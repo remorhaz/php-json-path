@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="unilex" basedir="." default="all">
+    <taskdef classname="vendor.remorhaz.php-unilex.phing.BuildTokenMatcher" name="build-lexer" />
+
+    <target name="all" depends="token-matchers"/>
+    <target name="token-matchers"
+            description="Generate token matchers"
+            depends="json-path-matcher" />
+    <target name="json-path-matcher">
+        <build-lexer
+            sourceFile="${application.startdir}/spec/LexerSpec.php"
+            destFile="${application.startdir}/generated/TokenMatcher.php"
+            description="JSONPath token matcher." />
+    </target>
+</project>
