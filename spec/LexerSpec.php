@@ -9,11 +9,6 @@ use Remorhaz\JSON\Path\TokenType;
 use Remorhaz\UniLex\Lexer\TokenMatcherInterface;
 
 /**
- * @lexToken /\$/
- */
-$context->setNewToken(TokenType::ROOT);
-
-/**
  * @lexToken /\./
  */
 $context->setNewToken(TokenType::DOT);
@@ -22,11 +17,6 @@ $context->setNewToken(TokenType::DOT);
  * @lexToken /\.{2}/
  */
 $context->setNewToken(TokenType::DOUBLE_DOT);
-
-/**
- * @lexToken /@/
- */
-$context->setNewToken(TokenType::SELF);
 
 /**
  * @lexToken /\(/
@@ -79,7 +69,7 @@ $context->setNewToken(TokenType::INT);
 $context->setNewToken(TokenType::HYPHEN);
 
 /**
- * @lexToken /[a-zA-Z_][a-zA-Z_0-9]*()/
+ * @lexToken /[a-zA-Z_\$@][a-zA-Z_\$@0-9]*()/
  */
 $context
     ->setNewToken(TokenType::NAME)
@@ -90,11 +80,11 @@ $context
  */
 $context
     ->setNewToken(TokenType::SINGLE_QUOTE)
-    ->setMode('string');
+    ->setMode('sqString');
 
 /**
  * @lexToken /'/
- * @lexMode string
+ * @lexMode sqString
  */
 $context
     ->setNewToken(TokenType::SINGLE_QUOTE)
@@ -102,7 +92,7 @@ $context
 
 /**
  * @lexToken /[^'\\]+/
- * @lexMode string
+ * @lexMode sqString
  */
 $context
     ->setNewToken(TokenType::UNESCAPED)
@@ -110,28 +100,75 @@ $context
 
 /**
  * @lexToken /\\/
- * @lexMode string
+ * @lexMode sqString
  */
 $context
     ->setNewToken(TokenType::BACKSLASH)
-    ->setMode('escape');
+    ->setMode('sqEscape');
 
 /**
  * @lexToken /\\/
- * @lexMode escape
+ * @lexMode sqEscape
  */
 $context
     ->setNewToken(TokenType::BACKSLASH)
-    ->setMode('string');
+    ->setMode('sqString');
 
 
 /**
  * @lexToken /'/
- * @lexMode escape
+ * @lexMode sqEscape
  */
 $context
     ->setNewToken(TokenType::SINGLE_QUOTE)
-    ->setMode('string');
+    ->setMode('sqString');
+
+/**
+ * @lexToken /"/
+ */
+$context
+    ->setNewToken(TokenType::DOUBLE_QUOTE)
+    ->setMode('dqString');
+
+/**
+ * @lexToken /"/
+ * @lexMode dqString
+ */
+$context
+    ->setNewToken(TokenType::DOUBLE_QUOTE)
+    ->setMode(TokenMatcherInterface::DEFAULT_MODE);
+
+/**
+ * @lexToken /[^"\\]+/
+ * @lexMode dqString
+ */
+$context
+    ->setNewToken(TokenType::UNESCAPED)
+    ->setTokenAttribute('text', $context->getSymbolString());
+
+/**
+ * @lexToken /\\/
+ * @lexMode dqString
+ */
+$context
+    ->setNewToken(TokenType::BACKSLASH)
+    ->setMode('dqEscape');
+
+/**
+ * @lexToken /\\/
+ * @lexMode dqEscape
+ */
+$context
+    ->setNewToken(TokenType::BACKSLASH)
+    ->setMode('dqString');
+
+/**
+ * @lexToken /"/
+ * @lexMode dqEscape
+ */
+$context
+    ->setNewToken(TokenType::DOUBLE_QUOTE)
+    ->setMode('dqString');
 
 /**
  * @lexToken /==/
@@ -173,11 +210,11 @@ $context->setNewToken(TokenType::OP_REGEX);
  */
 $context
     ->setNewToken(TokenType::SLASH)
-    ->setMode('regexp');
+    ->setMode('reString');
 
 /**
  * @lexToken /\//
- * @lexMode regexp
+ * @lexMode reString
  */
 $context
     ->setNewToken(TokenType::SLASH)
@@ -185,7 +222,7 @@ $context
 
 /**
  * @lexToken /[^/\\]*()/
- * @lexMode regexp
+ * @lexMode reString
  */
 $context
     ->setNewToken(TokenType::UNESCAPED)
@@ -193,7 +230,7 @@ $context
 
 /**
  * @lexToken /\\/
- * @lexMode regexp
+ * @lexMode reString
  */
 $context
     ->setNewToken(TokenType::BACKSLASH)
@@ -205,7 +242,7 @@ $context
  */
 $context
     ->setNewToken(TokenType::BACKSLASH)
-    ->setMode('regexp');
+    ->setMode('reString');
 
 /**
  * @lexToken /\//
@@ -213,7 +250,7 @@ $context
  */
 $context
     ->setNewToken(TokenType::SLASH)
-    ->setMode('regexp');
+    ->setMode('reString');
 
 /**
  * @lexToken /[^/\\]/
@@ -222,10 +259,19 @@ $context
 $context
     ->setNewToken(TokenType::UNESCAPED)
     ->setTokenAttribute('text', $context->getSymbolString())
-    ->setMode('regexp');
+    ->setMode('reString');
 
 /**
  * @lexToken /[\u0009\u000B\u000C\u0020\u00A0]+/
  */
-$context
-    ->setNewToken(TokenType::WS);
+$context->setNewToken(TokenType::WS);
+
+/**
+ * @lexToken /\|\|/
+ */
+$context->setNewToken(TokenType::OP_OR);
+
+/**
+ * @lexToken /&&/
+ */
+$context->setNewToken(TokenType::OP_AND);

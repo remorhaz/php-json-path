@@ -5,9 +5,7 @@ namespace Remorhaz\JSON\Path;
 abstract class TokenType
 {
 
-    public const ROOT = 0x01;
     public const DOT = 0x02;
-    public const SELF = 0x03;
     public const LEFT_BRACKET = 0x04;
     public const RIGHT_BRACKET = 0x05;
     public const LEFT_SQUARE_BRACKET = 0x06;
@@ -32,6 +30,9 @@ abstract class TokenType
     public const BACKSLASH = 0x19;
     public const WS = 0x1A;
     public const DOUBLE_DOT = 0x1B;
+    public const OP_AND = 0x1C;
+    public const OP_OR = 0x1D;
+    public const DOUBLE_QUOTE = 0x1E;
 
     public const EOI = 0xFF;
 }

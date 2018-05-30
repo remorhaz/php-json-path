@@ -22,14 +22,20 @@ class TokenMatcher extends TokenMatcherTemplate
     public function match(CharBufferInterface $buffer, TokenFactoryInterface $tokenFactory): bool
     {
         $context = $this->createContext($buffer, $tokenFactory);
-        if ($context->getMode() == 'string') {
-            goto stateString1;
+        if ($context->getMode() == 'sqString') {
+            goto stateSqString1;
         }
-        if ($context->getMode() == 'escape') {
-            goto stateEscape1;
+        if ($context->getMode() == 'sqEscape') {
+            goto stateSqEscape1;
         }
-        if ($context->getMode() == 'regexp') {
-            goto stateRegexp1;
+        if ($context->getMode() == 'dqString') {
+            goto stateDqString1;
+        }
+        if ($context->getMode() == 'dqEscape') {
+            goto stateDqEscape1;
+        }
+        if ($context->getMode() == 'reString') {
+            goto stateReString1;
         }
         if ($context->getMode() == 'reEscape') {
             goto stateReEscape1;
@@ -41,19 +47,9 @@ class TokenMatcher extends TokenMatcherTemplate
             goto error;
         }
         $char = $context->getBuffer()->getSymbol();
-        if (0x24 == $char) {
-            $context->getBuffer()->nextSymbol();
-            $context->setNewToken(TokenType::ROOT);
-            return true;
-        }
         if (0x2E == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state3;
-        }
-        if (0x40 == $char) {
-            $context->getBuffer()->nextSymbol();
-            $context->setNewToken(TokenType::SELF);
-            return true;
+            goto state2;
         }
         if (0x28 == $char) {
             $context->getBuffer()->nextSymbol();
@@ -102,56 +98,71 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         if (0x31 <= $char && $char <= 0x39) {
             $context->getBuffer()->nextSymbol();
-            goto state14;
+            goto state12;
         }
         if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             $context->setNewToken(TokenType::HYPHEN);
             return true;
         }
-        if (0x41 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
+        if (0x24 == $char || 0x40 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
             $context->getBuffer()->nextSymbol();
-            goto state16;
+            goto state14;
         }
         if (0x27 == $char) {
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::SINGLE_QUOTE)
-                ->setMode('string');
+                ->setMode('sqString');
+            return true;
+        }
+        if (0x22 == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context
+                ->setNewToken(TokenType::DOUBLE_QUOTE)
+                ->setMode('dqString');
             return true;
         }
         if (0x3D == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state18;
+            goto state17;
         }
         if (0x21 == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state19;
+            goto state18;
         }
         if (0x3C == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state20;
+            goto state19;
         }
         if (0x3E == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state21;
+            goto state20;
         }
         if (0x2F == $char) {
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::SLASH)
-                ->setMode('regexp');
+                ->setMode('reString');
             return true;
         }
         if (0x09 == $char || 0x0B == $char || 0x0C == $char || 0x20 == $char || 0xA0 == $char) {
             $context->getBuffer()->nextSymbol();
+            goto state22;
+        }
+        if (0x7C == $char) {
+            $context->getBuffer()->nextSymbol();
             goto state23;
+        }
+        if (0x26 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state24;
         }
         goto error;
 
-        state3:
+        state2:
         if ($context->getBuffer()->isEnd()) {
-            goto finish3;
+            goto finish2;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x2E == $char) {
@@ -159,8 +170,25 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->setNewToken(TokenType::DOUBLE_DOT);
             return true;
         }
-        finish3:
+        finish2:
         $context->setNewToken(TokenType::DOT);
+        return true;
+
+        state12:
+        if ($context->getBuffer()->isEnd()) {
+            goto finish12;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x30 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state34;
+        }
+        if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state34;
+        }
+        finish12:
+        $context->setNewToken(TokenType::INT);
         return true;
 
         state14:
@@ -170,40 +198,23 @@ class TokenMatcher extends TokenMatcherTemplate
         $char = $context->getBuffer()->getSymbol();
         if (0x30 == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state31;
+            goto state33;
         }
         if (0x31 <= $char && $char <= 0x39) {
             $context->getBuffer()->nextSymbol();
-            goto state31;
+            goto state33;
+        }
+        if (0x24 == $char || 0x40 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
+            $context->getBuffer()->nextSymbol();
+            goto state33;
         }
         finish14:
-        $context->setNewToken(TokenType::INT);
-        return true;
-
-        state16:
-        if ($context->getBuffer()->isEnd()) {
-            goto finish16;
-        }
-        $char = $context->getBuffer()->getSymbol();
-        if (0x30 == $char) {
-            $context->getBuffer()->nextSymbol();
-            goto state30;
-        }
-        if (0x31 <= $char && $char <= 0x39) {
-            $context->getBuffer()->nextSymbol();
-            goto state30;
-        }
-        if (0x41 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
-            $context->getBuffer()->nextSymbol();
-            goto state30;
-        }
-        finish16:
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
-        state18:
+        state17:
         if ($context->getBuffer()->isEnd()) {
             goto error;
         }
@@ -220,7 +231,7 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         goto error;
 
-        state19:
+        state18:
         if ($context->getBuffer()->isEnd()) {
             goto error;
         }
@@ -232,9 +243,9 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         goto error;
 
-        state20:
+        state19:
         if ($context->getBuffer()->isEnd()) {
-            goto finish20;
+            goto finish19;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x3D == $char) {
@@ -242,13 +253,13 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->setNewToken(TokenType::OP_LE);
             return true;
         }
-        finish20:
+        finish19:
         $context->setNewToken(TokenType::OP_L);
         return true;
 
-        state21:
+        state20:
         if ($context->getBuffer()->isEnd()) {
-            goto finish21;
+            goto finish20;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x3D == $char) {
@@ -256,79 +267,101 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->setNewToken(TokenType::OP_GE);
             return true;
         }
-        finish21:
+        finish20:
         $context->setNewToken(TokenType::OP_G);
+        return true;
+
+        state22:
+        if ($context->getBuffer()->isEnd()) {
+            goto finish22;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x09 == $char || 0x0B == $char || 0x0C == $char || 0x20 == $char || 0xA0 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state27;
+        }
+        finish22:
+        $context->setNewToken(TokenType::WS);
         return true;
 
         state23:
         if ($context->getBuffer()->isEnd()) {
-            goto finish23;
+            goto error;
         }
         $char = $context->getBuffer()->getSymbol();
-        if (0x09 == $char || 0x0B == $char || 0x0C == $char || 0x20 == $char || 0xA0 == $char) {
+        if (0x7C == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state24;
+            $context->setNewToken(TokenType::OP_OR);
+            return true;
         }
-        finish23:
-        $context
-            ->setNewToken(TokenType::WS);
-        return true;
+        goto error;
 
         state24:
         if ($context->getBuffer()->isEnd()) {
-            goto finish24;
+            goto error;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x26 == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context->setNewToken(TokenType::OP_AND);
+            return true;
+        }
+        goto error;
+
+        state27:
+        if ($context->getBuffer()->isEnd()) {
+            goto finish27;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x09 == $char || 0x0B == $char || 0x0C == $char || 0x20 == $char || 0xA0 == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state24;
+            goto state27;
         }
-        finish24:
-        $context
-            ->setNewToken(TokenType::WS);
+        finish27:
+        $context->setNewToken(TokenType::WS);
         return true;
 
-        state30:
+        state33:
         if ($context->getBuffer()->isEnd()) {
-            goto finish30;
+            goto finish33;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x30 == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state30;
+            goto state33;
         }
         if (0x31 <= $char && $char <= 0x39) {
             $context->getBuffer()->nextSymbol();
-            goto state30;
+            goto state33;
         }
-        if (0x41 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
+        if (0x24 == $char || 0x40 <= $char && $char <= 0x5A || 0x5F == $char || 0x61 <= $char && $char <= 0x7A) {
             $context->getBuffer()->nextSymbol();
-            goto state30;
+            goto state33;
         }
-        finish30:
+        finish33:
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
-        state31:
+        state34:
         if ($context->getBuffer()->isEnd()) {
-            goto finish31;
+            goto finish34;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x30 == $char) {
             $context->getBuffer()->nextSymbol();
-            goto state31;
+            goto state34;
         }
         if (0x31 <= $char && $char <= 0x39) {
             $context->getBuffer()->nextSymbol();
-            goto state31;
+            goto state34;
         }
-        finish31:
+        finish34:
         $context->setNewToken(TokenType::INT);
         return true;
 
-        stateString1:
+        stateSqString1:
         if ($context->getBuffer()->isEnd()) {
             goto error;
         }
@@ -342,48 +375,48 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         if (0x00 <= $char && $char <= 0x26 || 0x28 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
             $context->getBuffer()->nextSymbol();
-            goto stateString3;
+            goto stateSqString3;
         }
         if (0x5C == $char) {
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::BACKSLASH)
-                ->setMode('escape');
+                ->setMode('sqEscape');
             return true;
         }
         goto error;
 
-        stateString3:
+        stateSqString3:
         if ($context->getBuffer()->isEnd()) {
-            goto finishString3;
+            goto finishSqString3;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x00 <= $char && $char <= 0x26 || 0x28 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
             $context->getBuffer()->nextSymbol();
-            goto stateString5;
+            goto stateSqString5;
         }
-        finishString3:
+        finishSqString3:
         $context
             ->setNewToken(TokenType::UNESCAPED)
             ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
-        stateString5:
+        stateSqString5:
         if ($context->getBuffer()->isEnd()) {
-            goto finishString5;
+            goto finishSqString5;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x00 <= $char && $char <= 0x26 || 0x28 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
             $context->getBuffer()->nextSymbol();
-            goto stateString5;
+            goto stateSqString5;
         }
-        finishString5:
+        finishSqString5:
         $context
             ->setNewToken(TokenType::UNESCAPED)
             ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
-        stateEscape1:
+        stateSqEscape1:
         if ($context->getBuffer()->isEnd()) {
             goto error;
         }
@@ -392,19 +425,95 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::BACKSLASH)
-                ->setMode('string');
+                ->setMode('sqString');
             return true;
         }
         if (0x27 == $char) {
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::SINGLE_QUOTE)
-                ->setMode('string');
+                ->setMode('sqString');
             return true;
         }
         goto error;
 
-        stateRegexp1:
+        stateDqString1:
+        if ($context->getBuffer()->isEnd()) {
+            goto error;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x22 == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context
+                ->setNewToken(TokenType::DOUBLE_QUOTE)
+                ->setMode(TokenMatcherInterface::DEFAULT_MODE);
+            return true;
+        }
+        if (0x00 <= $char && $char <= 0x21 || 0x23 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
+            $context->getBuffer()->nextSymbol();
+            goto stateDqString3;
+        }
+        if (0x5C == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context
+                ->setNewToken(TokenType::BACKSLASH)
+                ->setMode('dqEscape');
+            return true;
+        }
+        goto error;
+
+        stateDqString3:
+        if ($context->getBuffer()->isEnd()) {
+            goto finishDqString3;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x00 <= $char && $char <= 0x21 || 0x23 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
+            $context->getBuffer()->nextSymbol();
+            goto stateDqString5;
+        }
+        finishDqString3:
+        $context
+            ->setNewToken(TokenType::UNESCAPED)
+            ->setTokenAttribute('text', $context->getSymbolString());
+        return true;
+
+        stateDqString5:
+        if ($context->getBuffer()->isEnd()) {
+            goto finishDqString5;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x00 <= $char && $char <= 0x21 || 0x23 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
+            $context->getBuffer()->nextSymbol();
+            goto stateDqString5;
+        }
+        finishDqString5:
+        $context
+            ->setNewToken(TokenType::UNESCAPED)
+            ->setTokenAttribute('text', $context->getSymbolString());
+        return true;
+
+        stateDqEscape1:
+        if ($context->getBuffer()->isEnd()) {
+            goto error;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x5C == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context
+                ->setNewToken(TokenType::BACKSLASH)
+                ->setMode('dqString');
+            return true;
+        }
+        if (0x22 == $char) {
+            $context->getBuffer()->nextSymbol();
+            $context
+                ->setNewToken(TokenType::DOUBLE_QUOTE)
+                ->setMode('dqString');
+            return true;
+        }
+        goto error;
+
+        stateReString1:
         if ($context->getBuffer()->isEnd()) {
             goto error;
         }
@@ -418,7 +527,7 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         if (0x00 <= $char && $char <= 0x2E || 0x30 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
             $context->getBuffer()->nextSymbol();
-            goto stateRegexp3;
+            goto stateReString3;
         }
         if (0x5C == $char) {
             $context->getBuffer()->nextSymbol();
@@ -429,16 +538,16 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         goto error;
 
-        stateRegexp3:
+        stateReString3:
         if ($context->getBuffer()->isEnd()) {
-            goto finishRegexp3;
+            goto finishReString3;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x00 <= $char && $char <= 0x2E || 0x30 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
             $context->getBuffer()->nextSymbol();
-            goto stateRegexp3;
+            goto stateReString3;
         }
-        finishRegexp3:
+        finishReString3:
         $context
             ->setNewToken(TokenType::UNESCAPED)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -453,14 +562,14 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::BACKSLASH)
-                ->setMode('regexp');
+                ->setMode('reString');
             return true;
         }
         if (0x2F == $char) {
             $context->getBuffer()->nextSymbol();
             $context
                 ->setNewToken(TokenType::SLASH)
-                ->setMode('regexp');
+                ->setMode('reString');
             return true;
         }
         if (0x00 <= $char && $char <= 0x2E || 0x30 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
@@ -468,7 +577,7 @@ class TokenMatcher extends TokenMatcherTemplate
             $context
                 ->setNewToken(TokenType::UNESCAPED)
                 ->setTokenAttribute('text', $context->getSymbolString())
-                ->setMode('regexp');
+                ->setMode('reString');
             return true;
         }
         goto error;
