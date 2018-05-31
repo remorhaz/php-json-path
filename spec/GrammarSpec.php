@@ -151,10 +151,10 @@ return [
             [],
         ],
         SymbolType::NT_EXPR_ARG_COMP => [
-            [SymbolType::NT_EXPR_GROUP],
-            [SymbolType::NT_PATH],
-            [SymbolType::NT_INT],
-            [SymbolType::NT_ARRAY],
+            [SymbolType::NT_EXPR_GROUP, SymbolType::NT_WS_OPT],
+            [SymbolType::NT_PATH, SymbolType::NT_WS_OPT],
+            [SymbolType::NT_INT, SymbolType::NT_WS_OPT],
+            [SymbolType::NT_ARRAY, SymbolType::NT_WS_OPT],
         ],
         SymbolType::NT_EXPR_ARG_COMP_TAIL => [
             [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
