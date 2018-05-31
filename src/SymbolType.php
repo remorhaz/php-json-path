@@ -51,7 +51,16 @@ abstract class SymbolType
     public const NT_INT_SLICE_STEP      = 0x2C;
     public const NT_INT                 = 0x2D;
     public const NT_INT_OPT             = 0x2E;
-    public const NT_EXPRESSION          = 0x2F;
+    public const NT_EXPR                = 0x2F;
+    public const NT_EXPR_GROUP          = 0x30;
+    public const NT_EXPR_ARG_OR         = 0x31;
+    public const NT_EXPR_ARG_OR_TAIL    = 0x32;
+    public const NT_EXPR_ARG_AND        = 0x33;
+    public const NT_EXPR_ARG_AND_TAIL   = 0x34;
+    public const NT_EXPR_ARG_COMP       = 0x35;
+    public const NT_EXPR_ARG_COMP_TAIL  = 0x36;
+    public const NT_ARRAY               = 0x37;
+    public const NT_ARRAY_CONTENT       = 0x38;
 
     public const T_EOI                  = 0xFF;
 }

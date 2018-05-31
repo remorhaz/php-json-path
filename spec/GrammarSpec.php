@@ -81,11 +81,12 @@ return [
             [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
             [SymbolType::NT_INT, SymbolType::NT_INT_NEXT],
             [SymbolType::NT_INT_SLICE],
-            [SymbolType::T_LEFT_BRACKET, SymbolType::NT_EXPRESSION, SymbolType::T_RIGHT_BRACKET],
+            [SymbolType::T_LEFT_BRACKET, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR, SymbolType::T_RIGHT_BRACKET],
             [
                 SymbolType::T_QUESTION,
                 SymbolType::T_LEFT_BRACKET,
-                SymbolType::NT_EXPRESSION,
+                SymbolType::NT_WS_OPT,
+                SymbolType::NT_EXPR,
                 SymbolType::T_RIGHT_BRACKET,
             ],
         ],
@@ -132,8 +133,55 @@ return [
             [SymbolType::NT_INT],
             [],
         ],
-        SymbolType::NT_EXPRESSION => [
-
+        SymbolType::NT_EXPR => [
+            [SymbolType::NT_EXPR_ARG_OR, SymbolType::NT_EXPR_ARG_OR_TAIL],
+        ],
+        SymbolType::NT_EXPR_ARG_OR => [
+            [SymbolType::NT_EXPR_ARG_AND, SymbolType::NT_EXPR_ARG_AND_TAIL],
+        ],
+        SymbolType::NT_EXPR_ARG_OR_TAIL => [
+            [SymbolType::T_OP_OR, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_OR],
+            [],
+        ],
+        SymbolType::NT_EXPR_ARG_AND => [
+            [SymbolType::NT_EXPR_ARG_COMP, SymbolType::NT_EXPR_ARG_COMP_TAIL],
+        ],
+        SymbolType::NT_EXPR_ARG_AND_TAIL => [
+            [SymbolType::T_OP_AND, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [],
+        ],
+        SymbolType::NT_EXPR_ARG_COMP => [
+            [SymbolType::NT_EXPR_GROUP],
+            [SymbolType::NT_PATH],
+            [SymbolType::NT_INT],
+            [SymbolType::NT_ARRAY],
+        ],
+        SymbolType::NT_EXPR_ARG_COMP_TAIL => [
+            [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_NEQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_L, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_LE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_G, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_GE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_REGEX, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_NAME, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [],
+        ],
+        SymbolType::NT_EXPR_GROUP => [
+            [SymbolType::T_LEFT_BRACKET, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR, SymbolType::T_RIGHT_BRACKET],
+        ],
+        SymbolType::NT_ARRAY => [
+            [
+                SymbolType::T_LEFT_SQUARE_BRACKET,
+                SymbolType::NT_WS_OPT,
+                SymbolType::NT_ARRAY_CONTENT,
+                SymbolType::T_RIGHT_SQUARE_BRACKET
+            ],
+        ],
+        SymbolType::NT_ARRAY_CONTENT => [
+            [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
+            [SymbolType::NT_INT, SymbolType::NT_WS_OPT, SymbolType::NT_INT_NEXT_LIST],
+            [],
         ],
     ],
 ];
