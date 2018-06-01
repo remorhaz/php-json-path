@@ -79,7 +79,7 @@ return [
         ],
         SymbolType::NT_BRACKET_FILTER => [
             [SymbolType::T_STAR, SymbolType::NT_WS_OPT],
-            [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
+            [SymbolType::NT_STRING_LIST],
             [SymbolType::NT_INT, SymbolType::NT_INT_NEXT],
             [SymbolType::NT_INT_SLICE],
             [SymbolType::T_LEFT_BRACKET, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR, SymbolType::T_RIGHT_BRACKET],
@@ -90,6 +90,9 @@ return [
                 SymbolType::NT_EXPR,
                 SymbolType::T_RIGHT_BRACKET,
             ],
+        ],
+        SymbolType::NT_STRING_LIST => [
+            [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
         ],
         SymbolType::NT_STRING_NEXT => [
             [
@@ -184,9 +187,24 @@ return [
             ],
         ],
         SymbolType::NT_ARRAY_CONTENT => [
-            [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
+            [SymbolType::NT_STRING_LIST],
             [SymbolType::NT_INT, SymbolType::NT_WS_OPT, SymbolType::NT_INT_NEXT_LIST],
             [],
+        ],
+        SymbolType::NT_STRING => [
+            [SymbolType::T_SINGLE_QUOTE, SymbolType::NT_STRING_CONTENT, SymbolType::T_SINGLE_QUOTE],
+            [SymbolType::T_DOUBLE_QUOTE, SymbolType::NT_STRING_CONTENT, SymbolType::T_DOUBLE_QUOTE],
+        ],
+        SymbolType::NT_STRING_CONTENT => [
+            [SymbolType::T_UNESCAPED, SymbolType::NT_STRING_CONTENT],
+            [SymbolType::T_BACKSLASH, SymbolType::NT_ESCAPED, SymbolType::NT_STRING_CONTENT],
+            [],
+        ],
+        SymbolType::NT_ESCAPED => [
+            [SymbolType::T_BACKSLASH],
+            [SymbolType::T_SINGLE_QUOTE],
+            [SymbolType::T_DOUBLE_QUOTE],
+            [SymbolType::T_UNESCAPED],
         ],
     ],
 ];

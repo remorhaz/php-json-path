@@ -61,7 +61,9 @@ $context->setNewToken(TokenType::COLON);
 /**
  * @lexToken /0|[1-9][0-9]*()/
  */
-$context->setNewToken(TokenType::INT);
+$context
+    ->setNewToken(TokenType::INT)
+    ->setTokenAttribute('text', $context->getSymbolString());
 
 /**
  * @lexToken /-/

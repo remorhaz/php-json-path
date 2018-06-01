@@ -93,7 +93,9 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         if (0x30 == $char) {
             $context->getBuffer()->nextSymbol();
-            $context->setNewToken(TokenType::INT);
+            $context
+                ->setNewToken(TokenType::INT)
+                ->setTokenAttribute('text', $context->getSymbolString());
             return true;
         }
         if (0x31 <= $char && $char <= 0x39) {
@@ -188,7 +190,9 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state34;
         }
         finish12:
-        $context->setNewToken(TokenType::INT);
+        $context
+            ->setNewToken(TokenType::INT)
+            ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
         state14:
@@ -360,7 +364,9 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state34;
         }
         finish34:
-        $context->setNewToken(TokenType::INT);
+        $context
+            ->setNewToken(TokenType::INT)
+            ->setTokenAttribute('text', $context->getSymbolString());
         return true;
 
         stateSqString1:

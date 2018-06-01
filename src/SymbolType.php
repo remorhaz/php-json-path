@@ -63,6 +63,9 @@ abstract class SymbolType
     public const NT_ARRAY               = 0x37;
     public const NT_ARRAY_CONTENT       = 0x38;
     public const NT_EXPR_ARG_SCALAR     = 0x39;
+    public const NT_STRING_CONTENT      = 0x3A;
+    public const NT_ESCAPED             = 0x3B;
+    public const NT_STRING_LIST         = 0x3C;
 
     public const T_EOI                  = 0xFF;
 }
