@@ -104,6 +104,7 @@ return [
         TokenType::COLON => 1,
         TokenType::RIGHT_SQUARE_BRACKET => 1,
         TokenType::COMMA => 1,
+        TokenType::OP_NOT => 1,
         TokenType::NAME => 1,
         TokenType::LEFT_SQUARE_BRACKET => 1,
         TokenType::OP_EQ => 1,
@@ -129,6 +130,7 @@ return [
         TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
     SymbolType::NT_EXPR => [
+        TokenType::OP_NOT => 0,
         TokenType::NAME => 0,
         TokenType::HYPHEN => 0,
         TokenType::INT => 0,
@@ -136,6 +138,7 @@ return [
         TokenType::LEFT_SQUARE_BRACKET => 0,
     ],
     SymbolType::NT_EXPR_ARG_OR => [
+        TokenType::OP_NOT => 0,
         TokenType::NAME => 0,
         TokenType::HYPHEN => 0,
         TokenType::INT => 0,
@@ -147,6 +150,7 @@ return [
         TokenType::RIGHT_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_AND => [
+        TokenType::OP_NOT => 0,
         TokenType::NAME => 0,
         TokenType::HYPHEN => 0,
         TokenType::INT => 0,
@@ -159,6 +163,14 @@ return [
         TokenType::RIGHT_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_COMP => [
+        TokenType::OP_NOT => 0,
+        TokenType::NAME => 1,
+        TokenType::HYPHEN => 1,
+        TokenType::INT => 1,
+        TokenType::LEFT_BRACKET => 1,
+        TokenType::LEFT_SQUARE_BRACKET => 1,
+    ],
+    SymbolType::NT_EXPR_ARG_SCALAR => [
         TokenType::LEFT_BRACKET => 0,
         TokenType::NAME => 1,
         TokenType::HYPHEN => 2,

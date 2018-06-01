@@ -34,10 +34,11 @@ abstract class SymbolType
     public const T_OP_AND               = 0x1A;
     public const T_OP_OR                = 0x1B;
     public const T_OP_REGEX             = 0x1C;
+    public const T_OP_NOT               = 0x1D;
 
-    public const NT_JSON_PATH           = 0x1D;
-    public const NT_PATH                = 0x1E;
-    public const NT_FILTER_LIST         = 0x1F;
+    public const NT_JSON_PATH           = 0x1E;
+    public const NT_PATH                = 0x1F;
+    public const NT_FILTER_LIST         = 0x20;
     public const NT_NAME                = 0x22;
     public const NT_BRACKET_FILTER      = 0x23;
     public const NT_DOT_FILTER          = 0x24;
@@ -61,6 +62,7 @@ abstract class SymbolType
     public const NT_EXPR_ARG_COMP_TAIL  = 0x36;
     public const NT_ARRAY               = 0x37;
     public const NT_ARRAY_CONTENT       = 0x38;
+    public const NT_EXPR_ARG_SCALAR     = 0x39;
 
     public const T_EOI                  = 0xFF;
 }

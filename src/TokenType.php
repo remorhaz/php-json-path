@@ -33,6 +33,7 @@ abstract class TokenType
     public const OP_AND                 = 0x1A;
     public const OP_OR                  = 0x1B;
     public const OP_REGEX               = 0x1C;
+    public const OP_NOT                 = 0x1D;
 
     public const EOI                    = 0xFF;
 }

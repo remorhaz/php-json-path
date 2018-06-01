@@ -38,6 +38,7 @@ return [
             SymbolType::T_OP_AND                => TokenType::OP_AND,
             SymbolType::T_OP_OR                 => TokenType::OP_OR,
             SymbolType::T_OP_REGEX              => TokenType::OP_REGEX,
+            SymbolType::T_OP_NOT                => TokenType::OP_NOT,
 
             SymbolType::T_EOI                   => TokenType::EOI,
     ],
@@ -151,6 +152,10 @@ return [
             [],
         ],
         SymbolType::NT_EXPR_ARG_COMP => [
+            [SymbolType::T_OP_NOT, SymbolType::NT_EXPR_ARG_SCALAR],
+            [SymbolType::NT_EXPR_ARG_SCALAR],
+        ],
+        SymbolType::NT_EXPR_ARG_SCALAR => [
             [SymbolType::NT_EXPR_GROUP, SymbolType::NT_WS_OPT],
             [SymbolType::NT_PATH, SymbolType::NT_WS_OPT],
             [SymbolType::NT_INT, SymbolType::NT_WS_OPT],

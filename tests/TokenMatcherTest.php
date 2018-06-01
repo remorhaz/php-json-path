@@ -169,6 +169,8 @@ class TokenMatcherTest extends TestCase
             "REGEX operator" => ['=~', [TokenType::OP_REGEX, TokenType::EOI]],
             "AND operator" => ['&&', [TokenType::OP_AND, TokenType::EOI]],
             "OR operator" => ['||', [TokenType::OP_OR, TokenType::EOI]],
+            "NOT operator" => ['!', [TokenType::OP_NOT, TokenType::EOI]],
+            "NEQ operator after NOT operator" => ['!!=', [TokenType::OP_NOT, TokenType::OP_NEQ, TokenType::EOI]],
             "Slash" => ['/', [TokenType::SLASH, TokenType::EOI]],
             "Empty regexp" => ['//', [TokenType::SLASH, TokenType::SLASH, TokenType::EOI]],
             "Non-empty open single-symbol regexp" => [
@@ -254,8 +256,6 @@ class TokenMatcherTest extends TestCase
             "Unused symbol outside of string" => ['#'],
             "Broken operator =" => ['=.'],
             "Broken operator = at EOI" => ['='],
-            "Broken operator !" => ['!.'],
-            "Broken operator ! at EOI" => ['!'],
             "Broken operator AND" => ['&.'],
             "Broken operator AND at EOI" => ['&'],
             "Broken operator OR" => ['|.'],

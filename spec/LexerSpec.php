@@ -275,3 +275,8 @@ $context->setNewToken(TokenType::OP_OR);
  * @lexToken /&&/
  */
 $context->setNewToken(TokenType::OP_AND);
+
+/**
+ * @lexToken /!/
+ */
+$context->setNewToken(TokenType::OP_NOT);

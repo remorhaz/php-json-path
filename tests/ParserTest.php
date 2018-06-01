@@ -20,7 +20,7 @@ class ParserTest extends TestCase
      */
     public function testParser(): void
     {
-        $buffer = CharBufferFactory::createFromString('$.a.b[?(@.x == 2)]');
+        $buffer = CharBufferFactory::createFromString('$.a.b[?(!(@.x == 2))]');
         $grammar = GrammarLoader::loadFile(__DIR__ . '/../spec/GrammarSpec.php');
         $tokenFactory = new TokenFactory($grammar);
         $tokenMatcher = new TokenMatcher;

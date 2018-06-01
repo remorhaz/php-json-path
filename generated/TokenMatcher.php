@@ -233,7 +233,7 @@ class TokenMatcher extends TokenMatcherTemplate
 
         state18:
         if ($context->getBuffer()->isEnd()) {
-            goto error;
+            goto finish18;
         }
         $char = $context->getBuffer()->getSymbol();
         if (0x3D == $char) {
@@ -241,7 +241,9 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->setNewToken(TokenType::OP_NEQ);
             return true;
         }
-        goto error;
+        finish18:
+        $context->setNewToken(TokenType::OP_NOT);
+        return true;
 
         state19:
         if ($context->getBuffer()->isEnd()) {
