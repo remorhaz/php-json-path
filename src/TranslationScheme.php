@@ -40,7 +40,11 @@ class TranslationScheme implements TranslationSchemeInterface
         $hash = "{$production->getHeader()->getSymbolId()}.{$production->getIndex()}";
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0":
-                var_dump("RETURN BUFFER");
+                var_dump("RETURN @LAST_BUFFER");
+                break;
+
+            case SymbolType::NT_PATH . ".0":
+                var_dump("BUFFER -> @LAST_BUFFER");
                 break;
 
             case SymbolType::NT_INT . ".0":
