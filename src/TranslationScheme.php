@@ -61,6 +61,33 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->setAttribute('s.int', $int);
                 break;
 
+            case SymbolType::NT_STRING_NEXT . ".0":
+                $textList = $production
+                    ->getSymbol(4)
+                    ->getAttribute('s.text_list');
+                $production
+                    ->getHeader()
+                    ->setAttribute('s.text_list', $textList);
+                break;
+
+            case SymbolType::NT_STRING_NEXT . ".1":
+                $textList = $production
+                    ->getHeader()
+                    ->getAttribute('i.text_list');
+                $production
+                    ->getHeader()
+                    ->setAttribute('s.text_list', $textList);
+                break;
+
+            case SymbolType::NT_STRING_LIST . ".0":
+                $textList = $production
+                    ->getSymbol(2)
+                    ->getAttribute('s.text_list');
+                $production
+                    ->getHeader()
+                    ->setAttribute('s.text_list', $textList);
+                break;
+
             case SymbolType::NT_STRING . ".0":
             case SymbolType::NT_STRING . ".1":
                 $text = $production
@@ -74,7 +101,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_STRING_CONTENT . ".0":
                 $text = $production
                     ->getSymbol(1)
-                    ->getAttribute('i.text');
+                    ->getAttribute('s.text');
                 $production
                     ->getHeader()
                     ->setAttribute('s.text', $text);
@@ -83,7 +110,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_STRING_CONTENT . ".1":
                 $text = $production
                     ->getSymbol(2)
-                    ->getAttribute('i.text');
+                    ->getAttribute('s.text');
                 $production
                     ->getHeader()
                     ->setAttribute('s.text', $text);
@@ -126,7 +153,18 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".1":
-                var_dump("SKIP IF NOT: NAME == '?'");
+                $textList = $production
+                    ->getSymbol(0)
+                    ->getAttribute('s.text_list');
+                if (count($textList) == 1) {
+                    $text = array_pop($textList);
+                    var_dump("SKIP IF NOT: NAME == '{$text}'");
+                    break;
+                }
+                var_dump("SKIP IF NOT: OR");
+                foreach ($textList as $text) {
+                    var_dump(" - OR: NAME == '{$text}'");
+                }
                 break;
         }
     }
@@ -167,6 +205,29 @@ class TranslationScheme implements TranslationSchemeInterface
                 var_dump("BUFFER <- BUFFER.PROPERTY // [string list]");
                 break;
 
+            case SymbolType::NT_STRING_LIST . ".0.2":
+                $text = $production
+                    ->getSymbol(0)
+                    ->getAttribute('s.text');
+                $textList = [$text];
+                $production
+                    ->getSymbol(2)
+                    ->setAttribute('i.text_list', $textList);
+                break;
+
+            case SymbolType::NT_STRING_NEXT . ".0.4":
+                $textList = $production
+                    ->getHeader()
+                    ->getAttribute('i.text_list');
+                $text = $production
+                    ->getSymbol(2)
+                    ->getAttribute('s.text');
+                $textList[] = $text;
+                $production
+                    ->getSymbol(4)
+                    ->setAttribute('i.text_list', $textList);
+                break;
+
             case SymbolType::NT_FILTER_LIST . ".0.1":
                 var_dump("BUFFER <- BUFFER.PROPERTY // .name");
                 break;
@@ -180,13 +241,13 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->getAttribute('s.text');
                 $production
                     ->getSymbol(1)
-                    ->setAttribute('i.filterName', $filterName);
+                    ->setAttribute('i.filter_name', $filterName);
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
                 $filterName = $production
                     ->getHeader()
-                    ->getAttribute('i.filterName');
+                    ->getAttribute('i.filter_name');
                 var_dump("SKIP IF NOT: NAME == '{$filterName}'");
                 break;
 
