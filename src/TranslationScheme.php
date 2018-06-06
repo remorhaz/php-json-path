@@ -12,6 +12,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $varList = [];
 
+    private $unsetVarList = [];
+
     /**
      * @param Symbol $symbol
      * @param Token $token
@@ -59,7 +61,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $varId = $this->createVar();
                 var_dump("VAR:{$varId} = VAR:{$pathId}.AGGREGATE(VAR:{$functionVarId})");
                 var_dump("VAR:{$pathId}.UNSET");
+                $this->unsetVar($pathId);
                 var_dump("VAR:{$functionVarId}.UNSET");
+                $this->unsetVar($functionVarId);
                 $header['s.path_id'] = $varId;
                 break;
 
@@ -172,7 +176,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $newPathId = $this->createVar();
                 var_dump("VAR:{$newPathId} = VAR:{$pathId}.FILTER_KEY(VAR:{$varId})");
                 var_dump("VAR:{$pathId}.UNSET");
+                $this->unsetVar($pathId);
                 var_dump("VAR:{$varId}.UNSET");
+                $this->unsetVar($varId);
                 $header['s.path_id'] = $newPathId;
                 break;
 
@@ -183,7 +189,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $newPathId = $this->createVar();
                 var_dump("VAR:{$newPathId} = VAR:{$pathId}.FILTER(VAR:{$varId})");
                 var_dump("VAR:{$pathId}.UNSET");
+                $this->unsetVar($pathId);
                 var_dump("VAR:{$varId}.UNSET");
+                $this->unsetVar($varId);
                 $header['s.path_id'] = $newPathId;
                 break;
 
@@ -193,6 +201,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $newVarId = $this->createVar();
                 var_dump("VAR:{$newVarId} = NOT(VAR:{$varId})");
                 var_dump("VAR:{$varId}.UNSET");
+                $this->unsetVar($varId);
                 $header['s.var_id'] = $newVarId;
                 break;
 
@@ -207,7 +216,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $varId = $this->createVar();
                 var_dump("VAR:{$varId} = EQ(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 var_dump("VAR:{$leftVarId}.UNSET");
+                $this->unsetVar($leftVarId);
                 var_dump("VAR:{$rightVarId}.UNSET");
+                $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
 
@@ -226,7 +237,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $varId = $this->createVar();
                 var_dump("VAR:{$varId} = AND(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 var_dump("VAR:{$leftVarId}.UNSET");
+                $this->unsetVar($leftVarId);
                 var_dump("VAR:{$rightVarId}.UNSET");
+                $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
 
@@ -245,7 +258,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $varId = $this->createVar();
                 var_dump("VAR:{$varId} = OR(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 var_dump("VAR:{$leftVarId}.UNSET");
+                $this->unsetVar($leftVarId);
                 var_dump("VAR:{$rightVarId}.UNSET");
+                $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
 
@@ -418,7 +433,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $newPathId = $this->createVar();
                 var_dump("VAR:{$newPathId} = VAR:{$pathId}.NEXT_KEY(VAR:{$varId})");
                 var_dump("VAR:{$pathId}.UNSET");
+                $this->unsetVar($pathId);
                 var_dump("VAR:{$varId}.UNSET");
+                $this->unsetVar($varId);
                 $symbols[0]['i.path_id'] = $newPathId;
                 break;
 
@@ -465,8 +482,16 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private function createVar(): int
     {
+        if (!empty($this->unsetVarList)) {
+            return array_shift($this->unsetVarList);
+        }
         $id = count($this->varList);
         $this->varList[] = $id;
         return $id;
+    }
+
+    private function unsetVar(int $id)
+    {
+        $this->unsetVarList[] = $id;
     }
 }
