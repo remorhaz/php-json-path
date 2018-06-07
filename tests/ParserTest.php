@@ -21,7 +21,8 @@ class ParserTest extends TestCase
      */
     public function testParser(): void
     {
-        $buffer = CharBufferFactory::createFromString('$.a.b[(!(@.x.length() == 2))]');
+        //$buffer = CharBufferFactory::createFromString('$.a.b[(@.x.length())]');
+        $buffer = CharBufferFactory::createFromString('$.a.b[?(!(@.x.length() == 2))]');
         //$buffer = CharBufferFactory::createFromString('$.a.b["c\\"d\\\\e", \'f\']');
         $grammar = GrammarLoader::loadFile(__DIR__ . '/../spec/GrammarSpec.php');
         $tokenFactory = new TokenFactory($grammar);

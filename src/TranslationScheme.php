@@ -55,14 +55,12 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOT_FILTER_NEXT . ".0":
                 $pathId = $header['i.path_id'];
                 $function = $header['i.filter_name'];
-                var_dump("// dataset aggregate function");
+                var_dump("// data aggregate function");
                 $functionVarId = $this->createVar();
-                var_dump("VAR:{$functionVarId} = STRING('{$function}')");
+                var_dump("VAR:{$functionVarId}|STRING = '{$function}'");
                 $varId = $this->createVar();
-                var_dump("VAR:{$varId} = VAR:{$pathId}.AGGREGATE(VAR:{$functionVarId})");
-                var_dump("VAR:{$pathId}.UNSET");
+                var_dump("VAR:{$varId}|ARRAY:INT = VAR:{$pathId}.AGGREGATE(VAR:{$functionVarId})");
                 $this->unsetVar($pathId);
-                var_dump("VAR:{$functionVarId}.UNSET");
                 $this->unsetVar($functionVarId);
                 $header['s.path_id'] = $varId;
                 break;
@@ -83,23 +81,30 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.path_id'] = $symbols[1]['s.path_id'];
                 break;
 
+            case SymbolType::NT_FILTER_LIST . ".1":
+                $header['s.path_id'] = $symbols[2]['s.path_id'];
+                break;
+
+            case SymbolType::NT_FILTER_LIST . ".2":
+                $header['s.path_id'] = $symbols[4]['s.path_id'];
+                break;
+
+            case SymbolType::NT_FILTER_LIST . ".3":
+                $header['s.path_id'] = $header['i.path_id'];
+                break;
+
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0":
                 $header['s.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1":
-                $pathId = $header['i.path_id'];
-                $inlinePathBufferId = $symbols[0]['s.path_id'];
-                $varId = $this->createVar();
-                var_dump("VAR:{$varId} = VAR:{$inlinePathBufferId}.UNFORK(VAR:{$pathId})");
-                $header['s.var_id'] = $varId;
+                $header['s.var_id'] = $symbols[0]['s.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2":
-                $pathId = $header['i.path_id'];
                 $int = $symbols[0]['s.int'];
                 $varId = $this->createVar();
-                var_dump("VAR:{$varId} = INT({$int}).MAP(VAR:{$pathId})");
+                var_dump("VAR:{$varId}|INT = {$int}");
                 $header['s.var_id'] = $varId;
                 break;
 
@@ -157,40 +162,59 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".1":
+                $pathId = $header['i.path_id'];
+                $filterId = $symbols[0]['i.filter_id'];
                 $textList = $symbols[0]['s.text_list'];
-                if (count($textList) == 1) {
-                    $text = array_pop($textList);
-                    var_dump("SKIP IF NOT: KEY == '{$text}'");
-                    break;
-                }
-                var_dump("SKIP IF NOT: OR");
+                $resultId = $this->createVar();
+                var_dump("VAR:{$resultId}|BOOL = false");
                 foreach ($textList as $text) {
-                    var_dump(" - OR: KEY == '{$text}'");
+                    $stringId = $this->createVar();
+                    var_dump("VAR:{$stringId}|STRING = '{$text}'");
+                    $matchId = $this->createVar();
+                    var_dump("VAR:{$matchId}|ARRAY:BOOL = EQ(VAR:{$filterId}, VAR:{$stringId})");
+                    $this->unsetVar($stringId);
+                    $oldResultId = $resultId;
+                    $resultId = $this->createVar();
+                    var_dump("VAR:{$resultId}|ARRAY:BOOL = OR(VAR:{$oldResultId}, VAR:{$matchId})");
+                    $this->unsetVar($matchId);
+                    $this->unsetVar($oldResultId);
                 }
+                $dataId = $this->createVar();
+                var_dump("VAR:{$dataId}|ARRAY:DATA = VAR:{$pathId}.NEXT");
+                $this->unsetVar($pathId);
+                $newPathId = $this->createVar();
+                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$dataId}.FILTER(VAR:{$resultId})");
+                $this->unsetVar($resultId);
+                $header['s.path_id'] = $newPathId;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4":
                 $pathId = $header['i.path_id'];
                 $varId = $symbols[2]['s.var_id'];
                 var_dump("// filter by key");
-                $newPathId = $this->createVar();
-                var_dump("VAR:{$newPathId} = VAR:{$pathId}.FILTER_KEY(VAR:{$varId})");
-                var_dump("VAR:{$pathId}.UNSET");
-                $this->unsetVar($pathId);
-                var_dump("VAR:{$varId}.UNSET");
+                $keysId = $this->createVar();
+                var_dump("VAR:{$keysId}|ARRAY:KEY = VAR:{$pathId}.KEYS");
+                $matchId = $this->createVar();
+                var_dump("VAR:{$matchId}|ARRAY:BOOL = IN(VAR:{$keysId}, VAR:{$varId})");
                 $this->unsetVar($varId);
+                $this->unsetVar($keysId);
+                $dataId = $this->createVar();
+                var_dump("VAR:{$dataId}|ARRAY:DATA = VAR:{$pathId}.NEXT");
+                $this->unsetVar($pathId);
+                $newPathId = $this->createVar();
+                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$dataId}.FILTER(VAR:{$matchId})");
+                $this->unsetVar($matchId);
+                $this->unsetVar($dataId);
                 $header['s.path_id'] = $newPathId;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".5":
                 $pathId = $header['i.path_id'];
                 $varId = $symbols[3]['s.var_id'];
-                var_dump("// filter by value");
+                var_dump("// filter by bool");
                 $newPathId = $this->createVar();
-                var_dump("VAR:{$newPathId} = VAR:{$pathId}.FILTER(VAR:{$varId})");
-                var_dump("VAR:{$pathId}.UNSET");
+                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$pathId}.FILTER(VAR:{$varId})");
                 $this->unsetVar($pathId);
-                var_dump("VAR:{$varId}.UNSET");
                 $this->unsetVar($varId);
                 $header['s.path_id'] = $newPathId;
                 break;
@@ -199,8 +223,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $varId = $symbols[1]['s.var_id'];
                 var_dump("// NOT expression");
                 $newVarId = $this->createVar();
-                var_dump("VAR:{$newVarId} = NOT(VAR:{$varId})");
-                var_dump("VAR:{$varId}.UNSET");
+                var_dump("VAR:{$newVarId}|BOOL* = NOT(VAR:{$varId})");
                 $this->unsetVar($varId);
                 $header['s.var_id'] = $newVarId;
                 break;
@@ -214,10 +237,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 $rightVarId = $symbols[2]['s.var_id'];
                 var_dump("// EQ expression");
                 $varId = $this->createVar();
-                var_dump("VAR:{$varId} = EQ(VAR:{$leftVarId}, VAR:{$rightVarId})");
-                var_dump("VAR:{$leftVarId}.UNSET");
+                var_dump("VAR:{$varId}|BOOL* = EQ(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 $this->unsetVar($leftVarId);
-                var_dump("VAR:{$rightVarId}.UNSET");
                 $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -235,10 +256,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 $rightVarId = $symbols[2]['s.var_id'];
                 var_dump("// AND expression");
                 $varId = $this->createVar();
-                var_dump("VAR:{$varId} = AND(VAR:{$leftVarId}, VAR:{$rightVarId})");
-                var_dump("VAR:{$leftVarId}.UNSET");
+                var_dump("VAR:{$varId}|BOOL* = AND(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 $this->unsetVar($leftVarId);
-                var_dump("VAR:{$rightVarId}.UNSET");
                 $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -256,10 +275,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 $rightVarId = $symbols[2]['s.var_id'];
                 var_dump("// OR expression");
                 $varId = $this->createVar();
-                var_dump("VAR:{$varId} = OR(VAR:{$leftVarId}, VAR:{$rightVarId})");
-                var_dump("VAR:{$leftVarId}.UNSET");
+                var_dump("VAR:{$varId}|BOOL* = OR(VAR:{$leftVarId}, VAR:{$rightVarId})");
                 $this->unsetVar($leftVarId);
-                var_dump("VAR:{$rightVarId}.UNSET");
                 $this->unsetVar($rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -301,10 +318,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 if ($isInlinePath) {
                     $parentPathId = $header['i.path_id'];
                     var_dump("// init inline path");
-                    var_dump("VAR:{$pathId} = VAR:{$parentPathId}.FORK");
+                    var_dump("VAR:{$pathId}|ARRAY:DATA = VAR:{$parentPathId}.FORK");
                 } else {
                     var_dump("// init root path");
-                    var_dump("VAR:{$pathId} = DATASET(@ROOT)");
+                    var_dump("VAR:{$pathId}|ARRAY:DATA = ARRAY(@ROOT)");
                 }
                 $symbols[1]['i.path_id'] = $pathId;
                 $symbols[1]['i.path_type'] = $pathType;
@@ -314,7 +331,9 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_BRACKET_FILTER . ".1.0":
                 $pathId = $header['i.path_id'];
                 var_dump("// [string list]");
-                var_dump("VAR:{$pathId} = VAR:{$pathId}.NEXT_KEY");
+                $filterId = $this->createVar();
+                var_dump("VAR:{$filterId}|ARRAY:STRING = VAR:{$pathId}.KEYS");
+                $symbols[0]['i.filter_id'] = $filterId;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4.2":
@@ -427,15 +446,22 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
                 $filterName = $header['i.filter_name'];
                 $pathId = $header['i.path_id'];
-                $varId = $this->createVar();
+                $stringId = $this->createVar();
                 var_dump("// .name");
-                var_dump("VAR:{$varId} = STRING('{$filterName}')");
-                $newPathId = $this->createVar();
-                var_dump("VAR:{$newPathId} = VAR:{$pathId}.NEXT_KEY(VAR:{$varId})");
-                var_dump("VAR:{$pathId}.UNSET");
+                var_dump("VAR:{$stringId}|STRING = '{$filterName}'");
+                $keysId = $this->createVar();
+                var_dump("VAR:{$keysId}|ARRAY:STRING = VAR:{$pathId}.KEYS");
+                $matchId = $this->createVar();
+                var_dump("VAR:{$matchId}|ARRAY:BOOL = EQ(VAR:{$stringId}, VAR:{$keysId})");
+                $this->unsetVar($stringId);
+                $this->unsetVar($keysId);
+                $dataId = $this->createVar();
+                var_dump("VAR:{$dataId}|ARRAY:DATA = VAR:{$pathId}.NEXT");
                 $this->unsetVar($pathId);
-                var_dump("VAR:{$varId}.UNSET");
-                $this->unsetVar($varId);
+                $newPathId = $this->createVar();
+                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$dataId}.FILTER(VAR:{$matchId})");
+                $this->unsetVar($dataId);
+                $this->unsetVar($matchId);
                 $symbols[0]['i.path_id'] = $newPathId;
                 break;
 
@@ -492,6 +518,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private function unsetVar(int $id)
     {
+        //var_dump("VAR:{$id}.UNSET");
         $this->unsetVarList[] = $id;
+        sort($this->unsetVarList);
     }
 }
