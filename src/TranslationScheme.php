@@ -117,15 +117,15 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0":
-                $header['s.text_list'] = $symbols[4]['s.text_list'];
+                $header['s.text_list_id'] = $symbols[4]['s.text_list_id'];
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".1":
-                $header['s.text_list'] = $header['i.text_list'];
+                $header['s.text_list_id'] = $header['i.text_list_id'];
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0":
-                $header['s.text_list'] = $symbols[2]['s.text_list'];
+                $header['s.text_list_id'] = $symbols[2]['s.text_list_id'];
                 break;
 
             case SymbolType::NT_STRING . ".0":
@@ -164,27 +164,17 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_BRACKET_FILTER . ".1":
                 $pathId = $header['i.path_id'];
                 $filterId = $symbols[0]['i.filter_id'];
-                $textList = $symbols[0]['s.text_list'];
-                $resultId = $this->createVar();
-                var_dump("VAR:{$resultId}|BOOL = false");
-                foreach ($textList as $text) {
-                    $stringId = $this->createVar();
-                    var_dump("VAR:{$stringId}|STRING = '{$text}'");
-                    $matchId = $this->createVar();
-                    var_dump("VAR:{$matchId}|ARRAY:BOOL = EQ(VAR:{$filterId}, VAR:{$stringId})");
-                    $this->unsetVar($stringId);
-                    $oldResultId = $resultId;
-                    $resultId = $this->createVar();
-                    var_dump("VAR:{$resultId}|ARRAY:BOOL = OR(VAR:{$oldResultId}, VAR:{$matchId})");
-                    $this->unsetVar($matchId);
-                    $this->unsetVar($oldResultId);
-                }
+                $textListId = $symbols[0]['s.text_list_id'];
+                $matchId = $this->createVar();
+                var_dump("VAR:{$matchId} = IN(VAR:{$filterId}, VAR:{$textListId})");
+                $this->unsetVar($textListId);
+                $this->unsetVar($filterId);
                 $dataId = $this->createVar();
                 var_dump("VAR:{$dataId}|ARRAY:DATA = VAR:{$pathId}.NEXT");
                 $this->unsetVar($pathId);
                 $newPathId = $this->createVar();
-                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$dataId}.FILTER(VAR:{$resultId})");
-                $this->unsetVar($resultId);
+                var_dump("VAR:{$newPathId}|ARRAY:DATA = VAR:{$dataId}.FILTER(VAR:{$matchId})");
+                $this->unsetVar($matchId);
                 $header['s.path_id'] = $newPathId;
                 break;
 
@@ -409,13 +399,23 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0.2":
-                $symbols[2]['i.text_list'] = [$symbols[0]['s.text']];
+                $text = $symbols[0]['s.text'];
+                $textId = $this->createVar();
+                var_dump("VAR:{$textId}|STRING = '{$text}'");
+                $textListId = $this->createVar();
+                var_dump("VAR:{$textListId}|ARRAY:STRING = [VAR:{$textId}]");
+                $symbols[2]['i.text_list_id'] = $textListId;
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0.4":
-                $textList = $header['i.text_list'];
-                $textList[] = $symbols[2]['s.text'];
-                $symbols[4]['i.text_list'] = $textList;
+                $textListId = $header['i.text_list_id'];
+                $text = $symbols[2]['s.text'];
+                $textId = $this->createVar();
+                var_dump("VAR:{$textId}|STRING = '{$text}'");
+                $newTextListId = $this->createVar();
+                var_dump("VAR:{$newTextListId}|ARRAY:STRING = APPEND(VAR:{$textListId}, VAR:{$textId})");
+                $this->unsetVar($textListId);
+                $symbols[4]['i.text_list_id'] = $newTextListId;
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".0.1":
