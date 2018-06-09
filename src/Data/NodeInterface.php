@@ -2,6 +2,6 @@
 
 namespace Remorhaz\JSON\Data;
 
-interface DataInterface
+interface NodeInterface
 {
 }
