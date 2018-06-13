@@ -11,6 +11,10 @@ interface VariableInterface
 
     public const TYPE_BOOL = 3;
 
+    public const TYPE_NODE = 4;
+
+    public const TYPE_NAN = 5;
+
     public function getId(): int;
 
     public function getType(): int;

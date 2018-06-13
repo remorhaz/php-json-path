@@ -23,5 +23,7 @@ interface AllocatorInterface
 
     public function allocateNodeList(NodeInterface ...$nodeList): VariableInterface;
 
+    public function allocateNull(): VariableInterface;
+
     public function free(VariableInterface $var);
 }
