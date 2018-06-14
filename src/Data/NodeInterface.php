@@ -1,6 +1,6 @@
 <?php
 
-namespace Remorhaz\JSON\Data;
+namespace Remorhaz\JSON\Path\Data;
 
 interface NodeInterface
 {
@@ -20,15 +20,21 @@ interface NodeInterface
     public function getScalarValue();
 
     /**
-     * @return int[]|string[]
+     * @return string[]
      */
-    public function getStructureKeys();
+    public function getPropertyList(): array;
+
+    public function getIndexList(): array;
+
+    public function getChildByProperty(string $property): NodeInterface;
+
+    public function getChildByIndex(int $index): NodeInterface;
 
     public function hasParent(): bool;
 
     public function getParent(): NodeInterface;
 
-    public function getProperty(): string;
+    public function getOwnProperty(): string;
 
-    public function getIndex(): int;
+    public function getOwnIndex(): int;
 }

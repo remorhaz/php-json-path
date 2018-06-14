@@ -21,8 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Remorhaz\\JSON\\Path\\": ["src/", "generated/"],
-      "Remorhaz\\JSON\\Data\\": ["src/Data/"]
+      "Remorhaz\\JSON\\Path\\": ["src/", "generated/"]
     }
   },
   "autoload-dev": {

@@ -2,7 +2,7 @@
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Data\NodeInterface;
+use Remorhaz\JSON\Path\Data\NodeInterface;
 
 interface AllocatorInterface
 {
