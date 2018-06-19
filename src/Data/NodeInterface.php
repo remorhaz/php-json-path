@@ -30,7 +30,7 @@ interface NodeInterface
 
     public function getChildByIndex(int $index): NodeInterface;
 
-    public function hasParent(): bool;
+    public function isRoot(): bool;
 
     public function getParent(): NodeInterface;
 
