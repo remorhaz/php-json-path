@@ -3,6 +3,8 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Path\Data\NodeInterface;
+use Remorhaz\JSON\Path\QueryBuilder;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\TranslationScheme;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
@@ -28,10 +30,18 @@ class ParserTest extends TestCase
         $tokenFactory = new TokenFactory($grammar);
         $tokenMatcher = new TokenMatcher;
         $reader = new TokenReader($buffer, $tokenMatcher, $tokenFactory);
-        $scheme = new TranslationScheme;
+        $queryBuilder = new QueryBuilder;
+        $scheme = new TranslationScheme($queryBuilder);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
         $parser->loadLookupTable(__DIR__ . '/../generated/LookupTable.php');
         $parser->run();
+        $query = $queryBuilder->build();
+        $query->execute($this->createDocumentRoot());
+    }
+
+    private function createDocumentRoot(): NodeInterface
+    {
+        
     }
 }

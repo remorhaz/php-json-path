@@ -16,6 +16,13 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $codeLineList = [];
 
+    private $queryBuilder;
+
+    public function __construct(QueryBuilder $queryBuilder)
+    {
+        $this->queryBuilder = $queryBuilder;
+    }
+
     /**
      * @param Symbol $symbol
      * @param Token $token
