@@ -11,11 +11,13 @@ interface VariableInterface
 
     public const TYPE_BOOL = 3;
 
-    public const TYPE_NODE = 4;
+    public const TYPE_NULL = 4;
 
-    public const TYPE_NAN = 5;
+    public const TYPE_NODE = 5;
 
-    public function getId(): int;
+    public const TYPE_NAN = 6;
+
+    public const TYPE_MIXED = 7;
 
     public function getType(): int;
 
@@ -24,7 +26,7 @@ interface VariableInterface
     public function isList(): bool;
 
     /**
-     * @return self[]
+     * @return VariableInterface[]
      */
     public function getList(): array;
 

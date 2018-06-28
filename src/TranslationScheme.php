@@ -14,8 +14,6 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $unsetVarList = [];
 
-    private $codeLineList = [];
-
     private $queryBuilder;
 
     public function __construct(QueryBuilder $queryBuilder)
@@ -54,7 +52,7 @@ class TranslationScheme implements TranslationSchemeInterface
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0":
                 $pathId = $symbols[0]['s.path_id'];
-                $this->addCodeLine("return \$var{$pathId};");
+                $this->queryBuilder->addCodeLine("return \$var{$pathId};");
                 break;
 
             case SymbolType::NT_PATH . ".0":
@@ -64,11 +62,11 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOT_FILTER_NEXT . ".0":
                 $pathId = $header['i.path_id'];
                 $function = var_export($header['i.filter_name'], true);
-                $this->addCodeLine("// data aggregate function");
+                $this->queryBuilder->addCodeLine("// data aggregate function");
                 $functionVarId = $this->createVar();
-                $this->addCodeLine("\$var{$functionVarId} = \$allocator->allocateString({$function});");
+                $this->queryBuilder->addCodeLine("\$var{$functionVarId} = \$allocator->allocateString({$function});");
                 $varId = $this->createVar();
-                $this->addCodeLine("\$var{$varId} = \$nodeSelector->aggregate(\$var{$pathId}, \$var{$functionVarId});");
+                $this->queryBuilder->addCodeLine("\$var{$varId} = \$nodeSelector->aggregate(\$var{$pathId}, \$var{$functionVarId});");
                 $this->unsetVar($pathId, $functionVarId);
                 $header['s.path_id'] = $varId;
                 break;
@@ -112,7 +110,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2":
                 $int = $symbols[0]['s.int'];
                 $varId = $this->createVar();
-                $this->addCodeLine("\$var{$varId} = \$allocator->allocateInt({$int});");
+                $this->queryBuilder->addCodeLine("\$var{$varId} = \$allocator->allocateInt({$int});");
                 $header['s.var_id'] = $varId;
                 break;
 
@@ -174,14 +172,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 $filterId = $symbols[0]['i.filter_id'];
                 $textListId = $symbols[0]['s.text_list_id'];
                 $matchId = $this->createVar();
-                $this->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$filterId}, \$var{$textListId});");
+                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$filterId}, \$var{$textListId});");
                 $this->unsetVar($textListId);
                 $this->unsetVar($filterId);
                 $dataId = $this->createVar();
-                $this->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
                 $this->unsetVar($pathId);
                 $newPathId = $this->createVar();
-                $this->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
+                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
                 $this->unsetVar($matchId);
                 $header['s.path_id'] = $newPathId;
                 break;
@@ -189,17 +187,17 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_BRACKET_FILTER . ".4":
                 $pathId = $header['i.path_id'];
                 $varId = $symbols[2]['s.var_id'];
-                $this->addCodeLine("// filter by key");
+                $this->queryBuilder->addCodeLine("// filter by key");
                 $keysId = $this->createVar();
-                $this->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
                 $matchId = $this->createVar();
-                $this->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$keysId}, \$var{$varId});");
+                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$keysId}, \$var{$varId});");
                 $this->unsetVar($varId, $keysId);
                 $dataId = $this->createVar();
-                $this->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
                 $this->unsetVar($pathId);
                 $newPathId = $this->createVar();
-                $this->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
+                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
                 $this->unsetVar($matchId, $dataId);
                 $header['s.path_id'] = $newPathId;
                 break;
@@ -207,18 +205,18 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_BRACKET_FILTER . ".5":
                 $pathId = $header['i.path_id'];
                 $varId = $symbols[3]['s.var_id'];
-                $this->addCodeLine("// filter by bool");
+                $this->queryBuilder->addCodeLine("// filter by bool");
                 $newPathId = $this->createVar();
-                $this->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$pathId}, \$var{$varId});");
+                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$pathId}, \$var{$varId});");
                 $this->unsetVar($pathId, $varId);
                 $header['s.path_id'] = $newPathId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0":
                 $varId = $symbols[1]['s.var_id'];
-                $this->addCodeLine("// NOT expression");
+                $this->queryBuilder->addCodeLine("// NOT expression");
                 $newVarId = $this->createVar();
-                $this->addCodeLine("\$var{$newVarId} = \$calculator->not(\$var{$varId});");
+                $this->queryBuilder->addCodeLine("\$var{$newVarId} = \$calculator->not(\$var{$varId});");
                 $this->unsetVar($varId);
                 $header['s.var_id'] = $newVarId;
                 break;
@@ -230,9 +228,9 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0":
                 $leftVarId = $header['i.var_id'];
                 $rightVarId = $symbols[2]['s.var_id'];
-                $this->addCodeLine("// EQ expression");
+                $this->queryBuilder->addCodeLine("// EQ expression");
                 $varId = $this->createVar();
-                $this->addCodeLine("\$var{$varId} = \$calculator->eq(\$var{$leftVarId}, \$var{$rightVarId});");
+                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->eq(\$var{$leftVarId}, \$var{$rightVarId});");
                 $this->unsetVar($leftVarId, $rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -248,9 +246,9 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0":
                 $leftVarId = $header['i.var_id'];
                 $rightVarId = $symbols[2]['s.var_id'];
-                $this->addCodeLine("// AND expression");
+                $this->queryBuilder->addCodeLine("// AND expression");
                 $varId = $this->createVar();
-                $this->addCodeLine("\$var{$varId} = \$calculator->and(\$var{$leftVarId}, \$var{$rightVarId})");
+                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->and(\$var{$leftVarId}, \$var{$rightVarId})");
                 $this->unsetVar($leftVarId, $rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -266,9 +264,9 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0":
                 $leftVarId = $header['i.var_id'];
                 $rightVarId = $symbols[2]['s.var_id'];
-                $this->addCodeLine("// OR expression");
+                $this->queryBuilder->addCodeLine("// OR expression");
                 $varId = $this->createVar();
-                $this->addCodeLine("\$var{$varId} = \$calculator->or(\$var{$leftVarId}, \$var{$rightVarId});");
+                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->or(\$var{$leftVarId}, \$var{$rightVarId});");
                 $this->unsetVar($leftVarId, $rightVarId);
                 $header['s.var_id'] = $varId;
                 break;
@@ -300,9 +298,9 @@ class TranslationScheme implements TranslationSchemeInterface
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0.0":
                 $symbols[0]['i.is_inline_path'] = false;
-                $this->addCodeLine("\$allocator = \$runtime->getAllocator();");
-                $this->addCodeLine("\$calculator = \$runtime->getCalculator();");
-                $this->addCodeLine("\$nodeSelector = \$runtime->getNodeSelector();");
+                $this->queryBuilder->addCodeLine("\$allocator = \$runtime->getAllocator();");
+                $this->queryBuilder->addCodeLine("\$calculator = \$runtime->getCalculator();");
+                $this->queryBuilder->addCodeLine("\$nodeSelector = \$runtime->getNodeSelector();");
                 break;
 
             case SymbolType::NT_PATH . ".0.1":
@@ -312,11 +310,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 $pathId = $this->createVar();
                 if ($isInlinePath) {
                     $parentPathId = $header['i.path_id'];
-                    $this->addCodeLine("// init inline path");
-                    $this->addCodeLine("\$var{$pathId} = \$nodeSelector->forkNodeList(\$var{$parentPathId});");
+                    $this->queryBuilder->addCodeLine("// init inline path");
+                    $this->queryBuilder->addCodeLine("\$var{$pathId} = \$nodeSelector->forkNodeList(\$var{$parentPathId});");
                 } else {
-                    $this->addCodeLine("// init root path");
-                    $this->addCodeLine("\$var{$pathId} = \$allocator->allocateNodeList(\$runtime->getDocumentRoot());");
+                    $this->queryBuilder->addCodeLine("// init root path");
+                    $this->queryBuilder->addCodeLine("\$var{$pathId} = \$allocator->allocateNodeList(\$runtime->getDocumentRoot());");
                 }
                 $symbols[1]['i.path_id'] = $pathId;
                 $symbols[1]['i.path_type'] = $pathType;
@@ -325,9 +323,9 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_BRACKET_FILTER . ".1.0":
                 $pathId = $header['i.path_id'];
-                $this->addCodeLine("// [string list]");
+                $this->queryBuilder->addCodeLine("// [string list]");
                 $filterId = $this->createVar();
-                $this->addCodeLine("\$var{$filterId} = \$nodeSelector->getKeyList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$filterId} = \$nodeSelector->getKeyList(\$var{$pathId});");
                 $symbols[0]['i.filter_id'] = $filterId;
                 break;
 
@@ -406,7 +404,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_STRING_LIST . ".0.2":
                 $text = var_export($symbols[0]['s.text'], true);
                 $textListId = $this->createVar();
-                $this->addCodeLine("\$var{$textListId} = \$allocator->allocateStringList({$text});");
+                $this->queryBuilder->addCodeLine("\$var{$textListId} = \$allocator->allocateStringList({$text});");
                 $symbols[2]['i.text_list_id'] = $textListId;
                 break;
 
@@ -414,8 +412,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 $textListId = $header['i.text_list_id'];
                 $text = var_export($symbols[2]['s.text'], true);
                 $textId = $this->createVar();
-                $this->addCodeLine("\$var{$textId} = \$allocator->allocateString({$text});");
-                $this->addCodeLine("\$var{$textListId}->append(\$var{$textId});");
+                $this->queryBuilder->addCodeLine("\$var{$textId} = \$allocator->allocateString({$text});");
+                $this->queryBuilder->addCodeLine("\$var{$textListId}->append(\$var{$textId});");
                 $symbols[4]['i.text_list_id'] = $textListId;
                 break;
 
@@ -448,18 +446,18 @@ class TranslationScheme implements TranslationSchemeInterface
                 $filterName = var_export($header['i.filter_name'], true);
                 $pathId = $header['i.path_id'];
                 $stringId = $this->createVar();
-                $this->addCodeLine("// .name");
-                $this->addCodeLine("\$var{$stringId} = \$allocator->allocateString({$filterName});");
+                $this->queryBuilder->addCodeLine("// .name");
+                $this->queryBuilder->addCodeLine("\$var{$stringId} = \$allocator->allocateString({$filterName});");
                 $keysId = $this->createVar();
-                $this->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
                 $matchId = $this->createVar();
-                $this->addCodeLine("\$var{$matchId} = \$calculator->eq(\$var{$stringId}, \$var{$keysId});");
+                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->eq(\$var{$stringId}, \$var{$keysId});");
                 $this->unsetVar($stringId, $keysId);
                 $dataId = $this->createVar();
-                $this->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
+                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
                 $this->unsetVar($pathId);
                 $newPathId = $this->createVar();
-                $this->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
+                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
                 $this->unsetVar($dataId, $matchId);
                 $symbols[0]['i.path_id'] = $newPathId;
                 break;
@@ -522,11 +520,5 @@ class TranslationScheme implements TranslationSchemeInterface
             $this->unsetVarList[] = $id;
             sort($this->unsetVarList);
         }
-    }
-
-    private function addCodeLine(string $codeLine)
-    {
-        $this->codeLineList[] = $codeLine;
-        var_dump($codeLine);
     }
 }

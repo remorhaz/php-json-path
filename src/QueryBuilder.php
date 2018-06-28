@@ -4,6 +4,8 @@ namespace Remorhaz\JSON\Path;
 
 use Closure;
 use Remorhaz\JSON\Path\Data\NodeInterface;
+use Remorhaz\JSON\Path\Runtime\Runtime;
+use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 
 class QueryBuilder
 {
@@ -40,6 +42,7 @@ class QueryBuilder
     private function createExecuteHandler(): Closure
     {
         return function (NodeInterface $documentRoot) {
+            $runtime = $this->createRuntime($documentRoot);
             eval($this->buildCode());
         };
     }
@@ -47,5 +50,10 @@ class QueryBuilder
     private function buildCode(): string
     {
         return implode(PHP_EOL, $this->codeLineList);
+    }
+
+    private function createRuntime(NodeInterface $documentRoot): RuntimeInterface
+    {
+        return new Runtime($documentRoot);
     }
 }

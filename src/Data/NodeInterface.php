@@ -32,9 +32,5 @@ interface NodeInterface
 
     public function isRoot(): bool;
 
-    public function getParent(): NodeInterface;
-
-    public function getOwnProperty(): string;
-
-    public function getOwnIndex(): int;
+    public function getParent(): NodeParentInterface;
 }

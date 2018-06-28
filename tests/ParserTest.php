@@ -3,6 +3,7 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Path\Data\Node;
 use Remorhaz\JSON\Path\Data\NodeInterface;
 use Remorhaz\JSON\Path\QueryBuilder;
 use Remorhaz\JSON\Path\TokenMatcher;
@@ -42,6 +43,7 @@ class ParserTest extends TestCase
 
     private function createDocumentRoot(): NodeInterface
     {
-        
+        $data = (object) ['a' => (object) ['b' => 1, 'c' => 2]];
+        return new Node($data);
     }
 }
