@@ -2,6 +2,12 @@
 
 namespace Remorhaz\JSON\Path;
 
+use function array_pop;
+use Remorhaz\JSON\Path\Iterator\Fetcher;
+use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
+use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
+use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
 use Remorhaz\UniLex\Parser\Production;
@@ -10,15 +16,24 @@ use Remorhaz\UniLex\Parser\Symbol;
 class TranslationScheme implements TranslationSchemeInterface
 {
 
-    private $varList = [];
+    private $fetcher;
 
-    private $unsetVarList = [];
+    private $rootValue;
 
-    private $queryBuilder;
+    private $outputBuffer = [];
 
-    public function __construct(QueryBuilder $queryBuilder)
+    public function __construct(ValueInterface $rootValue, Fetcher $fetcher)
     {
-        $this->queryBuilder = $queryBuilder;
+        $this->rootValue = $rootValue;
+        $this->fetcher = $fetcher;
+    }
+
+    /**
+     * @return ValueInterface[]
+     */
+    public function getOutput(): array
+    {
+        return $this->popOutput();
     }
 
     /**
@@ -51,67 +66,42 @@ class TranslationScheme implements TranslationSchemeInterface
         $hash = "{$production->getHeader()->getSymbolId()}.{$production->getIndex()}";
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0":
-                $pathId = $symbols[0]['s.path_id'];
-                $this->queryBuilder->addCodeLine("return \$var{$pathId};");
                 break;
 
             case SymbolType::NT_PATH . ".0":
-                $header['s.path_id'] = $symbols[1]['s.path_id'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".0":
-                $pathId = $header['i.path_id'];
-                $function = var_export($header['i.filter_name'], true);
-                $this->queryBuilder->addCodeLine("// data aggregate function");
-                $functionVarId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$functionVarId} = \$allocator->allocateString({$function});");
-                $varId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$varId} = \$nodeSelector->aggregate(\$var{$pathId}, \$var{$functionVarId});");
-                $this->unsetVar($pathId, $functionVarId);
-                $header['s.path_id'] = $varId;
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1":
-                $header['s.path_id'] = $symbols[0]['s.path_id'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".0":
-                $header['s.path_id'] = $symbols[1]['s.path_id'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".1":
-                $header['s.path_id'] = $symbols[1]['s.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".0":
-                $header['s.path_id'] = $symbols[1]['s.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".1":
-                $header['s.path_id'] = $symbols[2]['s.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2":
-                $header['s.path_id'] = $symbols[4]['s.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".3":
-                $header['s.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0":
-                $header['s.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1":
-                $header['s.var_id'] = $symbols[0]['s.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2":
-                $int = $symbols[0]['s.int'];
-                $varId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$varId} = \$allocator->allocateInt({$int});");
-                $header['s.var_id'] = $varId;
                 break;
 
             case SymbolType::NT_INT . ".0":
@@ -122,16 +112,31 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.int'] = $symbols[0]['s.int'];
                 break;
 
+            case SymbolType::NT_INT_NEXT . ".0":
+                // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
+                $header['s.int_list'] = $symbols[1]['s.int_list'];
+                break;
+
+            case SymbolType::NT_INT_NEXT_LIST . ".0":
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
+                $header['s.int_list'] = $symbols[4]['s.int_list'];
+                break;
+
+            case SymbolType::NT_INT_NEXT_LIST . ".1":
+                // [ ]
+                $header['s.int_list'] = $header['i.int_list'];
+                break;
+
             case SymbolType::NT_STRING_NEXT . ".0":
-                $header['s.text_list_id'] = $symbols[4]['s.text_list_id'];
+                $header['s.text_list'] = $symbols[4]['s.text_list'];
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".1":
-                $header['s.text_list_id'] = $header['i.text_list_id'];
+                $header['s.text_list'] = $header['i.text_list'];
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0":
-                $header['s.text_list_id'] = $symbols[2]['s.text_list_id'];
+                $header['s.text_list'] = $symbols[2]['s.text_list'];
                 break;
 
             case SymbolType::NT_STRING . ".0":
@@ -167,120 +172,75 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.text'] = $symbols[0]['s.text'];
                 break;
 
+            case SymbolType::NT_BRACKET_FILTER . ".0":
+                // T_STAR, NT_WS_OPT
+                $this->pushOutput(
+                    ...$this->fetcher->fetchChildren(
+                        new AnyChildMatcher,
+                        ...$this->popOutput()
+                    )
+                );
+                break;
             case SymbolType::NT_BRACKET_FILTER . ".1":
-                $pathId = $header['i.path_id'];
-                $filterId = $symbols[0]['i.filter_id'];
-                $textListId = $symbols[0]['s.text_list_id'];
-                $matchId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$filterId}, \$var{$textListId});");
-                $this->unsetVar($textListId);
-                $this->unsetVar($filterId);
-                $dataId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
-                $this->unsetVar($pathId);
-                $newPathId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
-                $this->unsetVar($matchId);
-                $header['s.path_id'] = $newPathId;
+                // NT_STRING_LIST
+                $this->pushOutput(
+                    ...$this->fetcher->fetchChildren(
+                        new StrictPropertyMatcher(...$symbols[0]['s.text_list']),
+                        ...$this->popOutput()
+                    )
+                );
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . ".2":
+                // [ 0:NT_INT, 1:NT_INT_NEXT ]
+                $this->pushOutput(
+                    ...$this->fetcher->fetchChildren(
+                        new StrictElementMatcher(...$symbols[1]['s.int_list']),
+                        ...$this->popOutput()
+                    )
+                );
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4":
-                $pathId = $header['i.path_id'];
-                $varId = $symbols[2]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// filter by key");
-                $keysId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
-                $matchId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->in(\$var{$keysId}, \$var{$varId});");
-                $this->unsetVar($varId, $keysId);
-                $dataId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
-                $this->unsetVar($pathId);
-                $newPathId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
-                $this->unsetVar($matchId, $dataId);
-                $header['s.path_id'] = $newPathId;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".5":
-                $pathId = $header['i.path_id'];
-                $varId = $symbols[3]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// filter by bool");
-                $newPathId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$pathId}, \$var{$varId});");
-                $this->unsetVar($pathId, $varId);
-                $header['s.path_id'] = $newPathId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0":
-                $varId = $symbols[1]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// NOT expression");
-                $newVarId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$newVarId} = \$calculator->not(\$var{$varId});");
-                $this->unsetVar($varId);
-                $header['s.var_id'] = $newVarId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".1":
-                $header['s.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0":
-                $leftVarId = $header['i.var_id'];
-                $rightVarId = $symbols[2]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// EQ expression");
-                $varId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->eq(\$var{$leftVarId}, \$var{$rightVarId});");
-                $this->unsetVar($leftVarId, $rightVarId);
-                $header['s.var_id'] = $varId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":
-                $header['s.var_id'] = $header['i.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND . ".0":
-                $header['s.var_id'] = $symbols[1]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0":
-                $leftVarId = $header['i.var_id'];
-                $rightVarId = $symbols[2]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// AND expression");
-                $varId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->and(\$var{$leftVarId}, \$var{$rightVarId})");
-                $this->unsetVar($leftVarId, $rightVarId);
-                $header['s.var_id'] = $varId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".1":
-                $header['s.var_id'] = $header['i.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0":
-                $header['s.var_id'] = $symbols[1]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0":
-                $leftVarId = $header['i.var_id'];
-                $rightVarId = $symbols[2]['s.var_id'];
-                $this->queryBuilder->addCodeLine("// OR expression");
-                $varId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$varId} = \$calculator->or(\$var{$leftVarId}, \$var{$rightVarId});");
-                $this->unsetVar($leftVarId, $rightVarId);
-                $header['s.var_id'] = $varId;
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".1":
-                $header['s.var_id'] = $header['i.var_id'];
                 break;
 
             case SymbolType::NT_EXPR . ".0":
-                $header['s.var_id'] = $symbols[1]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_GROUP . ".0":
-                $header['s.var_id'] = $symbols[2]['s.var_id'];
                 break;
         }
     }
@@ -298,92 +258,64 @@ class TranslationScheme implements TranslationSchemeInterface
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0.0":
                 $symbols[0]['i.is_inline_path'] = false;
-                $this->queryBuilder->addCodeLine("\$allocator = \$runtime->getAllocator();");
-                $this->queryBuilder->addCodeLine("\$calculator = \$runtime->getCalculator();");
-                $this->queryBuilder->addCodeLine("\$nodeSelector = \$runtime->getNodeSelector();");
                 break;
 
             case SymbolType::NT_PATH . ".0.1":
                 $rootName = $symbols[0]['s.text'];
                 $isInlinePath = $header['i.is_inline_path'];
-                $pathType = $this->getPathRootType($rootName, $isInlinePath);
-                $pathId = $this->createVar();
-                if ($isInlinePath) {
-                    $parentPathId = $header['i.path_id'];
-                    $this->queryBuilder->addCodeLine("// init inline path");
-                    $this->queryBuilder->addCodeLine("\$var{$pathId} = \$nodeSelector->forkNodeList(\$var{$parentPathId});");
-                } else {
-                    $this->queryBuilder->addCodeLine("// init root path");
-                    $this->queryBuilder->addCodeLine("\$var{$pathId} = \$allocator->allocateNodeList(\$runtime->getDocumentRoot());");
+                if ('$' == $rootName) {
+                    $this->pushOutput($this->rootValue);
                 }
-                $symbols[1]['i.path_id'] = $pathId;
-                $symbols[1]['i.path_type'] = $pathType;
                 $symbols[1]['i.is_inline_path'] = $isInlinePath;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".1.0":
-                $pathId = $header['i.path_id'];
-                $this->queryBuilder->addCodeLine("// [string list]");
-                $filterId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$filterId} = \$nodeSelector->getKeyList(\$var{$pathId});");
-                $symbols[0]['i.filter_id'] = $filterId;
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . ".2.1":
+                // 0:NT_INT, 1:NT_INT_NEXT
+                $symbols[1]['i.int'] = $symbols[0]['s.int'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".5.3":
-                $symbols[3]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR . ".0.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
-                $symbols[1]['i.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
-                $symbols[1]['i.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND . ".0.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
-                $symbols[1]['i.var_id'] = $symbols[0]['s.var_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".1.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0.0":
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2.0":
             case SymbolType::NT_EXPR_ARG_SCALAR . ".3.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0.2":
@@ -394,76 +326,70 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".5.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".6.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".7.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_EXPR_GROUP . ".0.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0.2":
-                $text = var_export($symbols[0]['s.text'], true);
-                $textListId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$textListId} = \$allocator->allocateStringList({$text});");
-                $symbols[2]['i.text_list_id'] = $textListId;
+                // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
+                $symbols[2]['i.text_list'] = [$symbols[0]['s.text']];
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0.4":
-                $textListId = $header['i.text_list_id'];
-                $text = var_export($symbols[2]['s.text'], true);
-                $textId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$textId} = \$allocator->allocateString({$text});");
-                $this->queryBuilder->addCodeLine("\$var{$textListId}->append(\$var{$textId});");
-                $symbols[4]['i.text_list_id'] = $textListId;
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
+                $textList = $header['i.text_list'];
+                $textList[] = $symbols[2]['s.text'];
+                $symbols[4]['i.text_list'] = $textList;
+                break;
+
+            case SymbolType::NT_INT_NEXT . ".0.1":
+                // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
+                $symbols[1]['i.int_list'] = [$header['i.int']];
+                break;
+
+            case SymbolType::NT_INT_NEXT_LIST . ".0.4":
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
+                $intList = $header['i.int_list'];
+                $intList[] = $symbols[2]['s.int'];
+                $symbols[4]['i.int_list'] = $intList;
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".1.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.2":
-                $symbols[2]['i.path_id'] = $header['i.path_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.4":
-                $symbols[4]['i.path_id'] = $symbols[2]['s.path_id'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".0.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
                 $symbols[1]['i.filter_name'] = $symbols[0]['s.text'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".1.1":
-                $symbols[1]['i.path_id'] = $header['i.path_id'];
+                $this->pushOutput(
+                    ...$this->fetcher->fetchChildren(
+                        new AnyChildMatcher,
+                        ...$this->popOutput()
+                    )
+                );
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
-                $filterName = var_export($header['i.filter_name'], true);
-                $pathId = $header['i.path_id'];
-                $stringId = $this->createVar();
-                $this->queryBuilder->addCodeLine("// .name");
-                $this->queryBuilder->addCodeLine("\$var{$stringId} = \$allocator->allocateString({$filterName});");
-                $keysId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$keysId} = \$nodeSelector->getKeyList(\$var{$pathId});");
-                $matchId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$matchId} = \$calculator->eq(\$var{$stringId}, \$var{$keysId});");
-                $this->unsetVar($stringId, $keysId);
-                $dataId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$dataId} = \$nodeSelector->getChildList(\$var{$pathId});");
-                $this->unsetVar($pathId);
-                $newPathId = $this->createVar();
-                $this->queryBuilder->addCodeLine("\$var{$newPathId} = \$nodeSelector->filterNodeList(\$var{$dataId}, \$var{$matchId});");
-                $this->unsetVar($dataId, $matchId);
-                $symbols[0]['i.path_id'] = $newPathId;
+                $this->pushOutput(
+                    ...$this->fetcher->fetchChildren(
+                        new StrictPropertyMatcher($header['i.filter_name']),
+                        ...$this->popOutput()
+                    )
+                );
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1.0":
-                $symbols[0]['i.path_id'] = $header['i.path_id'];
                 $symbols[0]['i.is_inline_path'] = true;
                 break;
 
@@ -482,43 +408,21 @@ class TranslationScheme implements TranslationSchemeInterface
         }
     }
 
+    private function pushOutput(ValueInterface ...$values): void
+    {
+        $this->outputBuffer[] = $values;
+    }
+
     /**
-     * @param string $name
-     * @param bool $isInlinePath
-     * @return string
-     * @throws Exception
+     * @return ValueInterface[]
      */
-    private function getPathRootType(string $name, bool $isInlinePath): string
+    private function popOutput(): array
     {
-        switch ($name) {
-            case '$':
-                return 'absolute';
-
-            case '@':
-                if ($isInlinePath) {
-                    return 'relative';
-                }
-                throw new Exception("Relative paths are allowed only in inline filters");
+        $output = array_pop($this->outputBuffer);
+        if (isset($output)) {
+            return $output;
         }
-        throw new Exception("Invalid path root: {$name}");
-    }
 
-    private function createVar(): int
-    {
-        if (!empty($this->unsetVarList)) {
-            return array_shift($this->unsetVarList);
-        }
-        $id = count($this->varList);
-        $this->varList[] = $id;
-        return $id;
-    }
-
-    private function unsetVar(int ...$idList)
-    {
-        foreach ($idList as $id) {
-            //$this->addCodeLine("\$allocator->free(\$var{$id});");
-            $this->unsetVarList[] = $id;
-            sort($this->unsetVarList);
-        }
+        throw new Exception\EmptyOutputBufferException();
     }
 }
