@@ -16,6 +16,7 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
+use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
 
 final class Fetcher
 {
@@ -136,6 +137,11 @@ final class Fetcher
             }
             throw new Exception\InvalidDataEventException($event);
         } while (true);
+    }
+
+    public function filterValues(ValueListFilterInterface $matcher, ValueInterface ...$values): array
+    {
+        return $matcher->filterValues(...$values);
     }
 
     private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher, PathInterface $path): array

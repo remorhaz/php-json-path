@@ -133,6 +133,11 @@ class ParserTest extends TestCase
                 '$[0, 2]',
                 ['true', '1'],
             ],
+            'Simple filter with integer that evaluates as true' => [
+                [1, 2, 3],
+                '$[*][?(1)]',
+                ['1', '2', '3'],
+            ],
         ];
     }
 }
