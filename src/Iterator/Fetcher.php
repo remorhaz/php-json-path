@@ -64,16 +64,16 @@ final class Fetcher
     {
         $event = $this->fetchEvent($iterator, $path);
         if ($event instanceof ScalarEventInterface) {
-            return new Value(new ArrayIterator([$event]), $path);
+            return $event;
         }
         if ($event instanceof BeforeArrayEventInterface) {
             $this->skipArrayValue($iterator, $event->getPath());
-            return new Value($event->getIterator(), $event->getPath());
+            return $event;
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
             $this->skipObjectValue($iterator, $event->getPath());
-            return new Value($event->getIterator(), $event->getPath());
+            return $event;
         }
 
         throw new Exception\InvalidDataEventException($event);
@@ -82,38 +82,49 @@ final class Fetcher
 
     /**
      * @param ChildMatcherInterface $matcher
-     * @param ValueInterface ...$values
-     * @return ValueInterface[]
+     * @param ValueListInterface $source
+     * @return ValueListInterface
      */
-    public function fetchChildren(Matcher\ChildMatcherInterface $matcher, ValueInterface ...$values): array
-    {
-        $result = [];
-
-        foreach ($values as $value) {
-            $result = array_merge($result, $this->fetchValueChildren($matcher, $value));
+    public function fetchChildren(
+        Matcher\ChildMatcherInterface $matcher,
+        ValueListInterface $source
+    ): ValueListInterface {
+        $targetValues = [];
+        $targetMap = [];
+        $sourceMap = $source->getOuterMap();
+        $targetIndex = 0;
+        foreach ($source->getValues() as $sourceIndex => $sourceValue) {
+            $children = $this->fetchValueChildren($matcher, $sourceValue);
+            foreach ($children as $child) {
+                $targetValues[$targetIndex] = $child;
+                $targetMap[$targetIndex++] = $sourceMap[$sourceIndex];
+            }
         }
 
-        return $result;
+        return new ValueList($targetMap, ...$targetValues);
     }
 
     /**
-     * @param ValueInterface $value
      * @param ChildMatcherInterface $matcher
+     * @param ValueInterface $value
      * @return ValueInterface[]
      */
-    private function fetchValueChildren(Matcher\ChildMatcherInterface $matcher, ValueInterface $value): array
-    {
-        $event = $this->fetchEvent($value->getIterator(), $value->getPath());
+    private function fetchValueChildren(
+        Matcher\ChildMatcherInterface $matcher,
+        ValueInterface $value
+    ): array {
+        $iterator = $value->createIterator();
+        $event = $this->fetchEvent($iterator, $value->getPath());
         if ($event instanceof ScalarEventInterface) {
             return [];
         }
 
         if ($event instanceof BeforeArrayEventInterface) {
-            return $this->fetchElements($value->getIterator(), $matcher, $event->getPath());
+            return $this->fetchElements($iterator, $matcher, $event->getPath());
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            return $this->fetchProperties($value->getIterator(), $matcher, $event->getPath());
+            return $this->fetchProperties($iterator, $matcher, $event->getPath());
         }
 
         throw new Exception\InvalidDataEventException($event);
@@ -139,9 +150,9 @@ final class Fetcher
         } while (true);
     }
 
-    public function filterValues(ValueListFilterInterface $matcher, ValueInterface ...$values): array
+    public function filterValues(ValueListFilterInterface $matcher, ValueListInterface $values): ValueListInterface
     {
-        return $matcher->filterValues(...$values);
+        return $matcher->filterValues($values);
     }
 
     private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher, PathInterface $path): array

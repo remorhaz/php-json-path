@@ -4,11 +4,13 @@ namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\Value;
+use Remorhaz\JSON\Path\Iterator\ValueList;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\TranslationScheme;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
@@ -26,22 +28,22 @@ class ParserTest extends TestCase
         $json = (object) ['x'=> 1, 'a' => (object) ['b' => 'c']];
         // $[a, x].b
         $path = Path::createEmpty();
-        $iterator = EventIterator::create($json, $path);
-        $values = [new Value($iterator, $path)];
+        $iteratorFactory = new EventIteratorFactory($json, $path);
+        $values = ValueList::create(new Value($iteratorFactory));
 
         $fetcher = new Fetcher;
         $values = $fetcher->fetchChildren(
             new StrictPropertyMatcher('a', 'x'),
-            ...$values
+            $values
         );
         $values = $fetcher->fetchChildren(
             new StrictPropertyMatcher('b'),
-            ...$values
+            $values
         );
 
         $actualValue = [];
-        foreach ($values as $value) {
-            $actualValue[] = (new EventExporter($fetcher))->export($value->getIterator());
+        foreach ($values->getValues() as $value) {
+            $actualValue[] = (new EventExporter($fetcher))->export($value->createIterator());
         }
 
         //self::assertEquals([(object) ['b' => 'c']], $actualValue);
@@ -63,7 +65,7 @@ class ParserTest extends TestCase
         $reader = new TokenReader($buffer, $tokenMatcher, $tokenFactory);
 
         $path = Path::createEmpty();
-        $rootValue = new Value(EventIterator::create($json, $path), $path);
+        $rootValue = new EventIteratorFactory($json, $path);
         $fetcher = new Fetcher;
         $scheme = new TranslationScheme($rootValue, $fetcher);
         $listener = new TranslationSchemeApplier($scheme);
@@ -74,7 +76,7 @@ class ParserTest extends TestCase
         $output = $scheme->getOutput();
         $actualValue = [];
         foreach ($output as $value) {
-            $actualValue[] = \json_encode((new EventExporter($fetcher))->export($value->getIterator()));
+            $actualValue[] = \json_encode((new EventExporter($fetcher))->export($value->createIterator()));
         }
 
         self::assertEquals($expectedValue, $actualValue);
@@ -137,6 +139,25 @@ class ParserTest extends TestCase
                 [1, 2, 3],
                 '$[*][?(1)]',
                 ['1', '2', '3'],
+            ],
+            'Simple filter with existing path' => [
+                (object) ['a' => (object) ['b' => 'c']],
+                '$.a[?(@.b)]',
+                ['{"b":"c"}'],
+            ],
+            'Simple filter with non-existing path' => [
+                (object) ['a' => (object) ['c' => 'd']],
+                '$.a[?(@.b)]',
+                [],
+            ],
+            'Simple filter with partially existing path' => [
+                [
+                    (object) ['a' => (object) ['b' => 'c']],
+                    (object) ['a' => (object) ['c' => 'd']],
+                    (object) ['b' => (object) ['c' => 'd']],
+                ],
+                '$[*][?(@.a.b)]',
+                ['{"a":{"b":"c"}}'],
             ],
         ];
     }

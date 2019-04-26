@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\Matcher;
 
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 
 interface ValueListFilterInterface
 {
 
-    public function filterValues(ValueInterface ...$values): array;
+    public function filterValues(ValueListInterface $valueList): ValueListInterface;
 }

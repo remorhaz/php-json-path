@@ -5,8 +5,8 @@ namespace Remorhaz\JSON\Path\Iterator\Event;
 
 use Iterator;
 
-interface IteratorAwareEventInterface extends DataEventInterface
+interface IteratorAwareEventInterface extends ValueEventInterface
 {
 
-    public function getIterator(): Iterator;
+    public function createIterator(): Iterator;
 }

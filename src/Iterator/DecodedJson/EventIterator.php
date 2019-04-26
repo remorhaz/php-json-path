@@ -27,7 +27,57 @@ final class EventIterator
 
     public static function create($data, PathInterface $path): Iterator
     {
-        return (new self($data, $path))->getGenerator();
+        $iterator = new self($data, $path);
+
+        return new class($iterator) implements Iterator
+        {
+
+            private $iterator;
+
+            private $generator;
+
+            public function __construct(EventIterator $iterator)
+            {
+                $this->iterator = $iterator;
+            }
+
+            public function current()
+            {
+                return $this->getGenerator()->current();
+            }
+
+            public function key()
+            {
+                return $this->getGenerator()->key();
+            }
+
+            public function next()
+            {
+                $this->getGenerator()->next();
+            }
+
+            public function valid()
+            {
+                return $this->getGenerator()->valid();
+            }
+
+            public function rewind()
+            {
+                $this->createGenerator()->rewind();
+            }
+
+            private function getGenerator(): Generator
+            {
+                return $this->generator ?? $this->createGenerator();
+            }
+
+            private function createGenerator(): Generator
+            {
+                $this->generator = $this->iterator->getGenerator();
+
+                return $this->generator;
+            }
+        };
     }
 
     private function __construct($data, PathInterface $path)
@@ -66,7 +116,9 @@ final class EventIterator
                 throw new Exception\InvalidElementKeyException($index, $this->path);
             }
             yield new ElementEvent($index, $this->path);
-            yield from self::create($element, $this->path->copyWithElement($index));
+            yield from $element instanceof \Iterator
+                ? $element
+                : self::create($element, $this->path->copyWithElement($index));
         }
 
         yield new AfterArrayEvent(self::create($data, $this->path), $this->path);

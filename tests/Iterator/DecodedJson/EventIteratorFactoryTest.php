@@ -6,6 +6,7 @@ namespace Remorhaz\JSON\Path\Test\Iterator\DecodedJson;
 use Iterator;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterObjectEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeObjectEvent;
@@ -15,7 +16,6 @@ use Remorhaz\JSON\Path\Iterator\Event\DataAwareEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterArrayEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeArrayEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidDataException;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidElementKeyException;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ScalarEvent;
@@ -26,9 +26,9 @@ use Remorhaz\JSON\Path\Iterator\Path;
 use stdClass;
 
 /**
- * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator
+ * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory
  */
-class DataEventIteratorTest extends TestCase
+class EventIteratorFactoryTest extends TestCase
 {
 
     /**
@@ -36,14 +36,14 @@ class DataEventIteratorTest extends TestCase
      * @param array $expectedValue
      * @dataProvider providerValidData
      */
-    public function testGetIterator_ConstructedWithValidData_GeneratesMatchingEventList(
+    public function testCreate_ConstructedWithValidData_GeneratesMatchingEventList(
         $data,
         array $expectedValue
     ): void {
-        $iterator = EventIterator::create($data, Path::createEmpty());
+        $iteratorFactory = new EventIteratorFactory($data, Path::createEmpty());
 
         $actualEvents = [];
-        foreach ($iterator as $event) {
+        foreach ($iteratorFactory->createIterator() as $event) {
             $actualEvents[] = $event;
         }
 
@@ -159,14 +159,14 @@ class DataEventIteratorTest extends TestCase
      * @param $data
      * @dataProvider providerInvalidData
      */
-    public function testGetIterator_InvalidData_ThrowsMatchingException($data): void
+    public function testCreate_InvalidData_ThrowsMatchingException($data): void
     {
-        $iterator = EventIterator::create($data, Path::createEmpty());
+        $iteratorFactory = new EventIteratorFactory($data, Path::createEmpty());
 
         $this->expectException(InvalidDataException::class);
         /** @noinspection PhpStatementHasEmptyBodyInspection */
         /** @noinspection PhpUnusedLocalVariableInspection */
-        foreach ($iterator as $event) {
+        foreach ($iteratorFactory->createIterator() as $event) {
         }
     }
 
@@ -182,14 +182,14 @@ class DataEventIteratorTest extends TestCase
      * @param array $data
      * @dataProvider providerArrayWithInvalidIndex
      */
-    public function testGetIterator_ArrayDataWithInvalidIndex_ThrowsException(array $data): void
+    public function testCreate_ArrayDataWithInvalidIndex_ThrowsException(array $data): void
     {
-        $iterator = EventIterator::create($data, Path::createEmpty());
+        $iteratorFactory = new EventIteratorFactory($data, Path::createEmpty());
 
         $this->expectException(InvalidElementKeyException::class);
         /** @noinspection PhpStatementHasEmptyBodyInspection */
         /** @noinspection PhpUnusedLocalVariableInspection */
-        foreach ($iterator as $event) {
+        foreach ($iteratorFactory->createIterator() as $event) {
         }
     }
 
@@ -223,7 +223,7 @@ class DataEventIteratorTest extends TestCase
         }
 
         if ($event instanceof IteratorAwareEventInterface) {
-            $result += ['data' => $this->exportData($this->exportIterator($event->getIterator()))];
+            $result += ['data' => $this->exportData($this->exportIterator($event->createIterator()))];
         }
 
         if ($event instanceof ElementEventInterface) {

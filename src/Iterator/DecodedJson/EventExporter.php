@@ -28,6 +28,9 @@ final class EventExporter
 
     public function export(Iterator $iterator)
     {
+        if (!$iterator->valid()) {
+            $iterator->rewind();
+        }
         $event = $this->fetcher->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {
             return $event->getData();

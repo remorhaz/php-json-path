@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
 
+use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
@@ -28,5 +29,10 @@ final class ScalarEvent implements ScalarEventInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    public function createIterator(): Iterator
+    {
+        return EventIterator::create($this->data, $this->path);
     }
 }

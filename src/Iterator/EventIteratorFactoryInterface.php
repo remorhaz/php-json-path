@@ -5,10 +5,10 @@ namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
 
-interface ValueInterface
+interface EventIteratorFactoryInterface
 {
 
-    public function getPath(): PathInterface;
-
     public function createIterator(): Iterator;
+
+    public function getPath(): PathInterface;
 }

@@ -6,18 +6,16 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 final class AfterArrayEvent implements AfterArrayEventInterface
 {
 
-    private $iterator;
+    private $iteratorFactory;
 
-    private $path;
-
-    public function __construct(Iterator $iterator, PathInterface $path)
+    public function __construct(ValueInterface $iteratorFactory)
     {
-        $this->iterator = $iterator;
-        $this->path = $path;
+        $this->iteratorFactory = $iteratorFactory;
     }
 
     /**
@@ -25,11 +23,11 @@ final class AfterArrayEvent implements AfterArrayEventInterface
      */
     public function getPath(): PathInterface
     {
-        return $this->path;
+        return $this->iteratorFactory->getPath();
     }
 
-    public function getIterator(): Iterator
+    public function createIterator(): Iterator
     {
-        return $this->iterator;
+        return $this->iteratorFactory->createIterator();
     }
 }
