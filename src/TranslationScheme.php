@@ -2,9 +2,6 @@
 
 namespace Remorhaz\JSON\Path;
 
-use function array_keys;
-use function array_merge;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
@@ -12,7 +9,6 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
 use Remorhaz\JSON\Path\Iterator\Path;
-use Remorhaz\JSON\Path\Iterator\Value;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
@@ -139,18 +135,9 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2":
                 // [ 0:NT_INT, 1:NT_WS_OPT ]
-                $intValue = $symbols[0]['s.int'];
-                /** @var ValueListInterface $valueList */
-                $valueList = $header['i.value_list'];
-                $header['s.value_list'] = new ValueList(
-                    $valueList->getOuterMap(),
-                    ...array_map(
-                        function () use ($intValue): ValueInterface {
-                            return new EventIteratorFactory($intValue, Path::createEmpty());
-                        },
-                        $valueList->getOuterMap()
-                    )
-                );
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->createScalarList($header['i.value_list'], $symbols[0]['s.int']);
                 break;
 
             case SymbolType::NT_INT . ".0":
@@ -264,11 +251,15 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0":
+                // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->isEqual($header['i.left_value_list'], $symbols[2]['s.value_list']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":
                 // [ ]
-                $header['s.value_list'] = $header['i.value_list'];
+                $header['s.value_list'] = $header['i.left_value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND . ".0":
@@ -338,6 +329,10 @@ class TranslationScheme implements TranslationSchemeInterface
                     $symbols[1]['i.value_list'] = ValueList::create($this->rootValue);
                 } elseif ('@' == $rootName) {
                     $symbols[1]['i.value_list'] = $header['i.value_list'];
+                } elseif ('null' === $rootName) {
+                    $symbols[1]['i.value_list'] = $this
+                        ->fetcher
+                        ->createScalarList($header['i.value_list'], null);
                 }
                 break;
 
@@ -393,11 +388,12 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_AND . ".0.1":
                 // [ 0:NT_EXPR_ARG_COMP, 1:NT_EXPR_ARG_COMP_TAIL ]
-                $symbols[1]['i.value_list'] = $symbols[0]['s.value_list'];
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                $symbols[1]['i.left_value_list'] = $symbols[0]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0.2":
-                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND]
+                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
@@ -426,6 +422,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0.2":
+                // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP ]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
+                break;
+
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3.2":

@@ -242,8 +242,10 @@ final class Fetcher
         return new ValueList(\array_flip($innerMap), ...$values);
     }
 
-    public function logicalAnd(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
-    {
+    public function logicalAnd(
+        ValueListInterface $leftValueList,
+        ValueListInterface $rightValueList
+    ): ValueListInterface {
         $values = [];
         $innerMap = [];
         $nextValueIndex = 0;
@@ -257,5 +259,60 @@ final class Fetcher
         }
 
         return new ValueList(\array_flip($innerMap), ...$values);
+    }
+
+    public function isEqual(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
+    {
+        $values = [];
+        $innerMap = [];
+        $nextInnerIndex = 0;
+        foreach ($leftValueList->getValues() as $leftInnerIndex => $leftValue) {
+            $leftOuterIndex = $leftValueList->getOuterIndex($leftInnerIndex);
+
+            foreach ($rightValueList->getValues() as $rightInnerIndex => $rightValue) {
+                $rightOuterIndex = $rightValueList->getOuterIndex($rightInnerIndex);
+                if ($leftOuterIndex != $rightOuterIndex) {
+                    continue;
+                }
+
+                $isEqualEvent = $this->isEqualEvent(
+                    $this->fetchEvent($leftValue->createIterator(), $leftValue->getPath()),
+                    $this->fetchEvent($rightValue->createIterator(), $rightValue->getPath())
+                );
+                if (!$isEqualEvent) {
+                    continue;
+                }
+                $values[] = new EventIteratorFactory(true, Path::createEmpty());
+                $innerMap[$leftOuterIndex] = $nextInnerIndex++;
+            }
+        }
+
+        return new ValueList(\array_flip($innerMap), ...$values);
+    }
+
+    private function isEqualEvent(DataEventInterface $leftEvent, DataEventInterface $rightEvent): bool
+    {
+        if ($leftEvent instanceof ScalarEventInterface && $rightEvent instanceof ScalarEventInterface) {
+            return $leftEvent->getData() === $rightEvent->getData();
+        }
+
+        return false;
+    }
+
+    public function createScalarList(ValueListInterface $valueList, $data): ValueListInterface
+    {
+        if (null !== $data && !\is_scalar($data)) {
+            throw new Exception\NonScalarDataException($data);
+        }
+
+        return new ValueList(
+            $valueList->getOuterMap(),
+            ...\array_map(
+                function () use ($data) {
+                    return new EventIteratorFactory($data, Path::createEmpty());
+                },
+                $valueList->getOuterMap()
+            )
+        );
     }
 }

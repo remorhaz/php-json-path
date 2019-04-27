@@ -158,6 +158,22 @@ class ParserTest extends TestCase
                 '$[*][?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
             ],
+            'Filter with equality check on scalar' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[*][?(@.a == 1)]',
+                ['{"a":1}'],
+            ],
+            'Filter with equality check on null' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => null],
+                ],
+                '$[*][?(@.a == null)]',
+                ['{"a":null}'],
+            ],
             'Filter with OR' => [
                 [
                     (object) ['a' => 1, 'b' => 2],
