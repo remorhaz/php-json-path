@@ -49,4 +49,9 @@ final class ValueList implements ValueListInterface
 
         return $this->outerMap[$valueIndex];
     }
+
+    public function outerIndexExists(int $outerIndex): bool
+    {
+        return \in_array($outerIndex, $this->outerMap, true);
+    }
 }

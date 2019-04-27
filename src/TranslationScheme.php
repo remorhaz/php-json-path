@@ -277,11 +277,15 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0":
+                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->logicalAnd($header['i.left_value_list'], $symbols[2]['s.value_list']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".1":
                 // []
-                $header['s.value_list'] = $header['i.value_list'];
+                $header['s.value_list'] = $header['i.left_value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0":
@@ -373,7 +377,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_OR . ".0.1":
                 // [ 0:NT_EXPR_ARG_AND, 1:NT_EXPR_ARG_AND_TAIL ]
-                $symbols[1]['i.value_list'] = $symbols[0]['s.value_list'];
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                $symbols[1]['i.left_value_list'] = $symbols[0]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0.2":
@@ -392,6 +397,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0.2":
+                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0.1":

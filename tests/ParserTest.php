@@ -158,7 +158,7 @@ class ParserTest extends TestCase
                 '$[*][?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
             ],
-            'Filter with existing equal integers by relative paths' => [
+            'Filter with OR' => [
                 [
                     (object) ['a' => 1, 'b' => 2],
                     (object) ['a' => 3],
@@ -167,6 +167,36 @@ class ParserTest extends TestCase
                 ],
                 '$[*][?(@.a || @.b)]',
                 ['{"a":1,"b":2}', '{"a":3}', '{"b":5}'],
+            ],
+            'Filter with AND' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[*][?(@.a && @.b)]',
+                ['{"a":1,"b":2}'],
+            ],
+            'Filter with AND before OR without brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[*][?(@.a && @.b || @.c)]',
+                ['{"a":1,"b":2}', '{"c":4}'],
+            ],
+            'Filter with AND after OR without brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[*][?(@.c || @.a && @.b)]',
+                ['{"a":1,"b":2}', '{"c":4}'],
             ],
         ];
     }

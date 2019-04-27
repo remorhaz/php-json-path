@@ -234,9 +234,26 @@ final class Fetcher
                 if (isset($innerMap[$outerIndex])) {
                     continue;
                 }
-                $innerMap[$outerIndex] = $nextValueIndex;
-                $values[$nextValueIndex++] = new EventIteratorFactory(true, Path::createEmpty());
+                $values[] = new EventIteratorFactory(true, Path::createEmpty());
+                $innerMap[$outerIndex] = $nextValueIndex++;
             }
+        }
+
+        return new ValueList(\array_flip($innerMap), ...$values);
+    }
+
+    public function logicalAnd(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
+    {
+        $values = [];
+        $innerMap = [];
+        $nextValueIndex = 0;
+        foreach ($leftValueList->getValues() as $index => $value) {
+            $outerIndex = $leftValueList->getOuterIndex($index);
+            if (!$rightValueList->outerIndexExists($outerIndex)) {
+                continue;
+            }
+            $values[] = new EventIteratorFactory(true, Path::createEmpty());
+            $innerMap[$outerIndex] = $nextValueIndex++;
         }
 
         return new ValueList(\array_flip($innerMap), ...$values);

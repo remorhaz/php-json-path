@@ -17,4 +17,6 @@ interface ValueListInterface
     public function getOuterMap(): array;
 
     public function getOuterIndex(int $valueIndex): int;
+
+    public function outerIndexExists(int $outerIndex): bool;
 }
