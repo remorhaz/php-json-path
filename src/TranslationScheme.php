@@ -5,11 +5,13 @@ namespace Remorhaz\JSON\Path;
 use function array_keys;
 use function array_merge;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
+use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\Value;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueList;
@@ -144,7 +146,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     $valueList->getOuterMap(),
                     ...array_map(
                         function () use ($intValue): ValueInterface {
-                            return Value::createInteger($intValue);
+                            return new EventIteratorFactory($intValue, Path::createEmpty());
                         },
                         $valueList->getOuterMap()
                     )
@@ -271,7 +273,7 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_AND . ".0":
                 // [ 0:NT_EXPR_ARG_COMP, 1:NT_EXPR_ARG_COMP_TAIL ]
-                $header['s.value_list'] = $symbols[1]['i.value_list'];
+                $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0":
@@ -288,16 +290,20 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0":
+                // [ 0:T_OP_OR, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->logicalOr($header['i.left_value_list'], $symbols[2]['s.value_list']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".1":
                 // [ ]
-                $header['s.value_list'] = $header['i.value_list'];
+                $header['s.value_list'] = $header['i.left_value_list'];
                 break;
 
             case SymbolType::NT_EXPR . ".0":
                 // [ 0:NT_EXPR_ARG_OR, 1:NT_EXPR_ARG_OR_TAIL ]
-                $header['s.value_list'] = $symbols[1]['i.value_list'];
+                $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_GROUP . ".0":
@@ -356,7 +362,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR . ".0.1":
                 // [ 0:NT_EXPR_ARG_OR, 1:NT_EXPR_ARG_OR_TAIL ]
-                $symbols[1]['i.value_list'] = $symbols[0]['s.value_list'];
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                $symbols[1]['i.left_value_list'] = $symbols[0]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0.0":
@@ -365,11 +372,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR . ".0.1":
-                // [ 0:NT_EXPR_ARG_COMP, 1:NT_EXPR_ARG_COMP_TAIL ]
+                // [ 0:NT_EXPR_ARG_AND, 1:NT_EXPR_ARG_AND_TAIL ]
                 $symbols[1]['i.value_list'] = $symbols[0]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0.2":
+                // [ 0:T_OP_OR, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND . ".0.0":
@@ -484,10 +493,6 @@ class TranslationScheme implements TranslationSchemeInterface
                     new StrictPropertyMatcher($header['i.filter_name']),
                     $header['i.value_list']
                 );
-                break;
-
-            case SymbolType::NT_EXPR_ARG_SCALAR . ".1.0":
-                $symbols[0]['i.is_inline_path'] = true;
                 break;
 
             case SymbolType::NT_STRING . ".0.1":

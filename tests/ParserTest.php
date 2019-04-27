@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\Value;
@@ -158,6 +157,16 @@ class ParserTest extends TestCase
                 ],
                 '$[*][?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
+            ],
+            'Filter with existing equal integers by relative paths' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[*][?(@.a || @.b)]',
+                ['{"a":1,"b":2}', '{"a":3}', '{"b":5}'],
             ],
         ];
     }

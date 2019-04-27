@@ -40,4 +40,13 @@ final class ValueList implements ValueListInterface
     {
         return $this->outerMap;
     }
+
+    public function getOuterIndex(int $valueIndex): int
+    {
+        if (!isset($this->outerMap[$valueIndex])) {
+            throw new Exception\ValueOuterIndexNotFoundException($valueIndex);
+        }
+
+        return $this->outerMap[$valueIndex];
+    }
 }

@@ -15,4 +15,6 @@ interface ValueListInterface
      * @return int[]
      */
     public function getOuterMap(): array;
+
+    public function getOuterIndex(int $valueIndex): int;
 }

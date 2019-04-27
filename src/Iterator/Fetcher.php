@@ -6,6 +6,8 @@ namespace Remorhaz\JSON\Path\Iterator;
 use function array_merge;
 use ArrayIterator;
 use Iterator;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
@@ -203,5 +205,40 @@ final class Fetcher
             }
             throw new Exception\InvalidDataEventException($event);
         } while (true);
+    }
+
+    /**
+     * @param ValueListInterface $valueList
+     * @return ValueListInterface
+     * @deprecated
+     */
+    public function asLogicalValueList(ValueListInterface $valueList): ValueListInterface
+    {
+        $logicalValues = [];
+        foreach ($valueList->getValues() as $value) {
+            $logicalValues[] = new EventIteratorFactory(true, Path::createEmpty());
+        }
+
+        return new ValueList($valueList->getOuterMap(), ...$logicalValues);
+    }
+
+    public function logicalOr(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
+    {
+        $values = [];
+        $innerMap = [];
+        $nextValueIndex = 0;
+        /** @var ValueListInterface $valueList */
+        foreach ([$leftValueList, $rightValueList] as $valueList) {
+            foreach ($valueList->getValues() as $index => $value) {
+                $outerIndex = $valueList->getOuterIndex($index);
+                if (isset($innerMap[$outerIndex])) {
+                    continue;
+                }
+                $innerMap[$outerIndex] = $nextValueIndex;
+                $values[$nextValueIndex++] = new EventIteratorFactory(true, Path::createEmpty());
+            }
+        }
+
+        return new ValueList(\array_flip($innerMap), ...$values);
     }
 }

@@ -27,23 +27,19 @@ class ValueListFilter implements ValueListFilterInterface
      */
     public function filterValues(ValueListInterface $valueList): ValueListInterface
     {
-        if (\array_keys($this->filterValueList->getValues()) !== \array_keys($valueList->getValues())) {
-            //throw new Exception\InvalidValuesException();
-        }
-
-        $targetValues = [];
-        $targetIndex = 0;
-        $outerMap = $valueList->getOuterMap();
-        $targetMap = [];
-        foreach ($this->filterValueList->getValues() as $filterIndex => $filterValue) {
-            $exportedValue = (new EventExporter(new Fetcher))->export($filterValue->createIterator());
-            if (!$this->asBoolean($exportedValue)) {
+        $nextIndex = 0;
+        $values = [];
+        $innerMap = [];
+        $filterOuterMap = $this->filterValueList->getOuterMap();
+        foreach ($valueList->getValues() as $index => $value) {
+            if (!\in_array($index, $filterOuterMap)) {
                 continue;
             }
-            $targetValues[] = $valueList->getValues()[$filterIndex];
-            $targetMap[$targetIndex++] = $outerMap[$filterIndex];
+            $innerMap[$nextIndex] = $valueList->getOuterIndex($index);
+            $values[$nextIndex++] = $value;
         }
-        return new ValueList($targetMap, ...$targetValues);
+
+        return new ValueList(\array_flip($innerMap), ...$values);
     }
 
     private function asBoolean($exportedValue): bool
