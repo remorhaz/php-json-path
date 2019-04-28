@@ -76,6 +76,16 @@ $context->setNewToken(TokenType::HYPHEN);
 $context->setNewToken(TokenType::NULL);
 
 /**
+ * @lexToken /true/
+ */
+$context->setNewToken(TokenType::TRUE);
+
+/**
+ * @lexToken /false/
+ */
+$context->setNewToken(TokenType::FALSE);
+
+/**
  * @lexToken /[a-zA-Z_][a-zA-Z_\$@0-9]*()/
  */
 $context

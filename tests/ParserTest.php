@@ -194,6 +194,66 @@ class ParserTest extends TestCase
                 '$[?(@.a == null)]',
                 ['{"a":null}'],
             ],
+            'Filter with equality check on true' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => true],
+                ],
+                '$[?(@.a == true)]',
+                ['{"a":true}'],
+            ],
+            'Filter with equality check on string' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 'b'],
+                    (object) ['a' => 'c'],
+                ],
+                '$[?(@.a == "b")]',
+                ['{"a":"b"}'],
+            ],
+            'Filter with equality check on false' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => false],
+                ],
+                '$[?(@.a == false)]',
+                ['{"a":false}'],
+            ],
+            'Filter with equality check on boolean literals evaluating to true' => [
+                [1, 2, 3],
+                '$[?(true == true)]',
+                ['1', '2', '3'],
+            ],
+            'Filter with equality check on boolean literals evaluating to false' => [
+                [1, 2, 3],
+                '$[?(true == false)]',
+                [],
+            ],
+            'Filter with equality check on integer literals evaluating to true' => [
+                [1, 2, 3],
+                '$[?(1 == 1)]',
+                ['1', '2', '3'],
+            ],
+            'Filter with equality check on integer literals evaluating to false' => [
+                [1, 2, 3],
+                '$[?(1 == 2)]',
+                [],
+            ],
+            'Filter with equality check on string literals evaluating to true' => [
+                [1, 2, 3],
+                '$[?("a" == "a")]',
+                ['1', '2', '3'],
+            ],
+            'Filter with equality check on string literals evaluating to false' => [
+                [1, 2, 3],
+                '$[?("a" == "b")]',
+                [],
+            ],
+            'Filter with equality check on mixed type literals evaluating to false' => [
+                [1, 2, 3],
+                '$[?("a" == 1)]',
+                [],
+            ],
             'Filter with OR' => [
                 [
                     (object) ['a' => 1, 'b' => 2],

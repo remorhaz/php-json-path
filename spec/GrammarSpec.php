@@ -178,6 +178,7 @@ return [
             [SymbolType::T_NULL, SymbolType::NT_WS_OPT],
             [SymbolType::T_TRUE, SymbolType::NT_WS_OPT],
             [SymbolType::T_FALSE, SymbolType::NT_WS_OPT],
+            [SymbolType::NT_STRING, SymbolType::NT_WS_OPT],
         ],
         SymbolType::NT_EXPR_ARG_COMP_TAIL => [
             [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],

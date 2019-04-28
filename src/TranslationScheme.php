@@ -166,6 +166,13 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->createScalarList($header['i.value_list'], false);
                 break;
 
+            case SymbolType::NT_EXPR_ARG_SCALAR . ".7":
+                // [ 0:NT_STRING, 1:NT_WS_OPT ]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->createScalarList($header['i.value_list'], $symbols[0]['s.text']);
+                break;
+
             case SymbolType::NT_INT . ".0":
                 $header['s.int'] = -$symbols[1]['s.int'];
                 break;
@@ -526,6 +533,18 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOT_FILTER . ".2.1":
                 // [ 0:T_NULL, 1:NT_DOT_FILTER_NEXT ]
                 $symbols[1]['i.filter_name'] = 'null';
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                break;
+
+            case SymbolType::NT_DOT_FILTER . ".3.1":
+                // [ 0:T_TRUE, 1:NT_DOT_FILTER_NEXT ]
+                $symbols[1]['i.filter_name'] = 'true';
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                break;
+
+            case SymbolType::NT_DOT_FILTER . ".4.1":
+                // [ 0:T_FALSE, 1:NT_DOT_FILTER_NEXT ]
+                $symbols[1]['i.filter_name'] = 'false';
                 $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 

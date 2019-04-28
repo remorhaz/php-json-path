@@ -161,6 +161,8 @@ return [
         TokenType::FALSE => 0,
         TokenType::LEFT_BRACKET => 0,
         TokenType::LEFT_SQUARE_BRACKET => 0,
+        TokenType::SINGLE_QUOTE => 0,
+        TokenType::DOUBLE_QUOTE => 0,
     ],
     SymbolType::NT_EXPR_ARG_OR => [
         TokenType::OP_NOT => 0,
@@ -173,6 +175,8 @@ return [
         TokenType::FALSE => 0,
         TokenType::LEFT_BRACKET => 0,
         TokenType::LEFT_SQUARE_BRACKET => 0,
+        TokenType::SINGLE_QUOTE => 0,
+        TokenType::DOUBLE_QUOTE => 0,
     ],
     SymbolType::NT_EXPR_ARG_OR_TAIL => [
         TokenType::OP_OR => 0,
@@ -189,6 +193,8 @@ return [
         TokenType::FALSE => 0,
         TokenType::LEFT_BRACKET => 0,
         TokenType::LEFT_SQUARE_BRACKET => 0,
+        TokenType::SINGLE_QUOTE => 0,
+        TokenType::DOUBLE_QUOTE => 0,
     ],
     SymbolType::NT_EXPR_ARG_AND_TAIL => [
         TokenType::OP_AND => 0,
@@ -206,6 +212,8 @@ return [
         TokenType::FALSE => 1,
         TokenType::LEFT_BRACKET => 1,
         TokenType::LEFT_SQUARE_BRACKET => 1,
+        TokenType::SINGLE_QUOTE => 1,
+        TokenType::DOUBLE_QUOTE => 1,
     ],
     SymbolType::NT_EXPR_ARG_SCALAR => [
         TokenType::LEFT_BRACKET => 0,
@@ -217,6 +225,8 @@ return [
         TokenType::NULL => 4,
         TokenType::TRUE => 5,
         TokenType::FALSE => 6,
+        TokenType::SINGLE_QUOTE => 7,
+        TokenType::DOUBLE_QUOTE => 7,
     ],
     SymbolType::NT_EXPR_ARG_COMP_TAIL => [
         TokenType::OP_EQ => 0,
