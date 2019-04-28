@@ -85,7 +85,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_PATH . ".0":
-                // [ 0:T_NAME, 1:NT_FILTER_LIST ]
+                // [ 0:T_ROOT_ABSOLUTE, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_PATH . ".1":
+                // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
@@ -138,6 +140,27 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->createScalarList($header['i.value_list'], $symbols[0]['s.int']);
+                break;
+
+            case SymbolType::NT_EXPR_ARG_SCALAR . ".4":
+                // [ 0:T_NULL, 1:NT_WS_OPT ]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->createScalarList($header['i.value_list'], null);
+                break;
+
+            case SymbolType::NT_EXPR_ARG_SCALAR . ".5":
+                // [ 0:T_TRUE, 1:NT_WS_OPT ]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->createScalarList($header['i.value_list'], true);
+                break;
+
+            case SymbolType::NT_EXPR_ARG_SCALAR . ".6":
+                // [ 0:T_FALSE, 1:NT_WS_OPT ]
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->createScalarList($header['i.value_list'], false);
                 break;
 
             case SymbolType::NT_INT . ".0":
@@ -322,18 +345,18 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_PATH . ".0.1":
-                // [ 0:T_NAME, 1:NT_FILTER_LIST ]
+                // [ 0:T_ROOT_ABSOLUTE, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
-                $rootName = $symbols[0]['s.text'];
-                if ('$' == $rootName) {
-                    $symbols[1]['i.value_list'] = ValueList::create($this->rootValue);
-                } elseif ('@' == $rootName) {
-                    $symbols[1]['i.value_list'] = $header['i.value_list'];
-                } elseif ('null' === $rootName) {
-                    $symbols[1]['i.value_list'] = $this
-                        ->fetcher
-                        ->createScalarList($header['i.value_list'], null);
-                }
+                $symbols[1]['i.value_list'] = ValueList::create($this->rootValue);
+                //$symbols[1]['i.value_list'] = $this
+                //    ->fetcher
+                //    ->createScalarList($header['i.value_list'], null);
+                break;
+
+            case SymbolType::NT_PATH . ".1.1":
+                // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".1.0":

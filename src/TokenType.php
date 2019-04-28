@@ -34,6 +34,11 @@ abstract class TokenType
     public const OP_OR                  = 0x1B;
     public const OP_REGEX               = 0x1C;
     public const OP_NOT                 = 0x1D;
+    public const ROOT_ABSOLUTE          = 0x1E;
+    public const ROOT_RELATIVE          = 0x1F;
+    public const NULL                   = 0x20;
+    public const TRUE                   = 0x21;
+    public const FALSE                  = 0x22;
 
     public const EOI                    = 0xFF;
 }

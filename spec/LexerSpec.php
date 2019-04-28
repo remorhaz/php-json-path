@@ -71,11 +71,26 @@ $context
 $context->setNewToken(TokenType::HYPHEN);
 
 /**
- * @lexToken /[a-zA-Z_\$@][a-zA-Z_\$@0-9]*()/
+ * @lexToken /null/
+ */
+$context->setNewToken(TokenType::NULL);
+
+/**
+ * @lexToken /[a-zA-Z_][a-zA-Z_\$@0-9]*()/
  */
 $context
     ->setNewToken(TokenType::NAME)
     ->setTokenAttribute('text', $context->getSymbolString());
+
+/**
+ * @lexToken /\$/
+ */
+$context->setNewToken(TokenType::ROOT_ABSOLUTE);
+
+/**
+ * @lexToken /@/
+ */
+$context->setNewToken(TokenType::ROOT_RELATIVE);
 
 /**
  * @lexToken /'/

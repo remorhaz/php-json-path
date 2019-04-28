@@ -40,8 +40,8 @@ class TokenMatcherTest extends TestCase
     public function providerValidInputTokenTypeList(): array
     {
         return [
-            "One-symbol name (root)" => ['$', [TokenType::NAME, TokenType::EOI]],
-            "One-symbol name (self)" => ['@', [TokenType::NAME, TokenType::EOI]],
+            "One-symbol name (root)" => ['$', [TokenType::ROOT_ABSOLUTE, TokenType::EOI]],
+            "One-symbol name (self)" => ['@', [TokenType::ROOT_RELATIVE, TokenType::EOI]],
             "One-symbol name (generic)" => ['x', [TokenType::NAME, TokenType::EOI]],
             "Multi-symbol name (generic)" => ['abc', [TokenType::NAME, TokenType::EOI]],
             "Multi-symbol name (mixed)" => ['_a@bc01$', [TokenType::NAME, TokenType::EOI]],

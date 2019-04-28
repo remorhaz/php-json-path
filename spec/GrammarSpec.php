@@ -39,6 +39,11 @@ return [
             SymbolType::T_OP_OR                 => TokenType::OP_OR,
             SymbolType::T_OP_REGEX              => TokenType::OP_REGEX,
             SymbolType::T_OP_NOT                => TokenType::OP_NOT,
+            SymbolType::T_ROOT_ABSOLUTE         => TokenType::ROOT_ABSOLUTE,
+            SymbolType::T_ROOT_RELATIVE         => TokenType::ROOT_RELATIVE,
+            SymbolType::T_NULL                  => TokenType::NULL,
+            SymbolType::T_TRUE                  => TokenType::TRUE,
+            SymbolType::T_FALSE                 => TokenType::FALSE,
 
             SymbolType::T_EOI                   => TokenType::EOI,
     ],
@@ -51,7 +56,8 @@ return [
             [SymbolType::NT_PATH],
         ],
         SymbolType::NT_PATH => [
-            [SymbolType::T_NAME, SymbolType::NT_FILTER_LIST],
+            [SymbolType::T_ROOT_ABSOLUTE, SymbolType::NT_FILTER_LIST],
+            [SymbolType::T_ROOT_RELATIVE, SymbolType::NT_FILTER_LIST],
         ],
         SymbolType::NT_FILTER_LIST => [
             [SymbolType::T_DOT, SymbolType::NT_DOT_FILTER],
@@ -76,6 +82,9 @@ return [
         SymbolType::NT_NAME => [
             [SymbolType::T_STAR],
             [SymbolType::T_NAME],
+            [SymbolType::T_NULL],
+            [SymbolType::T_TRUE],
+            [SymbolType::T_FALSE],
         ],
         SymbolType::NT_BRACKET_FILTER => [
             [SymbolType::T_STAR, SymbolType::NT_WS_OPT],
@@ -163,6 +172,9 @@ return [
             [SymbolType::NT_PATH, SymbolType::NT_WS_OPT],
             [SymbolType::NT_INT, SymbolType::NT_WS_OPT],
             [SymbolType::NT_ARRAY, SymbolType::NT_WS_OPT],
+            [SymbolType::T_NULL, SymbolType::NT_WS_OPT],
+            [SymbolType::T_TRUE, SymbolType::NT_WS_OPT],
+            [SymbolType::T_FALSE, SymbolType::NT_WS_OPT],
         ],
         SymbolType::NT_EXPR_ARG_COMP_TAIL => [
             [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
