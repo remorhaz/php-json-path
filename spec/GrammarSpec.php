@@ -74,6 +74,9 @@ return [
         SymbolType::NT_DOT_FILTER => [
             [SymbolType::T_NAME, SymbolType::NT_DOT_FILTER_NEXT],
             [SymbolType::T_STAR, SymbolType::NT_FILTER_LIST],
+            [SymbolType::T_NULL, SymbolType::NT_DOT_FILTER_NEXT],
+            [SymbolType::T_TRUE, SymbolType::NT_DOT_FILTER_NEXT],
+            [SymbolType::T_FALSE, SymbolType::NT_DOT_FILTER_NEXT],
         ],
         SymbolType::NT_DOT_FILTER_NEXT => [
             [SymbolType::T_LEFT_BRACKET, SymbolType::T_RIGHT_BRACKET],

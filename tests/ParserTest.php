@@ -89,6 +89,21 @@ class ParserTest extends TestCase
                 '$.a',
                 ['true'],
             ],
+            'Dot-notation null' => [
+                (object) ['null' => true],
+                '$.null',
+                ['true'],
+            ],
+            'Dot-notation true' => [
+                (object) ['true' => true],
+                '$.true',
+                ['true'],
+            ],
+            'Dot-notation false' => [
+                (object) ['false' => true],
+                '$.false',
+                ['true'],
+            ],
             'Bracket-notation property' => [
                 (object) ['a' => true],
                 '$["a"]',

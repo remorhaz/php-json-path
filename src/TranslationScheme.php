@@ -101,11 +101,14 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_DOT_FILTER . ".0":
                 // [ 0:T_NAME, 1:NT_DOT_FILTER_NEXT ]
-                $header['s.value_list'] = $symbols[1]['s.value_list'];
-                break;
-
             case SymbolType::NT_DOT_FILTER . ".1":
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOT_FILTER . ".2":
+                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOT_FILTER . ".3":
+                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOT_FILTER . ".4":
+                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
@@ -518,6 +521,12 @@ class TranslationScheme implements TranslationSchemeInterface
                     new AnyChildMatcher,
                     $header['i.value_list']
                 );
+                break;
+
+            case SymbolType::NT_DOT_FILTER . ".2.1":
+                // [ 0:T_NULL, 1:NT_DOT_FILTER_NEXT ]
+                $symbols[1]['i.filter_name'] = 'null';
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":

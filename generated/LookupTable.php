@@ -42,6 +42,9 @@ return [
     SymbolType::NT_DOT_FILTER => [
         TokenType::NAME => 0,
         TokenType::STAR => 1,
+        TokenType::NULL => 2,
+        TokenType::TRUE => 3,
+        TokenType::FALSE => 4,
     ],
     SymbolType::NT_DOT_FILTER_NEXT => [
         TokenType::LEFT_BRACKET => 0,
