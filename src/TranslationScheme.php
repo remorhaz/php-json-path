@@ -238,7 +238,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $header['s.value_list'] = $this->fetcher->filterValues(
                     new ValueListFilter($symbols[3]['s.value_list']),
-                    $header['i.value_list']
+                    $symbols[3]['i.value_list']
                 );
                 break;
 
@@ -351,7 +351,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 /** @var ValueListInterface $valueList */
                 $valueList = $header['i.value_list'];
-                $symbols[3]['i.value_list'] = ValueList::create(...$valueList->getValues());
+                $children = $this
+                    ->fetcher
+                    ->fetchFilterContext($valueList);
+                $symbols[3]['i.value_list'] = ValueList::create(...$children->getValues());
                 break;
 
             case SymbolType::NT_EXPR . ".0.0":

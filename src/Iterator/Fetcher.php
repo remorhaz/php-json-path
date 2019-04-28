@@ -17,6 +17,7 @@ use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
+use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
 
@@ -91,19 +92,42 @@ final class Fetcher
         Matcher\ChildMatcherInterface $matcher,
         ValueListInterface $source
     ): ValueListInterface {
-        $targetValues = [];
-        $targetMap = [];
-        $sourceMap = $source->getOuterMap();
-        $targetIndex = 0;
+        $values = [];
+        $outerMap = [];
+        $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
-                $targetValues[$targetIndex] = $child;
-                $targetMap[$targetIndex++] = $sourceMap[$sourceIndex];
+                $values[] = $child;
+                $outerMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
             }
         }
 
-        return new ValueList($targetMap, ...$targetValues);
+        return new ValueList($outerMap, ...$values);
+    }
+
+    public function fetchFilterContext(ValueListInterface $source): ValueListInterface
+    {
+        $values = [];
+        $outerMap = [];
+        $nextInnerIndex = 0;
+        foreach ($source->getValues() as $sourceIndex => $sourceValue) {
+            $outerIndex = $source->getOuterIndex($sourceIndex);
+            $event = $this->fetchEvent($sourceValue->createIterator());
+            if (!$event instanceof BeforeArrayEventInterface) {
+                $values[] = $sourceValue;
+                $outerMap[$nextInnerIndex++] = $outerIndex;
+                continue;
+            }
+
+            $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
+            foreach ($children as $child) {
+                $values[] = $child;
+                $outerMap[$nextInnerIndex++] = $outerIndex;
+            }
+        }
+
+        return new ValueList($outerMap, ...$values);
     }
 
     /**

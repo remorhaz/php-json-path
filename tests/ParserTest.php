@@ -134,8 +134,13 @@ class ParserTest extends TestCase
                 '$[0, 2]',
                 ['true', '1'],
             ],
-            'Simple filter with integer that evaluates as true' => [
+            'Simple filter with integer' => [
                 [1, 2, 3],
+                '$[?(1)]',
+                ['1', '2', '3'],
+            ],
+            'Simple filter with integer on all indice' => [
+                [[1, 2], [3]],
                 '$[*][?(1)]',
                 ['1', '2', '3'],
             ],
@@ -155,7 +160,7 @@ class ParserTest extends TestCase
                     (object) ['a' => (object) ['c' => 'd']],
                     (object) ['b' => (object) ['c' => 'd']],
                 ],
-                '$[*][?(@.a.b)]',
+                '$[?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
             ],
             'Filter with equality check on scalar' => [
@@ -163,7 +168,7 @@ class ParserTest extends TestCase
                     (object) ['a' => 1],
                     (object) ['a' => 2],
                 ],
-                '$[*][?(@.a == 1)]',
+                '$[?(@.a == 1)]',
                 ['{"a":1}'],
             ],
             'Filter with equality check on null' => [
@@ -171,7 +176,7 @@ class ParserTest extends TestCase
                     (object) ['a' => 1],
                     (object) ['a' => null],
                 ],
-                '$[*][?(@.a == null)]',
+                '$[?(@.a == null)]',
                 ['{"a":null}'],
             ],
             'Filter with OR' => [
@@ -181,7 +186,7 @@ class ParserTest extends TestCase
                     (object) ['c' => 4],
                     (object) ['b' => 5],
                 ],
-                '$[*][?(@.a || @.b)]',
+                '$[?(@.a || @.b)]',
                 ['{"a":1,"b":2}', '{"a":3}', '{"b":5}'],
             ],
             'Filter with AND' => [
@@ -191,7 +196,7 @@ class ParserTest extends TestCase
                     (object) ['c' => 4],
                     (object) ['b' => 5],
                 ],
-                '$[*][?(@.a && @.b)]',
+                '$[?(@.a && @.b)]',
                 ['{"a":1,"b":2}'],
             ],
             'Filter with AND before OR without brackets' => [
@@ -201,7 +206,7 @@ class ParserTest extends TestCase
                     (object) ['c' => 4],
                     (object) ['b' => 5],
                 ],
-                '$[*][?(@.a && @.b || @.c)]',
+                '$[?(@.a && @.b || @.c)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
             ],
             'Filter with AND after OR without brackets' => [
@@ -211,7 +216,7 @@ class ParserTest extends TestCase
                     (object) ['c' => 4],
                     (object) ['b' => 5],
                 ],
-                '$[*][?(@.c || @.a && @.b)]',
+                '$[?(@.c || @.a && @.b)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
             ],
         ];
