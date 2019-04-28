@@ -2,13 +2,11 @@
 
 namespace Remorhaz\JSON\Path;
 
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
-use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
@@ -301,7 +299,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0":
-                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND]
+                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR]
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->logicalAnd($header['i.left_value_list'], $symbols[2]['s.value_list']);
@@ -318,7 +316,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0":
-                // [ 0:T_OP_OR, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR]
+                // [ 0:T_OP_OR, 1:NT_WS_OPT, 2:NT_EXPR ]
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->logicalOr($header['i.left_value_list'], $symbols[2]['s.value_list']);
@@ -429,7 +427,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0.2":
-                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND ]
+                // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 

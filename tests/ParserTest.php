@@ -294,6 +294,36 @@ class ParserTest extends TestCase
                 '$[?(@.c || @.a && @.b)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
             ],
+            'Filter with OR after OR without brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[?(@.c || @.a || @.b)]',
+                ['{"a":1,"b":2}', '{"a":3}', '{"c":4}', '{"b":5}'],
+            ],
+            'Filter with AND after AND without brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => 2, 'c' => 3],
+                    (object) ['a' => 4],
+                    (object) ['b' => 5],
+                    (object) ['c' => 6],
+                ],
+                '$[?(@.c && @.a && @.b)]',
+                ['{"a":1,"b":2,"c":3}'],
+            ],
+            /*'Filter with EQ after EQ without brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => true, 'c' => 1],
+                    (object) ['a' => 1, 'b' => false, 'c' => 2],
+                    (object) ['a' => 3, 'b' => 3, 'c' => true],
+                    (object) ['a' => 3, 'b' => 4, 'c' => false],
+                ],
+                '$[?(@.c == @.a == @.b)]',
+                ['{"a":1,"b":true,"c":1}', '{"a":1,"b":false,"c":2}'],
+            ],*/
         ];
     }
 }

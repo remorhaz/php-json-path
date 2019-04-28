@@ -156,14 +156,15 @@ return [
             [SymbolType::NT_EXPR_ARG_AND, SymbolType::NT_EXPR_ARG_AND_TAIL],
         ],
         SymbolType::NT_EXPR_ARG_OR_TAIL => [
-            [SymbolType::T_OP_OR, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_OR],
+            [SymbolType::T_OP_OR, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR],
             [],
         ],
+
         SymbolType::NT_EXPR_ARG_AND => [
             [SymbolType::NT_EXPR_ARG_COMP, SymbolType::NT_EXPR_ARG_COMP_TAIL],
         ],
         SymbolType::NT_EXPR_ARG_AND_TAIL => [
-            [SymbolType::T_OP_AND, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_AND, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_OR],
             [],
         ],
         SymbolType::NT_EXPR_ARG_COMP => [
@@ -181,14 +182,14 @@ return [
             [SymbolType::NT_STRING, SymbolType::NT_WS_OPT],
         ],
         SymbolType::NT_EXPR_ARG_COMP_TAIL => [
-            [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_NEQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_L, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_LE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_G, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_GE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_OP_REGEX, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
-            [SymbolType::T_NAME, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_COMP],
+            [SymbolType::T_OP_EQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_NEQ, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_L, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_LE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_G, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_GE, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_OP_REGEX, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
+            [SymbolType::T_NAME, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_AND],
             [],
         ],
         SymbolType::NT_EXPR_GROUP => [
