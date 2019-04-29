@@ -178,10 +178,6 @@ return [
         TokenType::SINGLE_QUOTE => 0,
         TokenType::DOUBLE_QUOTE => 0,
     ],
-    SymbolType::NT_EXPR_ARG_OR_TAIL => [
-        TokenType::OP_OR => 0,
-        TokenType::RIGHT_BRACKET => 1,
-    ],
     SymbolType::NT_EXPR_ARG_AND => [
         TokenType::OP_NOT => 0,
         TokenType::ROOT_ABSOLUTE => 0,
@@ -195,11 +191,6 @@ return [
         TokenType::LEFT_SQUARE_BRACKET => 0,
         TokenType::SINGLE_QUOTE => 0,
         TokenType::DOUBLE_QUOTE => 0,
-    ],
-    SymbolType::NT_EXPR_ARG_AND_TAIL => [
-        TokenType::OP_AND => 0,
-        TokenType::OP_OR => 1,
-        TokenType::RIGHT_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_COMP => [
         TokenType::OP_NOT => 0,
@@ -215,18 +206,14 @@ return [
         TokenType::SINGLE_QUOTE => 1,
         TokenType::DOUBLE_QUOTE => 1,
     ],
-    SymbolType::NT_EXPR_ARG_SCALAR => [
-        TokenType::LEFT_BRACKET => 0,
-        TokenType::ROOT_ABSOLUTE => 1,
-        TokenType::ROOT_RELATIVE => 1,
-        TokenType::HYPHEN => 2,
-        TokenType::INT => 2,
-        TokenType::LEFT_SQUARE_BRACKET => 3,
-        TokenType::NULL => 4,
-        TokenType::TRUE => 5,
-        TokenType::FALSE => 6,
-        TokenType::SINGLE_QUOTE => 7,
-        TokenType::DOUBLE_QUOTE => 7,
+    SymbolType::NT_EXPR_ARG_OR_TAIL => [
+        TokenType::OP_OR => 0,
+        TokenType::RIGHT_BRACKET => 1,
+    ],
+    SymbolType::NT_EXPR_ARG_AND_TAIL => [
+        TokenType::OP_AND => 0,
+        TokenType::OP_OR => 1,
+        TokenType::RIGHT_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_COMP_TAIL => [
         TokenType::OP_EQ => 0,
@@ -240,6 +227,19 @@ return [
         TokenType::OP_AND => 8,
         TokenType::OP_OR => 8,
         TokenType::RIGHT_BRACKET => 8,
+    ],
+    SymbolType::NT_EXPR_ARG_SCALAR => [
+        TokenType::LEFT_BRACKET => 0,
+        TokenType::ROOT_ABSOLUTE => 1,
+        TokenType::ROOT_RELATIVE => 1,
+        TokenType::HYPHEN => 2,
+        TokenType::INT => 2,
+        TokenType::LEFT_SQUARE_BRACKET => 3,
+        TokenType::NULL => 4,
+        TokenType::TRUE => 5,
+        TokenType::FALSE => 6,
+        TokenType::SINGLE_QUOTE => 7,
+        TokenType::DOUBLE_QUOTE => 7,
     ],
     SymbolType::NT_EXPR_GROUP => [
         TokenType::LEFT_BRACKET => 0,
