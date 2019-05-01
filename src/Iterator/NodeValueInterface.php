@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
 
-interface ValueInterface
+interface NodeValueInterface
 {
 
     public function getPath(): PathInterface;

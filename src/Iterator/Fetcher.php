@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-use function array_merge;
-use ArrayIterator;
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
@@ -63,7 +60,7 @@ final class Fetcher
         throw new Exception\InvalidDataEventException($event);
     }
 
-    public function fetchValue(Iterator $iterator, $path): ValueInterface
+    public function fetchValue(Iterator $iterator, $path): NodeValueInterface
     {
         $event = $this->fetchEvent($iterator, $path);
         if ($event instanceof ScalarEventInterface) {
@@ -132,12 +129,12 @@ final class Fetcher
 
     /**
      * @param ChildMatcherInterface $matcher
-     * @param ValueInterface $value
-     * @return ValueInterface[]
+     * @param NodeValueInterface $value
+     * @return NodeValueInterface[]
      */
     private function fetchValueChildren(
         Matcher\ChildMatcherInterface $matcher,
-        ValueInterface $value
+        NodeValueInterface $value
     ): array {
         $iterator = $value->createIterator();
         $event = $this->fetchEvent($iterator, $value->getPath());

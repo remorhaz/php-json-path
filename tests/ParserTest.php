@@ -8,7 +8,6 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Path;
-use Remorhaz\JSON\Path\Iterator\Value;
 use Remorhaz\JSON\Path\Iterator\ValueList;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\TranslationScheme;
@@ -28,7 +27,7 @@ class ParserTest extends TestCase
         // $[a, x].b
         $path = Path::createEmpty();
         $iteratorFactory = new EventIteratorFactory($json, $path);
-        $values = ValueList::create(new Value($iteratorFactory));
+        $values = ValueList::create($iteratorFactory);
 
         $fetcher = new Fetcher;
         $values = $fetcher->fetchChildren(

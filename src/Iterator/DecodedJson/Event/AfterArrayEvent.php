@@ -6,14 +6,14 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 
 final class AfterArrayEvent implements AfterArrayEventInterface
 {
 
     private $iteratorFactory;
 
-    public function __construct(ValueInterface $iteratorFactory)
+    public function __construct(NodeValueInterface $iteratorFactory)
     {
         $this->iteratorFactory = $iteratorFactory;
     }

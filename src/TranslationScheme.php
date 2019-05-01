@@ -7,7 +7,7 @@ use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
@@ -24,14 +24,14 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $output;
 
-    public function __construct(ValueInterface $rootValue, Fetcher $fetcher)
+    public function __construct(NodeValueInterface $rootValue, Fetcher $fetcher)
     {
         $this->rootValue = $rootValue;
         $this->fetcher = $fetcher;
     }
 
     /**
-     * @return ValueInterface[]
+     * @return NodeValueInterface[]
      */
     public function getOutput(): array
     {

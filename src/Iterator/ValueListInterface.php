@@ -7,7 +7,7 @@ interface ValueListInterface
 {
 
     /**
-     * @return ValueInterface[]
+     * @return NodeValueInterface[]
      */
     public function getValues(): array;
 

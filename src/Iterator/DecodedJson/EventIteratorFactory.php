@@ -13,10 +13,10 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ElementEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\PropertyEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use stdClass;
 
-final class EventIteratorFactory implements ValueInterface
+final class EventIteratorFactory implements NodeValueInterface
 {
 
     private $data;

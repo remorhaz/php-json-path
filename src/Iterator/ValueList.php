@@ -12,21 +12,21 @@ final class ValueList implements ValueListInterface
 
     private $outerMap;
 
-    public static function create(ValueInterface ...$values): self
+    public static function create(NodeValueInterface ...$values): self
     {
         $outerMap = array_keys($values);
         return new self($outerMap, ...$values);
     }
 
 
-    public function __construct(array $outerMap, ValueInterface ...$values)
+    public function __construct(array $outerMap, NodeValueInterface ...$values)
     {
         $this->values = $values;
         $this->outerMap = $outerMap;
     }
 
     /**
-     * @return ValueInterface[]
+     * @return NodeValueInterface[]
      */
     public function getValues(): array
     {
