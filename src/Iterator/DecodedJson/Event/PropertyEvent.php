@@ -27,11 +27,6 @@ final class PropertyEvent implements PropertyEventInterface
         return $this->path;
     }
 
-    public function getChildPath(): PathInterface
-    {
-        return $this->path->copyWithProperty($this->name);
-    }
-
     /**
      * @return string
      */

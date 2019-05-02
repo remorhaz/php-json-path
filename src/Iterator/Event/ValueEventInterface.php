@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\Event;
 
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
-interface ValueEventInterface extends DataEventInterface, NodeValueInterface
+interface ValueEventInterface extends DataEventInterface
 {
+
+    public function getValue(): ValueInterface;
 }

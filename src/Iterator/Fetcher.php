@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
@@ -21,7 +20,7 @@ use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
 final class Fetcher
 {
 
-    public function fetchEvent(Iterator $iterator, ?PathInterface $path = null): DataEventInterface
+    public function fetchEvent(Iterator $iterator): DataEventInterface
     {
         if (!$iterator->valid()) {
             throw new Exception\UnexpectedEndOfData();
@@ -33,47 +32,43 @@ final class Fetcher
             throw new Exception\InvalidDataEventException($event);
         }
 
-        if (isset($path) && !$path->equals($event->getPath())) {
-            throw new Exception\InvalidDataEventException($event);
-        }
-
         return $event;
     }
 
-    public function skipValue(Iterator $iterator, $path): void
+    public function skipValue(Iterator $iterator): void
     {
-        $event = $this->fetchEvent($iterator, $path);
+        $event = $this->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {
             return;
         }
 
         if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator, $event->getPath());
+            $this->skipArrayValue($iterator);
             return;
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator, $event->getPath());
+            $this->skipObjectValue($iterator);
             return;
         }
 
         throw new Exception\InvalidDataEventException($event);
     }
 
-    public function fetchValue(Iterator $iterator, $path): NodeValueInterface
+    public function fetchValue(Iterator $iterator): NodeValueInterface
     {
-        $event = $this->fetchEvent($iterator, $path);
+        $event = $this->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {
-            return $event;
+            return $event->getValue();
         }
         if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator, $event->getPath());
-            return $event;
+            $this->skipArrayValue($iterator);
+            return $event->getValue();
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator, $event->getPath());
-            return $event;
+            $this->skipObjectValue($iterator);
+            return $event->getValue();
         }
 
         throw new Exception\InvalidDataEventException($event);
@@ -93,7 +88,7 @@ final class Fetcher
         $outerMap = [];
         $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
-            $children = $this->fetchValueChildren($matcher, $sourceValue);
+            $children = $this->fetchNodeValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
                 $outerMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
@@ -109,6 +104,9 @@ final class Fetcher
         $outerMap = [];
         $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
+            if (!$sourceValue instanceof NodeValueInterface) {
+                throw new Exception\InvalidContextValueException($sourceValue);
+            }
             $outerIndex = $source->getOuterIndex($sourceIndex);
             $event = $this->fetchEvent($sourceValue->createIterator());
             if (!$event instanceof BeforeArrayEventInterface) {
@@ -117,7 +115,7 @@ final class Fetcher
                 continue;
             }
 
-            $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
+            $children = $this->fetchNodeValueChildren(new AnyChildMatcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
                 $outerMap[$nextInnerIndex++] = $outerIndex;
@@ -129,41 +127,41 @@ final class Fetcher
 
     /**
      * @param ChildMatcherInterface $matcher
-     * @param NodeValueInterface $value
-     * @return NodeValueInterface[]
+     * @param ValueInterface $value
+     * @return ValueInterface[]
      */
-    private function fetchValueChildren(
+    private function fetchNodeValueChildren(
         Matcher\ChildMatcherInterface $matcher,
-        NodeValueInterface $value
+        ValueInterface $value
     ): array {
         $iterator = $value->createIterator();
-        $event = $this->fetchEvent($iterator, $value->getPath());
+        $event = $this->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {
             return [];
         }
 
         if ($event instanceof BeforeArrayEventInterface) {
-            return $this->fetchElements($iterator, $matcher, $event->getPath());
+            return $this->fetchElements($iterator, $matcher);
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            return $this->fetchProperties($iterator, $matcher, $event->getPath());
+            return $this->fetchProperties($iterator, $matcher);
         }
 
         throw new Exception\InvalidDataEventException($event);
     }
 
-    private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher, PathInterface $path): array
+    private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
     {
         $results = [];
         do {
-            $event = $this->fetchEvent($iterator, $path);
+            $event = $this->fetchEvent($iterator);
             if ($event instanceof ElementEventInterface) {
                 if ($matcher->match($event)) {
-                    $results[] = $this->fetchValue($iterator, $event->getChildPath());
+                    $results[] = $this->fetchValue($iterator);
                     continue;
                 }
-                $this->skipValue($iterator, $event->getChildPath());
+                $this->skipValue($iterator);
                 continue;
             }
             if ($event instanceof AfterArrayEventInterface) {
@@ -178,17 +176,17 @@ final class Fetcher
         return $matcher->filterValues($values);
     }
 
-    private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher, PathInterface $path): array
+    private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher): array
     {
         $results = [];
         do {
-            $event = $this->fetchEvent($iterator, $path);
+            $event = $this->fetchEvent($iterator);
             if ($event instanceof PropertyEventInterface) {
                 if ($matcher->match($event)) {
-                    $results[] = $this->fetchValue($iterator, $event->getChildPath());
+                    $results[] = $this->fetchValue($iterator);
                     continue;
                 }
-                $this->skipValue($iterator, $event->getChildPath());
+                $this->skipValue($iterator);
                 continue;
             }
             if ($event instanceof AfterObjectEventInterface) {
@@ -198,12 +196,12 @@ final class Fetcher
         } while (true);
     }
 
-    private function skipArrayValue(Iterator $iterator, PathInterface $path): void
+    private function skipArrayValue(Iterator $iterator): void
     {
         do {
-            $event = $this->fetchEvent($iterator, $path);
+            $event = $this->fetchEvent($iterator);
             if ($event instanceof ElementEventInterface) {
-                $this->skipValue($iterator, $event->getChildPath());
+                $this->skipValue($iterator);
                 continue;
             }
             if ($event instanceof AfterArrayEventInterface) {
@@ -213,12 +211,12 @@ final class Fetcher
         } while (true);
     }
 
-    private function skipObjectValue(Iterator $iterator, PathInterface $path): void
+    private function skipObjectValue(Iterator $iterator): void
     {
         do {
-            $event = $this->fetchEvent($iterator, $path);
+            $event = $this->fetchEvent($iterator);
             if ($event instanceof PropertyEventInterface) {
-                $this->skipValue($iterator, $event->getChildPath());
+                $this->skipValue($iterator);
                 continue;
             }
             if ($event instanceof AfterObjectEventInterface) {
@@ -237,7 +235,7 @@ final class Fetcher
     {
         $logicalValues = [];
         foreach ($valueList->getValues() as $value) {
-            $logicalValues[] = new EventIteratorFactory(true, Path::createEmpty());
+            $logicalValues[] = new LiteralValue(true);
         }
 
         return new ValueList($valueList->getOuterMap(), ...$logicalValues);
@@ -255,7 +253,7 @@ final class Fetcher
                 if (isset($innerMap[$outerIndex])) {
                     continue;
                 }
-                $values[] = new EventIteratorFactory(true, Path::createEmpty());
+                $values[] = new LiteralValue(true);
                 $innerMap[$outerIndex] = $nextValueIndex++;
             }
         }
@@ -275,7 +273,7 @@ final class Fetcher
             if (!$rightValueList->outerIndexExists($outerIndex)) {
                 continue;
             }
-            $values[] = new EventIteratorFactory(true, Path::createEmpty());
+            $values[] = new LiteralValue(true);
             $innerMap[$outerIndex] = $nextValueIndex++;
         }
 
@@ -297,13 +295,13 @@ final class Fetcher
                 }
 
                 $isEqualEvent = $this->isEqualEvent(
-                    $this->fetchEvent($leftValue->createIterator(), $leftValue->getPath()),
-                    $this->fetchEvent($rightValue->createIterator(), $rightValue->getPath())
+                    $this->fetchEvent($leftValue->createIterator()),
+                    $this->fetchEvent($rightValue->createIterator())
                 );
                 if (!$isEqualEvent) {
                     continue;
                 }
-                $values[] = new EventIteratorFactory(true, Path::createEmpty());
+                $values[] = new LiteralValue(true);
                 $innerMap[$leftOuterIndex] = $nextInnerIndex++;
             }
         }
@@ -330,7 +328,7 @@ final class Fetcher
             $valueList->getOuterMap(),
             ...\array_map(
                 function () use ($data) {
-                    return new EventIteratorFactory($data, Path::createEmpty());
+                    return new LiteralValue($data);
                 },
                 $valueList->getOuterMap()
             )

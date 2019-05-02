@@ -4,7 +4,7 @@ namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventIteratorFactory;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValue;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Path;
@@ -26,7 +26,7 @@ class ParserTest extends TestCase
         $json = (object) ['x'=> 1, 'a' => (object) ['b' => 'c']];
         // $[a, x].b
         $path = Path::createEmpty();
-        $iteratorFactory = new EventIteratorFactory($json, $path);
+        $iteratorFactory = new NodeValue($json, $path);
         $values = ValueList::create($iteratorFactory);
 
         $fetcher = new Fetcher;
@@ -63,7 +63,7 @@ class ParserTest extends TestCase
         $reader = new TokenReader($buffer, $tokenMatcher, $tokenFactory);
 
         $path = Path::createEmpty();
-        $rootValue = new EventIteratorFactory($json, $path);
+        $rootValue = new NodeValue($json, $path);
         $fetcher = new Fetcher;
         $scheme = new TranslationScheme($rootValue, $fetcher);
         $listener = new TranslationSchemeApplier($scheme);

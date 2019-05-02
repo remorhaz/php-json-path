@@ -27,11 +27,6 @@ final class ElementEvent implements ElementEventInterface
         return $this->path;
     }
 
-    public function getChildPath(): PathInterface
-    {
-        return $this->path->copyWithElement($this->index);
-    }
-
     /**
      * @return int
      */

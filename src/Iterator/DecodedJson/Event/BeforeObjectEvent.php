@@ -7,30 +7,20 @@ use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEventInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 final class BeforeObjectEvent implements BeforeObjectEventInterface
 {
 
-    private $iteratorFactory;
+    private $value;
 
-    public function __construct(NodeValueInterface $iteratorFactory)
+    public function __construct(NodeValueInterface $value)
     {
-        $this->iteratorFactory = $iteratorFactory;
+        $this->value = $value;
     }
 
-    /**
-     * @return PathInterface
-     */
-    public function getPath(): PathInterface
+    public function getValue(): ValueInterface
     {
-        return $this->iteratorFactory->getPath();
-    }
-
-    /**
-     * @return Iterator
-     */
-    public function createIterator(): Iterator
-    {
-        return $this->iteratorFactory->createIterator();
+        return $this->value;
     }
 }

@@ -3,31 +3,22 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
 
-use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\BeforeArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 final class BeforeArrayEvent implements BeforeArrayEventInterface
 {
 
-    private $iteratorFactory;
+    private $value;
 
-    public function __construct(NodeValueInterface $iteratorFactory)
+    public function __construct(NodeValueInterface $value)
     {
-        $this->iteratorFactory = $iteratorFactory;
+        $this->value = $value;
     }
 
-    /**
-     * @return PathInterface
-     */
-    public function getPath(): PathInterface
+    public function getValue(): ValueInterface
     {
-        return $this->iteratorFactory->getPath();
-    }
-
-    public function createIterator(): Iterator
-    {
-        return $this->iteratorFactory->createIterator();
+        return $this->value;
     }
 }

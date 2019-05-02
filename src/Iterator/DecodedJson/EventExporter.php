@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Exception;
-use Remorhaz\JSON\Path\Iterator\PathInterface;
 use stdClass;
 
 final class EventExporter
@@ -36,17 +35,17 @@ final class EventExporter
             return $event->getData();
         }
         if ($event instanceof BeforeArrayEventInterface) {
-            return $this->exportArrayData($iterator, $event->getPath());
+            return $this->exportArrayData($iterator);
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            return $this->exportObjectData($iterator, $event->getPath());
+            return $this->exportObjectData($iterator);
         }
 
         throw new Exception\UnexpectedDataEventException($event);
     }
 
-    private function exportArrayData(Iterator $iterator, PathInterface $path): array
+    private function exportArrayData(Iterator $iterator): array
     {
         $result = [];
 
@@ -54,9 +53,6 @@ final class EventExporter
             $event = $this->fetcher->fetchEvent($iterator);
             if (!isset($event)) {
                 throw new Exception\UnexpectedEndOfDataException;
-            }
-            if (!$path->equals($event->getPath())) {
-                throw new Exception\UnexpectedDataEventException($event);
             }
             if ($event instanceof ElementEventInterface) {
                 $result[$event->getIndex()] = $this->export($iterator);
@@ -70,7 +66,7 @@ final class EventExporter
         return $result;
     }
 
-    private function exportObjectData(Iterator $iterator, PathInterface $path): stdClass
+    private function exportObjectData(Iterator $iterator): stdClass
     {
         $result = (object) [];
 
@@ -78,9 +74,6 @@ final class EventExporter
             $event = $this->fetcher->fetchEvent($iterator);
             if (!isset($event)) {
                 throw new Exception\UnexpectedEndOfDataException;
-            }
-            if (!$path->equals($event->getPath())) {
-                throw new Exception\UnexpectedDataEventException($event);
             }
             if ($event instanceof PropertyEventInterface) {
                 $result->{$event->getName()} = $this->export($iterator);

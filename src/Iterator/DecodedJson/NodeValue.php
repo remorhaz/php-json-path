@@ -11,12 +11,12 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeArrayEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeObjectEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ElementEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\PropertyEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ScalarEvent;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use stdClass;
 
-final class EventIteratorFactory implements NodeValueInterface
+final class NodeValue implements NodeValueInterface
 {
 
     private $data;
@@ -37,7 +37,7 @@ final class EventIteratorFactory implements NodeValueInterface
     private function createGenerator($data, PathInterface $path): Generator
     {
         if (is_scalar($data) || is_null($data)) {
-            yield new ScalarEvent($data, $path);
+            yield new NodeScalarEvent($data, $path);
             return;
         }
 
@@ -64,9 +64,7 @@ final class EventIteratorFactory implements NodeValueInterface
                 throw new Exception\InvalidElementKeyException($index, $path);
             }
             yield new ElementEvent($index, $path);
-            yield from $element instanceof Iterator
-                ? $element
-                : $this->createGenerator($element, $path->copyWithElement($index));
+            yield from $this->createGenerator($element, $path->copyWithElement($index));
         }
 
         yield new AfterArrayEvent(new self($data, $path));
