@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use function array_fill;
+use function count;
+use function is_bool;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
@@ -288,6 +291,21 @@ final class Fetcher
     ): ResultValueListInterface {
         if ($resultValues instanceof ResultValueListInterface) {
             return $resultValues;
+        }
+
+        if ($resultValues instanceof LiteralValueListInterface) {
+            $literal = $resultValues->getLiteral();
+            if ($literal instanceof ScalarValueInterface) {
+                $data = $literal->getData();
+                if (is_bool($data)) {
+                    return new ResultValueList(
+                        $resultValues->getIndexMap(),
+                        ...array_fill(0, count($resultValues->getIndexMap()), $data)
+                    );
+                }
+            }
+
+            throw new Exception\LiteralEvaluatonErrorException($literal);
         }
 
         $results = [];

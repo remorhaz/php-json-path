@@ -148,14 +148,19 @@ class ParserTest extends TestCase
                 '$[0, 2]',
                 ['true', '1'],
             ],
-            'Simple filter with integer' => [
+            'Simple filter with true' => [
                 [1, 2, 3],
-                '$[?(1)]',
+                '$[?(true)]',
                 ['1', '2', '3'],
             ],
-            'Simple filter with integer on all indice' => [
+            'Simple filter with false' => [
+                [1, 2, 3],
+                '$[?(false)]',
+                [],
+            ],
+            'Simple filter with true on all indice' => [
                 [[1, 2], [3]],
-                '$[*][?(1)]',
+                '$[*][?(true)]',
                 ['1', '2', '3'],
             ],
             'Simple filter with existing path' => [
