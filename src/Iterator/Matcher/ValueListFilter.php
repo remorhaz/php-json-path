@@ -29,20 +29,18 @@ class ValueListFilter implements ValueListFilterInterface
         if (!$valueList->getIndexMap()->equals($this->filterValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($valueList);
         }
-        $nextIndex = 0;
         $values = [];
         $indexMap = [];
-        $filterValues = $this->filterValueList->getValues();
         foreach ($valueList->getValues() as $index => $value) {
-            $filterValue = $filterValues[$index];
+            $filterValue = $this->filterValueList->getValue($index);
             if (!$filterValue instanceof ResultValueInterface) {
                 throw new Exception\InvalidResultException($filterValue);
             }
             if (!$filterValue->getData()) {
                 continue;
             }
-            $indexMap[$nextIndex] = $valueList->getIndexMap()->getOuterIndex($index);
-            $values[$nextIndex++] = $value;
+            $indexMap[] = $valueList->getIndexMap()->getOuterIndex($index);
+            $values[] = $value;
         }
 
         return new NodeValueList(new IndexMap(...$indexMap), ...$values);

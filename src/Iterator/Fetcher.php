@@ -86,12 +86,11 @@ final class Fetcher
     ): NodeValueListInterface {
         $values = [];
         $indexMap = [];
-        $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
-                $indexMap[$nextInnerIndex++] = $source->getIndexMap()->getOuterIndex($sourceIndex);
+                $indexMap[] = $source->getIndexMap()->getOuterIndex($sourceIndex);
             }
         }
 
@@ -128,7 +127,6 @@ final class Fetcher
     {
         $values = [];
         $indexMap = [];
-        $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             if (!$sourceValue instanceof NodeValueInterface) {
                 throw new Exception\InvalidContextValueException($sourceValue);
@@ -137,14 +135,14 @@ final class Fetcher
             $event = $this->fetchEvent($sourceValue->createIterator());
             if (!$event instanceof BeforeArrayEventInterface) {
                 $values[] = $sourceValue;
-                $indexMap[$nextInnerIndex++] = $outerIndex;
+                $indexMap[] = $outerIndex;
                 continue;
             }
 
             $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
-                $indexMap[$nextInnerIndex++] = $outerIndex;
+                $indexMap[] = $outerIndex;
             }
         }
 
