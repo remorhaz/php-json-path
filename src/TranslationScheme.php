@@ -11,6 +11,8 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
+use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
+use Remorhaz\JSON\Path\Iterator\ResultValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
@@ -262,7 +264,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new AnyChildMatcher,
-                        $this->asValueList($header['i.value_list'])
+                        $this->asNodeValueList($header['i.value_list'])
                     );
                 break;
             case SymbolType::NT_BRACKET_FILTER . ".1":
@@ -271,7 +273,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new StrictPropertyMatcher(...$symbols[0]['s.text_list']),
-                        $this->asValueList($header['i.value_list'])
+                        $this->asNodeValueList($header['i.value_list'])
                     );
                 break;
 
@@ -281,7 +283,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new StrictElementMatcher(...$symbols[1]['s.int_list']),
-                        $this->asValueList($header['i.value_list'])
+                        $this->asNodeValueList($header['i.value_list'])
                     );
                 break;
 
@@ -290,18 +292,21 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_BRACKET_FILTER . ".5":
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
-                $contextValues = $this->asValueList($symbols[3]['i.context_value_list']);
+                $contextValues = $this->asNodeValueList($symbols[3]['i.context_value_list']);
+                $evaluationResult = $this
+                    ->fetcher
+                    ->evaluate(
+                        $this->asValueList($symbols[3]['i.value_list']),
+                        $this->asValueList($symbols[3]['s.value_list'])
+                    );
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->filterValues(
                         new ValueListFilter(
-                            $this
-                                ->fetcher
-                                ->evaluate(
-                                    $this->asValueList($symbols[3]['i.value_list']),
-                                    $this->asValueList($symbols[3]['s.value_list'])
-                                )
-                                ->popIndexMap($contextValues)
+                            new ResultValueList(
+                                $evaluationResult->getIndexMap()->join($contextValues->getIndexMap()),
+                                ...$evaluationResult->getResults()
+                            )
                         ),
                         $contextValues
                     );
@@ -383,7 +388,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_PATH . ".0.1":
                 // [ 0:T_ROOT_ABSOLUTE, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
-                $symbols[1]['i.value_list'] = NodeValueList::createRootNodes($this->rootValue);
+                $symbols[1]['i.value_list'] = NodeValueList::createRoot($this->rootValue);
                 break;
 
             case SymbolType::NT_PATH . ".1.1":
@@ -407,9 +412,12 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $filterContext = $this
                     ->fetcher
-                    ->fetchFilterContext($this->asValueList($header['i.value_list']));
+                    ->fetchFilterContext($this->asNodeValueList($header['i.value_list']));
                 $symbols[3]['i.context_value_list'] = $filterContext;
-                $symbols[3]['i.value_list'] = $filterContext->pushIndexMap();
+                $symbols[3]['i.value_list'] = new NodeValueList(
+                    $filterContext->getIndexMap()->split(),
+                    ...$filterContext->getValues()
+                );
                 break;
 
             case SymbolType::NT_EXPR . ".0.0":
@@ -593,7 +601,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new AnyChildMatcher,
-                        $this->asValueList($header['i.value_list'])
+                        $this->asNodeValueList($header['i.value_list'])
                     );
                 break;
 
@@ -621,7 +629,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new StrictPropertyMatcher($header['i.filter_name']),
-                        $this->asValueList($header['i.value_list'])
+                        $this->asNodeValueList($header['i.value_list'])
                     );
                 break;
 
@@ -643,6 +651,15 @@ class TranslationScheme implements TranslationSchemeInterface
     private function asValueList($attribute): ValueListInterface
     {
         if ($attribute instanceof ValueListInterface) {
+            return $attribute;
+        }
+
+        throw new Exception\InvalidValueListInAttributeException($attribute);
+    }
+
+    private function asNodeValueList($attribute): NodeValueListInterface
+    {
+        if ($attribute instanceof NodeValueListInterface) {
             return $attribute;
         }
 

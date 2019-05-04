@@ -12,10 +12,25 @@ final class ResultValueList implements ResultValueListInterface
 
     private $values;
 
-    public function __construct(array $indexMap, bool ...$results)
+    public function __construct(IndexMapInterface $indexMap, bool ...$results)
     {
         $this->results = $results;
         $this->indexMap = $indexMap;
+    }
+
+    public function getValue(int $index): ValueInterface
+    {
+        $values = $this->getValues();
+        if (!isset($values[$index])) {
+            throw new Exception\ValueNotFoundException($index);
+        }
+
+        return $values[$index];
+    }
+
+    public function getIndexMap(): IndexMapInterface
+    {
+        return $this->indexMap;
     }
 
     public function getResults(): array
@@ -44,39 +59,5 @@ final class ResultValueList implements ResultValueListInterface
     private function createResultValue(bool $result): ResultValueInterface
     {
         return new ResultValue($result);
-    }
-
-    public function getIndexMap(): array
-    {
-        return $this->indexMap;
-    }
-
-    public function getOuterIndex(int $valueIndex): int
-    {
-        if (!isset($this->indexMap[$valueIndex])) {
-            throw new Exception\ValueOuterIndexNotFoundException($valueIndex);
-        }
-
-        return $this->indexMap[$valueIndex];
-    }
-
-    public function outerIndexExists(int $outerIndex): bool
-    {
-        return in_array($outerIndex, $this->indexMap, true);
-    }
-
-    public function pushIndexMap(): ValueListInterface
-    {
-        return new self(array_keys($this->results), ...$this->results);
-    }
-
-    public function popIndexMap(ValueListInterface $mapSource): ValueListInterface
-    {
-        $indexMap = [];
-        foreach (array_keys($this->indexMap) as $index) {
-            $indexMap[] = $mapSource->getOuterIndex($index);
-        }
-
-        return new self($indexMap, ...$this->results);
     }
 }

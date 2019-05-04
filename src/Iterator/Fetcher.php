@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-use function array_flip;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
@@ -78,13 +77,13 @@ final class Fetcher
 
     /**
      * @param ChildMatcherInterface $matcher
-     * @param ValueListInterface $source
-     * @return ValueListInterface
+     * @param NodeValueListInterface $source
+     * @return NodeValueListInterface
      */
     public function fetchChildren(
         Matcher\ChildMatcherInterface $matcher,
-        ValueListInterface $source
-    ): ValueListInterface {
+        NodeValueListInterface $source
+    ): NodeValueListInterface {
         $values = [];
         $indexMap = [];
         $nextInnerIndex = 0;
@@ -92,21 +91,21 @@ final class Fetcher
             $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
-                $indexMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
+                $indexMap[$nextInnerIndex++] = $source->getIndexMap()->getOuterIndex($sourceIndex);
             }
         }
 
-        return new NodeValueList($indexMap, ...$values);
+        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
     }
 
     /**
      * @param ChildMatcherInterface $matcher
-     * @param ValueInterface $value
-     * @return ValueInterface[]
+     * @param NodeValueInterface $value
+     * @return NodeValueInterface[]
      */
     private function fetchValueChildren(
         Matcher\ChildMatcherInterface $matcher,
-        ValueInterface $value
+        NodeValueInterface $value
     ): array {
         $iterator = $value->createIterator();
         $event = $this->fetchEvent($iterator);
@@ -125,7 +124,7 @@ final class Fetcher
         throw new Exception\InvalidDataEventException($event);
     }
 
-    public function fetchFilterContext(ValueListInterface $source): ValueListInterface
+    public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
     {
         $values = [];
         $indexMap = [];
@@ -134,7 +133,7 @@ final class Fetcher
             if (!$sourceValue instanceof NodeValueInterface) {
                 throw new Exception\InvalidContextValueException($sourceValue);
             }
-            $outerIndex = $source->getOuterIndex($sourceIndex);
+            $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             $event = $this->fetchEvent($sourceValue->createIterator());
             if (!$event instanceof BeforeArrayEventInterface) {
                 $values[] = $sourceValue;
@@ -149,7 +148,7 @@ final class Fetcher
             }
         }
 
-        return new NodeValueList($indexMap, ...$values);
+        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
     }
 
     private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
@@ -172,8 +171,10 @@ final class Fetcher
         } while (true);
     }
 
-    public function filterValues(ValueListFilterInterface $matcher, ValueListInterface $values): ValueListInterface
-    {
+    public function filterValues(
+        ValueListFilterInterface $matcher,
+        NodeValueListInterface $values
+    ): NodeValueListInterface {
         return $matcher->filterValues($values);
     }
 
@@ -231,7 +232,7 @@ final class Fetcher
         ResultValueListInterface $leftValueList,
         ResultValueListInterface $rightValueList
     ): ResultValueListInterface {
-        if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
+        if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
 
@@ -247,7 +248,7 @@ final class Fetcher
         ResultValueListInterface $leftValueList,
         ResultValueListInterface $rightValueList
     ): ResultValueListInterface {
-        if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
+        if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
 
@@ -263,15 +264,13 @@ final class Fetcher
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList
     ): ResultValueListInterface {
-        if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
+        if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
         $results = [];
 
-        $rightValues = $rightValueList->getValues();
         foreach ($leftValueList->getValues() as $index => $leftValue) {
-            $rightValue = $rightValues[$index];
-            $results[] = $this->isEqualValue($leftValue, $rightValue);
+            $results[] = $this->isEqualValue($leftValue, $rightValueList->getValue($index));
         }
         return new ResultValueList($leftValueList->getIndexMap(), ...$results);
     }
@@ -294,8 +293,8 @@ final class Fetcher
         }
 
         $results = [];
-        foreach ($sourceValues->getIndexMap() as $outerIndex) {
-            $results[] = $resultValues->outerIndexExists($outerIndex);
+        foreach ($sourceValues->getIndexMap()->toArray() as $outerIndex) {
+            $results[] = $resultValues->getIndexMap()->outerIndexExists($outerIndex);
         }
 
         return new ResultValueList($sourceValues->getIndexMap(), ...$results);

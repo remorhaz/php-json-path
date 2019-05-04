@@ -15,7 +15,7 @@ final class LiteralValueList implements LiteralValueListInterface
 
     private $values;
 
-    public function __construct(array $indexMap, LiteralValueInterface $value)
+    public function __construct(IndexMapInterface $indexMap, LiteralValueInterface $value)
     {
         $this->indexMap = $indexMap;
         $this->value = $value;
@@ -24,6 +24,16 @@ final class LiteralValueList implements LiteralValueListInterface
     public function getLiteral(): LiteralValueInterface
     {
         return $this->value;
+    }
+
+    public function getValue(int $index): ValueInterface
+    {
+        $values = $this->getValues();
+        if (!isset($values[$index])) {
+            throw new Exception\ValueNotFoundException($index);
+        }
+
+        return $values[$index];
     }
 
     public function getValues(): array
@@ -35,40 +45,8 @@ final class LiteralValueList implements LiteralValueListInterface
         return $this->values;
     }
 
-    /**
-     * @return int[]
-     */
-    public function getIndexMap(): array
+    public function getIndexMap(): IndexMapInterface
     {
         return $this->indexMap;
-    }
-
-    public function getOuterIndex(int $valueIndex): int
-    {
-        if (!isset($this->indexMap[$valueIndex])) {
-            throw new Exception\ValueOuterIndexNotFoundException($valueIndex);
-        }
-
-        return $this->indexMap[$valueIndex];
-    }
-
-    public function outerIndexExists(int $outerIndex): bool
-    {
-        return in_array($outerIndex, $this->indexMap, true);
-    }
-
-    public function pushIndexMap(): ValueListInterface
-    {
-        return new self(array_keys($this->indexMap), $this->value);
-    }
-
-    public function popIndexMap(ValueListInterface $mapSource): ValueListInterface
-    {
-        $indexMap = [];
-        foreach (array_keys($this->indexMap) as $index) {
-            $indexMap[] = $mapSource->getOuterIndex($index);
-        }
-
-        return new self($indexMap, $this->value);
     }
 }

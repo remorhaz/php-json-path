@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\Matcher;
 
+use Remorhaz\JSON\Path\Iterator\IndexMap;
+use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
 use Remorhaz\JSON\Path\Iterator\ResultValueInterface;
 use Remorhaz\JSON\Path\Iterator\ResultValueListInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
@@ -22,9 +24,9 @@ class ValueListFilter implements ValueListFilterInterface
      * @param ValueListInterface $valueList
      * @return ValueListInterface
      */
-    public function filterValues(ValueListInterface $valueList): ValueListInterface
+    public function filterValues(NodeValueListInterface $valueList): NodeValueListInterface
     {
-        if ($valueList->getIndexMap() !== $this->filterValueList->getIndexMap()) {
+        if (!$valueList->getIndexMap()->equals($this->filterValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($valueList);
         }
         $nextIndex = 0;
@@ -39,10 +41,10 @@ class ValueListFilter implements ValueListFilterInterface
             if (!$filterValue->getData()) {
                 continue;
             }
-            $indexMap[$nextIndex] = $valueList->getOuterIndex($index);
+            $indexMap[$nextIndex] = $valueList->getIndexMap()->getOuterIndex($index);
             $values[$nextIndex++] = $value;
         }
 
-        return new NodeValueList($indexMap, ...$values);
+        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
     }
 }

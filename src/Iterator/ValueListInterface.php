@@ -6,21 +6,12 @@ namespace Remorhaz\JSON\Path\Iterator;
 interface ValueListInterface
 {
 
+    public function getValue(int $index): ValueInterface;
+
     /**
      * @return ValueInterface[]
      */
     public function getValues(): array;
 
-    /**
-     * @return int[]
-     */
-    public function getIndexMap(): array;
-
-    public function getOuterIndex(int $valueIndex): int;
-
-    public function outerIndexExists(int $outerIndex): bool;
-
-    public function pushIndexMap(): ValueListInterface;
-
-    public function popIndexMap(ValueListInterface $mapSource): ValueListInterface;
+    public function getIndexMap(): IndexMapInterface;
 }

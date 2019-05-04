@@ -27,7 +27,7 @@ class ParserTest extends TestCase
         // $[a, x].b
         $path = Path::createEmpty();
         $iteratorFactory = (new NodeValueFactory)->createValue($json, $path);
-        $values = NodeValueList::createRootNodes($iteratorFactory);
+        $values = NodeValueList::createRoot($iteratorFactory);
 
         $fetcher = new Fetcher;
         $values = $fetcher->fetchChildren(
