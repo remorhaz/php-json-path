@@ -4,7 +4,6 @@ namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\EventExporter;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
@@ -314,7 +313,7 @@ class ParserTest extends TestCase
                 '$[?(@.c && @.a && @.b)]',
                 ['{"a":1,"b":2,"c":3}'],
             ],
-            /*'Filter with EQ after EQ without brackets' => [
+            'Filter with EQ after EQ without brackets' => [
                 [
                     (object) ['a' => 1, 'b' => true, 'c' => 1],
                     (object) ['a' => 1, 'b' => false, 'c' => 2],
@@ -323,7 +322,7 @@ class ParserTest extends TestCase
                 ],
                 '$[?(@.c == @.a == @.b)]',
                 ['{"a":1,"b":true,"c":1}', '{"a":1,"b":false,"c":2}'],
-            ],*/
+            ],
         ];
     }
 }

@@ -84,9 +84,19 @@ final class ValueList implements ValueListInterface
         return in_array($outerIndex, $this->indexMap, true);
     }
 
-    public function withNewIndexMap(): ValueListInterface
+    public function pushIndexMap(): ValueListInterface
     {
         return new self($this->type, array_keys($this->values), ...$this->values);
+    }
+
+    public function popIndexMap(ValueListInterface $mapSource): ValueListInterface
+    {
+        $indexMap = [];
+        foreach (array_keys($this->indexMap) as $index) {
+            $indexMap[] = $mapSource->getOuterIndex($index);
+        }
+
+        return new self($this->type, $indexMap, ...$this->values);
     }
 
     public function withLiteral(LiteralValueInterface $value): ValueListInterface

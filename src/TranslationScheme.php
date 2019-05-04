@@ -274,11 +274,20 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_BRACKET_FILTER . ".5":
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
+                $contextValues = $this->asValueList($symbols[3]['i.context_value_list']);
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->filterValues(
-                        new ValueListFilter($this->asValueList($symbols[3]['s.value_list'])),
-                        $this->asValueList($symbols[3]['i.context_value_list'])
+                        new ValueListFilter(
+                            $this
+                                ->fetcher
+                                ->evaluate(
+                                    $this->asValueList($symbols[3]['i.value_list']),
+                                    $this->asValueList($symbols[3]['s.value_list'])
+                                )
+                                ->popIndexMap($contextValues)
+                        ),
+                        $contextValues
                     );
                 break;
 
@@ -384,7 +393,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchFilterContext($this->asValueList($header['i.value_list']));
                 $symbols[3]['i.context_value_list'] = $filterContext;
-                $symbols[3]['i.value_list'] = $filterContext->withNewIndexMap();
+                $symbols[3]['i.value_list'] = $filterContext->pushIndexMap();
                 break;
 
             case SymbolType::NT_EXPR . ".0.0":
@@ -416,12 +425,17 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_OR_TAIL . ".0.3":
                 // [ 0:T_OP_OR, 1:NT_WS_OPT, 2:NT_EXPR_ARG_OR, 3:NT_EXPR_ARG_OR_TAIL ]
-                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $sourceValues = $this->asValueList($header['i.value_list']);
+                $symbols[3]['i.value_list'] = $sourceValues;
                 $symbols[3]['i.left_value_list'] = $this
                     ->fetcher
                     ->logicalOr(
-                        $this->asValueList($header['i.left_value_list']),
-                        $this->asValueList($symbols[2]['s.value_list'])
+                        $this
+                            ->fetcher
+                            ->evaluate($sourceValues, $this->asValueList($header['i.left_value_list'])),
+                        $this
+                            ->fetcher
+                            ->evaluate($sourceValues, $this->asValueList($symbols[2]['s.value_list']))
                     );
                 break;
 
@@ -443,12 +457,17 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_AND_TAIL . ".0.3":
                 // [ 0:T_OP_AND, 1:NT_WS_OPT, 2:NT_EXPR_ARG_AND, 3:NT_EXPR_ARG_AND_TAIL ]
-                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $sourceValues = $this->asValueList($header['i.value_list']);
+                $symbols[3]['i.value_list'] = $sourceValues;
                 $symbols[3]['i.left_value_list'] = $this
                     ->fetcher
                     ->logicalAnd(
-                        $this->asValueList($header['i.left_value_list']),
-                        $this->asValueList($symbols[2]['s.value_list'])
+                        $this
+                            ->fetcher
+                            ->evaluate($sourceValues, $this->asValueList($header['i.left_value_list'])),
+                        $this
+                            ->fetcher
+                            ->evaluate($sourceValues, $this->asValueList($symbols[2]['s.value_list']))
                     );
                 break;
 

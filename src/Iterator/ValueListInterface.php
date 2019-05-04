@@ -20,7 +20,9 @@ interface ValueListInterface
 
     public function outerIndexExists(int $outerIndex): bool;
 
-    public function withNewIndexMap(): ValueListInterface;
+    public function pushIndexMap(): ValueListInterface;
+
+    public function popIndexMap(ValueListInterface $mapSource): ValueListInterface;
 
     public function withLiteral(LiteralValueInterface $value): ValueListInterface;
 
