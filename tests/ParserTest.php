@@ -28,7 +28,7 @@ class ParserTest extends TestCase
         // $[a, x].b
         $path = Path::createEmpty();
         $iteratorFactory = (new NodeValueFactory)->createValue($json, $path);
-        $values = ValueList::create($iteratorFactory);
+        $values = ValueList::createRootNodes($iteratorFactory);
 
         $fetcher = new Fetcher;
         $values = $fetcher->fetchChildren(
@@ -171,8 +171,8 @@ class ParserTest extends TestCase
             ],
             'Simple filter with partially existing path' => [
                 [
-                    (object) ['a' => (object) ['b' => 'c']],
                     (object) ['a' => (object) ['c' => 'd']],
+                    (object) ['a' => (object) ['b' => 'c']],
                     (object) ['b' => (object) ['c' => 'd']],
                 ],
                 '$[?(@.a.b)]',

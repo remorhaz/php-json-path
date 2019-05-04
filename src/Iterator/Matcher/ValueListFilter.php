@@ -24,15 +24,15 @@ class ValueListFilter implements ValueListFilterInterface
     {
         $nextIndex = 0;
         $values = [];
-        $outerMap = [];
+        $indexMap = [];
         foreach ($valueList->getValues() as $index => $value) {
             if (!$this->filterValueList->outerIndexExists($index)) {
                 continue;
             }
-            $outerMap[$nextIndex] = $valueList->getOuterIndex($index);
+            $indexMap[$nextIndex] = $valueList->getOuterIndex($index);
             $values[$nextIndex++] = $value;
         }
 
-        return new ValueList($outerMap, ...$values);
+        return ValueList::createNodes($indexMap, ...$values);
     }
 }

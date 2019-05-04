@@ -14,9 +14,19 @@ interface ValueListInterface
     /**
      * @return int[]
      */
-    public function getOuterMap(): array;
+    public function getIndexMap(): array;
 
     public function getOuterIndex(int $valueIndex): int;
 
     public function outerIndexExists(int $outerIndex): bool;
+
+    public function withNewIndexMap(): ValueListInterface;
+
+    public function withLiteral(LiteralValueInterface $value): ValueListInterface;
+
+    public function containsNodes(): bool;
+
+    public function containsResults(): bool;
+
+    public function containsLiterals(): bool;
 }

@@ -15,7 +15,7 @@ final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInte
     public function __construct($data)
     {
         if (null !== $data && !is_scalar($data)) {
-            throw new Exception\InvalidDataException($data);
+            throw new Exception\InvalidScalarDataException($data);
         }
         $this->data = $data;
     }

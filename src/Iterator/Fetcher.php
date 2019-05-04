@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use function array_flip;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
@@ -13,7 +14,6 @@ use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
@@ -86,17 +86,17 @@ final class Fetcher
         ValueListInterface $source
     ): ValueListInterface {
         $values = [];
-        $outerMap = [];
+        $indexMap = [];
         $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
-                $outerMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
+                $indexMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
             }
         }
 
-        return new ValueList($outerMap, ...$values);
+        return ValueList::createNodes($indexMap, ...$values);
     }
 
     /**
@@ -128,7 +128,7 @@ final class Fetcher
     public function fetchFilterContext(ValueListInterface $source): ValueListInterface
     {
         $values = [];
-        $outerMap = [];
+        $indexMap = [];
         $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             if (!$sourceValue instanceof NodeValueInterface) {
@@ -138,18 +138,18 @@ final class Fetcher
             $event = $this->fetchEvent($sourceValue->createIterator());
             if (!$event instanceof BeforeArrayEventInterface) {
                 $values[] = $sourceValue;
-                $outerMap[$nextInnerIndex++] = $outerIndex;
+                $indexMap[$nextInnerIndex++] = $outerIndex;
                 continue;
             }
 
             $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
-                $outerMap[$nextInnerIndex++] = $outerIndex;
+                $indexMap[$nextInnerIndex++] = $outerIndex;
             }
         }
 
-        return new ValueList($outerMap, ...$values);
+        return ValueList::createNodes($indexMap, ...$values);
     }
 
     private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
@@ -229,47 +229,47 @@ final class Fetcher
 
     public function logicalOr(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
     {
-        $values = [];
-        $innerMap = [];
+        $results = [];
+        $reverseIndexMap = [];
         $nextValueIndex = 0;
         /** @var ValueListInterface $valueList */
         foreach ([$leftValueList, $rightValueList] as $valueList) {
             foreach ($valueList->getValues() as $index => $value) {
                 $outerIndex = $valueList->getOuterIndex($index);
-                if (isset($innerMap[$outerIndex])) {
+                if (isset($reverseIndexMap[$outerIndex])) {
                     continue;
                 }
-                $values[] = new ResultValue(true);
-                $innerMap[$outerIndex] = $nextValueIndex++;
+                $results[] = true;
+                $reverseIndexMap[$outerIndex] = $nextValueIndex++;
             }
         }
 
-        return new ValueList(\array_flip($innerMap), ...$values);
+        return ValueList::createResults(array_flip($reverseIndexMap), ...$results);
     }
 
     public function logicalAnd(
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList
     ): ValueListInterface {
-        $values = [];
-        $innerMap = [];
+        $results = [];
+        $reverseIndexMap = [];
         $nextValueIndex = 0;
         foreach ($leftValueList->getValues() as $index => $value) {
             $outerIndex = $leftValueList->getOuterIndex($index);
             if (!$rightValueList->outerIndexExists($outerIndex)) {
                 continue;
             }
-            $values[] = new ResultValue(true);
-            $innerMap[$outerIndex] = $nextValueIndex++;
+            $results[] = true;
+            $reverseIndexMap[$outerIndex] = $nextValueIndex++;
         }
 
-        return new ValueList(\array_flip($innerMap), ...$values);
+        return ValueList::createResults(array_flip($reverseIndexMap), ...$results);
     }
 
     public function isEqual(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
     {
-        $values = [];
-        $innerMap = [];
+        $results = [];
+        $reverseIndexMap = [];
         $nextInnerIndex = 0;
         foreach ($leftValueList->getValues() as $leftInnerIndex => $leftValue) {
             $leftOuterIndex = $leftValueList->getOuterIndex($leftInnerIndex);
@@ -280,54 +280,23 @@ final class Fetcher
                     continue;
                 }
 
-                $isEqualEvent = $this->isEqualEvent(
-                    $this->fetchEvent($leftValue->createIterator()),
-                    $this->fetchEvent($rightValue->createIterator())
-                );
+                $isEqualEvent = $this->isEqualValue($leftValue, $rightValue);
                 if (!$isEqualEvent) {
                     continue;
                 }
-                $values[] = new ResultValue(true);
-                $innerMap[$leftOuterIndex] = $nextInnerIndex++;
+                $results[] = true;
+                $reverseIndexMap[$leftOuterIndex] = $nextInnerIndex++;
             }
         }
-
-        return new ValueList(\array_flip($innerMap), ...$values);
+        return ValueList::createResults(array_flip($reverseIndexMap), ...$results);
     }
 
-    private function isEqualEvent(DataEventInterface $leftEvent, DataEventInterface $rightEvent): bool
+    private function isEqualValue(ValueInterface $leftValue, ValueInterface $rightValue): bool
     {
-        if (!$leftEvent instanceof ValueEventInterface) {
-            return false;
-        }
-        $leftValue = $leftEvent->getValue();
-
-        if (!$rightEvent instanceof ValueEventInterface) {
-            return false;
-        }
-        $rightValue = $rightEvent->getValue();
-
         if ($leftValue instanceof ScalarValueInterface && $rightValue instanceof ScalarValueInterface) {
             return $leftValue->getData() === $rightValue->getData();
         }
 
         return false;
-    }
-
-    public function createLiteralList(ValueListInterface $valueList, $data): ValueListInterface
-    {
-        if (null !== $data && !\is_scalar($data)) {
-            throw new Exception\NonScalarDataException($data);
-        }
-
-        return new ValueList(
-            $valueList->getOuterMap(),
-            ...\array_map(
-                function () use ($data) {
-                    return new LiteralScalarValue($data);
-                },
-                $valueList->getOuterMap()
-            )
-        );
     }
 }
