@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\Event;
 
-use Iterator;
-use Remorhaz\JSON\Path\Iterator\LiteralValue;
-use Remorhaz\JSON\Path\Iterator\Path;
-use Remorhaz\JSON\Path\Iterator\PathInterface;
+use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 final class LiteralScalarEvent implements ScalarEventInterface
@@ -18,7 +15,7 @@ final class LiteralScalarEvent implements ScalarEventInterface
 
     public function __construct($data)
     {
-        $this->value = new LiteralValue($data);
+        $this->value = new LiteralScalarValue($data);
         $this->data = $data;
     }
 

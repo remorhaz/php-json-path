@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-interface NodeValueInterface extends ValueInterface, PathAwareInterface
+interface ObjectValueInterface extends ValueInterface
 {
 }

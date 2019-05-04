@@ -5,9 +5,10 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 
 use Remorhaz\JSON\Path\Iterator\Exception\ExceptionInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
+use RuntimeException;
 use Throwable;
 
-class InvalidDataException extends \RuntimeException implements ExceptionInterface
+class InvalidNodeDataException extends RuntimeException implements ExceptionInterface
 {
 
     private $data;

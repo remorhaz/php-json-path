@@ -235,7 +235,7 @@ final class Fetcher
     {
         $logicalValues = [];
         foreach ($valueList->getValues() as $value) {
-            $logicalValues[] = new LiteralValue(true);
+            $logicalValues[] = new LiteralScalarValue(true);
         }
 
         return new ValueList($valueList->getOuterMap(), ...$logicalValues);
@@ -253,7 +253,7 @@ final class Fetcher
                 if (isset($innerMap[$outerIndex])) {
                     continue;
                 }
-                $values[] = new LiteralValue(true);
+                $values[] = new LiteralScalarValue(true);
                 $innerMap[$outerIndex] = $nextValueIndex++;
             }
         }
@@ -273,7 +273,7 @@ final class Fetcher
             if (!$rightValueList->outerIndexExists($outerIndex)) {
                 continue;
             }
-            $values[] = new LiteralValue(true);
+            $values[] = new LiteralScalarValue(true);
             $innerMap[$outerIndex] = $nextValueIndex++;
         }
 
@@ -301,7 +301,7 @@ final class Fetcher
                 if (!$isEqualEvent) {
                     continue;
                 }
-                $values[] = new LiteralValue(true);
+                $values[] = new LiteralScalarValue(true);
                 $innerMap[$leftOuterIndex] = $nextInnerIndex++;
             }
         }
@@ -328,7 +328,7 @@ final class Fetcher
             $valueList->getOuterMap(),
             ...\array_map(
                 function () use ($data) {
-                    return new LiteralValue($data);
+                    return new LiteralScalarValue($data);
                 },
                 $valueList->getOuterMap()
             )

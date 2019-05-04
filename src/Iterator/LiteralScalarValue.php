@@ -7,14 +7,22 @@ use Generator;
 use function is_scalar;
 use Iterator;
 
-final class LiteralValue implements LiteralValueInterface
+final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInterface
 {
 
     private $data;
 
     public function __construct($data)
     {
+        if (null !== $data && !is_scalar($data)) {
+            throw new Exception\InvalidDataException($data);
+        }
         $this->data = $data;
+    }
+
+    public function getData()
+    {
+        return $this->data;
     }
 
     public function createIterator(): Iterator
@@ -24,11 +32,6 @@ final class LiteralValue implements LiteralValueInterface
 
     private function createGenerator($data): Generator
     {
-        if (null === $data || is_scalar($data)) {
-            yield new Event\LiteralScalarEvent($data);
-            return;
-        }
-
-        throw new Exception\InvalidDataException($data);
+        yield new Event\LiteralScalarEvent($data);
     }
 }
