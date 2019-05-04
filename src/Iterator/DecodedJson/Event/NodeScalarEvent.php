@@ -25,9 +25,4 @@ final class NodeScalarEvent implements ScalarEventInterface
     {
         return $this->value;
     }
-
-    public function getData()
-    {
-        return $this->data;
-    }
 }

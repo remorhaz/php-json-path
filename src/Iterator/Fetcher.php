@@ -13,6 +13,7 @@ use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
+use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
@@ -311,8 +312,18 @@ final class Fetcher
 
     private function isEqualEvent(DataEventInterface $leftEvent, DataEventInterface $rightEvent): bool
     {
-        if ($leftEvent instanceof ScalarEventInterface && $rightEvent instanceof ScalarEventInterface) {
-            return $leftEvent->getData() === $rightEvent->getData();
+        if (!$leftEvent instanceof ValueEventInterface) {
+            return false;
+        }
+        $leftValue = $leftEvent->getValue();
+
+        if (!$rightEvent instanceof ValueEventInterface) {
+            return false;
+        }
+        $rightValue = $rightEvent->getValue();
+
+        if ($leftValue instanceof ScalarValueInterface && $rightValue instanceof ScalarValueInterface) {
+            return $leftValue->getData() === $rightValue->getData();
         }
 
         return false;

@@ -5,7 +5,6 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson;
 
 use function is_array;
 use function is_scalar;
-use Remorhaz\JSON\Path\Iterator\Exception;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use stdClass;

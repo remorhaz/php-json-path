@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Iterator\DecodedJson;
 
+use function get_class;
 use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
@@ -10,7 +11,6 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
-use Remorhaz\JSON\Path\Iterator\Event\DataAwareEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidNodeDataException;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
@@ -18,6 +18,7 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\PathAwareInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 /**
  * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue
@@ -43,11 +44,71 @@ class NodeScalarValueTest extends TestCase
     public function providerValidData(): array
     {
         return [
-            'Integer data' => [1, [['class' => NodeScalarEvent::class, 'path' => [], 'data' => 1,]]],
-            'String data' => ['a', [['class' => NodeScalarEvent::class, 'path' => [], 'data' => 'a']]],
-            'Float data' => [1.2, [['class' => NodeScalarEvent::class, 'path' => [], 'data' => 1.2,]]],
-            'Boolean data' => [true, [['class' => NodeScalarEvent::class, 'path' => [], 'data' => true]]],
-            'NULL data' => [null, [['class' => NodeScalarEvent::class, 'path' => [], 'data' => null]]],
+            'Integer data' => [
+                1,
+                [
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => 1,
+                            'path' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'String data' => [
+                'a',
+                [
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => 'a',
+                            'path' => [],
+                        ]
+                    ]
+                ],
+            ],
+            'Float data' => [
+                1.2,
+                [
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => 1.2,
+                            'path' => [],
+                        ]
+                    ],
+                ],
+            ],
+            'Boolean data' => [
+                true,
+                [
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => true,
+                            'path' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'NULL data' => [
+                null,
+                [
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => null,
+                            'path' => [],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -92,18 +153,7 @@ class NodeScalarValueTest extends TestCase
         }
 
         if ($event instanceof ValueEventInterface) {
-            $value = $event->getValue();
-            if ($value instanceof PathAwareInterface) {
-                $result += ['path' => $value->getPath()->getElements()];
-            }
-        }
-
-        if ($event instanceof DataAwareEventInterface) {
-            $result += ['data' => $this->exportData($event->getData())];
-        }
-
-        if ($event instanceof ValueEventInterface) {
-            $result += ['data' => $this->exportData($this->exportIterator($event->getValue()->createIterator()))];
+            $result += ['value' => $this->exportValue($event->getValue())];
         }
 
         if ($event instanceof ElementEventInterface) {
@@ -112,6 +162,20 @@ class NodeScalarValueTest extends TestCase
 
         if ($event instanceof PropertyEventInterface) {
             $result += ['name' => $event->getName()];
+        }
+
+        return $result;
+    }
+
+    private function exportValue(ValueInterface $value): array
+    {
+        $result = [
+            'class' => get_class($value),
+            'data' => $this->exportData($this->exportIterator($value->createIterator())),
+        ];
+
+        if ($value instanceof PathAwareInterface) {
+            $result += ['path' => $value->getPath()->getElements()];
         }
 
         return $result;

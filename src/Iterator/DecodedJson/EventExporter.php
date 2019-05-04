@@ -13,6 +13,7 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Exception;
+use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
 use stdClass;
 
 final class EventExporter
@@ -27,12 +28,13 @@ final class EventExporter
 
     public function export(Iterator $iterator)
     {
-        if (!$iterator->valid()) {
-            $iterator->rewind();
-        }
         $event = $this->fetcher->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {
-            return $event->getData();
+            $value = $event->getValue();
+            if (!$value instanceof ScalarValueInterface) {
+                throw new Exception\UnexpectedDataEventException($event);
+            }
+            return $value->getData();
         }
         if ($event instanceof BeforeArrayEventInterface) {
             return $this->exportArrayData($iterator);
@@ -51,9 +53,6 @@ final class EventExporter
 
         do {
             $event = $this->fetcher->fetchEvent($iterator);
-            if (!isset($event)) {
-                throw new Exception\UnexpectedEndOfDataException;
-            }
             if ($event instanceof ElementEventInterface) {
                 $result[$event->getIndex()] = $this->export($iterator);
                 continue;
@@ -72,9 +71,6 @@ final class EventExporter
 
         do {
             $event = $this->fetcher->fetchEvent($iterator);
-            if (!isset($event)) {
-                throw new Exception\UnexpectedEndOfDataException;
-            }
             if ($event instanceof PropertyEventInterface) {
                 $result->{$event->getName()} = $this->export($iterator);
                 continue;

@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
 
-use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEventInterface;
-use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 

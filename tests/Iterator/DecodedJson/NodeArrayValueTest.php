@@ -8,11 +8,11 @@ use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeArrayValue;
+use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ElementEvent;
-use Remorhaz\JSON\Path\Iterator\Event\DataAwareEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterArrayEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeArrayEvent;
@@ -22,6 +22,7 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\PathAwareInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 /**
  * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\NodeArrayValue
@@ -50,29 +51,99 @@ class NodeArrayValueTest extends TestCase
             'Empty array' => [
                 [],
                 [
-                    ['class' => BeforeArrayEvent::class, 'path' => [], 'data' => []],
-                    ['class' => AfterArrayEvent::class, 'path' => [], 'data' => []],
+                    [
+                        'class' => BeforeArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [],
+                            'path' => [],
+                        ],
+                    ],
+                    [
+                        'class' => AfterArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [],
+                            'path' => [],
+                        ],
+                    ],
                 ],
             ],
             'Array with scalar element' => [
                 [1],
                 [
-                    ['class' => BeforeArrayEvent::class, 'path' => [], 'data' => [1]],
+                    [
+                        'class' => BeforeArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [1],
+                            'path' => [],
+                        ],
+                    ],
                     ['class' => ElementEvent::class, 'path' => [], 'index' => 0],
-                    ['class' => NodeScalarEvent::class, 'path' => [0], 'data' => 1],
-                    ['class' => AfterArrayEvent::class, 'path' => [], 'data' => [1]],
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => 1,
+                            'path' => [0],
+                        ],
+                    ],
+                    [
+                        'class' => AfterArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [1],
+                            'path' => [],
+                        ],
+                    ],
                 ],
             ],
             'Array with array element' => [
                 [[1]],
                 [
-                    ['class' => BeforeArrayEvent::class, 'path' => [], 'data' => [[1]]],
+                    [
+                        'class' => BeforeArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [[1]],
+                            'path' => [],
+                        ],
+                    ],
                     ['class' => ElementEvent::class, 'path' => [], 'index' => 0],
-                    ['class' => BeforeArrayEvent::class, 'path' => [0], 'data' => [1]],
+                    [
+                        'class' => BeforeArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [1],
+                            'path' => [0],
+                        ],
+                    ],
                     ['class' => ElementEvent::class, 'path' => [0], 'index' => 0],
-                    ['class' => NodeScalarEvent::class, 'path' => [0, 0], 'data' => 1],
-                    ['class' => AfterArrayEvent::class, 'path' => [0], 'data' => [1]],
-                    ['class' => AfterArrayEvent::class, 'path' => [], 'data' => [[1]]],
+                    [
+                        'class' => NodeScalarEvent::class,
+                        'value' => [
+                            'class' => NodeScalarValue::class,
+                            'data' => 1,
+                            'path' => [0, 0],
+                        ],
+                    ],
+                    [
+                        'class' => AfterArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [1],
+                            'path' => [0],
+                        ],
+                    ],
+                    [
+                        'class' => AfterArrayEvent::class,
+                        'value' => [
+                            'class' => NodeArrayValue::class,
+                            'data' => [[1]],
+                            'path' => [],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -119,18 +190,7 @@ class NodeArrayValueTest extends TestCase
         }
 
         if ($event instanceof ValueEventInterface) {
-            $value = $event->getValue();
-            if ($value instanceof PathAwareInterface) {
-                $result += ['path' => $value->getPath()->getElements()];
-            }
-        }
-
-        if ($event instanceof DataAwareEventInterface) {
-            $result += ['data' => $this->exportData($event->getData())];
-        }
-
-        if ($event instanceof ValueEventInterface) {
-            $result += ['data' => $this->exportData($this->exportIterator($event->getValue()->createIterator()))];
+            $result += ['value' => $this->exportValue($event->getValue())];
         }
 
         if ($event instanceof ElementEventInterface) {
@@ -139,6 +199,20 @@ class NodeArrayValueTest extends TestCase
 
         if ($event instanceof PropertyEventInterface) {
             $result += ['name' => $event->getName()];
+        }
+
+        return $result;
+    }
+
+    private function exportValue(ValueInterface $value): array
+    {
+        $result = [
+            'class' => get_class($value),
+            'data' => $this->exportData($this->exportIterator($value->createIterator())),
+        ];
+
+        if ($value instanceof PathAwareInterface) {
+            $result += ['path' => $value->getPath()->getElements()];
         }
 
         return $result;
