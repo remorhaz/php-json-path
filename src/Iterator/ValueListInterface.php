@@ -23,12 +23,4 @@ interface ValueListInterface
     public function pushIndexMap(): ValueListInterface;
 
     public function popIndexMap(ValueListInterface $mapSource): ValueListInterface;
-
-    public function withLiteral(LiteralValueInterface $value): ValueListInterface;
-
-    public function containsNodes(): bool;
-
-    public function containsResults(): bool;
-
-    public function containsLiterals(): bool;
 }

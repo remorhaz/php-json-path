@@ -4,12 +4,13 @@ namespace Remorhaz\JSON\Path;
 
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
+use Remorhaz\JSON\Path\Iterator\LiteralValueList;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueList;
+use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
@@ -139,37 +140,52 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".2":
                 // [ 0:NT_INT, 1:NT_WS_OPT ]
-                $header['s.value_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->withLiteral(new LiteralScalarValue($symbols[0]['s.int']));
+                $header['s.value_list'] = new LiteralValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    new LiteralScalarValue($symbols[0]['s.int'])
+                );
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".4":
                 // [ 0:T_NULL, 1:NT_WS_OPT ]
-                $header['s.value_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->withLiteral(new LiteralScalarValue(null));
+                $header['s.value_list'] = new LiteralValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    new LiteralScalarValue(null)
+                );
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".5":
                 // [ 0:T_TRUE, 1:NT_WS_OPT ]
-                $header['s.value_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->withLiteral(new LiteralScalarValue(true));
+                $header['s.value_list'] = new LiteralValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    new LiteralScalarValue(true)
+                );
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".6":
                 // [ 0:T_FALSE, 1:NT_WS_OPT ]
-                $header['s.value_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->withLiteral(new LiteralScalarValue(false));
+                $header['s.value_list'] = new LiteralValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    new LiteralScalarValue(false)
+                );
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".7":
                 // [ 0:NT_STRING, 1:NT_WS_OPT ]
-                $header['s.value_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->withLiteral(new LiteralScalarValue($symbols[0]['s.text']));
+                $header['s.value_list'] = new LiteralValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    new LiteralScalarValue($symbols[0]['s.text'])
+                );
                 break;
 
             case SymbolType::NT_INT . ".0":
@@ -367,7 +383,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_PATH . ".0.1":
                 // [ 0:T_ROOT_ABSOLUTE, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
-                $symbols[1]['i.value_list'] = ValueList::createRootNodes($this->rootValue);
+                $symbols[1]['i.value_list'] = NodeValueList::createRootNodes($this->rootValue);
                 break;
 
             case SymbolType::NT_PATH . ".1.1":

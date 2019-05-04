@@ -96,7 +96,7 @@ final class Fetcher
             }
         }
 
-        return ValueList::createNodes($indexMap, ...$values);
+        return new NodeValueList($indexMap, ...$values);
     }
 
     /**
@@ -149,7 +149,7 @@ final class Fetcher
             }
         }
 
-        return ValueList::createNodes($indexMap, ...$values);
+        return new NodeValueList($indexMap, ...$values);
     }
 
     private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
@@ -227,66 +227,42 @@ final class Fetcher
         } while (true);
     }
 
-    public function logicalOr(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
-    {
-        if (!$leftValueList->containsResults()) {
-            throw new Exception\InvalidResultListException($leftValueList);
-        }
-        if (!$rightValueList->containsResults()) {
-            throw new Exception\InvalidResultListException($rightValueList);
-        }
+    public function logicalOr(
+        ResultValueListInterface $leftValueList,
+        ResultValueListInterface $rightValueList
+    ): ResultValueListInterface {
         if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
 
         $results = [];
-        $rightValues = $rightValueList->getValues();
-        foreach ($leftValueList->getValues() as $index => $leftValue) {
-            if (!$leftValue instanceof ResultValueInterface) {
-                throw new Exception\InvalidResultException($leftValue);
-            }
-            $rightValue = $rightValues[$index];
-            if (!$rightValue instanceof ResultValueInterface) {
-                throw new Exception\InvalidResultException($rightValue);
-            }
-            $results[] = $leftValue->getData() || $rightValue->getData();
+        foreach ($leftValueList->getResults() as $index => $leftResult) {
+            $results[] = $leftResult || $rightValueList->getResult($index);
         }
 
-        return ValueList::createResults($leftValueList->getIndexMap(), ...$results);
+        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
     }
 
     public function logicalAnd(
-        ValueListInterface $leftValueList,
-        ValueListInterface $rightValueList
-    ): ValueListInterface {
-        if (!$leftValueList->containsResults()) {
-            throw new Exception\InvalidResultListException($leftValueList);
-        }
-        if (!$rightValueList->containsResults()) {
-            throw new Exception\InvalidResultListException($rightValueList);
-        }
+        ResultValueListInterface $leftValueList,
+        ResultValueListInterface $rightValueList
+    ): ResultValueListInterface {
         if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
 
         $results = [];
-        $rightValues = $rightValueList->getValues();
-        foreach ($leftValueList->getValues() as $index => $leftValue) {
-            if (!$leftValue instanceof ResultValueInterface) {
-                throw new Exception\InvalidResultException($leftValue);
-            }
-            $rightValue = $rightValues[$index];
-            if (!$rightValue instanceof ResultValueInterface) {
-                throw new Exception\InvalidResultException($rightValue);
-            }
-            $results[] = $leftValue->getData() && $rightValue->getData();
+        foreach ($leftValueList->getResults() as $index => $leftResult) {
+            $results[] = $leftResult && $rightValueList->getResult($index);
         }
 
-        return ValueList::createResults($leftValueList->getIndexMap(), ...$results);
+        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
     }
 
-    public function isEqual(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
-    {
+    public function isEqual(
+        ValueListInterface $leftValueList,
+        ValueListInterface $rightValueList
+    ): ResultValueListInterface {
         if ($leftValueList->getIndexMap() !== $rightValueList->getIndexMap()) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
@@ -297,7 +273,7 @@ final class Fetcher
             $rightValue = $rightValues[$index];
             $results[] = $this->isEqualValue($leftValue, $rightValue);
         }
-        return ValueList::createResults($leftValueList->getIndexMap(), ...$results);
+        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
     }
 
     private function isEqualValue(ValueInterface $leftValue, ValueInterface $rightValue): bool
@@ -312,8 +288,8 @@ final class Fetcher
     public function evaluate(
         ValueListInterface $sourceValues,
         ValueListInterface $resultValues
-    ): ValueListInterface {
-        if ($resultValues->containsResults()) {
+    ): ResultValueListInterface {
+        if ($resultValues instanceof ResultValueListInterface) {
             return $resultValues;
         }
 
@@ -322,6 +298,6 @@ final class Fetcher
             $results[] = $resultValues->outerIndexExists($outerIndex);
         }
 
-        return ValueList::createResults($sourceValues->getIndexMap(), ...$results);
+        return new ResultValueList($sourceValues->getIndexMap(), ...$results);
     }
 }
