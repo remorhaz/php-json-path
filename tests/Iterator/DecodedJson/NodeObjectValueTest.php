@@ -10,13 +10,13 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeObjectValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
+use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterObjectEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeObjectEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\PropertyEvent;
+use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEvent;
+use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEvent;
+use Remorhaz\JSON\Path\Iterator\Event\PropertyEvent;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
@@ -82,7 +82,7 @@ class NodeObjectValueTest extends TestCase
                     ],
                     ['class' => PropertyEvent::class, 'path' => [], 'name' => 'a'],
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,
@@ -124,7 +124,7 @@ class NodeObjectValueTest extends TestCase
                     ],
                     ['class' => PropertyEvent::class, 'path' => ['a'], 'name' => 'b'],
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,

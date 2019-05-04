@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
+namespace Remorhaz\JSON\Path\Iterator\Event;
 
-use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 final class AfterArrayEvent implements AfterArrayEventInterface
@@ -12,7 +10,7 @@ final class AfterArrayEvent implements AfterArrayEventInterface
 
     private $value;
 
-    public function __construct(NodeValueInterface $value)
+    public function __construct(ValueInterface $value)
     {
         $this->value = $value;
     }

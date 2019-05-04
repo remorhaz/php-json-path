@@ -5,9 +5,9 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson;
 
 use Generator;
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterObjectEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeObjectEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\PropertyEvent;
+use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEvent;
+use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEvent;
+use Remorhaz\JSON\Path\Iterator\Event\PropertyEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\ObjectValueInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;

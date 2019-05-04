@@ -9,11 +9,11 @@ use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
+use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidNodeDataException;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
@@ -48,7 +48,7 @@ class NodeScalarValueTest extends TestCase
                 1,
                 [
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,
@@ -61,7 +61,7 @@ class NodeScalarValueTest extends TestCase
                 'a',
                 [
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 'a',
@@ -74,7 +74,7 @@ class NodeScalarValueTest extends TestCase
                 1.2,
                 [
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1.2,
@@ -87,7 +87,7 @@ class NodeScalarValueTest extends TestCase
                 true,
                 [
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => true,
@@ -100,7 +100,7 @@ class NodeScalarValueTest extends TestCase
                 null,
                 [
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => null,

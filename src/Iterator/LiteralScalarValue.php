@@ -27,11 +27,11 @@ final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInte
 
     public function createIterator(): Iterator
     {
-        return $this->createGenerator($this->data);
+        return $this->createGenerator();
     }
 
-    private function createGenerator($data): Generator
+    private function createGenerator(): Generator
     {
-        yield new Event\LiteralScalarEvent($data);
+        yield new Event\ScalarEvent($this);
     }
 }

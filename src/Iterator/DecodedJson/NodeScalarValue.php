@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Iterator\DecodedJson;
 
 use Generator;
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
+use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
@@ -38,11 +38,11 @@ final class NodeScalarValue implements NodeValueInterface, ScalarValueInterface
 
     public function createIterator(): Iterator
     {
-        return $this->createGenerator($this->data, $this->path);
+        return $this->createGenerator();
     }
 
-    private function createGenerator($data, PathInterface $path): Generator
+    private function createGenerator(): Generator
     {
-        yield new NodeScalarEvent($data, $path);
+        yield new ScalarEvent($this);
     }
 }

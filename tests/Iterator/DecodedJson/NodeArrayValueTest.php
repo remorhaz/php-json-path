@@ -10,14 +10,14 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeArrayValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
+use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\ElementEvent;
+use Remorhaz\JSON\Path\Iterator\Event\ElementEvent;
 use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\AfterArrayEvent;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\BeforeArrayEvent;
+use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEvent;
+use Remorhaz\JSON\Path\Iterator\Event\BeforeArrayEvent;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidElementKeyException;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Event\NodeScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
@@ -82,7 +82,7 @@ class NodeArrayValueTest extends TestCase
                     ],
                     ['class' => ElementEvent::class, 'path' => [], 'index' => 0],
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,
@@ -121,7 +121,7 @@ class NodeArrayValueTest extends TestCase
                     ],
                     ['class' => ElementEvent::class, 'path' => [0], 'index' => 0],
                     [
-                        'class' => NodeScalarEvent::class,
+                        'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,

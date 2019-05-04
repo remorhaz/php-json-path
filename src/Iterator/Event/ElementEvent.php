@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator\DecodedJson\Event;
+namespace Remorhaz\JSON\Path\Iterator\Event;
 
-use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 
 final class ElementEvent implements ElementEventInterface
