@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Test\Iterator\DecodedJson;
 use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
+use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeArrayValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;

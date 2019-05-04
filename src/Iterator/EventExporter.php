@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator\DecodedJson;
+namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\BeforeArrayEventInterface;
@@ -13,7 +12,6 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Exception;
-use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
 use stdClass;
 
 final class EventExporter

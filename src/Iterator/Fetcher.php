@@ -89,7 +89,7 @@ final class Fetcher
         $outerMap = [];
         $nextInnerIndex = 0;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
-            $children = $this->fetchNodeValueChildren($matcher, $sourceValue);
+            $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
                 $outerMap[$nextInnerIndex++] = $source->getOuterIndex($sourceIndex);
@@ -97,6 +97,32 @@ final class Fetcher
         }
 
         return new ValueList($outerMap, ...$values);
+    }
+
+    /**
+     * @param ChildMatcherInterface $matcher
+     * @param ValueInterface $value
+     * @return ValueInterface[]
+     */
+    private function fetchValueChildren(
+        Matcher\ChildMatcherInterface $matcher,
+        ValueInterface $value
+    ): array {
+        $iterator = $value->createIterator();
+        $event = $this->fetchEvent($iterator);
+        if ($event instanceof ScalarEventInterface) {
+            return [];
+        }
+
+        if ($event instanceof BeforeArrayEventInterface) {
+            return $this->fetchElements($iterator, $matcher);
+        }
+
+        if ($event instanceof BeforeObjectEventInterface) {
+            return $this->fetchProperties($iterator, $matcher);
+        }
+
+        throw new Exception\InvalidDataEventException($event);
     }
 
     public function fetchFilterContext(ValueListInterface $source): ValueListInterface
@@ -116,7 +142,7 @@ final class Fetcher
                 continue;
             }
 
-            $children = $this->fetchNodeValueChildren(new AnyChildMatcher, $sourceValue);
+            $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
                 $outerMap[$nextInnerIndex++] = $outerIndex;
@@ -124,32 +150,6 @@ final class Fetcher
         }
 
         return new ValueList($outerMap, ...$values);
-    }
-
-    /**
-     * @param ChildMatcherInterface $matcher
-     * @param ValueInterface $value
-     * @return ValueInterface[]
-     */
-    private function fetchNodeValueChildren(
-        Matcher\ChildMatcherInterface $matcher,
-        ValueInterface $value
-    ): array {
-        $iterator = $value->createIterator();
-        $event = $this->fetchEvent($iterator);
-        if ($event instanceof ScalarEventInterface) {
-            return [];
-        }
-
-        if ($event instanceof BeforeArrayEventInterface) {
-            return $this->fetchElements($iterator, $matcher);
-        }
-
-        if ($event instanceof BeforeObjectEventInterface) {
-            return $this->fetchProperties($iterator, $matcher);
-        }
-
-        throw new Exception\InvalidDataEventException($event);
     }
 
     private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
@@ -227,21 +227,6 @@ final class Fetcher
         } while (true);
     }
 
-    /**
-     * @param ValueListInterface $valueList
-     * @return ValueListInterface
-     * @deprecated
-     */
-    public function asLogicalValueList(ValueListInterface $valueList): ValueListInterface
-    {
-        $logicalValues = [];
-        foreach ($valueList->getValues() as $value) {
-            $logicalValues[] = new LiteralScalarValue(true);
-        }
-
-        return new ValueList($valueList->getOuterMap(), ...$logicalValues);
-    }
-
     public function logicalOr(ValueListInterface $leftValueList, ValueListInterface $rightValueList): ValueListInterface
     {
         $values = [];
@@ -254,7 +239,7 @@ final class Fetcher
                 if (isset($innerMap[$outerIndex])) {
                     continue;
                 }
-                $values[] = new LiteralScalarValue(true);
+                $values[] = new ResultValue(true);
                 $innerMap[$outerIndex] = $nextValueIndex++;
             }
         }
@@ -274,7 +259,7 @@ final class Fetcher
             if (!$rightValueList->outerIndexExists($outerIndex)) {
                 continue;
             }
-            $values[] = new LiteralScalarValue(true);
+            $values[] = new ResultValue(true);
             $innerMap[$outerIndex] = $nextValueIndex++;
         }
 
@@ -302,7 +287,7 @@ final class Fetcher
                 if (!$isEqualEvent) {
                     continue;
                 }
-                $values[] = new LiteralScalarValue(true);
+                $values[] = new ResultValue(true);
                 $innerMap[$leftOuterIndex] = $nextInnerIndex++;
             }
         }
@@ -329,7 +314,7 @@ final class Fetcher
         return false;
     }
 
-    public function createScalarList(ValueListInterface $valueList, $data): ValueListInterface
+    public function createLiteralList(ValueListInterface $valueList, $data): ValueListInterface
     {
         if (null !== $data && !\is_scalar($data)) {
             throw new Exception\NonScalarDataException($data);

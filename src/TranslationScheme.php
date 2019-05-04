@@ -140,35 +140,35 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_INT, 1:NT_WS_OPT ]
                 $header['s.value_list'] = $this
                     ->fetcher
-                    ->createScalarList($header['i.value_list'], $symbols[0]['s.int']);
+                    ->createLiteralList($header['i.value_list'], $symbols[0]['s.int']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".4":
                 // [ 0:T_NULL, 1:NT_WS_OPT ]
                 $header['s.value_list'] = $this
                     ->fetcher
-                    ->createScalarList($header['i.value_list'], null);
+                    ->createLiteralList($header['i.value_list'], null);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".5":
                 // [ 0:T_TRUE, 1:NT_WS_OPT ]
                 $header['s.value_list'] = $this
                     ->fetcher
-                    ->createScalarList($header['i.value_list'], true);
+                    ->createLiteralList($header['i.value_list'], true);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".6":
                 // [ 0:T_FALSE, 1:NT_WS_OPT ]
                 $header['s.value_list'] = $this
                     ->fetcher
-                    ->createScalarList($header['i.value_list'], false);
+                    ->createLiteralList($header['i.value_list'], false);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".7":
                 // [ 0:NT_STRING, 1:NT_WS_OPT ]
                 $header['s.value_list'] = $this
                     ->fetcher
-                    ->createScalarList($header['i.value_list'], $symbols[0]['s.text']);
+                    ->createLiteralList($header['i.value_list'], $symbols[0]['s.text']);
                 break;
 
             case SymbolType::NT_INT . ".0":

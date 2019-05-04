@@ -7,7 +7,7 @@ use function get_class;
 use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\EventExporter;
+use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
