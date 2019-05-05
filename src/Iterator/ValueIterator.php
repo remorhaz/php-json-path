@@ -16,10 +16,12 @@ use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 final class ValueIterator
 {
 
-    public function createArrayIterator(ArrayValueInterface $value): \Generator
+    /**
+     * @param Iterator $iterator
+     * @return \Generator|ValueInterface[]
+     */
+    public function createArrayIterator(Iterator $iterator): \Generator
     {
-        $iterator = $value->createIterator();
-
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeArrayEventInterface) {
             throw new Exception\UnexpectedDataEventException($event);
@@ -41,10 +43,12 @@ final class ValueIterator
         } while (true);
     }
 
-    public function createObjectIterator(ObjectValueInterface $value): \Generator
+    /**
+     * @param Iterator $iterator
+     * @return \Generator|ValueInterface[]
+     */
+    public function createObjectIterator(Iterator $iterator): \Generator
     {
-        $iterator = $value->createIterator();
-
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeObjectEventInterface) {
             throw new Exception\UnexpectedDataEventException($event);

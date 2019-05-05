@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Iterator\Matcher;
 
 use function in_array;
-use Remorhaz\JSON\Path\Iterator\Event\ChildEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 
 final class StrictElementMatcher implements ChildMatcherInterface
 {
@@ -17,10 +15,8 @@ final class StrictElementMatcher implements ChildMatcherInterface
         $this->indices = $indices;
     }
 
-    public function match(ChildEventInterface $event): bool
+    public function match($address): bool
     {
-        return $event instanceof ElementEventInterface
-            ? in_array($event->getIndex(), $this->indices, true)
-            : false;
+        return in_array($address, $this->indices, true);
     }
 }

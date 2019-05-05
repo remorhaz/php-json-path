@@ -37,8 +37,8 @@ final class EqualValueComparator implements ValueComparatorInterface
 
     private function isArrayEqual(ArrayValueInterface $leftValue, ArrayValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIterator->createArrayIterator($leftValue);
-        $rightValueIterator = $this->valueIterator->createArrayIterator($rightValue);
+        $leftValueIterator = $this->valueIterator->createArrayIterator($leftValue->createIterator());
+        $rightValueIterator = $this->valueIterator->createArrayIterator($rightValue->createIterator());
 
         while ($leftValueIterator->valid()) {
             if (!$rightValueIterator->valid()) {
@@ -55,8 +55,8 @@ final class EqualValueComparator implements ValueComparatorInterface
 
     private function isObjectEqual(ObjectValueInterface $leftValue, ObjectValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIterator->createObjectIterator($leftValue);
-        $rightValueIterator = $this->valueIterator->createObjectIterator($rightValue);
+        $leftValueIterator = $this->valueIterator->createObjectIterator($leftValue->createIterator());
+        $rightValueIterator = $this->valueIterator->createObjectIterator($rightValue->createIterator());
 
         $valuesByProperty = [];
         while ($leftValueIterator->valid()) {

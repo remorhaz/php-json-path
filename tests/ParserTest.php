@@ -33,7 +33,8 @@ class ParserTest extends TestCase
         $iteratorFactory = (new NodeValueFactory)->createValue($json, $path);
         $values = NodeValueList::createRoot($iteratorFactory);
 
-        $fetcher = new Fetcher;
+        $valueIterator = new ValueIterator;
+        $fetcher = new Fetcher($valueIterator);
         $values = $fetcher->fetchChildren(
             new StrictPropertyMatcher('a', 'x'),
             $values
@@ -45,7 +46,7 @@ class ParserTest extends TestCase
 
         $actualValue = [];
         foreach ($values->getValues() as $value) {
-            $actualValue[] = (new EventExporter($fetcher))->export($value->createIterator());
+            $actualValue[] = (new EventExporter($valueIterator))->export($value->createIterator());
         }
 
         //self::assertEquals([(object) ['b' => 'c']], $actualValue);
@@ -68,8 +69,9 @@ class ParserTest extends TestCase
 
         $path = Path::createEmpty();
         $rootValue = (new NodeValueFactory)->createValue($json, $path);
-        $fetcher = new Fetcher;
-        $evaluator = new Evaluator(new ValueComparatorCollection(new ValueIterator));
+        $valueIterator = new ValueIterator;
+        $fetcher = new Fetcher($valueIterator);
+        $evaluator = new Evaluator(new ValueComparatorCollection($valueIterator));
         $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
@@ -79,7 +81,7 @@ class ParserTest extends TestCase
         $output = $scheme->getOutput();
         $actualValue = [];
         foreach ($output as $value) {
-            $actualValue[] = \json_encode((new EventExporter($fetcher))->export($value->createIterator()));
+            $actualValue[] = \json_encode((new EventExporter($valueIterator))->export($value->createIterator()));
         }
 
         self::assertEquals($expectedValue, $actualValue);

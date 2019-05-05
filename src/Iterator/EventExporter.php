@@ -4,80 +4,43 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
-use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\BeforeArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Exception;
-use stdClass;
 
 final class EventExporter
 {
 
-    private $fetcher;
+    private $valueIterator;
 
-    public function __construct(Fetcher $fetcher)
+    public function __construct(ValueIterator $valueIterator)
     {
-        $this->fetcher = $fetcher;
+        $this->valueIterator = $valueIterator;
     }
 
     public function export(Iterator $iterator)
     {
-        $event = $this->fetcher->fetchEvent($iterator);
-        if ($event instanceof ScalarEventInterface) {
-            $value = $event->getValue();
-            if (!$value instanceof ScalarValueInterface) {
-                throw new Exception\UnexpectedDataEventException($event);
-            }
+        $value = $this->valueIterator->fetchValue($iterator);
+        if ($value instanceof ScalarValueInterface) {
             return $value->getData();
         }
-        if ($event instanceof BeforeArrayEventInterface) {
-            return $this->exportArrayData($iterator);
+
+        if ($value instanceof ArrayValueInterface) {
+            $result = [];
+            foreach ($this->valueIterator->createArrayIterator($value->createIterator()) as $index => $element) {
+                $result[$index] = $this->export($element->createIterator());
+            }
+
+            return $result;
         }
 
-        if ($event instanceof BeforeObjectEventInterface) {
-            return $this->exportObjectData($iterator);
+        if ($value instanceof ObjectValueInterface) {
+            $result = (object) [];
+            foreach ($this->valueIterator->createObjectIterator($value->createIterator()) as $name => $property) {
+                $result->{$name} = $this->export($property->createIterator());
+            }
+
+            return $result;
         }
 
-        throw new Exception\UnexpectedDataEventException($event);
-    }
-
-    private function exportArrayData(Iterator $iterator): array
-    {
-        $result = [];
-
-        do {
-            $event = $this->fetcher->fetchEvent($iterator);
-            if ($event instanceof ElementEventInterface) {
-                $result[$event->getIndex()] = $this->export($iterator);
-                continue;
-            }
-            if ($event instanceof AfterArrayEventInterface) {
-                break;
-            }
-        } while (true);
-
-        return $result;
-    }
-
-    private function exportObjectData(Iterator $iterator): stdClass
-    {
-        $result = (object) [];
-
-        do {
-            $event = $this->fetcher->fetchEvent($iterator);
-            if ($event instanceof PropertyEventInterface) {
-                $result->{$event->getName()} = $this->export($iterator);
-                continue;
-            }
-            if ($event instanceof AfterObjectEventInterface) {
-                break;
-            }
-        } while (true);
-
-        return $result;
+        throw new Exception\UnexpectedValueException($value);
     }
 }

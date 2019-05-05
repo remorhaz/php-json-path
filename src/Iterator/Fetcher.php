@@ -5,14 +5,6 @@ namespace Remorhaz\JSON\Path\Iterator;
 
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
-use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\BeforeArrayEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\BeforeObjectEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
@@ -20,60 +12,12 @@ use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilterInterface;
 final class Fetcher
 {
 
-    public function fetchEvent(Iterator $iterator): DataEventInterface
+    private $valueIterator;
+
+    public function __construct(ValueIterator $valueIterator)
     {
-        if (!$iterator->valid()) {
-            throw new Exception\UnexpectedEndOfData();
-        }
-        $event = $iterator->current();
-        $iterator->next();
-
-        if (!$event instanceof DataEventInterface) {
-            throw new Exception\InvalidDataEventException($event);
-        }
-
-        return $event;
+        $this->valueIterator = $valueIterator;
     }
-
-    public function skipValue(Iterator $iterator): void
-    {
-        $event = $this->fetchEvent($iterator);
-        if ($event instanceof ScalarEventInterface) {
-            return;
-        }
-
-        if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator);
-            return;
-        }
-
-        if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator);
-            return;
-        }
-
-        throw new Exception\InvalidDataEventException($event);
-    }
-
-    public function fetchValue(Iterator $iterator): NodeValueInterface
-    {
-        $event = $this->fetchEvent($iterator);
-        if ($event instanceof ScalarEventInterface) {
-            return $event->getValue();
-        }
-        if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator);
-            return $event->getValue();
-        }
-
-        if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator);
-            return $event->getValue();
-        }
-
-        throw new Exception\InvalidDataEventException($event);
-    }
-
     /**
      * @param ChildMatcherInterface $matcher
      * @param NodeValueListInterface $source
@@ -105,21 +49,19 @@ final class Fetcher
         Matcher\ChildMatcherInterface $matcher,
         NodeValueInterface $value
     ): array {
-        $iterator = $value->createIterator();
-        $event = $this->fetchEvent($iterator);
-        if ($event instanceof ScalarEventInterface) {
+        if ($value instanceof ScalarValueInterface) {
             return [];
         }
 
-        if ($event instanceof BeforeArrayEventInterface) {
-            return $this->fetchElements($iterator, $matcher);
+        if ($value instanceof ArrayValueInterface) {
+            return $this->fetchElements($value->createIterator(), $matcher);
         }
 
-        if ($event instanceof BeforeObjectEventInterface) {
-            return $this->fetchProperties($iterator, $matcher);
+        if ($value instanceof ObjectValueInterface) {
+            return $this->fetchProperties($value->createIterator(), $matcher);
         }
 
-        throw new Exception\InvalidDataEventException($event);
+        throw new Exception\InvalidValueException($value);
     }
 
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
@@ -131,14 +73,9 @@ final class Fetcher
                 throw new Exception\InvalidContextValueException($sourceValue);
             }
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
-            $event = $this->fetchEvent($sourceValue->createIterator());
-            if (!$event instanceof BeforeArrayEventInterface) {
-                $values[] = $sourceValue;
-                $indexMap[] = $outerIndex;
-                continue;
-            }
-
-            $children = $this->fetchValueChildren(new AnyChildMatcher, $sourceValue);
+            $children = $sourceValue instanceof ArrayValueInterface
+                ? $this->fetchValueChildren(new AnyChildMatcher, $sourceValue)
+                : [$sourceValue];
             foreach ($children as $child) {
                 $values[] = $child;
                 $indexMap[] = $outerIndex;
@@ -151,21 +88,25 @@ final class Fetcher
     private function fetchElements(Iterator $iterator, ChildMatcherInterface $matcher): array
     {
         $results = [];
-        do {
-            $event = $this->fetchEvent($iterator);
-            if ($event instanceof ElementEventInterface) {
-                if ($matcher->match($event)) {
-                    $results[] = $this->fetchValue($iterator);
-                    continue;
-                }
-                $this->skipValue($iterator);
-                continue;
+        foreach ($this->valueIterator->createArrayIterator($iterator) as $index => $element) {
+            if ($matcher->match($index)) {
+                $results[] = $element;
             }
-            if ($event instanceof AfterArrayEventInterface) {
-                return $results;
+        }
+
+        return $results;
+    }
+
+    private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher): array
+    {
+        $results = [];
+        foreach ($this->valueIterator->createObjectIterator($iterator) as $name => $property) {
+            if ($matcher->match($name)) {
+                $results[] = $property;
             }
-            throw new Exception\InvalidDataEventException($event);
-        } while (true);
+        }
+
+        return $results;
     }
 
     public function filterValues(
@@ -173,55 +114,5 @@ final class Fetcher
         NodeValueListInterface $values
     ): NodeValueListInterface {
         return $matcher->filterValues($values);
-    }
-
-    private function fetchProperties(Iterator $iterator, ChildMatcherInterface $matcher): array
-    {
-        $results = [];
-        do {
-            $event = $this->fetchEvent($iterator);
-            if ($event instanceof PropertyEventInterface) {
-                if ($matcher->match($event)) {
-                    $results[] = $this->fetchValue($iterator);
-                    continue;
-                }
-                $this->skipValue($iterator);
-                continue;
-            }
-            if ($event instanceof AfterObjectEventInterface) {
-                return $results;
-            }
-            throw new Exception\InvalidDataEventException($event);
-        } while (true);
-    }
-
-    private function skipArrayValue(Iterator $iterator): void
-    {
-        do {
-            $event = $this->fetchEvent($iterator);
-            if ($event instanceof ElementEventInterface) {
-                $this->skipValue($iterator);
-                continue;
-            }
-            if ($event instanceof AfterArrayEventInterface) {
-                return;
-            }
-            throw new Exception\InvalidDataEventException($event);
-        } while (true);
-    }
-
-    private function skipObjectValue(Iterator $iterator): void
-    {
-        do {
-            $event = $this->fetchEvent($iterator);
-            if ($event instanceof PropertyEventInterface) {
-                $this->skipValue($iterator);
-                continue;
-            }
-            if ($event instanceof AfterObjectEventInterface) {
-                return;
-            }
-            throw new Exception\InvalidDataEventException($event);
-        } while (true);
     }
 }
