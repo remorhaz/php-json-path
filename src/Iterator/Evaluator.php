@@ -50,6 +50,16 @@ final class Evaluator
         return new ResultValueList($leftValueList->getIndexMap(), ...$results);
     }
 
+    public function logicalNot(ResultValueListInterface $valueList): ResultValueListInterface
+    {
+        $results = [];
+        foreach ($valueList->getResults() as $leftResult) {
+            $results[] = !$leftResult;
+        }
+
+        return new ResultValueList($valueList->getIndexMap(), ...$results);
+    }
+
     public function isEqual(
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList

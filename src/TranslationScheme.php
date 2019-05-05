@@ -319,6 +319,17 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0":
+                // [ 0:T_OP_NOT, 1:NT_EXPR_ARG_SCALAR ]
+                $header['s.value_list'] = $this
+                    ->evaluator
+                    ->logicalNot(
+                        $this
+                            ->evaluator
+                            ->evaluate(
+                                $this->asValueList($header['i.value_list']),
+                                $this->asValueList($symbols[1]['s.value_list'])
+                            )
+                    );
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".1":
@@ -504,6 +515,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0.1":
+                // [ 0:T_OP_NOT, 1:NT_EXPR_ARG_SCALAR ]
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".1.0":

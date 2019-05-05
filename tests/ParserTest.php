@@ -10,7 +10,6 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\EqualValueComparator;
 use Remorhaz\JSON\Path\Iterator\ValueComparatorCollection;
 use Remorhaz\JSON\Path\Iterator\ValueIterator;
 use Remorhaz\JSON\Path\TokenMatcher;
@@ -393,6 +392,11 @@ class ParserTest extends TestCase
                 [1, 2, 3],
                 '$[?((false))]',
                 [],
+            ],
+            'Filter with negated false' => [
+                [1, 2, 3],
+                '$[?(!false)]',
+                ['1', '2', '3'],
             ],
         ];
     }
