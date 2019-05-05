@@ -11,6 +11,13 @@ use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 final class Evaluator
 {
 
+    private $comparators;
+
+    public function __construct(ValueComparatorCollection $comparators)
+    {
+        $this->comparators = $comparators;
+    }
+
     public function logicalOr(
         ResultValueListInterface $leftValueList,
         ResultValueListInterface $rightValueList
@@ -53,18 +60,12 @@ final class Evaluator
         $results = [];
 
         foreach ($leftValueList->getValues() as $index => $leftValue) {
-            $results[] = $this->isEqualValue($leftValue, $rightValueList->getValue($index));
+            $results[] = $this
+                ->comparators
+                ->equal()
+                ->compare($leftValue, $rightValueList->getValue($index));
         }
         return new ResultValueList($leftValueList->getIndexMap(), ...$results);
-    }
-
-    private function isEqualValue(ValueInterface $leftValue, ValueInterface $rightValue): bool
-    {
-        if ($leftValue instanceof ScalarValueInterface && $rightValue instanceof ScalarValueInterface) {
-            return $leftValue->getData() === $rightValue->getData();
-        }
-
-        return false;
     }
 
     public function evaluate(

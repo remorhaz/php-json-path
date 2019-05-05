@@ -10,6 +10,9 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
+use Remorhaz\JSON\Path\Iterator\EqualValueComparator;
+use Remorhaz\JSON\Path\Iterator\ValueComparatorCollection;
+use Remorhaz\JSON\Path\Iterator\ValueIterator;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\TranslationScheme;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
@@ -66,7 +69,8 @@ class ParserTest extends TestCase
         $path = Path::createEmpty();
         $rootValue = (new NodeValueFactory)->createValue($json, $path);
         $fetcher = new Fetcher;
-        $scheme = new TranslationScheme($rootValue, $fetcher, new Evaluator);
+        $evaluator = new Evaluator(new ValueComparatorCollection(new ValueIterator));
+        $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
         $parser->loadLookupTable(__DIR__ . '/../generated/LookupTable.php');
@@ -258,6 +262,35 @@ class ParserTest extends TestCase
                 [1, 2, 3],
                 '$[?("a" == 1)]',
                 [],
+            ],
+            'Filter with equality check on existing string paths evaluating to true' => [
+                (object) ['a' => 'b', 'c' => 'b'],
+                '$[?(@.a == @.c)]',
+                ['{"a":"b","c":"b"}'],
+            ],
+            'Filter with equality check on existing string paths evaluating to false' => [
+                (object) ['a' => 'b', 'c' => 'd'],
+                '$[?(@.a == @.c)]',
+                [],
+            ],
+            'Filter with equality check on existing array paths' => [
+                [
+                    (object) ['a' => ['b','d'], 'c' => ['b', 'd']],
+                    (object) ['a' => ['b','d'], 'c' => ['b', 'd', 'e']],
+                    (object) ['a' => ['b','d'], 'c' => ['d', 'b']],
+                ],
+                '$[?(@.a == @.c)]',
+                ['{"a":["b","d"],"c":["b","d"]}'],
+            ],
+            'Filter with equality check on existing object paths' => [
+                [
+                    (object) ['a' => (object) ['b' => 1,'d' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 2,'d' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 1], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 1,'d' => 2, 'e' => 3], 'c' => (object) ['d' => 2, 'b' => 1]],
+                ],
+                '$[?(@.a == @.c)]',
+                ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
             ],
             'Filter with OR' => [
                 [
