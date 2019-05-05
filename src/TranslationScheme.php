@@ -137,6 +137,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0":
+                // [ 0:NT_EXPR_GROUP, 1:NT_WS_OPT ]
+                $header['s.value_list'] = $symbols[0]['s.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1":
@@ -370,6 +372,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_GROUP . ".0":
+                // [ 0:T_LEFT_BRACKET, 1:NT_WS_OPT, 2:NT_EXPR, 3:T_RIGHT_BRACKET]
+                $header['s.value_list'] = $symbols[2]['s.value_list'];
                 break;
         }
     }
@@ -508,6 +512,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0.0":
+                // [ 0:NT_EXPR_GROUP, 1:NT_WS_OPT ]
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1.0":
@@ -549,6 +555,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_GROUP . ".0.2":
+                // [ 0:T_LEFT_BRACKET, 1:NT_WS_OPT, 2:NT_EXPR, 3:T_RIGHT_BRACKET ]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0.2":

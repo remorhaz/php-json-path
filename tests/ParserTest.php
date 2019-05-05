@@ -299,6 +299,16 @@ class ParserTest extends TestCase
                 '$[?(@.c || @.a && @.b)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
             ],
+            'Filter with AND after OR with brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => 2],
+                    (object) ['a' => 3],
+                    (object) ['c' => 4],
+                    (object) ['b' => 5],
+                ],
+                '$[?((@.c || @.a) && @.b)]',
+                ['{"a":1,"b":2}'],
+            ],
             'Filter with OR after OR without brackets' => [
                 [
                     (object) ['a' => 1, 'b' => 2],
@@ -328,6 +338,26 @@ class ParserTest extends TestCase
                 ],
                 '$[?(@.c == @.a == @.b)]',
                 ['{"a":1,"b":true,"c":1}', '{"a":1,"b":false,"c":2}'],
+            ],
+            'Filter with EQ after EQ with brackets' => [
+                [
+                    (object) ['a' => 1, 'b' => true, 'c' => 1],
+                    (object) ['a' => 1, 'b' => false, 'c' => 2],
+                    (object) ['a' => 3, 'b' => 3, 'c' => true],
+                    (object) ['a' => 3, 'b' => 4, 'c' => false],
+                ],
+                '$[?(@.c == (@.a == @.b))]',
+                ['{"a":3,"b":3,"c":true}', '{"a":3,"b":4,"c":false}'],
+            ],
+            'Filter with true in brackets' => [
+                [1, 2, 3],
+                '$[?((true))]',
+                ['1', '2', '3'],
+            ],
+            'Filter with false in brackets' => [
+                [1, 2, 3],
+                '$[?((false))]',
+                [],
             ],
         ];
     }
