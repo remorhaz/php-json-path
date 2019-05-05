@@ -2,6 +2,7 @@
 
 namespace Remorhaz\JSON\Path;
 
+use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
 use Remorhaz\JSON\Path\Iterator\LiteralValueList;
@@ -28,10 +29,13 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $output;
 
-    public function __construct(NodeValueInterface $rootValue, Fetcher $fetcher)
+    private $evaluator;
+
+    public function __construct(NodeValueInterface $rootValue, Fetcher $fetcher, Evaluator $evaluator)
     {
         $this->rootValue = $rootValue;
         $this->fetcher = $fetcher;
+        $this->evaluator = $evaluator;
     }
 
     /**
@@ -294,7 +298,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $contextValues = $this->asNodeValueList($symbols[3]['i.context_value_list']);
                 $evaluationResult = $this
-                    ->fetcher
+                    ->evaluator
                     ->evaluate(
                         $this->asValueList($symbols[3]['i.value_list']),
                         $this->asValueList($symbols[3]['s.value_list'])
@@ -452,13 +456,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 $sourceValues = $this->asValueList($header['i.value_list']);
                 $symbols[3]['i.value_list'] = $sourceValues;
                 $symbols[3]['i.left_value_list'] = $this
-                    ->fetcher
+                    ->evaluator
                     ->logicalOr(
                         $this
-                            ->fetcher
+                            ->evaluator
                             ->evaluate($sourceValues, $this->asValueList($header['i.left_value_list'])),
                         $this
-                            ->fetcher
+                            ->evaluator
                             ->evaluate($sourceValues, $this->asValueList($symbols[2]['s.value_list']))
                     );
                 break;
@@ -484,13 +488,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 $sourceValues = $this->asValueList($header['i.value_list']);
                 $symbols[3]['i.value_list'] = $sourceValues;
                 $symbols[3]['i.left_value_list'] = $this
-                    ->fetcher
+                    ->evaluator
                     ->logicalAnd(
                         $this
-                            ->fetcher
+                            ->evaluator
                             ->evaluate($sourceValues, $this->asValueList($header['i.left_value_list'])),
                         $this
-                            ->fetcher
+                            ->evaluator
                             ->evaluate($sourceValues, $this->asValueList($symbols[2]['s.value_list']))
                     );
                 break;
@@ -528,7 +532,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $symbols[3]['i.value_list'] = $header['i.value_list'];
                 $symbols[3]['i.left_value_list'] = $this
-                    ->fetcher
+                    ->evaluator
                     ->isEqual(
                         $this->asValueList($header['i.left_value_list']),
                         $this->asValueList($symbols[2]['s.value_list'])

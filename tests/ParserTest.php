@@ -3,6 +3,7 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
@@ -65,7 +66,7 @@ class ParserTest extends TestCase
         $path = Path::createEmpty();
         $rootValue = (new NodeValueFactory)->createValue($json, $path);
         $fetcher = new Fetcher;
-        $scheme = new TranslationScheme($rootValue, $fetcher);
+        $scheme = new TranslationScheme($rootValue, $fetcher, new Evaluator);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
         $parser->loadLookupTable(__DIR__ . '/../generated/LookupTable.php');
