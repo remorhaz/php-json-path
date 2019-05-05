@@ -188,7 +188,7 @@ class ParserTest extends TestCase
                 '$[?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
             ],
-            'Filter with equality check on scalar' => [
+            'Filter with EQ check on int' => [
                 [
                     (object) ['a' => 1],
                     (object) ['a' => 2],
@@ -397,6 +397,14 @@ class ParserTest extends TestCase
                 [1, 2, 3],
                 '$[?(!false)]',
                 ['1', '2', '3'],
+            ],
+            'Filter with NEQ check on int' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[?(@.a != 1)]',
+                ['{"a":2}'],
             ],
         ];
     }

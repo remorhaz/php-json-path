@@ -339,9 +339,10 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0":
                 // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1":
+                // [ 0:T_OP_NEQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $header['s.value_list'] = $symbols[3]['s.value_list'];
                 break;
-
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":
                 // [ ]
                 $header['s.value_list'] = $header['i.left_value_list'];
@@ -544,6 +545,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0.2":
                 // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1.2":
+                // [ 0:T_OP_NEQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
@@ -558,7 +561,21 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 break;
 
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1.2":
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1.3":
+                // [ 0:T_OP_NEQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.left_value_list'] = $this
+                    ->evaluator
+                    ->logicalNot(
+                        $this
+                            ->evaluator
+                            ->isEqual(
+                                $this->asValueList($header['i.left_value_list']),
+                                $this->asValueList($symbols[2]['s.value_list'])
+                            )
+                    );
+                break;
+
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".4.2":
