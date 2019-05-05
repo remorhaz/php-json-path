@@ -4,6 +4,7 @@ namespace Remorhaz\JSON\Path;
 
 use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
+use Remorhaz\JSON\Path\Iterator\LiteralArrayValueList;
 use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
 use Remorhaz\JSON\Path\Iterator\LiteralValueList;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
@@ -153,6 +154,16 @@ class TranslationScheme implements TranslationSchemeInterface
                         ->asValueList($header['i.value_list'])
                         ->getIndexMap(),
                     new LiteralScalarValue($symbols[0]['s.int'])
+                );
+                break;
+
+            case SymbolType::NT_EXPR_ARG_SCALAR . ".3":
+                // [ 0:NT_ARRAY, 1:NT_WS_OPT ]
+                $header['s.value_list'] = new LiteralArrayValueList(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap(),
+                    ...$symbols[0]['s.array_elements']
                 );
                 break;
 
@@ -387,6 +398,21 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_LEFT_BRACKET, 1:NT_WS_OPT, 2:NT_EXPR, 3:T_RIGHT_BRACKET]
                 $header['s.value_list'] = $symbols[2]['s.value_list'];
                 break;
+
+            case SymbolType::NT_ARRAY . '.0':
+                // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT, 3:T_RIGHT_SQUARE_BRACKET ]
+                $header['s.array_elements'] = $symbols[2]['s.array_elements'];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT . '.0':
+                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
+                $header['s.array_elements'] = $symbols[3]['s.array_elements'];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT . '.1':
+                // []
+                $header['s.array_elements'] = $header['i.array_elements'];
+                break;
         }
     }
 
@@ -541,6 +567,8 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".3.0":
+                // [ 0:NT_ARRAY, 1:NT_WS_OPT ]
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".0.2":
@@ -686,6 +714,26 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_STRING_CONTENT . ".1.2":
                 $symbols[2]['i.text'] = $header['i.text'] . $symbols[1]['s.text'];
+                break;
+
+            case SymbolType::NT_ARRAY . '.0.2':
+                // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT, 3:T_RIGHT_SQUARE_BRACKET ]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
+                $symbols[2]['i.array_elements'] = [];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT . '.0.0':
+                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT . '.0.3':
+                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.array_elements'] = \array_merge(
+                    $header['i.array_elements'],
+                    [$this->asValueList($symbols[0]['s.value_list'])]
+                );
                 break;
         }
     }

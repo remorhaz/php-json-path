@@ -163,7 +163,12 @@ return [
             1 => [SymbolType::NT_EXPR_ARG_SCALAR],
         ],
         SymbolType::NT_EXPR_ARG_OR_TAIL => [
-            0 => [SymbolType::T_OP_OR, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR_ARG_OR, SymbolType::NT_EXPR_ARG_OR_TAIL],
+            0 => [
+                SymbolType::T_OP_OR,
+                SymbolType::NT_WS_OPT,
+                SymbolType::NT_EXPR_ARG_OR,
+                SymbolType::NT_EXPR_ARG_OR_TAIL,
+            ],
             1 => [],
         ],
         SymbolType::NT_EXPR_ARG_AND_TAIL => [
@@ -248,9 +253,13 @@ return [
             ],
         ],
         SymbolType::NT_ARRAY_CONTENT => [
-            0 => [SymbolType::NT_STRING_LIST],
-            1 => [SymbolType::NT_INT, SymbolType::NT_WS_OPT, SymbolType::NT_INT_NEXT_LIST],
-            2 => [],
+            0 => [
+                SymbolType::NT_EXPR,
+                SymbolType::T_COMMA,
+                SymbolType::NT_WS_OPT,
+                SymbolType::NT_ARRAY_CONTENT,
+            ],
+            1 => [],
         ],
         SymbolType::NT_STRING => [
             0 => [SymbolType::T_SINGLE_QUOTE, SymbolType::NT_STRING_CONTENT, SymbolType::T_SINGLE_QUOTE],
