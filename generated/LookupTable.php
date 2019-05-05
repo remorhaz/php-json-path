@@ -39,6 +39,7 @@ return [
         TokenType::OP_OR => 3,
         TokenType::RIGHT_BRACKET => 3,
         TokenType::COMMA => 3,
+        TokenType::RIGHT_SQUARE_BRACKET => 3,
     ],
     SymbolType::NT_DOT_FILTER => [
         TokenType::NAME => 0,
@@ -66,6 +67,7 @@ return [
         TokenType::OP_OR => 1,
         TokenType::RIGHT_BRACKET => 1,
         TokenType::COMMA => 1,
+        TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
     SymbolType::NT_NAME => [
         TokenType::STAR => 0,
@@ -212,12 +214,14 @@ return [
         TokenType::OP_OR => 0,
         TokenType::RIGHT_BRACKET => 1,
         TokenType::COMMA => 1,
+        TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_AND_TAIL => [
         TokenType::OP_AND => 0,
         TokenType::OP_OR => 1,
         TokenType::RIGHT_BRACKET => 1,
         TokenType::COMMA => 1,
+        TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
     SymbolType::NT_EXPR_ARG_COMP_TAIL => [
         TokenType::OP_EQ => 0,
@@ -232,6 +236,7 @@ return [
         TokenType::OP_OR => 8,
         TokenType::RIGHT_BRACKET => 8,
         TokenType::COMMA => 8,
+        TokenType::RIGHT_SQUARE_BRACKET => 8,
     ],
     SymbolType::NT_EXPR_ARG_SCALAR => [
         TokenType::LEFT_BRACKET => 0,
@@ -265,6 +270,10 @@ return [
         TokenType::LEFT_SQUARE_BRACKET => 0,
         TokenType::SINGLE_QUOTE => 0,
         TokenType::DOUBLE_QUOTE => 0,
+        TokenType::RIGHT_SQUARE_BRACKET => 1,
+    ],
+    SymbolType::NT_ARRAY_CONTENT_TAIL => [
+        TokenType::COMMA => 0,
         TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
     SymbolType::NT_STRING => [

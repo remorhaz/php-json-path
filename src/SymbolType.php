@@ -71,6 +71,7 @@ abstract class SymbolType
     public const NT_STRING_CONTENT      = 0x9B;
     public const NT_ESCAPED             = 0x9C;
     public const NT_STRING_LIST         = 0x9D;
+    public const NT_ARRAY_CONTENT_TAIL  = 0x9E;
 
     public const T_EOI                  = 0xFF;
 }

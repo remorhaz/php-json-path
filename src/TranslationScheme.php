@@ -405,11 +405,21 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.0':
-                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
-                $header['s.array_elements'] = $symbols[3]['s.array_elements'];
+                // [ 0:NT_EXPR, 1:NT_ARRAY_CONTENT_TAIL ]
+                $header['s.array_elements'] = $symbols[1]['s.array_elements'];
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.1':
+                // []
+                $header['s.array_elements'] = $header['i.array_elements'];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT_TAIL . '.0':
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT ]
+                $header['s.array_elements'] = $symbols[2]['s.array_elements'];
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT_TAIL . '.1':
                 // []
                 $header['s.array_elements'] = $header['i.array_elements'];
                 break;
@@ -723,17 +733,23 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.0.0':
-                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
+                // [ 0:NT_EXPR, 1:NT_ARRAY_CONTENT_TAIL ]
                 $symbols[0]['i.value_list'] = $header['i.value_list'];
                 break;
 
-            case SymbolType::NT_ARRAY_CONTENT . '.0.3':
-                // [ 0:NT_EXPR, 1:T_COMMA, 2:NT_WS_OPT, 3:NT_ARRAY_CONTENT ]
-                $symbols[3]['i.value_list'] = $header['i.value_list'];
-                $symbols[3]['i.array_elements'] = \array_merge(
+            case SymbolType::NT_ARRAY_CONTENT . '.0.1':
+                // [ 0:NT_EXPR, 1:NT_ARRAY_CONTENT_TAIL ]
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                $symbols[1]['i.array_elements'] = \array_merge(
                     $header['i.array_elements'],
                     [$this->asValueList($symbols[0]['s.value_list'])]
                 );
+                break;
+
+            case SymbolType::NT_ARRAY_CONTENT_TAIL . '.0.2':
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT ]
+                $symbols[2]['i.value_list'] = $header['i.value_list'];
+                $symbols[2]['i.array_elements'] = $header['i.array_elements'];
                 break;
         }
     }

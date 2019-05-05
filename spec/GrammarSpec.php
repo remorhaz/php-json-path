@@ -253,12 +253,11 @@ return [
             ],
         ],
         SymbolType::NT_ARRAY_CONTENT => [
-            0 => [
-                SymbolType::NT_EXPR,
-                SymbolType::T_COMMA,
-                SymbolType::NT_WS_OPT,
-                SymbolType::NT_ARRAY_CONTENT,
-            ],
+            0 => [SymbolType::NT_EXPR, SymbolType::NT_ARRAY_CONTENT_TAIL],
+            1 => [],
+        ],
+        SymbolType::NT_ARRAY_CONTENT_TAIL => [
+            0 => [SymbolType::T_COMMA, SymbolType::NT_WS_OPT, SymbolType::NT_ARRAY_CONTENT],
             1 => [],
         ],
         SymbolType::NT_STRING => [

@@ -412,7 +412,7 @@ class ParserTest extends TestCase
                     (object) ['a' => [1]],
                     (object) ['a' => [2]],
                 ],
-                '$[?(@.a == [1,])]', // TODO: remove trailing comma
+                '$[?(@.a == [1])]',
                 ['{"a":[1]}'],
             ],
             'Filter with path comparison to array with path' => [
@@ -421,7 +421,7 @@ class ParserTest extends TestCase
                     (object) ['a' => [1, 2], 'b' => 2],
                     (object) ['a' => [2], 'b' => 1],
                 ],
-                '$[?(@.a == [1, @.b,])]', // TODO: remove trailing comma
+                '$[?(@.a == [1, @.b])]',
                 ['{"a":[1,2],"b":2}'],
             ],
         ];
