@@ -364,6 +364,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1":
                 // [ 0:T_OP_NEQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2":
+                // [ 0:T_OP_L, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3":
+                // [ 0:T_OP_LE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".4":
+                // [ 0:T_OP_G, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".5":
+                // [ 0:T_OP_GE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $header['s.value_list'] = $symbols[3]['s.value_list'];
                 break;
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":
@@ -597,6 +605,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_OP_EQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".1.2":
                 // [ 0:T_OP_NEQ, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2.2":
+                // [ 0:T_OP_L, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3.2":
+                // [ 0:T_OP_LE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".4.2":
+                // [ 0:T_OP_G, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".5.2":
+                // [ 0:T_OP_GE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 break;
 
@@ -626,10 +642,58 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 break;
 
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2.2":
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3.2":
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".4.2":
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".5.2":
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".2.3":
+                // [ 0:T_OP_L, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.left_value_list'] = $this
+                    ->evaluator
+                    ->isGreater(
+                        $this->asValueList($symbols[2]['s.value_list']),
+                        $this->asValueList($header['i.left_value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".3.3":
+                // [ 0:T_OP_LE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.left_value_list'] = $this
+                    ->evaluator
+                    ->logicalNot(
+                        $this
+                            ->evaluator
+                            ->isGreater(
+                                $this->asValueList($header['i.left_value_list']),
+                                $this->asValueList($symbols[2]['s.value_list'])
+                            )
+                    );
+                break;
+
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".4.3":
+                // [ 0:T_OP_G, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.left_value_list'] = $this
+                    ->evaluator
+                    ->isGreater(
+                        $this->asValueList($header['i.left_value_list']),
+                        $this->asValueList($symbols[2]['s.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".5.3":
+                // [ 0:T_OP_GE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
+                $symbols[3]['i.value_list'] = $header['i.value_list'];
+                $symbols[3]['i.left_value_list'] = $this
+                    ->evaluator
+                    ->logicalNot(
+                        $this
+                            ->evaluator
+                            ->isGreater(
+                                $this->asValueList($symbols[2]['s.value_list']),
+                                $this->asValueList($header['i.left_value_list'])
+                            )
+                    );
+                break;
+
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".6.2":
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".7.2":
                 break;

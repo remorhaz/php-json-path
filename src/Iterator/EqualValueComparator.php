@@ -3,14 +3,20 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use Collator;
+use function is_string;
+
 final class EqualValueComparator implements ValueComparatorInterface
 {
 
     private $valueIterator;
 
-    public function __construct(ValueIterator $valueIterator)
+    private $collator;
+
+    public function __construct(ValueIterator $valueIterator, Collator $collator)
     {
         $this->valueIterator = $valueIterator;
+        $this->collator = $collator;
     }
 
     public function compare(ValueInterface $leftValue, ValueInterface $rightValue): bool
@@ -32,7 +38,14 @@ final class EqualValueComparator implements ValueComparatorInterface
 
     private function isScalarEqual(ScalarValueInterface $leftValue, ScalarValueInterface $rightValue): bool
     {
-        return $leftValue->getData() === $rightValue->getData();
+        $leftData = $leftValue->getData();
+        $rightData = $rightValue->getData();
+
+        if (is_string($leftData) && is_string($rightData)) {
+            return 0 === $this->collator->compare($leftData, $rightData);
+        }
+
+        return $leftData === $rightData;
     }
 
     private function isArrayEqual(ArrayValueInterface $leftValue, ArrayValueInterface $rightValue): bool

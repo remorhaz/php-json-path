@@ -70,7 +70,7 @@ class ParserTest extends TestCase
         $rootValue = (new NodeValueFactory)->createValue($json, $path);
         $valueIterator = new ValueIterator;
         $fetcher = new Fetcher($valueIterator);
-        $evaluator = new Evaluator(new ValueComparatorCollection($valueIterator));
+        $evaluator = new Evaluator(new ValueComparatorCollection($valueIterator, new \Collator('UTF-8')));
         $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
@@ -80,7 +80,10 @@ class ParserTest extends TestCase
         $output = $scheme->getOutput();
         $actualValue = [];
         foreach ($output as $value) {
-            $actualValue[] = \json_encode((new EventExporter($valueIterator))->export($value->createIterator()));
+            $actualValue[] = \json_encode(
+                (new EventExporter($valueIterator))->export($value->createIterator()),
+                JSON_UNESCAPED_UNICODE
+            );
         }
 
         self::assertEquals($expectedValue, $actualValue);
@@ -398,6 +401,14 @@ class ParserTest extends TestCase
                 '$[?(!false)]',
                 ['1', '2', '3'],
             ],
+            'Filter with EQ check on sring' => [
+                [
+                    (object) ['a' => 'а'],
+                    (object) ['a' => 'б'],
+                ],
+                '$[?(@.a == "а")]',
+                ['{"a":"а"}'],
+            ],
             'Filter with NEQ check on int' => [
                 [
                     (object) ['a' => 1],
@@ -405,6 +416,54 @@ class ParserTest extends TestCase
                 ],
                 '$[?(@.a != 1)]',
                 ['{"a":2}'],
+            ],
+            'Filter with NEQ check on sring' => [
+                [
+                    (object) ['a' => 'а'],
+                    (object) ['a' => 'б'],
+                ],
+                '$[?(@.a != "а")]',
+                ['{"a":"б"}'],
+            ],
+            'Filter with G check on int' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[?(@.a > 1)]',
+                ['{"a":2}'],
+            ],
+            'Filter with G check on string' => [
+                [
+                    (object) ['a' => 'а'],
+                    (object) ['a' => 'б'],
+                ],
+                '$[?(@.a > "а")]',
+                ['{"a":"б"}'],
+            ],
+            'Filter with LE check on int' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[?(@.a <= 1)]',
+                ['{"a":1}'],
+            ],
+            'Filter with L check on int' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[?(@.a < 2)]',
+                ['{"a":1}'],
+            ],
+            'Filter with GE check on int' => [
+                [
+                    (object) ['a' => 1],
+                    (object) ['a' => 2],
+                ],
+                '$[?(@.a >= 1)]',
+                ['{"a":1}','{"a":2}'],
             ],
             'Filter with path comparison to array' => [
                 [

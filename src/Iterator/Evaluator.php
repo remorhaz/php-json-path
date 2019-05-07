@@ -64,15 +64,36 @@ final class Evaluator
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList
     ): ResultValueListInterface {
+        return $this->compare(
+            $leftValueList,
+            $rightValueList,
+            $this->comparators->equal()
+        );
+    }
+
+    public function isGreater(
+        ValueListInterface $leftValueList,
+        ValueListInterface $rightValueList
+    ): ResultValueListInterface {
+        return $this->compare(
+            $leftValueList,
+            $rightValueList,
+            $this->comparators->greater()
+        );
+    }
+
+    private function compare(
+        ValueListInterface $leftValueList,
+        ValueListInterface $rightValueList,
+        ValueComparatorInterface $comparator
+    ): ResultValueListInterface {
         if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
         $results = [];
 
         foreach ($leftValueList->getValues() as $index => $leftValue) {
-            $results[] = $this
-                ->comparators
-                ->equal()
+            $results[] = $comparator
                 ->compare($leftValue, $rightValueList->getValue($index));
         }
         return new ResultValueList($leftValueList->getIndexMap(), ...$results);

@@ -3,18 +3,28 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use Collator;
+
 final class ValueComparatorCollection
 {
 
     private $valueIterator;
 
-    public function __construct(ValueIterator $valueIterator)
+    private $collator;
+
+    public function __construct(ValueIterator $valueIterator, Collator $collator)
     {
         $this->valueIterator = $valueIterator;
+        $this->collator = $collator;
     }
 
     public function equal(): ValueComparatorInterface
     {
-        return new EqualValueComparator($this->valueIterator);
+        return new EqualValueComparator($this->valueIterator, $this->collator);
+    }
+
+    public function greater(): ValueComparatorInterface
+    {
+        return new GreaterValueComparator($this->valueIterator, $this->collator);
     }
 }
