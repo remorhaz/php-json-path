@@ -85,7 +85,7 @@ final class ValueIterator
         return $event;
     }
 
-    public function skipValue(Iterator $iterator): void
+    private function skipValue(Iterator $iterator): void
     {
         $event = $this->fetchEvent($iterator);
         if ($event instanceof ScalarEventInterface) {

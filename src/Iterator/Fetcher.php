@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use function array_merge;
+use function array_push;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
@@ -40,6 +42,23 @@ final class Fetcher
         return new NodeValueList(new IndexMap(...$indexMap), ...$values);
     }
 
+    public function fetchDeepChildren(
+        Matcher\ChildMatcherInterface $matcher,
+        NodeValueListInterface $source
+    ): NodeValueListInterface {
+        $values = [];
+        $indexMap = [];
+        foreach ($source->getValues() as $sourceIndex => $sourceValue) {
+            $children = $this->fetchValueDeepChildren($matcher, $sourceValue);
+            foreach ($children as $child) {
+                $values[] = $child;
+                $indexMap[] = $source->getIndexMap()->getOuterIndex($sourceIndex);
+            }
+        }
+
+        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
+    }
+
     /**
      * @param ChildMatcherInterface $matcher
      * @param NodeValueInterface $value
@@ -62,6 +81,57 @@ final class Fetcher
         }
 
         throw new Exception\InvalidValueException($value);
+    }
+
+    private function fetchValueDeepChildren(
+        Matcher\ChildMatcherInterface $matcher,
+        NodeValueInterface $value
+    ): array {
+        if ($value instanceof ScalarValueInterface) {
+            return [];
+        }
+
+        if ($value instanceof ArrayValueInterface) {
+            return $this->fetchDeepElements($value->createIterator(), $matcher);
+        }
+
+        if ($value instanceof ObjectValueInterface) {
+            return $this->fetchDeepProperties($value->createIterator(), $matcher);
+        }
+
+        throw new Exception\InvalidValueException($value);
+    }
+
+    private function fetchDeepElements(Iterator $iterator, ChildMatcherInterface $matcher): array
+    {
+        $results = [];
+        foreach ($this->valueIterator->createArrayIterator($iterator) as $index => $element) {
+            if ($matcher->match($index)) {
+                $results[] = $element;
+            }
+            array_push(
+                $results,
+                ...$this->fetchValueDeepChildren($matcher, $element)
+            );
+        }
+
+        return $results;
+    }
+
+    private function fetchDeepProperties(Iterator $iterator, ChildMatcherInterface $matcher): array
+    {
+        $results = [];
+        foreach ($this->valueIterator->createObjectIterator($iterator) as $name => $property) {
+            if ($matcher->match($name)) {
+                $results[] = $property;
+            }
+            array_push(
+                $results,
+                ...$this->fetchValueDeepChildren($matcher, $property)
+            );
+        }
+
+        return $results;
     }
 
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface

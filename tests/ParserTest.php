@@ -424,6 +424,63 @@ class ParserTest extends TestCase
                 '$[?(@.a == [1, @.b])]',
                 ['{"a":[1,2],"b":2}'],
             ],
+            'Deep scan of a property' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['a' => 2]]],
+                    (object) ['b' => (object) ['c' => 3]],
+                ],
+                '$..a',
+                ['1', '{"b":{"a":2}}', '2'],
+            ],
+            'Deep scan of true property' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['true' => 2]]],
+                    (object) ['true' => (object) ['c' => 3]],
+                ],
+                '$..true',
+                ['2', '{"c":3}'],
+            ],
+            'Deep scan of false property' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['false' => 2]]],
+                    (object) ['false' => (object) ['c' => 3]],
+                ],
+                '$..false',
+                ['2', '{"c":3}'],
+            ],
+            'Deep scan of null property' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['null' => 2]]],
+                    (object) ['null' => (object) ['c' => 3]],
+                ],
+                '$..null',
+                ['2', '{"c":3}'],
+            ],
+            'Deep scan of all children' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['a' => 2]]],
+                    (object) ['b' => (object) ['c' => 3]],
+                ],
+                '$..*',
+                [
+                    '["a",{"a":1}]',
+                    '"a"',
+                    '{"a":1}',
+                    '1',
+                    '{"a":{"b":{"a":2}}}',
+                    '{"b":{"a":2}}',
+                    '{"a":2}',
+                    '2',
+                    '{"b":{"c":3}}',
+                    '{"c":3}',
+                    '3',
+                ],
+            ],
         ];
     }
 }

@@ -119,12 +119,24 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
-            case SymbolType::NT_FILTER_LIST . ".0":
-                // [ 0:T_DOT, 1:NT_DOT_FILTER ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.0':
+                // [ 0:T_NAME, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.1':
+                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2':
+                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3':
+                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.4':
+                // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
+            case SymbolType::NT_FILTER_LIST . ".0":
+                // [ 0:T_DOT, 1:NT_DOT_FILTER ]
             case SymbolType::NT_FILTER_LIST . ".1":
+                // [ 0:T_DOUBLE_DOT, 1:NT_DOUBLE_DOT_FILTER ]
+                $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2":
@@ -656,7 +668,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 
-            case SymbolType::NT_FILTER_LIST . ".1.2":
+            case SymbolType::NT_FILTER_LIST . ".1.1":
+                // [ 0:T_DOUBLE_DOT, 1:NT_DOUBLE_DOT_FILTER ]
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.2":
@@ -709,6 +723,56 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->fetchChildren(
                         new StrictPropertyMatcher($header['i.filter_name']),
+                        $this->asNodeValueList($header['i.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.0.1':
+                // [ 0:T_NAME, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list'] = $this
+                    ->fetcher
+                    ->fetchDeepChildren(
+                        new StrictPropertyMatcher($symbols[0]['s.text']),
+                        $this->asNodeValueList($header['i.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.1.1':
+                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list'] = $this
+                    ->fetcher
+                    ->fetchDeepChildren(
+                        new StrictPropertyMatcher('true'),
+                        $this->asNodeValueList($header['i.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2.1':
+                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list'] = $this
+                    ->fetcher
+                    ->fetchDeepChildren(
+                        new StrictPropertyMatcher('false'),
+                        $this->asNodeValueList($header['i.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3.1':
+                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list'] = $this
+                    ->fetcher
+                    ->fetchDeepChildren(
+                        new StrictPropertyMatcher('null'),
+                        $this->asNodeValueList($header['i.value_list'])
+                    );
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.4.1':
+                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list'] = $this
+                    ->fetcher
+                    ->fetchDeepChildren(
+                        new AnyChildMatcher(),
                         $this->asNodeValueList($header['i.value_list'])
                     );
                 break;

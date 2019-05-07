@@ -61,7 +61,7 @@ return [
         ],
         SymbolType::NT_FILTER_LIST => [
             0 => [SymbolType::T_DOT, SymbolType::NT_DOT_FILTER],
-            1 => [SymbolType::T_DOUBLE_DOT, SymbolType::NT_NAME, SymbolType::NT_FILTER_LIST],
+            1 => [SymbolType::T_DOUBLE_DOT, SymbolType::NT_DOUBLE_DOT_FILTER],
             2 => [
                 SymbolType::T_LEFT_SQUARE_BRACKET,
                 SymbolType::NT_WS_OPT,
@@ -77,6 +77,13 @@ return [
             2 => [SymbolType::T_NULL, SymbolType::NT_DOT_FILTER_NEXT],
             3 => [SymbolType::T_TRUE, SymbolType::NT_DOT_FILTER_NEXT],
             4 => [SymbolType::T_FALSE, SymbolType::NT_DOT_FILTER_NEXT],
+        ],
+        SymbolType::NT_DOUBLE_DOT_FILTER => [
+            0 => [SymbolType::T_NAME, SymbolType::NT_FILTER_LIST],
+            1 => [SymbolType::T_TRUE, SymbolType::NT_FILTER_LIST],
+            2 => [SymbolType::T_FALSE, SymbolType::NT_FILTER_LIST],
+            3 => [SymbolType::T_NULL, SymbolType::NT_FILTER_LIST],
+            4 => [SymbolType::T_STAR, SymbolType::NT_FILTER_LIST],
         ],
         SymbolType::NT_DOT_FILTER_NEXT => [
             0 => [SymbolType::T_LEFT_BRACKET, SymbolType::T_RIGHT_BRACKET],

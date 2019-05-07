@@ -48,6 +48,13 @@ return [
         TokenType::TRUE => 3,
         TokenType::FALSE => 4,
     ],
+    SymbolType::NT_DOUBLE_DOT_FILTER => [
+        TokenType::NAME => 0,
+        TokenType::TRUE => 1,
+        TokenType::FALSE => 2,
+        TokenType::NULL => 3,
+        TokenType::STAR => 4,
+    ],
     SymbolType::NT_DOT_FILTER_NEXT => [
         TokenType::LEFT_BRACKET => 0,
         TokenType::DOT => 1,
