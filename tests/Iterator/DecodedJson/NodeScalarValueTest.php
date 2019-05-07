@@ -126,7 +126,8 @@ class NodeScalarValueTest extends TestCase
     {
         return [
             'Resource' => [STDERR],
-            'Invalid object' => [new class {}],
+            'Invalid object' => [new class {
+            }],
             'Array' => [[]],
             'Object' => [(object) []],
         ];

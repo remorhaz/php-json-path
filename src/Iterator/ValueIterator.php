@@ -39,7 +39,6 @@ final class ValueIterator
             $index = $event->getIndex();
 
             yield $index => $this->fetchValue($iterator);
-
         } while (true);
     }
 
@@ -66,7 +65,6 @@ final class ValueIterator
             $property = $event->getName();
 
             yield $property => $this->fetchValue($iterator);
-
         } while (true);
     }
 

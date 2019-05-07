@@ -540,6 +540,15 @@ class ParserTest extends TestCase
                     '3',
                 ],
             ],
+            'Deep scan of all children with comparative condition' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['a' => 2]]],
+                    (object) ['b' => (object) ['c' => 3]],
+                ],
+                '$..*[?(@ < 3)]',
+                ['1', '2'],
+            ],
         ];
     }
 }

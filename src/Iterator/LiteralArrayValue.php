@@ -34,5 +34,4 @@ final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterf
         }
         yield new Event\AfterArrayEvent($this);
     }
-
 }
