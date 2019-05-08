@@ -6,6 +6,7 @@ namespace Remorhaz\JSON\Path\Iterator;
 use function array_fill;
 use function count;
 use function is_bool;
+use function preg_match;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 
@@ -114,7 +115,7 @@ final class Evaluator
                 $results[] = false;
                 continue;
             }
-            $match = preg_match($regexp, $data);
+            $match = @preg_match($regexp, $data);
             if (false === $match) {
                 throw new Exception\InvalidRegExpException($regexp);
             }
