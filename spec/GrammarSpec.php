@@ -44,6 +44,7 @@ return [
             SymbolType::T_NULL                  => TokenType::NULL,
             SymbolType::T_TRUE                  => TokenType::TRUE,
             SymbolType::T_FALSE                 => TokenType::FALSE,
+            SymbolType::T_REGEXP_MOD            => TokenType::REGEXP_MOD,
 
             SymbolType::T_EOI                   => TokenType::EOI,
     ],
@@ -224,12 +225,7 @@ return [
                 SymbolType::NT_EXPR_ARG_COMP,
                 SymbolType::NT_EXPR_ARG_COMP_TAIL,
             ],
-            6 => [
-                SymbolType::T_OP_REGEX,
-                SymbolType::NT_WS_OPT,
-                SymbolType::NT_EXPR_ARG_COMP,
-                SymbolType::NT_EXPR_ARG_COMP_TAIL,
-            ],
+            6 => [SymbolType::T_OP_REGEX, SymbolType::NT_WS_OPT, SymbolType::NT_REGEXP],
             7 => [
                 SymbolType::T_NAME,
                 SymbolType::NT_WS_OPT,
@@ -281,6 +277,19 @@ return [
             1 => [SymbolType::T_SINGLE_QUOTE],
             2 => [SymbolType::T_DOUBLE_QUOTE],
             3 => [SymbolType::T_UNESCAPED],
+        ],
+        SymbolType::NT_REGEXP => [
+            0 => [SymbolType::T_SLASH, SymbolType::NT_REGEXP_STRING, SymbolType::T_REGEXP_MOD],
+        ],
+        SymbolType::NT_REGEXP_STRING => [
+            0 => [SymbolType::T_UNESCAPED, SymbolType::NT_REGEXP_STRING],
+            1 => [SymbolType::T_BACKSLASH, SymbolType::NT_REGEXP_ESCAPED, SymbolType::NT_REGEXP_STRING],
+            2 => [],
+        ],
+        SymbolType::NT_REGEXP_ESCAPED => [
+            0 => [SymbolType::T_SLASH],
+            1 => [SymbolType::T_BACKSLASH],
+            2 => [SymbolType::T_UNESCAPED],
         ],
     ],
 ];

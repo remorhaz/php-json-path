@@ -82,7 +82,7 @@ class ParserTest extends TestCase
         foreach ($output as $value) {
             $actualValue[] = \json_encode(
                 (new EventExporter($valueIterator))->export($value->createIterator()),
-                JSON_UNESCAPED_UNICODE
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             );
         }
 
@@ -548,6 +548,51 @@ class ParserTest extends TestCase
                 ],
                 '$..*[?(@ < 3)]',
                 ['1', '2'],
+            ],
+            'Filter with regular expression without modofier' => [
+                [
+                    (object) ['a' => 'abc'],
+                    (object) ['a' => 'Bc'],
+                    (object) ['a' => 'bca'],
+                ],
+                '$[?(@.a =~ /bc$/)]',
+                ['{"a":"abc"}'],
+            ],
+            'Filter with regular expression with modofier' => [
+                [
+                    (object) ['a' => 'abc'],
+                    (object) ['a' => 'Bc'],
+                    (object) ['a' => 'bca'],
+                ],
+                '$[?(@.a =~ /bc$/i)]',
+                ['{"a":"abc"}', '{"a":"Bc"}'],
+            ],
+            'Filter with regular expression with escaped slash' => [
+                [
+                    (object) ['a' => 'ab/c'],
+                    (object) ['a' => 'B/c'],
+                    (object) ['a' => 'bca'],
+                ],
+                '$[?(@.a =~ /b\/c$/i)]',
+                ['{"a":"ab/c"}', '{"a":"B/c"}'],
+            ],
+            'Filter with regular expression with escaped backslash' => [
+                [
+                    (object) ['a' => 'ab\\c'],
+                    (object) ['a' => 'B\\c'],
+                    (object) ['a' => 'bca'],
+                ],
+                '$[?(@.a =~ /b\\\\c$/i)]',
+                ['{"a":"ab\\\\c"}', '{"a":"B\\\\c"}'],
+            ],
+            'Filter with regular expression with escaped non-slash' => [
+                [
+                    (object) ['a' => 'abc'],
+                    (object) ['a' => 'Bc'],
+                    (object) ['a' => 'bca'],
+                ],
+                '$[?(@.a =~ /b\\c$/i)]',
+                ['{"a":"abc"}', '{"a":"Bc"}'],
             ],
         ];
     }

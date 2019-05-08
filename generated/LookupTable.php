@@ -138,6 +138,7 @@ return [
         TokenType::FALSE => 1,
         TokenType::LEFT_SQUARE_BRACKET => 1,
         TokenType::COMMA => 1,
+        TokenType::SLASH => 1,
         TokenType::OP_EQ => 1,
         TokenType::OP_NEQ => 1,
         TokenType::OP_L => 1,
@@ -298,5 +299,18 @@ return [
         TokenType::SINGLE_QUOTE => 1,
         TokenType::DOUBLE_QUOTE => 2,
         TokenType::UNESCAPED => 3,
+    ],
+    SymbolType::NT_REGEXP => [
+        TokenType::SLASH => 0,
+    ],
+    SymbolType::NT_REGEXP_STRING => [
+        TokenType::UNESCAPED => 0,
+        TokenType::BACKSLASH => 1,
+        TokenType::REGEXP_MOD => 2,
+    ],
+    SymbolType::NT_REGEXP_ESCAPED => [
+        TokenType::SLASH => 0,
+        TokenType::BACKSLASH => 1,
+        TokenType::UNESCAPED => 2,
     ],
 ];

@@ -39,6 +39,7 @@ abstract class TokenType
     public const NULL                   = 0x20;
     public const TRUE                   = 0x21;
     public const FALSE                  = 0x22;
+    public const REGEXP_MOD             = 0x23;
 
     public const EOI                    = 0xFF;
 }

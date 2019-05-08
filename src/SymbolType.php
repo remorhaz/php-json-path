@@ -40,6 +40,7 @@ abstract class SymbolType
     public const T_NULL                 = 0x20;
     public const T_TRUE                 = 0x21;
     public const T_FALSE                = 0x22;
+    public const T_REGEXP_MOD           = 0x23;
 
     public const NT_JSON_PATH           = 0x80;
     public const NT_PATH                = 0x81;
@@ -73,6 +74,9 @@ abstract class SymbolType
     public const NT_STRING_LIST         = 0x9D;
     public const NT_ARRAY_CONTENT_TAIL  = 0x9E;
     public const NT_DOUBLE_DOT_FILTER   = 0x9F;
+    public const NT_REGEXP              = 0xA0;
+    public const NT_REGEXP_STRING       = 0xA1;
+    public const NT_REGEXP_ESCAPED      = 0xA2;
 
     public const T_EOI                  = 0xFF;
 }

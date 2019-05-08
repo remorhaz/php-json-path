@@ -240,11 +240,12 @@ $context
     ->setMode('reString');
 
 /**
- * @lexToken /\//
+ * @lexToken /\/[A-Za-z]*()/
  * @lexMode reString
  */
 $context
-    ->setNewToken(TokenType::SLASH)
+    ->setNewToken(TokenType::REGEXP_MOD)
+    ->setTokenAttribute('text', $context->getSymbolString())
     ->setMode(TokenMatcherInterface::DEFAULT_MODE);
 
 /**

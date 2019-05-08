@@ -61,6 +61,7 @@ class TranslationScheme implements TranslationSchemeInterface
         switch ($symbol->getSymbolId()) {
             case SymbolType::T_NAME:
             case SymbolType::T_UNESCAPED:
+            case SymbolType::T_REGEXP_MOD:
                 $s['s.text'] = $t['text'];
                 break;
 
@@ -374,6 +375,17 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_OP_GE, 1:NT_WS_OPT, 2:NT_EXPR_ARG_COMP, 3:NT_EXPR_ARG_COMP_TAIL ]
                 $header['s.value_list'] = $symbols[3]['s.value_list'];
                 break;
+
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".6":
+                // [ 0:T_OP_REGEX, 1:NT_WS_OPT, 2:NT_REGEXP ],
+                $header['s.value_list'] = $this
+                    ->evaluator
+                    ->isRegExp(
+                        $this->asValueList($header['i.left_value_list']),
+                        $symbols[2]['s.text']
+                    );
+                break;
+
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":
                 // [ ]
                 $header['s.value_list'] = $header['i.left_value_list'];
@@ -442,6 +454,41 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_ARRAY_CONTENT_TAIL . '.1':
                 // []
                 $header['s.array_elements'] = $header['i.array_elements'];
+                break;
+
+            case SymbolType::NT_REGEXP . '.0':
+                // [ 0:T_SLASH, 1:NT_REGEXP_STRING, 2:T_REGEXP_MOD ]
+                $header['s.text'] = $symbols[1]['s.text'] . $symbols[2]['s.text'];
+                break;
+
+            case SymbolType::NT_REGEXP_STRING . '.0':
+                // [ 0:T_UNESCAPED, 1:NT_REGEXP_STRING ]
+                $header['s.text'] = $symbols[1]['s.text'];
+                break;
+
+            case SymbolType::NT_REGEXP_STRING . '.1':
+                // [ 0:T_BACKSLASH, 1:NT_REGEXP_ESCAPED, 2:NT_REGEXP_STRING ]
+                $header['s.text'] = $symbols[2]['s.text'];
+                break;
+
+            case SymbolType::NT_REGEXP_STRING . '.2':
+                // [ ]
+                $header['s.text'] = $header['i.text'];
+                break;
+
+            case SymbolType::NT_REGEXP_ESCAPED . '.0':
+                // [ 0:T_SLASH ]
+                $header['s.text'] = '\\/';
+                break;
+
+            case SymbolType::NT_REGEXP_ESCAPED . '.1':
+                // [ 0:T_BACKSLASH ]
+                $header['s.text'] = '\\\\';
+                break;
+
+            case SymbolType::NT_REGEXP_ESCAPED . '.2':
+                // [ 0:T_UNESCAPED ]
+                $header['s.text'] = $symbols[0]['s.text'];
                 break;
         }
     }
@@ -878,6 +925,21 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 $symbols[2]['i.array_elements'] = $header['i.array_elements'];
+                break;
+
+            case SymbolType::NT_REGEXP . '.0.1':
+                // [ 0:T_SLASH, 1:NT_REGEXP_STRING, 2:T_REGEXP_MOD ]
+                $symbols[1]['i.text'] = '/';
+                break;
+
+            case SymbolType::NT_REGEXP_STRING . '.0.1':
+                // [ 0:T_UNESCAPED, 1:NT_REGEXP_STRING ]
+                $symbols[1]['i.text'] = $header['i.text'] . $symbols[0]['s.text'];
+                break;
+
+            case SymbolType::NT_REGEXP_STRING . '.1.2':
+                // [ 0:T_BACKSLASH, 1:NT_REGEXP_ESCAPED, 2:NT_REGEXP_STRING ]
+                $symbols[2]['i.text'] = $header['i.text'] . $symbols[1]['s.text'];
                 break;
         }
     }

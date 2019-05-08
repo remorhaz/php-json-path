@@ -1639,12 +1639,18 @@ class TokenMatcher extends TokenMatcherTemplate
         $char = $context->getBuffer()->getSymbol();
         if (0x2F == $char) {
             $context->getBuffer()->nextSymbol();
-            $context
-                ->setNewToken(TokenType::SLASH)
-                ->setMode(TokenMatcherInterface::DEFAULT_MODE);
-            return true;
+            goto stateReString2;
         }
-        if (0x00 <= $char && $char <= 0x2E || 0x30 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
+        if (0x41 <= $char && $char <= 0x5A || 0x61 <= $char && $char <= 0x7A) {
+            $context->getBuffer()->nextSymbol();
+            goto stateReString3;
+        }
+        if (0x00 <= $char && $char <= 0x2E ||
+            0x30 <= $char && $char <= 0x40 ||
+            0x5B == $char ||
+            0x5D <= $char && $char <= 0x60 ||
+            0x7B <= $char && $char <= 0x10FFFF
+        ) {
             $context->getBuffer()->nextSymbol();
             goto stateReString3;
         }
@@ -1657,12 +1663,37 @@ class TokenMatcher extends TokenMatcherTemplate
         }
         goto error;
 
+        stateReString2:
+        if ($context->getBuffer()->isEnd()) {
+            goto finishReString2;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x41 <= $char && $char <= 0x5A || 0x61 <= $char && $char <= 0x7A) {
+            $context->getBuffer()->nextSymbol();
+            goto stateReString5;
+        }
+        finishReString2:
+        $context
+            ->setNewToken(TokenType::REGEXP_MOD)
+            ->setTokenAttribute('text', $context->getSymbolString())
+            ->setMode(TokenMatcherInterface::DEFAULT_MODE);
+        return true;
+
         stateReString3:
         if ($context->getBuffer()->isEnd()) {
             goto finishReString3;
         }
         $char = $context->getBuffer()->getSymbol();
-        if (0x00 <= $char && $char <= 0x2E || 0x30 <= $char && $char <= 0x5B || 0x5D <= $char && $char <= 0x10FFFF) {
+        if (0x41 <= $char && $char <= 0x5A || 0x61 <= $char && $char <= 0x7A) {
+            $context->getBuffer()->nextSymbol();
+            goto stateReString3;
+        }
+        if (0x00 <= $char && $char <= 0x2E ||
+            0x30 <= $char && $char <= 0x40 ||
+            0x5B == $char ||
+            0x5D <= $char && $char <= 0x60 ||
+            0x7B <= $char && $char <= 0x10FFFF
+        ) {
             $context->getBuffer()->nextSymbol();
             goto stateReString3;
         }
@@ -1670,6 +1701,22 @@ class TokenMatcher extends TokenMatcherTemplate
         $context
             ->setNewToken(TokenType::UNESCAPED)
             ->setTokenAttribute('text', $context->getSymbolString());
+        return true;
+
+        stateReString5:
+        if ($context->getBuffer()->isEnd()) {
+            goto finishReString5;
+        }
+        $char = $context->getBuffer()->getSymbol();
+        if (0x41 <= $char && $char <= 0x5A || 0x61 <= $char && $char <= 0x7A) {
+            $context->getBuffer()->nextSymbol();
+            goto stateReString5;
+        }
+        finishReString5:
+        $context
+            ->setNewToken(TokenType::REGEXP_MOD)
+            ->setTokenAttribute('text', $context->getSymbolString())
+            ->setMode(TokenMatcherInterface::DEFAULT_MODE);
         return true;
 
         stateReEscape1:

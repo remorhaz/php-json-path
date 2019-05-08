@@ -7,6 +7,7 @@ use function array_fill;
 use function count;
 use function is_bool;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
+use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 
 final class Evaluator
 {
@@ -97,6 +98,30 @@ final class Evaluator
                 ->compare($leftValue, $rightValueList->getValue($index));
         }
         return new ResultValueList($leftValueList->getIndexMap(), ...$results);
+    }
+
+    public function isRegExp(ValueListInterface $valueList, string $regexp): ResultValueListInterface
+    {
+        $results = [];
+
+        foreach ($valueList->getValues() as $value) {
+            if (!$value instanceof ScalarValueInterface) {
+                $results[] = false;
+                continue;
+            }
+            $data = $value->getData();
+            if (!is_string($data)) {
+                $results[] = false;
+                continue;
+            }
+            $match = preg_match($regexp, $data);
+            if (false === $match) {
+                throw new Exception\InvalidRegExpException($regexp);
+            }
+            $results[] = 1 === $match;
+        }
+
+        return new ResultValueList($valueList->getIndexMap(), ...$results);
     }
 
     public function evaluate(
