@@ -111,24 +111,12 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_NAME, 1:NT_DOT_FILTER_NEXT ]
             case SymbolType::NT_DOT_FILTER . ".1":
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOT_FILTER . ".2":
-                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOT_FILTER . ".3":
-                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOT_FILTER . ".4":
-                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0':
                 // [ 0:T_NAME, 1:NT_FILTER_LIST ]
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1':
-                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2':
-                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3':
-                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.4':
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list'] = $symbols[1]['s.value_list'];
                 break;
@@ -490,6 +478,26 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_UNESCAPED ]
                 $header['s.text'] = $symbols[0]['s.text'];
                 break;
+
+            case SymbolType::NT_NAME . '.0':
+                // [ 0:T_NAME ]
+                $header['s.text'] = $symbols[0]['s.text'];
+                break;
+
+            case SymbolType::NT_NAME . '.1':
+                // [ 0:T_NULL ]
+                $header['s.text'] = 'null';
+                break;
+
+            case SymbolType::NT_NAME . '.2':
+                // [ 0:T_TRUE ]
+                $header['s.text'] = 'true';
+                break;
+
+            case SymbolType::NT_NAME . '.3':
+                // [ 0:T_FALSE ]
+                $header['s.text'] = 'false';
+                break;
         }
     }
 
@@ -810,24 +818,6 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 break;
 
-            case SymbolType::NT_DOT_FILTER . ".2.1":
-                // [ 0:T_NULL, 1:NT_DOT_FILTER_NEXT ]
-                $symbols[1]['i.filter_name'] = 'null';
-                $symbols[1]['i.value_list'] = $header['i.value_list'];
-                break;
-
-            case SymbolType::NT_DOT_FILTER . ".3.1":
-                // [ 0:T_TRUE, 1:NT_DOT_FILTER_NEXT ]
-                $symbols[1]['i.filter_name'] = 'true';
-                $symbols[1]['i.value_list'] = $header['i.value_list'];
-                break;
-
-            case SymbolType::NT_DOT_FILTER . ".4.1":
-                // [ 0:T_FALSE, 1:NT_DOT_FILTER_NEXT ]
-                $symbols[1]['i.filter_name'] = 'false';
-                $symbols[1]['i.value_list'] = $header['i.value_list'];
-                break;
-
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
                 // [ 0:NT_FILTER_LIST ]
                 $symbols[0]['i.value_list'] = $this
@@ -849,37 +839,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1.1':
-                // [ 0:T_TRUE, 1:NT_FILTER_LIST ]
-                $symbols[1]['i.value_list'] = $this
-                    ->fetcher
-                    ->fetchDeepChildren(
-                        new StrictPropertyMatcher('true'),
-                        $this->asNodeValueList($header['i.value_list'])
-                    );
-                break;
-
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2.1':
-                // [ 0:T_FALSE, 1:NT_FILTER_LIST ]
-                $symbols[1]['i.value_list'] = $this
-                    ->fetcher
-                    ->fetchDeepChildren(
-                        new StrictPropertyMatcher('false'),
-                        $this->asNodeValueList($header['i.value_list'])
-                    );
-                break;
-
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3.1':
-                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
-                $symbols[1]['i.value_list'] = $this
-                    ->fetcher
-                    ->fetchDeepChildren(
-                        new StrictPropertyMatcher('null'),
-                        $this->asNodeValueList($header['i.value_list'])
-                    );
-                break;
-
-            case SymbolType::NT_DOUBLE_DOT_FILTER . '.4.1':
-                // [ 0:T_NULL, 1:NT_FILTER_LIST ]
+                // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.value_list'] = $this
                     ->fetcher
                     ->fetchDeepChildren(
