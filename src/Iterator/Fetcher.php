@@ -226,29 +226,29 @@ final class Fetcher
 
         $result = [];
         foreach ($fullIndexList as $valueIndex => $allIndice) {
+            if (!isset($step)) {
+                $step = 1;
+            }
+            $isReverse = $step < 0;
             $indexCount = count($allIndice);
             if (!isset($start)) {
-                $start = 0;
+                $start = $isReverse ? -1 : 0;
             }
             if ($start < 0) {
                 $start = max($start + $indexCount, 0);
             }
             if (!isset($end)) {
-                $end = count($allIndice);
+                $end = $isReverse ? -$indexCount - 1 : $indexCount;
             }
             if ($end > $indexCount) {
                 $end = $indexCount;
             }
             if ($end < 0) {
-                $end = max($end + $indexCount, 0);
+                $end = max($end + $indexCount, $isReverse ? -1 : 0);
             }
-            if (!isset($step)) {
-                $step = 1;
-            }
-            $isReverse = $step < 0;
             $indice = [];
-            $index = $isReverse ? $end - 1 : $start;
-            while ($isReverse ? $index >= $start : $index < $end) {
+            $index = $start;
+            while ($isReverse ? $index > $end : $index < $end) {
                 $indice[] = $allIndice[$index];
                 $index += $step;
             }

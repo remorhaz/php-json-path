@@ -214,6 +214,16 @@ class ParserTest extends TestCase
                 '$[::-1]',
                 ['1', '2', '3'],
             ],
+            'Slice defined with start and negative step' => [
+                [1, 2, 3],
+                '$[1::-1]',
+                ['1', '2'],
+            ],
+            'Slice fully defined with and negative end and step' => [
+                [1, 2, 3],
+                '$[1:-4:-1]',
+                ['1', '2'],
+            ],
             'Simple filter with true' => [
                 [1, 2, 3],
                 '$[?(true)]',
