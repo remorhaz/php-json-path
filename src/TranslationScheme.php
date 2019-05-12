@@ -587,21 +587,12 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_BRACKET_FILTER . ".1.0":
                 // [ 0:NT_STRING_LIST ]
                 $symbols[0]['i.value_list'] = $header['i.value_list'];
-                $symbols[0]['i.index_list'] = $this
-                    ->asValueList($header['i.value_list'])
-                    ->getIndexMap()
-                    ->getInnerIndice();
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".2.1":
                 // 0:NT_INT, 1:NT_INT_NEXT
                 $symbols[1]['i.int'] = $symbols[0]['s.int'];
                 $symbols[1]['i.value_list'] = $header['i.value_list'];
-                $valueList = $this
-                    ->asValueList($header['i.value_list']);
-                $symbols[1]['i.index_list'] = $valueList
-                    ->getIndexMap()
-                    ->getInnerIndice();
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.3.0':
@@ -834,7 +825,13 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_STRING_LIST . ".0.2":
                 // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
-                $symbols[2]['i.text_list'] = array_fill_keys($header['i.index_list'], [$symbols[0]['s.text']]);
+                $symbols[2]['i.text_list'] = array_fill_keys(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap()
+                        ->getInnerIndice(),
+                    [$symbols[0]['s.text']]
+                );
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0.4":
@@ -848,7 +845,13 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . ".0.1":
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
-                $symbols[1]['i.int_list'] = array_fill_keys($header['i.index_list'], [$header['i.int']]);
+                $symbols[1]['i.int_list'] = array_fill_keys(
+                    $this
+                        ->asValueList($header['i.value_list'])
+                        ->getIndexMap()
+                        ->getInnerIndice(),
+                    [$header['i.int']]
+                );
                 break;
 
             case SymbolType::NT_INT_NEXT_LIST . ".0.4":
@@ -862,7 +865,6 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . '.1.0':
                 // [ 0:NT_INT_SLICE ]
-                $symbols[0]['i.index_list'] = $header['i.index_list'];
                 $symbols[0]['i.value_list'] = $header['i.value_list'];
                 $symbols[0]['i.int_start'] = $header['i.int'];
                 break;
