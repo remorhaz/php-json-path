@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use function array_keys;
 use function count;
 
 final class IndexMap implements IndexMapInterface
@@ -18,6 +19,11 @@ final class IndexMap implements IndexMapInterface
     public function count()
     {
         return count($this->map);
+    }
+
+    public function getInnerIndice(): array
+    {
+        return array_keys($this->map);
     }
 
     public function toArray(): array

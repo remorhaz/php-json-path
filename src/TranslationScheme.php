@@ -2,12 +2,15 @@
 
 namespace Remorhaz\JSON\Path;
 
+use function array_fill_keys;
+use function count;
 use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\LiteralArrayValueList;
 use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
 use Remorhaz\JSON\Path\Iterator\LiteralValueList;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
+use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherList;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictElementMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
@@ -221,6 +224,43 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.int_list'] = $symbols[1]['s.int_list'];
                 break;
 
+            case SymbolType::NT_INT_NEXT . '.1':
+                // [ 0:NT_INT_SLICE ]
+                $header['s.int_list'] = $symbols[0]['s.int_list'];
+                break;
+
+            case SymbolType::NT_INT_SLICE . '.0':
+                // [ 0:T_COLON, 1:NT_INT_OPT, 2:NT_INT_SLICE_STEP, 3:NT_WS_OPT ]
+                $header['s.value_list'] = $header['i.value_list'];
+                $header['s.int_list'] = $this
+                    ->fetcher
+                    ->fetchSliceIndice(
+                        $this->asValueList($header['i.value_list']),
+                        $header['i.int_start'],
+                        $symbols[1]['s.int'],
+                        $symbols[2]['s.int']
+                    );
+                break;
+
+            case SymbolType::NT_INT_OPT . '.0':
+                // [ 0:NT_INT ]
+                $header['s.int'] = $symbols[0]['s.int'];
+                break;
+
+            case SymbolType::NT_INT_OPT . '.1':
+                $header['s.int'] = null;
+                break;
+
+            case SymbolType::NT_INT_SLICE_STEP . '.0':
+                // [ 0:T_COLON, 1:NT_INT_OPT ]
+                $header['s.int'] = $symbols[1]['s.int'];
+                break;
+
+            case SymbolType::NT_INT_SLICE_STEP . '.1':
+                // [ ]
+                $header['s.int'] = null;
+                break;
+
             case SymbolType::NT_INT_NEXT_LIST . ".0":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
                 $header['s.int_list'] = $symbols[4]['s.int_list'];
@@ -278,30 +318,47 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_BRACKET_FILTER . ".0":
                 // [ 0:T_STAR, 1:NT_WS_OPT ]
+                $valueList = $this->asNodeValueList($header['i.value_list']);
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->fetchChildren(
-                        new AnyChildMatcher,
-                        $this->asNodeValueList($header['i.value_list'])
+                        $valueList,
+                        ...ChildMatcherList::populate(
+                            new AnyChildMatcher,
+                            ...$valueList->getIndexMap()->getInnerIndice()
+                        )
                     );
                 break;
             case SymbolType::NT_BRACKET_FILTER . ".1":
                 // [ 0:NT_STRING_LIST ]
+                $valueList = $this->asNodeValueList($header['i.value_list']);
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->fetchChildren(
-                        new StrictPropertyMatcher(...$symbols[0]['s.text_list']),
-                        $this->asNodeValueList($header['i.value_list'])
+                        $valueList,
+                        ...StrictPropertyMatcher::populate($valueList, ...$symbols[0]['s.text_list'])
                     );
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".2":
                 // [ 0:NT_INT, 1:NT_INT_NEXT ]
+                $valueList = $this->asNodeValueList($header['i.value_list']);
                 $header['s.value_list'] = $this
                     ->fetcher
                     ->fetchChildren(
-                        new StrictElementMatcher(...$symbols[1]['s.int_list']),
-                        $this->asNodeValueList($header['i.value_list'])
+                        $valueList,
+                        ...StrictElementMatcher::populate($valueList, ...$symbols[1]['s.int_list'])
+                    );
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . '.3':
+                // [ 0:NT_INT_SLICE ]
+                $valueList = $symbols[0]['s.value_list'];
+                $header['s.value_list'] = $this
+                    ->fetcher
+                    ->fetchChildren(
+                        $valueList,
+                        ...StrictElementMatcher::populate($valueList, ...$symbols[0]['s.int_list'])
                     );
                 break;
 
@@ -504,7 +561,6 @@ class TranslationScheme implements TranslationSchemeInterface
     /**
      * @param Production $production
      * @param int $symbolIndex
-     * @throws Exception
      */
     public function applySymbolActions(Production $production, int $symbolIndex): void
     {
@@ -529,11 +585,29 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".1.0":
+                // [ 0:NT_STRING_LIST ]
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
+                $symbols[0]['i.index_list'] = $this
+                    ->asValueList($header['i.value_list'])
+                    ->getIndexMap()
+                    ->getInnerIndice();
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".2.1":
                 // 0:NT_INT, 1:NT_INT_NEXT
                 $symbols[1]['i.int'] = $symbols[0]['s.int'];
+                $symbols[1]['i.value_list'] = $header['i.value_list'];
+                $valueList = $this
+                    ->asValueList($header['i.value_list']);
+                $symbols[1]['i.index_list'] = $valueList
+                    ->getIndexMap()
+                    ->getInnerIndice();
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . '.3.0':
+                // [ 0:NT_INT_SLICE ]
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
+                $symbols[0]['i.int_start'] = null;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4.2":
@@ -760,26 +834,37 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_STRING_LIST . ".0.2":
                 // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
-                $symbols[2]['i.text_list'] = [$symbols[0]['s.text']];
+                $symbols[2]['i.text_list'] = array_fill_keys($header['i.index_list'], [$symbols[0]['s.text']]);
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0.4":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
                 $textList = $header['i.text_list'];
-                $textList[] = $symbols[2]['s.text'];
+                foreach ($textList as $index => &$list) {
+                    $list[] = $symbols[2]['s.text'];
+                }
                 $symbols[4]['i.text_list'] = $textList;
                 break;
 
             case SymbolType::NT_INT_NEXT . ".0.1":
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
-                $symbols[1]['i.int_list'] = [$header['i.int']];
+                $symbols[1]['i.int_list'] = array_fill_keys($header['i.index_list'], [$header['i.int']]);
                 break;
 
             case SymbolType::NT_INT_NEXT_LIST . ".0.4":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
                 $intList = $header['i.int_list'];
-                $intList[] = $symbols[2]['s.int'];
+                foreach ($intList as $index => &$list) {
+                    $list[] = $symbols[2]['s.int'];
+                }
                 $symbols[4]['i.int_list'] = $intList;
+                break;
+
+            case SymbolType::NT_INT_NEXT . '.1.0':
+                // [ 0:NT_INT_SLICE ]
+                $symbols[0]['i.index_list'] = $header['i.index_list'];
+                $symbols[0]['i.value_list'] = $header['i.value_list'];
+                $symbols[0]['i.int_start'] = $header['i.int'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".0.1":
@@ -810,21 +895,29 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_DOT_FILTER . ".1.1":
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
+                $valueList = $this->asNodeValueList($header['i.value_list']);
                 $symbols[1]['i.value_list'] = $this
                     ->fetcher
                     ->fetchChildren(
-                        new AnyChildMatcher,
-                        $this->asNodeValueList($header['i.value_list'])
+                        $valueList,
+                        ...ChildMatcherList::populate(
+                            new AnyChildMatcher,
+                            ...$valueList->getIndexMap()->getInnerIndice()
+                        )
                     );
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
                 // [ 0:NT_FILTER_LIST ]
+                $valueList = $this->asNodeValueList($header['i.value_list']);
                 $symbols[0]['i.value_list'] = $this
                     ->fetcher
                     ->fetchChildren(
-                        new StrictPropertyMatcher($header['i.filter_name']),
-                        $this->asNodeValueList($header['i.value_list'])
+                        $valueList,
+                        ...ChildMatcherList::populate(
+                            new StrictPropertyMatcher($header['i.filter_name']),
+                           ...$valueList->getIndexMap()->getInnerIndice()
+                        )
                     );
                 break;
 

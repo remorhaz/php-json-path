@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-use function array_merge;
+use function abs;
 use function array_push;
 use Iterator;
+use function max;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
@@ -20,18 +21,20 @@ final class Fetcher
     {
         $this->valueIterator = $valueIterator;
     }
+
     /**
-     * @param ChildMatcherInterface $matcher
      * @param NodeValueListInterface $source
+     * @param ChildMatcherInterface ...$matcherList
      * @return NodeValueListInterface
      */
     public function fetchChildren(
-        Matcher\ChildMatcherInterface $matcher,
-        NodeValueListInterface $source
+        NodeValueListInterface $source,
+        ChildMatcherInterface ...$matcherList
     ): NodeValueListInterface {
         $values = [];
         $indexMap = [];
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
+            $matcher = $matcherList[$sourceIndex];
             $children = $this->fetchValueChildren($matcher, $sourceValue);
             foreach ($children as $child) {
                 $values[] = $child;
@@ -184,5 +187,74 @@ final class Fetcher
         NodeValueListInterface $values
     ): NodeValueListInterface {
         return $matcher->filterValues($values);
+    }
+
+    /**
+     * @param ValueListInterface $valueList
+     * @return int[][]
+     */
+    public function fetchIndice(ValueListInterface $valueList): array
+    {
+        $result = [];
+        foreach ($valueList->getValues() as $valueIndex => $value) {
+            if (!$value instanceof ArrayValueInterface) {
+                $result[$valueIndex] = [];
+                continue;
+            }
+
+            $indice = [];
+            $elementIterator = $this->valueIterator->createArrayIterator($value->createIterator());
+            foreach ($elementIterator as $index => $element) {
+                $indice[] = $index;
+            }
+            $result[$valueIndex] = $indice;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param ValueListInterface $valueList
+     * @param int|null $start
+     * @param int|null $end
+     * @param int|null $step
+     * @return int[][]
+     */
+    public function fetchSliceIndice(ValueListInterface $valueList, ?int $start, ?int $end, ?int $step): array
+    {
+        $fullIndexList = $this->fetchIndice($valueList);
+
+        $result = [];
+        foreach ($fullIndexList as $valueIndex => $allIndice) {
+            $indexCount = count($allIndice);
+            if (!isset($start)) {
+                $start = 0;
+            }
+            if ($start < 0) {
+                $start = max($start + $indexCount, 0);
+            }
+            if (!isset($end)) {
+                $end = count($allIndice);
+            }
+            if ($end > $indexCount) {
+                $end = $indexCount;
+            }
+            if ($end < 0) {
+                $end = max($end + $indexCount, 0);
+            }
+            if (!isset($step)) {
+                $step = 1;
+            }
+            $isReverse = $step < 0;
+            $indice = [];
+            $index = $isReverse ? $end - 1 : $start;
+            while ($isReverse ? $index >= $start : $index < $end) {
+                $indice[] = $allIndice[$index];
+                $index += $step;
+            }
+            $result[] = $indice;
+        }
+
+        return $result;
     }
 }

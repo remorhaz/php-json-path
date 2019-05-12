@@ -8,6 +8,8 @@ use Countable;
 interface IndexMapInterface extends Countable
 {
 
+    public function getInnerIndice(): array;
+
     public function toArray(): array;
 
     public function getOuterIndex(int $innerIndex): int;

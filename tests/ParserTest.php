@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
+use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherList;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
@@ -35,12 +36,18 @@ class ParserTest extends TestCase
         $valueIterator = new ValueIterator;
         $fetcher = new Fetcher($valueIterator);
         $values = $fetcher->fetchChildren(
-            new StrictPropertyMatcher('a', 'x'),
-            $values
+            $values,
+            ...ChildMatcherList::populate(
+                new StrictPropertyMatcher('a', 'x'),
+                ...$values->getIndexMap()->getInnerIndice()
+            )
         );
         $values = $fetcher->fetchChildren(
-            new StrictPropertyMatcher('b'),
-            $values
+            $values,
+            ...ChildMatcherList::populate(
+                new StrictPropertyMatcher('b'),
+                ...$values->getIndexMap()->getInnerIndice()
+            )
         );
 
         $actualValue = [];
@@ -156,6 +163,56 @@ class ParserTest extends TestCase
                 [true, false, 1],
                 '$[0, 2]',
                 ['true', '1'],
+            ],
+            'Fully defined slice' => [
+                [1, 2, 3, 4, 5, 6, 7],
+                '$[1:6:2]',
+                ['2', '4', '6'],
+            ],
+            'Slice defined without start' => [
+                [1, 2, 3, 4, 5, 6, 7],
+                '$[:6:2]',
+                ['1', '3', '5'],
+            ],
+            'Slice defined without end' => [
+                [1, 2, 3, 4, 5, 6, 7],
+                '$[0::2]',
+                ['1', '3', '5', '7'],
+            ],
+            'Slice defined without step value' => [
+                [1, 2, 3, 4, 5, 6, 7],
+                '$[1:3:]',
+                ['2', '3'],
+            ],
+            'Slice defined without step' => [
+                [1, 2, 3, 4, 5, 6, 7],
+                '$[1:3]',
+                ['2', '3'],
+            ],
+            'Slice defined without all values' => [
+                [1, 2, 3],
+                '$[::]',
+                ['1', '2', '3'],
+            ],
+            'Slice defined without all values and step' => [
+                [1, 2, 3],
+                '$[:]',
+                ['1', '2', '3'],
+            ],
+            'Slice defined with just negative start' => [
+                [1, 2, 3],
+                '$[-1:]',
+                ['3'],
+            ],
+            'Slice defined with just negative end' => [
+                [1, 2, 3],
+                '$[:-1]',
+                ['1', '2'],
+            ],
+            'Slice defined with just negative step' => [
+                [1, 2, 3],
+                '$[::-1]',
+                ['1', '2', '3'],
             ],
             'Simple filter with true' => [
                 [1, 2, 3],
