@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-use function abs;
 use function array_push;
 use Iterator;
 use function max;

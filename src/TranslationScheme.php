@@ -3,7 +3,6 @@
 namespace Remorhaz\JSON\Path;
 
 use function array_fill_keys;
-use function count;
 use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\LiteralArrayValueList;
@@ -103,6 +102,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".0":
+                // [ 0:T_LEFT_BRACKET, 1:T_RIGHT_BRACKET ]
+                $header['s.value_list'] = $this
+                    ->evaluator
+                    ->aggregate(
+                        $header['i.filter_name'],
+                        $this->asValueList($header['i.value_list'])
+                    );
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1":

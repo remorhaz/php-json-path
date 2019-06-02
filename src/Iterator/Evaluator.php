@@ -8,16 +8,18 @@ use function count;
 use function is_bool;
 use function preg_match;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
-use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 
 final class Evaluator
 {
 
     private $comparators;
 
-    public function __construct(ValueComparatorCollection $comparators)
+    private $aggregators;
+
+    public function __construct(ValueComparatorCollection $comparators, ValueAggregatorCollection $aggregators)
     {
         $this->comparators = $comparators;
+        $this->aggregators = $aggregators;
     }
 
     public function logicalOr(
@@ -154,5 +156,21 @@ final class Evaluator
         }
 
         return new ResultValueList($sourceValues->getIndexMap(), ...$results);
+    }
+
+    public function aggregate(string $functionName, ValueListInterface $valueList): ValueListInterface
+    {
+        $aggregator = $this->aggregators->byName($functionName);
+        $results = [];
+        $indexMap = [];
+        foreach ($valueList->getValues() as $innerIndex => $value) {
+            $minValue = $aggregator->tryAggregate($value);
+            if (isset($minValue)) {
+                $results[] = $minValue;
+                $indexMap[] = $valueList->getIndexMap()->getOuterIndex($innerIndex);
+            }
+        }
+
+        return new NodeValueList(new IndexMap(...$indexMap), ...$results);
     }
 }

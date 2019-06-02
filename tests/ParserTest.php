@@ -11,6 +11,7 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
+use Remorhaz\JSON\Path\Iterator\ValueAggregatorCollection;
 use Remorhaz\JSON\Path\Iterator\ValueComparatorCollection;
 use Remorhaz\JSON\Path\Iterator\ValueIterator;
 use Remorhaz\JSON\Path\TokenMatcher;
@@ -77,7 +78,10 @@ class ParserTest extends TestCase
         $rootValue = (new NodeValueFactory)->createValue($json, $path);
         $valueIterator = new ValueIterator;
         $fetcher = new Fetcher($valueIterator);
-        $evaluator = new Evaluator(new ValueComparatorCollection($valueIterator, new \Collator('UTF-8')));
+        $evaluator = new Evaluator(
+            new ValueComparatorCollection($valueIterator, new \Collator('UTF-8')),
+            new ValueAggregatorCollection($valueIterator)
+        );
         $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
         $listener = new TranslationSchemeApplier($scheme);
         $parser = new Parser($grammar, $reader, $listener);
@@ -660,6 +664,24 @@ class ParserTest extends TestCase
                 ],
                 '$[?(@.a =~ /b\\c$/i)]',
                 ['{"a":"abc"}', '{"a":"Bc"}'],
+            ],
+            'Aggregate function MIN' => [
+                [
+                    (object) ['a' => [1, 2, 3]],
+                    (object) ['a' => ['b', 2.1, 3]],
+                    (object) ['a' => []],
+                ],
+                '$..a.min()',
+                ['1', '2.1'],
+            ],
+            'Aggregate function MAX' => [
+                [
+                    (object) ['a' => [1, 2, 3]],
+                    (object) ['a' => [1, 2.1, 'b']],
+                    (object) ['a' => []],
+                ],
+                '$..a.max()',
+                ['3', '2.1'],
             ],
         ];
     }
