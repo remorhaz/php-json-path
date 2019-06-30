@@ -924,7 +924,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $valueList,
                         ...ChildMatcherList::populate(
                             new StrictPropertyMatcher($header['i.filter_name']),
-                           ...$valueList->getIndexMap()->getInnerIndice()
+                            ...$valueList->getIndexMap()->getInnerIndice()
                         )
                     );
                 break;
