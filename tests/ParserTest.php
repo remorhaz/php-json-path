@@ -709,6 +709,16 @@ class ParserTest extends TestCase
                 '$..a.avg()',
                 ['2', '1.5'],
             ],
+            'Aggregate function STDDEV' => [
+                [
+                    (object) ['a' => [1, 2, 3]],
+                    (object) ['a' => [1, 2, 1.5, 'b']],
+                    (object) ['a' => [1]],
+                    (object) ['a' => []],
+                ],
+                '$..a.stddev()',
+                ['1', '0.5'],
+            ],
         ];
     }
 }
