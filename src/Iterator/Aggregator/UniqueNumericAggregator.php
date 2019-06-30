@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator;
+namespace Remorhaz\JSON\Path\Iterator\Aggregator;
+
+use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
 
 abstract class UniqueNumericAggregator extends NumericAggregator
 {

@@ -7,7 +7,7 @@ use Generator;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
 
-final class ResultValue implements ResultValueInterface
+final class EvaluatedValue implements EvaluatedValueInterface
 {
 
     private $value;

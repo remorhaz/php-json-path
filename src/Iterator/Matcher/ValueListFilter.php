@@ -5,8 +5,8 @@ namespace Remorhaz\JSON\Path\Iterator\Matcher;
 
 use Remorhaz\JSON\Path\Iterator\IndexMap;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
-use Remorhaz\JSON\Path\Iterator\ResultValueInterface;
-use Remorhaz\JSON\Path\Iterator\ResultValueListInterface;
+use Remorhaz\JSON\Path\Iterator\EvaluatedValueInterface;
+use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 
@@ -15,7 +15,7 @@ class ValueListFilter implements ValueListFilterInterface
 
     private $filterValueList;
 
-    public function __construct(ResultValueListInterface $filterValueList)
+    public function __construct(EvaluatedValueListInterface $filterValueList)
     {
         $this->filterValueList = $filterValueList;
     }
@@ -33,7 +33,7 @@ class ValueListFilter implements ValueListFilterInterface
         $indexMap = [];
         foreach ($valueList->getValues() as $index => $value) {
             $filterValue = $this->filterValueList->getValue($index);
-            if (!$filterValue instanceof ResultValueInterface) {
+            if (!$filterValue instanceof EvaluatedValueInterface) {
                 throw new Exception\InvalidResultException($filterValue);
             }
             if (!$filterValue->getData()) {

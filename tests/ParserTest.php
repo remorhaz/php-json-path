@@ -2,6 +2,8 @@
 
 namespace Remorhaz\JSON\Path\Test;
 
+use Collator;
+use function json_encode;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\EventExporter;
@@ -11,11 +13,12 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\ValueAggregatorCollection;
-use Remorhaz\JSON\Path\Iterator\ValueComparatorCollection;
+use Remorhaz\JSON\Path\Iterator\Aggregator\ValueAggregatorCollection;
+use Remorhaz\JSON\Path\Iterator\Comparator\ValueComparatorCollection;
 use Remorhaz\JSON\Path\Iterator\ValueIterator;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\TranslationScheme;
+use Remorhaz\UniLex;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Parser\LL1\Parser;
@@ -61,8 +64,11 @@ class ParserTest extends TestCase
     }
 
     /**
-     * @throws \Remorhaz\UniLex\Exception
-     * @throws \Remorhaz\UniLex\Parser\LL1\UnexpectedTokenException
+     * @param $json
+     * @param string $query
+     * @param array $expectedValue
+     * @throws UniLex\Exception
+     * @throws UniLex\Parser\LL1\UnexpectedTokenException
      * @dataProvider providerParser
      */
     public function testParser($json, string $query, array $expectedValue): void
@@ -79,7 +85,7 @@ class ParserTest extends TestCase
         $valueIterator = new ValueIterator;
         $fetcher = new Fetcher($valueIterator);
         $evaluator = new Evaluator(
-            new ValueComparatorCollection($valueIterator, new \Collator('UTF-8')),
+            new ValueComparatorCollection($valueIterator, new Collator('UTF-8')),
             new ValueAggregatorCollection($valueIterator)
         );
         $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
@@ -91,7 +97,7 @@ class ParserTest extends TestCase
         $output = $scheme->getOutput();
         $actualValue = [];
         foreach ($output as $value) {
-            $actualValue[] = \json_encode(
+            $actualValue[] = json_encode(
                 (new EventExporter($valueIterator))->export($value->createIterator()),
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
             );

@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator;
+namespace Remorhaz\JSON\Path\Iterator\Aggregator;
+
+use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
+use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueIterator;
 
 final class LengthAggregator implements ValueAggregatorInterface
 {

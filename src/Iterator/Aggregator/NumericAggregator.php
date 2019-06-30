@@ -1,11 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator;
+namespace Remorhaz\JSON\Path\Iterator\Aggregator;
 
 use function array_map;
 use function is_float;
 use function is_int;
+use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
+use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Path\Iterator\ValueIterator;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {

@@ -16,7 +16,7 @@ use Remorhaz\JSON\Path\Iterator\Matcher\ValueListFilter;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
-use Remorhaz\JSON\Path\Iterator\ResultValueList;
+use Remorhaz\JSON\Path\Iterator\EvaluatedValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
@@ -384,7 +384,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->fetcher
                     ->filterValues(
                         new ValueListFilter(
-                            new ResultValueList(
+                            new EvaluatedValueList(
                                 $evaluationResult->getIndexMap()->join($contextValues->getIndexMap()),
                                 ...$evaluationResult->getResults()
                             )

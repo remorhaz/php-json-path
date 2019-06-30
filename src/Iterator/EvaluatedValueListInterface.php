@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-interface ResultValueListInterface extends ValueListInterface
+interface EvaluatedValueListInterface extends ValueListInterface
 {
     /**
      * @return bool[]

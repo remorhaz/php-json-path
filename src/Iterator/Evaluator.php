@@ -7,6 +7,9 @@ use function array_fill;
 use function count;
 use function is_bool;
 use function preg_match;
+use Remorhaz\JSON\Path\Iterator\Aggregator\ValueAggregatorCollection;
+use Remorhaz\JSON\Path\Iterator\Comparator\ValueComparatorCollection;
+use Remorhaz\JSON\Path\Iterator\Comparator\ValueComparatorInterface;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 
 final class Evaluator
@@ -23,9 +26,9 @@ final class Evaluator
     }
 
     public function logicalOr(
-        ResultValueListInterface $leftValueList,
-        ResultValueListInterface $rightValueList
-    ): ResultValueListInterface {
+        EvaluatedValueListInterface $leftValueList,
+        EvaluatedValueListInterface $rightValueList
+    ): EvaluatedValueListInterface {
         if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
@@ -35,13 +38,13 @@ final class Evaluator
             $results[] = $leftResult || $rightValueList->getResult($index);
         }
 
-        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
+        return new EvaluatedValueList($leftValueList->getIndexMap(), ...$results);
     }
 
     public function logicalAnd(
-        ResultValueListInterface $leftValueList,
-        ResultValueListInterface $rightValueList
-    ): ResultValueListInterface {
+        EvaluatedValueListInterface $leftValueList,
+        EvaluatedValueListInterface $rightValueList
+    ): EvaluatedValueListInterface {
         if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
@@ -51,23 +54,23 @@ final class Evaluator
             $results[] = $leftResult && $rightValueList->getResult($index);
         }
 
-        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
+        return new EvaluatedValueList($leftValueList->getIndexMap(), ...$results);
     }
 
-    public function logicalNot(ResultValueListInterface $valueList): ResultValueListInterface
+    public function logicalNot(EvaluatedValueListInterface $valueList): EvaluatedValueListInterface
     {
         $results = [];
         foreach ($valueList->getResults() as $leftResult) {
             $results[] = !$leftResult;
         }
 
-        return new ResultValueList($valueList->getIndexMap(), ...$results);
+        return new EvaluatedValueList($valueList->getIndexMap(), ...$results);
     }
 
     public function isEqual(
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList
-    ): ResultValueListInterface {
+    ): EvaluatedValueListInterface {
         return $this->compare(
             $leftValueList,
             $rightValueList,
@@ -78,7 +81,7 @@ final class Evaluator
     public function isGreater(
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList
-    ): ResultValueListInterface {
+    ): EvaluatedValueListInterface {
         return $this->compare(
             $leftValueList,
             $rightValueList,
@@ -90,7 +93,7 @@ final class Evaluator
         ValueListInterface $leftValueList,
         ValueListInterface $rightValueList,
         ValueComparatorInterface $comparator
-    ): ResultValueListInterface {
+    ): EvaluatedValueListInterface {
         if (!$leftValueList->getIndexMap()->equals($rightValueList->getIndexMap())) {
             throw new Exception\InvalidIndexMapException($rightValueList);
         }
@@ -100,10 +103,10 @@ final class Evaluator
             $results[] = $comparator
                 ->compare($leftValue, $rightValueList->getValue($index));
         }
-        return new ResultValueList($leftValueList->getIndexMap(), ...$results);
+        return new EvaluatedValueList($leftValueList->getIndexMap(), ...$results);
     }
 
-    public function isRegExp(ValueListInterface $valueList, string $regexp): ResultValueListInterface
+    public function isRegExp(ValueListInterface $valueList, string $regexp): EvaluatedValueListInterface
     {
         $results = [];
 
@@ -124,14 +127,14 @@ final class Evaluator
             $results[] = 1 === $match;
         }
 
-        return new ResultValueList($valueList->getIndexMap(), ...$results);
+        return new EvaluatedValueList($valueList->getIndexMap(), ...$results);
     }
 
     public function evaluate(
         ValueListInterface $sourceValues,
         ValueListInterface $resultValues
-    ): ResultValueListInterface {
-        if ($resultValues instanceof ResultValueListInterface) {
+    ): EvaluatedValueListInterface {
+        if ($resultValues instanceof EvaluatedValueListInterface) {
             return $resultValues;
         }
 
@@ -140,7 +143,7 @@ final class Evaluator
             if ($literal instanceof ScalarValueInterface) {
                 $data = $literal->getData();
                 if (is_bool($data)) {
-                    return new ResultValueList(
+                    return new EvaluatedValueList(
                         $resultValues->getIndexMap(),
                         ...array_fill(0, count($resultValues->getIndexMap()), $data)
                     );
@@ -155,7 +158,7 @@ final class Evaluator
             $results[] = $resultValues->getIndexMap()->outerIndexExists($outerIndex);
         }
 
-        return new ResultValueList($sourceValues->getIndexMap(), ...$results);
+        return new EvaluatedValueList($sourceValues->getIndexMap(), ...$results);
     }
 
     public function aggregate(string $functionName, ValueListInterface $valueList): ValueListInterface

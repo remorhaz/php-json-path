@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
-final class ResultValueList implements ResultValueListInterface
+final class EvaluatedValueList implements EvaluatedValueListInterface
 {
 
     private $results;
@@ -56,8 +56,8 @@ final class ResultValueList implements ResultValueListInterface
         return $this->values;
     }
 
-    private function createResultValue(bool $result): ResultValueInterface
+    private function createResultValue(bool $result): EvaluatedValueInterface
     {
-        return new ResultValue($result);
+        return new EvaluatedValue($result);
     }
 }

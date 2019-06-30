@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Iterator;
+namespace Remorhaz\JSON\Path\Iterator\Comparator;
 
 use Collator;
+use Remorhaz\JSON\Path\Iterator\ValueIterator;
 
 final class ValueComparatorCollection
 {
