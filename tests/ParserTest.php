@@ -683,6 +683,17 @@ class ParserTest extends TestCase
                 '$..a.max()',
                 ['3', '2.1'],
             ],
+            'Aggregate function LENGTH' => [
+                [
+                    (object) ['a' => [1, 2, 3]],
+                    (object) ['a' => true],
+                    (object) ['a' => (object) ['b' => 'c']],
+                    (object) ['a' => []],
+                    (object) ['a' => [(object) ['a' => [1, 2]]]],
+                ],
+                '$..a.length()',
+                ['3', '0', '1', '2'],
+            ],
         ];
     }
 }

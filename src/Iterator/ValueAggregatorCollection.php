@@ -8,6 +8,7 @@ final class ValueAggregatorCollection
 
     private const MIN = 'min';
     private const MAX = 'max';
+    private const LENGTH = 'length';
 
     private $valueIterator;
 
@@ -24,6 +25,9 @@ final class ValueAggregatorCollection
 
             case self::MAX:
                 return $this->max();
+
+            case self::LENGTH:
+                return $this->length();
         }
 
         throw new Exception\AggregateFunctionNotFound($name);
@@ -37,5 +41,10 @@ final class ValueAggregatorCollection
     public function max(): ValueAggregatorInterface
     {
         return new MaxAggregator($this->valueIterator);
+    }
+
+    public function length(): ValueAggregatorInterface
+    {
+        return new LengthAggregator($this->valueIterator);
     }
 }
