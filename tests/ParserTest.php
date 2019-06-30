@@ -700,6 +700,15 @@ class ParserTest extends TestCase
                 '$..a.length()',
                 ['3', '0', '1', '2'],
             ],
+            'Aggregate function AVG' => [
+                [
+                    (object) ['a' => [1, 2, 3]],
+                    (object) ['a' => [1, 2, 'b']],
+                    (object) ['a' => []],
+                ],
+                '$..a.avg()',
+                ['2', '1.5'],
+            ],
         ];
     }
 }

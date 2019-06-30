@@ -12,6 +12,7 @@ final class ValueAggregatorCollection
     private const MIN = 'min';
     private const MAX = 'max';
     private const LENGTH = 'length';
+    private const AVG = 'avg';
 
     private $valueIterator;
 
@@ -31,6 +32,9 @@ final class ValueAggregatorCollection
 
             case self::LENGTH:
                 return $this->length();
+
+            case self::AVG:
+                return $this->avg();
         }
 
         throw new Exception\AggregateFunctionNotFound($name);
@@ -49,5 +53,10 @@ final class ValueAggregatorCollection
     public function length(): ValueAggregatorInterface
     {
         return new LengthAggregator($this->valueIterator);
+    }
+
+    public function avg(): ValueAggregatorInterface
+    {
+        return new AvgAggregator($this->valueIterator);
     }
 }
