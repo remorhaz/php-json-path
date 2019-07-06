@@ -9,18 +9,18 @@ use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
 use Remorhaz\JSON\Path\Iterator\ObjectValueInterface;
 use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 final class EqualValueComparator implements ValueComparatorInterface
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
     private $collator;
 
-    public function __construct(ValueIterator $valueIterator, Collator $collator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory, Collator $collator)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;
     }
 
@@ -55,8 +55,8 @@ final class EqualValueComparator implements ValueComparatorInterface
 
     private function isArrayEqual(ArrayValueInterface $leftValue, ArrayValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIterator->createArrayIterator($leftValue->createIterator());
-        $rightValueIterator = $this->valueIterator->createArrayIterator($rightValue->createIterator());
+        $leftValueIterator = $this->valueIteratorFactory->createArrayIterator($leftValue->createIterator());
+        $rightValueIterator = $this->valueIteratorFactory->createArrayIterator($rightValue->createIterator());
 
         while ($leftValueIterator->valid()) {
             if (!$rightValueIterator->valid()) {
@@ -73,8 +73,8 @@ final class EqualValueComparator implements ValueComparatorInterface
 
     private function isObjectEqual(ObjectValueInterface $leftValue, ObjectValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIterator->createObjectIterator($leftValue->createIterator());
-        $rightValueIterator = $this->valueIterator->createObjectIterator($rightValue->createIterator());
+        $leftValueIterator = $this->valueIteratorFactory->createObjectIterator($leftValue->createIterator());
+        $rightValueIterator = $this->valueIteratorFactory->createObjectIterator($rightValue->createIterator());
 
         $valuesByProperty = [];
         while ($leftValueIterator->valid()) {

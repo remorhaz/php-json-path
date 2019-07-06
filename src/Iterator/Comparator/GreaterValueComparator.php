@@ -8,18 +8,18 @@ use function is_int;
 use function is_string;
 use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 final class GreaterValueComparator implements ValueComparatorInterface
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
     private $collator;
 
-    public function __construct(ValueIterator $valueIterator, Collator $collator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory, Collator $collator)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;
     }
 

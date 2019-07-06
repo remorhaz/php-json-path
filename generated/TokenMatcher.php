@@ -11,6 +11,7 @@
 
 namespace Remorhaz\JSON\Path;
 
+use Remorhaz\JSON\Path\Parser\TokenType;
 use Remorhaz\UniLex\IO\CharBufferInterface;
 use Remorhaz\UniLex\Lexer\TokenFactoryInterface;
 use Remorhaz\UniLex\Lexer\TokenMatcherInterface;

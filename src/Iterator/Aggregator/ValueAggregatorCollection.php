@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Iterator\Aggregator;
 
 use Remorhaz\JSON\Path\Iterator\Exception;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 final class ValueAggregatorCollection
 {
@@ -15,11 +15,11 @@ final class ValueAggregatorCollection
     private const AVG = 'avg';
     private const STDDEV = 'stddev';
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
-    public function __construct(ValueIterator $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     public function byName(string $name): ValueAggregatorInterface
@@ -46,26 +46,26 @@ final class ValueAggregatorCollection
 
     public function min(): ValueAggregatorInterface
     {
-        return new MinAggregator($this->valueIterator);
+        return new MinAggregator($this->valueIteratorFactory);
     }
 
     public function max(): ValueAggregatorInterface
     {
-        return new MaxAggregator($this->valueIterator);
+        return new MaxAggregator($this->valueIteratorFactory);
     }
 
     public function length(): ValueAggregatorInterface
     {
-        return new LengthAggregator($this->valueIterator);
+        return new LengthAggregator($this->valueIteratorFactory);
     }
 
     public function avg(): ValueAggregatorInterface
     {
-        return new AvgAggregator($this->valueIterator);
+        return new AvgAggregator($this->valueIteratorFactory);
     }
 
     public function stdDev(): ValueAggregatorInterface
     {
-        return new StdDevAggregator($this->valueIterator);
+        return new StdDevAggregator($this->valueIteratorFactory);
     }
 }

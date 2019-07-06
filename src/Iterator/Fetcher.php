@@ -16,7 +16,7 @@ final class Fetcher
 
     private $valueIterator;
 
-    public function __construct(ValueIterator $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIterator)
     {
         $this->valueIterator = $valueIterator;
     }

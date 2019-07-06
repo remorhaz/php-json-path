@@ -9,21 +9,21 @@ use function is_int;
 use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
 use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
     abstract protected function aggregateNumericData(
         array $dataList,
         ScalarValueInterface ...$elements
     ): ?ValueInterface;
 
-    public function __construct(ValueIterator $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     final public function tryAggregate(ValueInterface $value): ?ValueInterface
@@ -61,7 +61,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
             return $numericElements;
         }
         $arrayIterator = $this
-            ->valueIterator
+            ->valueIteratorFactory
             ->createArrayIterator($value->createIterator());
         foreach ($arrayIterator as $element) {
             $numericElement = $this->findNumericElement($element);

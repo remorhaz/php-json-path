@@ -9,8 +9,8 @@
  * Phing version: 2.16.1
  */
 
-use Remorhaz\JSON\Path\SymbolType;
-use Remorhaz\JSON\Path\TokenType;
+use Remorhaz\JSON\Path\Parser\SymbolType;
+use Remorhaz\JSON\Path\Parser\TokenType;
 
 return [
     SymbolType::NT_JSON_PATH => [

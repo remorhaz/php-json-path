@@ -13,10 +13,10 @@
   "require": {
     "php": "^7.3",
     "ext-intl": "*",
+    "ext-json": "*",
     "remorhaz/php-unilex": "dev-master"
   },
   "require-dev": {
-    "ext-json": "*",
     "phpunit/phpunit": "^8.2",
     "phing/phing": "^2.16",
     "squizlabs/php_codesniffer": "^3.2.0"

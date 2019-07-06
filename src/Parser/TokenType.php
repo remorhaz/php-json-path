@@ -1,6 +1,6 @@
 <?php
 
-namespace Remorhaz\JSON\Path;
+namespace Remorhaz\JSON\Path\Parser;
 
 abstract class TokenType
 {

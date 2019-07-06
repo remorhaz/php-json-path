@@ -9,23 +9,23 @@ use Remorhaz\JSON\Path\Iterator\Exception;
 final class EventExporter
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
-    public function __construct(ValueIterator $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     public function export(Iterator $iterator)
     {
-        $value = $this->valueIterator->fetchValue($iterator);
+        $value = $this->valueIteratorFactory->fetchValue($iterator);
         if ($value instanceof ScalarValueInterface) {
             return $value->getData();
         }
 
         if ($value instanceof ArrayValueInterface) {
             $result = [];
-            foreach ($this->valueIterator->createArrayIterator($value->createIterator()) as $index => $element) {
+            foreach ($this->valueIteratorFactory->createArrayIterator($value->createIterator()) as $index => $element) {
                 $result[$index] = $this->export($element->createIterator());
             }
 
@@ -34,7 +34,7 @@ final class EventExporter
 
         if ($value instanceof ObjectValueInterface) {
             $result = (object) [];
-            foreach ($this->valueIterator->createObjectIterator($value->createIterator()) as $name => $property) {
+            foreach ($this->valueIteratorFactory->createObjectIterator($value->createIterator()) as $name => $property) {
                 $result->{$name} = $this->export($property->createIterator());
             }
 

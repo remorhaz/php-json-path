@@ -2,6 +2,8 @@
 
 namespace Remorhaz\JSON\Path;
 
+use Remorhaz\JSON\Path\Parser\SymbolType;
+use Remorhaz\JSON\Path\Parser\TokenType;
 use Remorhaz\UniLex\Grammar\ContextFree\GrammarLoader;
 
 return [

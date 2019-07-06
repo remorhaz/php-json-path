@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Iterator;
 
+use Generator;
 use Iterator;
 use Remorhaz\JSON\Path\Iterator\Event\AfterArrayEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\AfterObjectEventInterface;
@@ -13,14 +14,14 @@ use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Event\ScalarEventInterface;
 
-final class ValueIterator
+final class ValueIteratorFactory implements ValueIteratorFactoryInterface
 {
 
     /**
      * @param Iterator $iterator
-     * @return \Generator|ValueInterface[]
+     * @return Generator|ValueInterface[]
      */
-    public function createArrayIterator(Iterator $iterator): \Generator
+    public function createArrayIterator(Iterator $iterator): Generator
     {
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeArrayEventInterface) {
@@ -44,9 +45,9 @@ final class ValueIterator
 
     /**
      * @param Iterator $iterator
-     * @return \Generator|ValueInterface[]
+     * @return Generator|ValueInterface[]
      */
-    public function createObjectIterator(Iterator $iterator): \Generator
+    public function createObjectIterator(Iterator $iterator): Generator
     {
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeObjectEventInterface) {

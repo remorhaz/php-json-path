@@ -6,16 +6,16 @@ namespace Remorhaz\JSON\Path\Iterator\Aggregator;
 use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
 use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 final class LengthAggregator implements ValueAggregatorInterface
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
-    public function __construct(ValueIterator $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     public function tryAggregate(ValueInterface $value): ?ValueInterface
@@ -34,7 +34,7 @@ final class LengthAggregator implements ValueAggregatorInterface
         }
 
         $arrayIterator = $this
-            ->valueIterator
+            ->valueIteratorFactory
             ->createArrayIterator($value->createIterator());
         $count = 0;
         /** @noinspection PhpUnusedLocalVariableInspection */

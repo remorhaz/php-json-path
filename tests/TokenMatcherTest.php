@@ -4,7 +4,7 @@ namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\TokenMatcher;
-use Remorhaz\JSON\Path\TokenType;
+use Remorhaz\JSON\Path\Parser\TokenType;
 use Remorhaz\UniLex\Lexer\TokenFactory;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Unicode\CharBufferFactory;

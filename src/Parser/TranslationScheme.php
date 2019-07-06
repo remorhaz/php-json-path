@@ -1,6 +1,6 @@
 <?php
 
-namespace Remorhaz\JSON\Path;
+namespace Remorhaz\JSON\Path\Parser;
 
 use function array_fill_keys;
 use Remorhaz\JSON\Path\Iterator\Evaluator;
@@ -18,7 +18,6 @@ use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
-use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
 use Remorhaz\UniLex\Parser\Production;
 use Remorhaz\UniLex\Parser\Symbol;

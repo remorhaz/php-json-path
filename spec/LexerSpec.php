@@ -5,7 +5,7 @@
  * @lexTargetClass Remorhaz\JSON\Path\TokenMatcher
  */
 
-use Remorhaz\JSON\Path\TokenType;
+use Remorhaz\JSON\Path\Parser\TokenType;
 use Remorhaz\UniLex\Lexer\TokenMatcherInterface;
 
 /**

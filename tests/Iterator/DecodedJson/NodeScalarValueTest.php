@@ -18,7 +18,7 @@ use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\PathAwareInterface;
 use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 
 /**
  * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue
@@ -208,6 +208,6 @@ class NodeScalarValueTest extends TestCase
 
     private function exportIterator(Iterator $iterator)
     {
-        return (new EventExporter(new ValueIterator))->export($iterator);
+        return (new EventExporter(new ValueIteratorFactory))->export($iterator);
     }
 }

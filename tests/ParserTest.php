@@ -2,10 +2,7 @@
 
 namespace Remorhaz\JSON\Path\Test;
 
-use Collator;
-use function json_encode;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherList;
@@ -13,18 +10,8 @@ use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
 use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\Aggregator\ValueAggregatorCollection;
-use Remorhaz\JSON\Path\Iterator\Comparator\ValueComparatorCollection;
-use Remorhaz\JSON\Path\Iterator\ValueIterator;
-use Remorhaz\JSON\Path\TokenMatcher;
-use Remorhaz\JSON\Path\TranslationScheme;
-use Remorhaz\UniLex;
-use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
-use Remorhaz\UniLex\Lexer\TokenReader;
-use Remorhaz\UniLex\Parser\LL1\Parser;
-use Remorhaz\UniLex\Grammar\ContextFree\GrammarLoader;
-use Remorhaz\UniLex\Parser\LL1\TranslationSchemeApplier;
-use Remorhaz\UniLex\Unicode\CharBufferFactory;
+use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Path\Processor\Processor;
 
 class ParserTest extends TestCase
 {
@@ -37,8 +24,8 @@ class ParserTest extends TestCase
         $iteratorFactory = (new NodeValueFactory)->createValue($json, $path);
         $values = NodeValueList::createRoot($iteratorFactory);
 
-        $valueIterator = new ValueIterator;
-        $fetcher = new Fetcher($valueIterator);
+        $valueIteratorFactory = new ValueIteratorFactory;
+        $fetcher = new Fetcher($valueIteratorFactory);
         $values = $fetcher->fetchChildren(
             $values,
             ...ChildMatcherList::populate(
@@ -56,7 +43,7 @@ class ParserTest extends TestCase
 
         $actualValue = [];
         foreach ($values->getValues() as $value) {
-            $actualValue[] = (new EventExporter($valueIterator))->export($value->createIterator());
+            $actualValue[] = (new EventExporter($valueIteratorFactory))->export($value->createIterator());
         }
 
         //self::assertEquals([(object) ['b' => 'c']], $actualValue);
@@ -67,41 +54,13 @@ class ParserTest extends TestCase
      * @param $json
      * @param string $query
      * @param array $expectedValue
-     * @throws UniLex\Exception
-     * @throws UniLex\Parser\LL1\UnexpectedTokenException
      * @dataProvider providerParser
      */
     public function testParser($json, string $query, array $expectedValue): void
     {
-        //self::markTestSkipped('JSON Iterator not implemented');
-        $buffer = CharBufferFactory::createFromString($query);
-        $grammar = GrammarLoader::loadFile(__DIR__ . '/../spec/GrammarSpec.php');
-        $tokenFactory = new TokenFactory($grammar);
-        $tokenMatcher = new TokenMatcher;
-        $reader = new TokenReader($buffer, $tokenMatcher, $tokenFactory);
-
-        $path = Path::createEmpty();
-        $rootValue = (new NodeValueFactory)->createValue($json, $path);
-        $valueIterator = new ValueIterator;
-        $fetcher = new Fetcher($valueIterator);
-        $evaluator = new Evaluator(
-            new ValueComparatorCollection($valueIterator, new Collator('UTF-8')),
-            new ValueAggregatorCollection($valueIterator)
-        );
-        $scheme = new TranslationScheme($rootValue, $fetcher, $evaluator);
-        $listener = new TranslationSchemeApplier($scheme);
-        $parser = new Parser($grammar, $reader, $listener);
-        $parser->loadLookupTable(__DIR__ . '/../generated/LookupTable.php');
-        $parser->run();
-
-        $output = $scheme->getOutput();
-        $actualValue = [];
-        foreach ($output as $value) {
-            $actualValue[] = json_encode(
-                (new EventExporter($valueIterator))->export($value->createIterator()),
-                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-            );
-        }
+        $actualValue = Processor::create()
+            ->readDecoded($query, $json)
+            ->asJson();
 
         self::assertEquals($expectedValue, $actualValue);
     }
