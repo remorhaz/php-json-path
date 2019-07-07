@@ -7,6 +7,7 @@ use Remorhaz\JSON\Path\Iterator\Evaluator;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\TokenMatcher;
+use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UnilexException;
 use Remorhaz\UniLex\Grammar\ContextFree\GrammarInterface;
 use Remorhaz\UniLex\Grammar\ContextFree\GrammarLoader;
@@ -34,12 +35,13 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         $this->evaluator = $evaluator;
     }
 
-    public function createTranslationScheme(NodeValueInterface $rootValue): TranslationSchemeInterface
+    public function createTranslationScheme(NodeValueInterface $rootValue, Tree $queryAst): TranslationSchemeInterface
     {
         return new TranslationScheme(
             $rootValue,
             $this->fetcher,
-            $this->evaluator
+            $this->evaluator,
+            new QueryAstBuilder($queryAst)
         );
     }
 

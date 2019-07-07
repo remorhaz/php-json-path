@@ -15,6 +15,7 @@ use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Path\Parser\TranslatorFactory;
 use Remorhaz\JSON\Path\Parser\TranslatorFactoryInterface;
+use Remorhaz\UniLex\AST\Tree;
 use Throwable;
 
 final class Processor implements ProcessorInterface
@@ -56,11 +57,11 @@ final class Processor implements ProcessorInterface
 
     private function readOutput(string $path, NodeValueInterface $rootNode): array
     {
-
         try {
+            $ast = new Tree;
             $scheme = $this
                 ->translatorFactory
-                ->createTranslationScheme($rootNode);
+                ->createTranslationScheme($rootNode, $ast);
             $this
                 ->translatorFactory
                 ->createParser($path, $scheme)
