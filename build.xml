@@ -22,8 +22,8 @@
     <target name="json-path-lookup">
         <build-lookup
             description="JSONPath parser LL(1) lookup table."
-            symbolClassName="Remorhaz\JSON\Path\SymbolType"
-            tokenClassName="Remorhaz\JSON\Path\TokenType"
+            symbolClassName="Remorhaz\JSON\Path\Parser\SymbolType"
+            tokenClassName="Remorhaz\JSON\Path\Parser\TokenType"
             configFile="${application.startdir}/spec/GrammarSpec.php"
             destFile="${application.startdir}/generated/LookupTable.php" />
     </target>

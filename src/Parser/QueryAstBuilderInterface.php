@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Parser;
 
-use Remorhaz\UniLex\AST\Node;
-
 interface QueryAstBuilderInterface
 {
 

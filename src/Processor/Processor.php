@@ -15,6 +15,7 @@ use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Path\Parser\TranslatorFactory;
 use Remorhaz\JSON\Path\Parser\TranslatorFactoryInterface;
+use Remorhaz\UniLex\AST\Translator;
 use Remorhaz\UniLex\AST\Tree;
 use Throwable;
 
@@ -66,6 +67,10 @@ final class Processor implements ProcessorInterface
                 ->translatorFactory
                 ->createParser($path, $scheme)
                 ->run();
+
+            $astListener = new QueryAstTranslatorListener;
+            $translator = new Translator($ast, $astListener);
+            $translator->run();
         } catch (Throwable $e) {
             throw new Exception\TranslationFailedException($e);
         }
