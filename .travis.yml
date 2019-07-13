@@ -5,11 +5,12 @@ php:
   - '7.4snapshot'
 
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./build/cc-test-reporter
-  - chmod +x ./build/cc-test-reporter
-  - ./build/cc-test-reporter before-build
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
 
 install:
+  - mkdir -p ./build/log
   - composer self-update
   - composer install --prefer-source --no-interaction
   - vendor/bin/phing
