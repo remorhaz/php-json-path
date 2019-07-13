@@ -19,7 +19,6 @@ use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueList;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
-use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Lexer\Token;
 use Remorhaz\UniLex\Parser\Production;
 use Remorhaz\UniLex\Parser\Symbol;
@@ -126,7 +125,7 @@ class TranslationScheme implements TranslationSchemeInterface
 
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->calculateAggregate(
+                    ->aggregate(
                         $header['i.filter_name'],
                         $header['i.value_list_id']
                     );
@@ -197,9 +196,11 @@ class TranslationScheme implements TranslationSchemeInterface
 
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralScalar(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        $symbols[0]['s.int']
+                        $this
+                            ->astBuilder
+                            ->createScalar($symbols[0]['s.int'])
                     );
                 break;
 
@@ -213,9 +214,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralArray(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        ...$symbols[0]['s.array_element_ids']
+                        $symbols[0]['s.array_id']
                     );
                 break;
 
@@ -229,9 +230,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralScalar(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        null
+                        $this
+                            ->astBuilder
+                            ->createScalar(null)
                     );
                 break;
 
@@ -245,9 +248,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralScalar(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        true
+                        $this
+                            ->astBuilder
+                            ->createScalar(true)
                     );
                 break;
 
@@ -261,9 +266,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralScalar(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        false
+                        $this
+                            ->astBuilder
+                            ->createScalar(false)
                     );
                 break;
 
@@ -277,9 +284,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteralScalar(
+                    ->populateLiteral(
                         $header['i.value_list_id'],
-                        $symbols[0]['s.text']
+                        $this
+                            ->astBuilder
+                            ->createScalar($symbols[0]['s.text'])
                     );
                 break;
 
@@ -547,7 +556,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalNot(
+                    ->evaluateLogicalNot(
                         $this
                             ->astBuilder
                             ->evaluate(
@@ -652,31 +661,31 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_ARRAY . '.0':
                 // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT, 3:T_RIGHT_SQUARE_BRACKET ]
                 $header['s.array_elements'] = $symbols[2]['s.array_elements'];
-                $header['s.array_element_ids'] = $symbols[2]['s.array_element_ids'];
+                $header['s.array_id'] = $symbols[2]['s.array_id'];
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.0':
                 // [ 0:NT_EXPR, 1:NT_ARRAY_CONTENT_TAIL ]
                 $header['s.array_elements'] = $symbols[1]['s.array_elements'];
-                $header['s.array_element_ids'] = $symbols[1]['s.array_element_ids'];
+                $header['s.array_id'] = $symbols[1]['s.array_id'];
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.1':
                 // []
                 $header['s.array_elements'] = $header['i.array_elements'];
-                $header['s.array_element_ids'] = $header['i.array_element_ids'];
+                $header['s.array_id'] = $header['i.array_id'];
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT_TAIL . '.0':
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_ARRAY_CONTENT ]
                 $header['s.array_elements'] = $symbols[2]['s.array_elements'];
-                $header['s.array_element_ids'] = $symbols[2]['s.array_element_ids'];
+                $header['s.array_id'] = $symbols[2]['s.array_id'];
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT_TAIL . '.1':
                 // []
                 $header['s.array_elements'] = $header['i.array_elements'];
-                $header['s.array_element_ids'] = $header['i.array_element_ids'];
+                $header['s.array_id'] = $header['i.array_id'];
                 break;
 
             case SymbolType::NT_REGEXP . '.0':
@@ -849,7 +858,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[3]['i.left_value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalOr(
+                    ->evaluateLogicalOr(
                         $this
                             ->astBuilder
                             ->evaluate(
@@ -902,7 +911,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[3]['i.left_value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalAnd(
+                    ->evaluateLogicalAnd(
                         $this
                             ->astBuilder
                             ->evaluate(
@@ -1003,7 +1012,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[3]['i.left_value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalNot(
+                    ->evaluateLogicalNot(
                         $this
                             ->astBuilder
                             ->calculateIsEqual(
@@ -1047,7 +1056,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[3]['i.left_value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalNot(
+                    ->evaluateLogicalNot(
                         $this
                             ->astBuilder
                             ->calculateIsGreater(
@@ -1091,7 +1100,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[3]['i.left_value_list_id'] = $this
                     ->astBuilder
-                    ->calculateLogicalNot(
+                    ->evaluateLogicalNot(
                         $this
                             ->astBuilder
                             ->calculateIsGreater(
@@ -1268,7 +1277,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[2]['i.array_elements'] = [];
-                $symbols[2]['i.array_element_ids'] = [];
+                $symbols[2]['i.array_id'] = $this
+                    ->astBuilder
+                    ->createArray();
                 break;
 
             case SymbolType::NT_ARRAY_CONTENT . '.0.0':
@@ -1285,10 +1296,9 @@ class TranslationScheme implements TranslationSchemeInterface
                     $header['i.array_elements'],
                     [$this->asValueList($symbols[0]['s.value_list'])]
                 );
-                $symbols[1]['i.array_element_ids'] = array_merge(
-                    $header['i.array_element_ids'],
-                    [$symbols[0]['s.value_list_id']]
-                );
+                $symbols[1]['i.array_id'] = $this
+                    ->astBuilder
+                    ->appendToArray($header['i.array_id'], $symbols[0]['s.value_list_id']);
 
                 break;
 
@@ -1297,7 +1307,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[2]['i.array_elements'] = $header['i.array_elements'];
-                $symbols[2]['i.array_element_ids'] = $header['i.array_element_ids'];
+                $symbols[2]['i.array_id'] = $header['i.array_id'];
                 break;
 
             case SymbolType::NT_REGEXP . '.0.1':

@@ -18,11 +18,11 @@ interface QueryAstBuilderInterface
 
     public function filter(int $contextId, int $evaluatedId): int;
 
-    public function calculateLogicalOr(int $leftId, int $rightId): int;
+    public function evaluateLogicalOr(int $leftId, int $rightId): int;
 
-    public function calculateLogicalAnd(int $leftId, int $rightId): int;
+    public function evaluateLogicalAnd(int $leftId, int $rightId): int;
 
-    public function calculateLogicalNot(int $id): int;
+    public function evaluateLogicalNot(int $id): int;
 
     public function calculateIsEqual(int $leftId, int $rightId): int;
 
@@ -40,15 +40,19 @@ interface QueryAstBuilderInterface
 
     public function matchElementStrictly(int $id): int;
 
-    public function calculateAggregate(string $name, int $id): int;
+    public function aggregate(string $name, int $id): int;
 
-    public function populateLiteralScalar(int $sourceId, $value): int;
-
-    public function populateLiteralArray(int $sourceId, int ...$valueIdList): int;
+    public function populateLiteral(int $sourceId, int $valueId): int;
 
     public function populateIndexList(int $sourceId, int ...$indexList): int;
 
     public function populateIndexSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int;
 
     public function populateNameList(int $sourceId, string ...$nameList): int;
+
+    public function createScalar($value): int;
+
+    public function createArray(): int;
+
+    public function appendToArray(int $arrayId, int $valueId): int;
 }
