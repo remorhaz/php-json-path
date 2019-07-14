@@ -305,6 +305,22 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
 
     /**
      * @param int $sourceId
+     * @param int $arrayId
+     * @return int
+     * @throws UniLexException
+     */
+    public function populateLiteralArray(int $sourceId, int $arrayId): int
+    {
+        return $this
+            ->tree
+            ->createNode(QueryAstNodeType::POPULATE_LITERAL_ARRAY)
+            ->addChild($this->tree->getNode($sourceId))
+            ->addChild($this->tree->getNode($arrayId))
+            ->getId();
+    }
+
+    /**
+     * @param int $sourceId
      * @param int ...$indexList
      * @return int
      * @throws UniLexException

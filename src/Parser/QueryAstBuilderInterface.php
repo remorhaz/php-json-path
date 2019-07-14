@@ -44,6 +44,8 @@ interface QueryAstBuilderInterface
 
     public function populateLiteral(int $sourceId, int $valueId): int;
 
+    public function populateLiteralArray(int $sourceId, int $arrayId): int;
+
     public function populateIndexList(int $sourceId, int ...$indexList): int;
 
     public function populateIndexSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int;

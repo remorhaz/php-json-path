@@ -25,6 +25,7 @@ abstract class QueryAstNodeType
     public const MATCH_ELEMENT_STRICTLY = 'match_element_strictly';
     public const AGGREGATE = 'aggregate';
     public const POPULATE_LITERAL = 'populate_literal';
+    public const POPULATE_LITERAL_ARRAY = 'populate_literal_array';
     public const POPULATE_INDEX_LIST = 'populate_index_list';
     public const POPULATE_INDEX_SLICE = 'populate_index_slice';
     public const POPULATE_NAME_LIST = 'populate_name_list';

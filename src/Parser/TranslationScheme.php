@@ -214,7 +214,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 );
                 $header['s.value_list_id'] = $this
                     ->astBuilder
-                    ->populateLiteral(
+                    ->populateLiteralArray(
                         $header['i.value_list_id'],
                         $symbols[0]['s.array_id']
                     );

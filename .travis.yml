@@ -6,8 +6,8 @@ php:
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    - chmod +x ./cc-test-reporter
-    - ./cc-test-reporter before-build
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 install:
   - mkdir -p ./build/log
@@ -20,4 +20,4 @@ script:
   - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
-  - ./build/cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT

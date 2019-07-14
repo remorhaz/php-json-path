@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor;
 
 use function array_map;
-use PhpParser\Builder\Namespace_;
 use PhpParser\BuilderFactory;
+use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
+use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\JSON\Path\Parser\QueryAstNodeType;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node;
@@ -23,32 +25,56 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
 
     private $references = [];
 
-    /**
-     * @var Namespace_
-     */
-    private $ns;
+    private $runtime;
 
-    private $self;
+    private $stmts = [];
+
+    private $queryCallback;
 
     public function __construct()
     {
         $this->php = new BuilderFactory;
     }
 
+    public function getQueryCallback(): callable
+    {
+        if (!isset($this->queryCallback)) {
+            throw new Exception\QueryCallbackUndefinedException;
+        }
+
+        return $this->queryCallback;
+    }
+
     public function onStart(Node $node): void
     {
-        $this->ns = $this
-            ->php
-            ->namespace(null);
-
-        $this->self = $this->php->var('this');
+        $this->runtime = $this->php->var('runtime');
     }
 
     public function onFinish(): void
     {
-        /*var_export(
-            (new Standard)->prettyPrint([$this->ns->getNode()])
-        );*/
+        $runtimeParam = $this
+                ->php
+                ->param('runtime')
+                ->setType(RuntimeInterface::class)
+                ->getNode();
+        $stmts = \array_map(
+            function (\PhpParser\Node $stmt): \PhpParser\Node {
+                return $stmt instanceof Expr ? new Expression($stmt): $stmt;
+            },
+            $this->stmts
+        );
+
+        $closure = new Expr\Closure(
+            [
+                'stmts' => $stmts,
+                'returnType' => ValueListInterface::class,
+                'params' => [$runtimeParam],
+            ]
+        );
+        $return = new Return_($closure);
+
+        $callbackCode = (new Standard)->prettyPrint([$return]);
+        $this->queryCallback = eval($callbackCode);
     }
 
     public function onBeginProduction(Node $node, PushInterface $stack): void
@@ -67,15 +93,11 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
         }
         switch ($node->getName()) {
             case QueryAstNodeType::GET_INPUT:
-                $this->setReference($node, $this->php->var('input'));
+                $this->addMethodCall($node, 'getInput');
                 break;
 
             case QueryAstNodeType::SET_OUTPUT:
-                $this
-                    ->ns
-                    ->addStmt(
-                        new Return_($this->getReference($node->getChild(0)))
-                    );
+                $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 
             case QueryAstNodeType::CREATE_FILTER_CONTEXT:
@@ -221,6 +243,20 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                 );
                 break;
 
+            case QueryAstNodeType::POPULATE_LITERAL_ARRAY:
+                $unpack = new Arg(
+                    $this->getReference($node->getChild(1)),
+                    false,
+                    true
+                );
+                $this->addMethodCall(
+                    $node,
+                    'populateLiteralArray',
+                    $this->getReference($node->getChild(0)),
+                    $unpack
+                );
+                break;
+
             case QueryAstNodeType::POPULATE_INDEX_LIST:
                 $this->addMethodCall(
                     $node,
@@ -262,9 +298,7 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                 $attributes = $node->getAttributeList();
                 // TODO: allow accessing null attributes
                 $value = $this->php->val($attributes['value'] ?? null);
-                $this
-                    ->ns
-                    ->addStmt(new Assign($this->createReference($node), $value));
+                $this->stmts[] = new Assign($this->createReference($node), $value);
                 break;
 
             case QueryAstNodeType::CREATE_ARRAY:
@@ -273,14 +307,10 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                 foreach ($node->getChildList() as $child) {
                     $items[] = $this->getReference($child);
                 }
-                $this
-                    ->ns
-                    ->addStmt(
-                        new Assign(
-                            $this->createReference($node),
-                            $this->php->val($items)
-                        )
-                    );
+                $this->stmts[] = new Assign(
+                    $this->createReference($node),
+                    $this->php->val($items)
+                );
                 break;
 
             case QueryAstNodeType::APPEND_TO_ARRAY:
@@ -302,6 +332,7 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
     {
         $reference = $this->php->var($this->getVarName($node));
         $this->setReference($node, $reference);
+
         return $reference;
     }
 
@@ -328,13 +359,11 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
         return $this->references[$node->getId()];
     }
 
-    private function addMethodCall(Node $node, string $method, Expr ...$args): void
+    private function addMethodCall(Node $node, string $method, \PhpParser\Node ...$args): void
     {
         $methodCall = $this
             ->php
-            ->methodCall($this->self, $method, $args);
-        $this
-            ->ns
-            ->addStmt(new Assign($this->createReference($node), $methodCall));
+            ->methodCall($this->runtime, $method, $args);
+        $this->stmts[] = new Assign($this->createReference($node), $methodCall);
     }
 }
