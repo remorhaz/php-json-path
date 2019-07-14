@@ -10,7 +10,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 install:
-  - mkdir -p ./build/log
+  - mkdir -p ./build/logs
   - composer self-update
   - composer install --prefer-source --no-interaction
   - vendor/bin/phing
