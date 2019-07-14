@@ -3,7 +3,6 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\EventExporter;
 use Remorhaz\JSON\Path\Iterator\Fetcher;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherList;
 use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
@@ -12,6 +11,7 @@ use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\NodeValueList;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Processor\Processor;
+use Remorhaz\JSON\Path\Processor\Result;
 
 class ParserTest extends TestCase
 {
@@ -41,13 +41,8 @@ class ParserTest extends TestCase
             )
         );
 
-        $actualValue = [];
-        foreach ($values->getValues() as $value) {
-            $actualValue[] = (new EventExporter($valueIteratorFactory))->export($value->createIterator());
-        }
-
-        //self::assertEquals([(object) ['b' => 'c']], $actualValue);
-        self::assertEquals(['c'], $actualValue);
+        $result = new Result($valueIteratorFactory, ...$values->getValues());
+        self::assertEquals(['c'], $result->decode());
     }
 
     /**

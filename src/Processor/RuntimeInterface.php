@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor;
 
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Iterator\LiteralArrayValue;
 use Remorhaz\JSON\Path\Iterator\LiteralValueInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
@@ -70,7 +69,10 @@ interface RuntimeInterface
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
 
-    public function populateLiteralArray(NodeValueListInterface $source, LiteralValueInterface ...$values): ValueListInterface;
+    public function populateLiteralArray(
+        NodeValueListInterface $source,
+        LiteralValueInterface ...$values
+    ): ValueListInterface;
 
     public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array;
 

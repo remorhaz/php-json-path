@@ -25,7 +25,8 @@ final class EventExporter
 
         if ($value instanceof ArrayValueInterface) {
             $result = [];
-            foreach ($this->valueIteratorFactory->createArrayIterator($value->createIterator()) as $index => $element) {
+            $arrayIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
+            foreach ($arrayIterator as $index => $element) {
                 $result[$index] = $this->export($element->createIterator());
             }
 
@@ -34,7 +35,8 @@ final class EventExporter
 
         if ($value instanceof ObjectValueInterface) {
             $result = (object) [];
-            foreach ($this->valueIteratorFactory->createObjectIterator($value->createIterator()) as $name => $property) {
+            $objectIterator = $this->valueIteratorFactory->createObjectIterator($value->createIterator());
+            foreach ($objectIterator as $name => $property) {
                 $result->{$name} = $this->export($property->createIterator());
             }
 

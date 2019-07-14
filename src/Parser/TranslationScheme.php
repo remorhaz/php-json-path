@@ -162,7 +162,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2":
-                // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_BRACKET_FILTER, 3:T_RIGHT_SQUARE_BRACKET, 4:NT_FILTER_LIST ]
+                // [
+                //   0:T_LEFT_SQUARE_BRACKET,
+                //   1:NT_WS_OPT,
+                //   2:NT_BRACKET_FILTER,
+                //   3:T_RIGHT_SQUARE_BRACKET,
+                //   4:NT_FILTER_LIST
+                // ]
                 $header['s.value_list'] = $symbols[4]['s.value_list'];
                 $header['s.value_list_id'] = $symbols[4]['s.value_list_id'];
                 break;
@@ -1155,13 +1161,25 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.2":
-                // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_BRACKET_FILTER, 3:T_RIGHT_SQUARE_BRACKET, 4:NT_FILTER_LIST ]
+                // [
+                //   0:T_LEFT_SQUARE_BRACKET,
+                //   1:NT_WS_OPT,
+                //   2:NT_BRACKET_FILTER,
+                //   3:T_RIGHT_SQUARE_BRACKET,
+                //   4:NT_FILTER_LIST
+                // ]
                 $symbols[2]['i.value_list'] = $header['i.value_list'];
                 $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.4":
-                // [ 0:T_LEFT_SQUARE_BRACKET, 1:NT_WS_OPT, 2:NT_BRACKET_FILTER, 3:T_RIGHT_SQUARE_BRACKET, 4:NT_FILTER_LIST ]
+                // [
+                //   0:T_LEFT_SQUARE_BRACKET,
+                //   1:NT_WS_OPT,
+                //   2:NT_BRACKET_FILTER,
+                //   3:T_RIGHT_SQUARE_BRACKET,
+                //   4:NT_FILTER_LIST
+                // ]
                 $symbols[4]['i.value_list'] = $symbols[2]['s.value_list'];
                 $symbols[4]['i.value_list_id'] = $symbols[2]['s.value_list_id'];
                 break;
