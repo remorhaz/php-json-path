@@ -57,20 +57,20 @@ final class Processor implements ProcessorInterface
     private function readOutput(string $path, NodeValueInterface $rootNode): ResultInterface
     {
         try {
-            $ast = new Tree;
+            $queryAst = new Tree;
             $scheme = $this
                 ->translatorFactory
-                ->createTranslationScheme($rootNode, $ast);
+                ->createTranslationScheme($queryAst);
             $this
                 ->translatorFactory
                 ->createParser($path, $scheme)
                 ->run();
 
-            $astListener = new QueryCallbackBuilder;
-            $translator = new Translator($ast, $astListener);
+            $queryCallbackBuilder = new QueryCallbackBuilder;
+            $translator = new Translator($queryAst, $queryCallbackBuilder);
             $translator->run();
 
-            $queryCallback = $astListener->getQueryCallback();
+            $queryCallback = $queryCallbackBuilder->getQueryCallback();
 
             $valueIteratorFactory = new ValueIteratorFactory;
             $runtime = new Runtime(

@@ -12,7 +12,7 @@ use Remorhaz\UniLex\Exception as UnilexException;
 use Remorhaz\UniLex\Grammar\ContextFree\GrammarInterface;
 use Remorhaz\UniLex\Grammar\ContextFree\GrammarLoader;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
-use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface as SddTranslationScheme;
+use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Lexer\TokenReaderInterface;
 use Remorhaz\UniLex\Parser\LL1\Parser;
@@ -35,17 +35,12 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         $this->evaluator = $evaluator;
     }
 
-    public function createTranslationScheme(NodeValueInterface $rootValue, Tree $queryAst): TranslationSchemeInterface
+    public function createTranslationScheme(Tree $queryAst): TranslationSchemeInterface
     {
-        return new TranslationScheme(
-            $rootValue,
-            $this->fetcher,
-            $this->evaluator,
-            new QueryAstBuilder($queryAst)
-        );
+        return new TranslationScheme(new QueryAstBuilder($queryAst));
     }
 
-    public function createParser(string $path, SddTranslationScheme $scheme): Parser
+    public function createParser(string $path, TranslationSchemeInterface $scheme): Parser
     {
         try {
             $parser = new Parser(
