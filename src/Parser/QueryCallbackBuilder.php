@@ -11,6 +11,7 @@ use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 use Remorhaz\JSON\Path\Processor\Exception;
 use Remorhaz\JSON\Path\Processor\RuntimeInterface;
@@ -27,6 +28,8 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
     private $references = [];
 
     private $runtime;
+
+    private $input;
 
     private $stmts = [];
 
@@ -49,15 +52,21 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
     public function onStart(Node $node): void
     {
         $this->runtime = $this->php->var('runtime');
+        $this->input = $this->php->var('input');
     }
 
     public function onFinish(): void
     {
         $runtimeParam = $this
-                ->php
-                ->param('runtime')
-                ->setType(RuntimeInterface::class)
-                ->getNode();
+            ->php
+            ->param('runtime')
+            ->setType(RuntimeInterface::class)
+            ->getNode();
+        $inputParam = $this
+            ->php
+            ->param('input')
+            ->setType(NodeValueInterface::class)
+            ->getNode();
         $stmts = \array_map(
             function (\PhpParser\Node $stmt): \PhpParser\Node {
                 return $stmt instanceof Expr ? new Expression($stmt): $stmt;
@@ -69,7 +78,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
             [
                 'stmts' => $stmts,
                 'returnType' => ValueListInterface::class,
-                'params' => [$runtimeParam],
+                'params' => [$runtimeParam, $inputParam],
             ]
         );
         $return = new Return_($closure);
@@ -94,7 +103,11 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
         }
         switch ($node->getName()) {
             case QueryAstNodeType::GET_INPUT:
-                $this->addMethodCall($node, 'getInput');
+                $this->addMethodCall(
+                    $node,
+                    'getInput',
+                    $this->input
+                );
                 break;
 
             case QueryAstNodeType::SET_OUTPUT:

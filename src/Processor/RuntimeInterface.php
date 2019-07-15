@@ -7,13 +7,14 @@ use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Iterator\LiteralValueInterface;
 use Remorhaz\JSON\Path\Iterator\LiteralValueListInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 
 interface RuntimeInterface
 {
 
-    public function getInput(): NodeValueListInterface;
+    public function getInput(NodeValueInterface $rootValue): NodeValueListInterface;
 
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 

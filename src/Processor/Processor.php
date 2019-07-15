@@ -51,13 +51,10 @@ final class Processor implements ProcessorInterface
 
     public function readDecoded(string $path, $decodedJson): ResultInterface
     {
-        return new Result(
-            $this->valueIteratorFactory,
-            ...$this->readOutput($path, $this->createDecodedRootNode($decodedJson))
-        );
+        return $this->readOutput($path, $this->createDecodedRootNode($decodedJson));
     }
 
-    private function readOutput(string $path, NodeValueInterface $rootNode): array
+    private function readOutput(string $path, NodeValueInterface $rootNode): ResultInterface
     {
         try {
             $ast = new Tree;
@@ -81,16 +78,15 @@ final class Processor implements ProcessorInterface
                 new Evaluator(
                     new ValueComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
                     new ValueAggregatorCollection($valueIteratorFactory)
-                ),
-                $rootNode
+                )
             );
-            $query = new Query($runtime, $queryCallback);
-            $query->execute();
+            $query = new Query($valueIteratorFactory, $runtime, $queryCallback);
+            $result = $query->execute($rootNode);
         } catch (Throwable $e) {
             throw new Exception\TranslationFailedException($e);
         }
 
-        return $scheme->getOutput();
+        return $result;
     }
 
     private function createDecodedRootNode($decodedJson): NodeValueInterface

@@ -28,18 +28,15 @@ final class Runtime implements RuntimeInterface
 
     private $evaluator;
 
-    private $input;
-
-    public function __construct(Fetcher $fetcher, Evaluator $evaluator, NodeValueInterface $rootValue)
+    public function __construct(Fetcher $fetcher, Evaluator $evaluator)
     {
         $this->fetcher = $fetcher;
         $this->evaluator = $evaluator;
-        $this->input = NodeValueList::createRoot($rootValue);
     }
 
-    public function getInput(): NodeValueListInterface
+    public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
     {
-        return $this->input;
+        return NodeValueList::createRoot($rootValue);
     }
 
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface
