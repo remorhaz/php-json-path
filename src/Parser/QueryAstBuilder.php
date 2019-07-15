@@ -235,11 +235,12 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
             ->getId();
     }
 
-    public function matchAnyChild(): int
+    public function matchAnyChild(int $sourceId): int
     {
         return $this
             ->tree
             ->createNode(QueryAstNodeType::MATCH_ANY_CHILD)
+            ->addChild($this->tree->getNode($sourceId))
             ->getId();
     }
 

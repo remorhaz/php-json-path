@@ -13,6 +13,7 @@ use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Path\Parser\QueryCallbackBuilder;
 use Remorhaz\JSON\Path\Parser\TranslatorFactory;
 use Remorhaz\JSON\Path\Parser\TranslatorFactoryInterface;
 use Remorhaz\UniLex\AST\Translator;
@@ -68,9 +69,23 @@ final class Processor implements ProcessorInterface
                 ->createParser($path, $scheme)
                 ->run();
 
-            $astListener = new QueryAstTranslatorListener;
+            $astListener = new QueryCallbackBuilder;
             $translator = new Translator($ast, $astListener);
             $translator->run();
+
+            $queryCallback = $astListener->getQueryCallback();
+
+            $valueIteratorFactory = new ValueIteratorFactory;
+            $runtime = new Runtime(
+                new Fetcher($valueIteratorFactory),
+                new Evaluator(
+                    new ValueComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
+                    new ValueAggregatorCollection($valueIteratorFactory)
+                ),
+                $rootNode
+            );
+            $query = new Query($runtime, $queryCallback);
+            $query->execute();
         } catch (Throwable $e) {
             throw new Exception\TranslationFailedException($e);
         }

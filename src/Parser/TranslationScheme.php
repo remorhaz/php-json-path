@@ -441,7 +441,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->astBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->astBuilder->matchAnyChild()
+                        $this->astBuilder->matchAnyChild($header['i.value_list_id'])
                     );
                 break;
             case SymbolType::NT_BRACKET_FILTER . ".1":
@@ -1207,7 +1207,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->astBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->astBuilder->matchAnyChild()
+                        $this->astBuilder->matchAnyChild($header['i.value_list_id'])
                     );
                 break;
 
@@ -1273,7 +1273,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->astBuilder
                     ->fetchChildrenDeep(
                         $header['i.value_list_id'],
-                        $this->astBuilder->matchAnyChild()
+                        $this->astBuilder->matchAnyChild($header['i.value_list_id'])
                     );
                 break;
 

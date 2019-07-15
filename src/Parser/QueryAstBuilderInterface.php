@@ -34,7 +34,7 @@ interface QueryAstBuilderInterface
 
     public function fetchChildrenDeep(int $id, int $matcherId): int;
 
-    public function matchAnyChild(): int;
+    public function matchAnyChild(int $sourceId): int;
 
     public function matchPropertyStrictly(int $id): int;
 

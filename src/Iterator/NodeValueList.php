@@ -12,6 +12,11 @@ final class NodeValueList implements NodeValueListInterface
 
     private $indexMap;
 
+    /**
+     * @param NodeValueInterface ...$values
+     * @return NodeValueListInterface
+     * @todo Probably single value is enough
+     */
     public static function createRoot(NodeValueInterface ...$values): NodeValueListInterface
     {
         return new self(new IndexMap(...array_keys($values)), ...$values);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
+namespace Remorhaz\JSON\Path\Parser;
 
 use function array_map;
 use PhpParser\BuilderFactory;
@@ -12,13 +12,14 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
-use Remorhaz\JSON\Path\Parser\QueryAstNodeType;
+use Remorhaz\JSON\Path\Processor\Exception;
+use Remorhaz\JSON\Path\Processor\RuntimeInterface;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node;
 use Remorhaz\UniLex\Exception as UnilexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
-final class QueryAstTranslatorListener extends AbstractTranslatorListener
+final class QueryCallbackBuilder extends AbstractTranslatorListener
 {
 
     private $php;
@@ -192,7 +193,11 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                     $node,
                     'fetchChildren',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    new Arg(
+                        $this->getReference($node->getChild(1)),
+                        false,
+                        true
+                    )
                 );
                 break;
 
@@ -201,12 +206,20 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                     $node,
                     'fetchChildrenDeep',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    new Arg(
+                        $this->getReference($node->getChild(1)),
+                        false,
+                        true
+                    )
                 );
                 break;
 
             case QueryAstNodeType::MATCH_ANY_CHILD:
-                $this->addMethodCall($node, 'matchAnyChild');
+                $this->addMethodCall(
+                    $node,
+                    'matchAnyChild',
+                    $this->getReference($node->getChild(0))
+                );
                 break;
 
             case QueryAstNodeType::MATCH_PROPERTY_STRICTLY:
@@ -244,16 +257,15 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                 break;
 
             case QueryAstNodeType::POPULATE_LITERAL_ARRAY:
-                $unpack = new Arg(
-                    $this->getReference($node->getChild(1)),
-                    false,
-                    true
-                );
                 $this->addMethodCall(
                     $node,
                     'populateLiteralArray',
                     $this->getReference($node->getChild(0)),
-                    $unpack
+                    new Arg(
+                        $this->getReference($node->getChild(1)),
+                        false,
+                        true
+                    )
                 );
                 break;
 
@@ -298,7 +310,11 @@ final class QueryAstTranslatorListener extends AbstractTranslatorListener
                 $attributes = $node->getAttributeList();
                 // TODO: allow accessing null attributes
                 $value = $this->php->val($attributes['value'] ?? null);
-                $this->stmts[] = new Assign($this->createReference($node), $value);
+                $this->addMethodCall(
+                    $node,
+                    'createScalar',
+                    $value
+                );
                 break;
 
             case QueryAstNodeType::CREATE_ARRAY:

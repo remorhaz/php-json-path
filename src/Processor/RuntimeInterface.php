@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Path\Processor;
 
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Iterator\LiteralValueInterface;
+use Remorhaz\JSON\Path\Iterator\LiteralValueListInterface;
 use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherInterface;
 use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
 use Remorhaz\JSON\Path\Iterator\ValueListInterface;
@@ -21,7 +22,7 @@ interface RuntimeInterface
     public function evaluate(ValueListInterface $source, ValueListInterface $values): EvaluatedValueListInterface;
 
     public function filter(
-        NodeValueListInterface $context,
+        NodeValueListInterface $contextValues,
         EvaluatedValueListInterface $evaluatedValues
     ): NodeValueListInterface;
 
@@ -51,7 +52,7 @@ interface RuntimeInterface
 
     public function fetchChildren(
         NodeValueListInterface $values,
-        ChildMatcherInterface $matcher
+        ChildMatcherInterface ...$matchers
     ): NodeValueListInterface;
 
     public function fetchChildrenDeep(
@@ -59,11 +60,11 @@ interface RuntimeInterface
         ChildMatcherInterface $matcher
     ): NodeValueListInterface;
 
-    public function matchAnyChild(): ChildMatcherInterface;
+    public function matchAnyChild(NodeValueListInterface $source): array;
 
-    public function matchPropertyStrictly(array $nameLists): ChildMatcherInterface;
+    public function matchPropertyStrictly(array $nameLists): array;
 
-    public function matchElementStrictly(array $indexLists): ChildMatcherInterface;
+    public function matchElementStrictly(array $indexLists): array;
 
     public function aggregate(string $name, NodeValueListInterface $values): ValueListInterface;
 
@@ -71,7 +72,7 @@ interface RuntimeInterface
 
     public function populateLiteralArray(
         NodeValueListInterface $source,
-        LiteralValueInterface ...$values
+        ValueListInterface ...$values
     ): ValueListInterface;
 
     public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array;
