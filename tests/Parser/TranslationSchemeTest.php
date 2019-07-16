@@ -1,23 +1,29 @@
 <?php
 
-namespace Remorhaz\JSON\Path\Test;
+namespace Remorhaz\JSON\Path\Test\Parser;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\JsonDataFactory;
 use Remorhaz\JSON\Path\JsonPath;
 
-class ParserTest extends TestCase
+class TranslationSchemeTest extends TestCase
 {
 
     /**
+     * Because of the scheme complexity it's more convenient to test it in full integration.
+     *
      * @param $json
      * @param string $path
      * @param array $expectedValue
      * @dataProvider providerParser
      * @covers \Remorhaz\JSON\Path\Parser\TranslationScheme
+     * @todo Maybe it's better to test in isolation, checking the resulting AST.
      */
-    public function testParser($json, string $path, array $expectedValue): void
-    {
+    public function testAllMethods_AssembledWithParser_QueryWorksAsExpected(
+        $json,
+        string $path,
+        array $expectedValue
+    ): void {
         $jsonPath = JsonPath::create();
         $result = $jsonPath->select(
             $jsonPath->createQuery($path),

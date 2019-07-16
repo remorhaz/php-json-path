@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
+use function is_float;
 use function is_int;
 use function is_string;
 use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
@@ -36,7 +37,7 @@ final class GreaterValueComparator implements ComparatorInterface
     {
         $leftData = $leftValue->getData();
         $rightData = $rightValue->getData();
-        if (is_int($leftData) && is_int($rightData)) {
+        if ((is_int($leftData) || is_float($leftData)) && (is_int($rightData) || is_float($rightData))) {
             return $leftData > $rightData;
         }
 

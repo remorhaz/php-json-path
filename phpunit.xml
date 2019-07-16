@@ -14,6 +14,9 @@
                 processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src/</directory>
             <directory suffix=".php">generated/</directory>
+            <exclude>
+                <file>generated/LookupTable.php</file>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
