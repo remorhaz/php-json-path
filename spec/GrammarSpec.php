@@ -97,8 +97,7 @@ return [
             1 => [SymbolType::NT_STRING_LIST],
             2 => [SymbolType::NT_INT, SymbolType::NT_INT_NEXT],
             3 => [SymbolType::NT_INT_SLICE],
-            4 => [SymbolType::T_LEFT_BRACKET, SymbolType::NT_WS_OPT, SymbolType::NT_EXPR, SymbolType::T_RIGHT_BRACKET],
-            5 => [
+            4 => [
                 SymbolType::T_QUESTION,
                 SymbolType::T_LEFT_BRACKET,
                 SymbolType::NT_WS_OPT,

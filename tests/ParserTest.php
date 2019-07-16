@@ -14,6 +14,7 @@ class ParserTest extends TestCase
      * @param string $path
      * @param array $expectedValue
      * @dataProvider providerParser
+     * @covers \Remorhaz\JSON\Path\Parser\TranslationScheme
      */
     public function testParser($json, string $path, array $expectedValue): void
     {

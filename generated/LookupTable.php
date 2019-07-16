@@ -95,8 +95,7 @@ return [
         TokenType::HYPHEN => 2,
         TokenType::INT => 2,
         TokenType::COLON => 3,
-        TokenType::LEFT_BRACKET => 4,
-        TokenType::QUESTION => 5,
+        TokenType::QUESTION => 4,
     ],
     SymbolType::NT_STRING_LIST => [
         TokenType::SINGLE_QUOTE => 0,
@@ -127,7 +126,6 @@ return [
     SymbolType::NT_WS_OPT => [
         TokenType::WS => 0,
         TokenType::STAR => 1,
-        TokenType::LEFT_BRACKET => 1,
         TokenType::QUESTION => 1,
         TokenType::HYPHEN => 1,
         TokenType::INT => 1,
@@ -141,6 +139,7 @@ return [
         TokenType::NULL => 1,
         TokenType::TRUE => 1,
         TokenType::FALSE => 1,
+        TokenType::LEFT_BRACKET => 1,
         TokenType::LEFT_SQUARE_BRACKET => 1,
         TokenType::COMMA => 1,
         TokenType::SLASH => 1,

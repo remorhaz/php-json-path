@@ -359,9 +359,6 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4":
-                break;
-
-            case SymbolType::NT_BRACKET_FILTER . ".5":
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
@@ -587,7 +584,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[0]['i.int_start'] = null;
                 break;
 
-            case SymbolType::NT_BRACKET_FILTER . ".5.3":
+            case SymbolType::NT_BRACKET_FILTER . ".4.3":
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $symbols[3]['i.context_value_list_id'] = $this
                     ->queryAstBuilder
