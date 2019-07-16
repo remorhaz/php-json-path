@@ -16,8 +16,8 @@ final class ResultFactory implements ResultFactoryInterface
         $this->valueIteratorFactoryInterface = $valueIteratorFactory;
     }
 
-    public function createResult(ValueListInterface $values): ResultInterface
+    public function createResult(ValueListInterface $values): SelectResultInterface
     {
-        return new Result($this->valueIteratorFactoryInterface, ...$values->getValues());
+        return new SelectResult($this->valueIteratorFactoryInterface, ...$values->getValues());
     }
 }

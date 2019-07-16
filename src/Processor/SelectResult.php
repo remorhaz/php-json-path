@@ -18,7 +18,7 @@ use Remorhaz\JSON\Path\Iterator\ValueIteratorFactoryInterface;
 use stdClass;
 use Throwable;
 
-final class Result implements ResultInterface
+final class SelectResult implements SelectResultInterface
 {
 
     private $valueIteratorFactory;

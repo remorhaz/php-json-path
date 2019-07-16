@@ -8,5 +8,5 @@ use Remorhaz\JSON\Path\Iterator\ValueListInterface;
 interface ResultFactoryInterface
 {
 
-    public function createResult(ValueListInterface $values): ResultInterface;
+    public function createResult(ValueListInterface $values): SelectResultInterface;
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-interface ResultInterface
+interface SelectResultInterface
 {
 
     public function decode();

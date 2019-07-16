@@ -4,13 +4,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path;
 
 use Collator;
+use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Path\Processor\SelectResultInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
 use Remorhaz\JSON\Path\Runtime\Fetcher;
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
-use Remorhaz\JSON\Path\Iterator\Path;
 use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Parser\Ll1ParserFactory;
 use Remorhaz\JSON\Path\Parser\Parser;
@@ -22,18 +21,14 @@ use Remorhaz\JSON\Path\Query\QueryFactory;
 use Remorhaz\JSON\Path\Query\QueryFactoryInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Processor\ResultFactory;
-use Remorhaz\JSON\Path\Processor\ResultFactoryInterface;
 use Remorhaz\JSON\Path\Runtime\Runtime;
-use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 
-final class JsonPath
+final class JsonPath implements QueryFactoryInterface, ProcessorInterface
 {
 
-    private $runtime;
-
-    private $resultFactory;
-
     private $queryFactory;
+
+    private $processor;
 
     public static function create(): self
     {
@@ -45,36 +40,34 @@ final class JsonPath
                 new AggregatorCollection($valueIteratorFactory)
             )
         );
+        $processor = new Processor(
+            $runtime,
+            new ResultFactory($valueIteratorFactory)
+        );
         $queryFactory = new QueryFactory(
             new Parser(new Ll1ParserFactory),
             new QueryAstTranslator(new QueryCallbackBuilder)
         );
 
         return new self(
-            $runtime,
-            new ResultFactory($valueIteratorFactory),
+            $processor,
             $queryFactory
         );
     }
 
     public function __construct(
-        RuntimeInterface $runtime,
-        ResultFactoryInterface $resultFactory,
+        ProcessorInterface $processor,
         QueryFactoryInterface $queryFactory
     ) {
-        $this->runtime = $runtime;
-        $this->resultFactory = $resultFactory;
+        $this->processor = $processor;
         $this->queryFactory = $queryFactory;
     }
 
-    public function createProcessor(): ProcessorInterface
+    public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
     {
-        return new Processor($this->runtime, $this->resultFactory);
-    }
-
-    public function readDecodedJson($decodedJson): NodeValueInterface
-    {
-        return (new NodeValueFactory)->createValue($decodedJson, Path::createEmpty());
+        return $this
+            ->processor
+            ->select($query, $rootNode);
     }
 
     public function createQuery(string $path): QueryInterface

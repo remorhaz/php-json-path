@@ -35,7 +35,7 @@ class NodeScalarValueTest extends TestCase
         $data,
         array $expectedValue
     ): void {
-        $iteratorFactory = new NodeScalarValue($data, Path::createEmpty());
+        $iteratorFactory = new NodeScalarValue($data, new Path);
 
         $actualEvents = iterator_to_array($iteratorFactory->createIterator(), false);
         self::assertSame($expectedValue, $this->exportEvents(...$actualEvents));
@@ -119,7 +119,7 @@ class NodeScalarValueTest extends TestCase
     public function testConstruct_InvalidData_ThrowsMatchingException($data): void
     {
         $this->expectException(InvalidNodeDataException::class);
-        new NodeScalarValue($data, Path::createEmpty());
+        new NodeScalarValue($data, new Path);
     }
 
     public function providerInvalidData(): array

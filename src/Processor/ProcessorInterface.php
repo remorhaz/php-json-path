@@ -9,5 +9,5 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
 interface ProcessorInterface
 {
 
-    public function select(QueryInterface $query, NodeValueInterface $rootNode): ResultInterface;
+    public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface;
 }

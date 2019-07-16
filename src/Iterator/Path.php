@@ -8,12 +8,7 @@ final class Path implements PathInterface
 
     private $elements;
 
-    public static function createEmpty(): PathInterface
-    {
-        return new self;
-    }
-
-    private function __construct(...$elements)
+    public function __construct(...$elements)
     {
         $this->elements = $elements;
     }

@@ -20,7 +20,7 @@ final class Processor implements ProcessorInterface
         $this->resultFactory = $resultFactory;
     }
 
-    public function select(QueryInterface $query, NodeValueInterface $rootNode): ResultInterface
+    public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
     {
         return $this
             ->resultFactory

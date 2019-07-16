@@ -7,7 +7,6 @@ use function array_fill;
 use function count;
 use function is_bool;
 use function preg_match;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueList;
 use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Iterator\IndexMap;

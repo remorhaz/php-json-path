@@ -3,6 +3,7 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Path\JsonDataFactory;
 use Remorhaz\JSON\Path\JsonPath;
 
 class ParserTest extends TestCase
@@ -17,12 +18,10 @@ class ParserTest extends TestCase
     public function testParser($json, string $path, array $expectedValue): void
     {
         $jsonPath = JsonPath::create();
-        $result = $jsonPath
-            ->createProcessor()
-            ->select(
-                $jsonPath->createQuery($path),
-                $jsonPath->readDecodedJson($json)
-            );
+        $result = $jsonPath->select(
+            $jsonPath->createQuery($path),
+            JsonDataFactory::create()->fromDecodedJson($json)
+        );
 
         self::assertEquals($expectedValue, $result->asJson());
     }

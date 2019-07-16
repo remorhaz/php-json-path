@@ -9,7 +9,7 @@ use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
 use Remorhaz\JSON\Path\Iterator\PathInterface;
 use stdClass;
 
-final class NodeValueFactory
+final class NodeValueFactory implements NodeValueFactoryInterface
 {
 
     public function createValue($data, PathInterface $path): NodeValueInterface

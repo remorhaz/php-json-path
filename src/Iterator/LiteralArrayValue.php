@@ -29,7 +29,7 @@ final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterf
         yield new Event\BeforeArrayEvent($this);
 
         foreach ($this->values as $index => $value) {
-            yield new Event\ElementEvent($index, Path::createEmpty());
+            yield new Event\ElementEvent($index, new Path);
             yield from $value->createIterator();
         }
         yield new Event\AfterArrayEvent($this);

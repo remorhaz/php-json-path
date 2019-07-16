@@ -39,7 +39,7 @@ class NodeArrayValueTest extends TestCase
         array $data,
         array $expectedValue
     ): void {
-        $value = new NodeArrayValue($data, Path::createEmpty(), new NodeValueFactory);
+        $value = new NodeArrayValue($data, new Path, new NodeValueFactory);
 
         $actualEvents = iterator_to_array($value->createIterator(), false);
         self::assertSame($expectedValue, $this->exportEvents(...$actualEvents));
@@ -155,7 +155,7 @@ class NodeArrayValueTest extends TestCase
      */
     public function testCreateIterator_ArrayDataWithInvalidIndex_ThrowsException(array $data): void
     {
-        $value = new NodeArrayValue($data, Path::createEmpty(), new NodeValueFactory);
+        $value = new NodeArrayValue($data, new Path, new NodeValueFactory);
 
         $this->expectException(InvalidElementKeyException::class);
         iterator_to_array($value->createIterator());
