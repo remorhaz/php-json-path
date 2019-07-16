@@ -3,61 +3,28 @@
 namespace Remorhaz\JSON\Path\Test;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\Fetcher;
-use Remorhaz\JSON\Path\Iterator\Matcher\ChildMatcherList;
-use Remorhaz\JSON\Path\Iterator\Matcher\StrictPropertyMatcher;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeValueFactory;
-use Remorhaz\JSON\Path\Iterator\Path;
-use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
-use Remorhaz\JSON\Path\Processor\Processor;
-use Remorhaz\JSON\Path\Processor\Result;
+use Remorhaz\JSON\Path\JsonPath;
 
 class ParserTest extends TestCase
 {
 
-    public function testRuntime()
-    {
-        $json = (object) ['x'=> 1, 'a' => (object) ['b' => 'c']];
-        // $[a, x].b
-        $path = Path::createEmpty();
-        $iteratorFactory = (new NodeValueFactory)->createValue($json, $path);
-        $values = NodeValueList::createRoot($iteratorFactory);
-
-        $valueIteratorFactory = new ValueIteratorFactory;
-        $fetcher = new Fetcher($valueIteratorFactory);
-        $values = $fetcher->fetchChildren(
-            $values,
-            ...ChildMatcherList::populate(
-                new StrictPropertyMatcher('a', 'x'),
-                ...$values->getIndexMap()->getInnerIndice()
-            )
-        );
-        $values = $fetcher->fetchChildren(
-            $values,
-            ...ChildMatcherList::populate(
-                new StrictPropertyMatcher('b'),
-                ...$values->getIndexMap()->getInnerIndice()
-            )
-        );
-
-        $result = new Result($valueIteratorFactory, ...$values->getValues());
-        self::assertEquals(['c'], $result->decode());
-    }
-
     /**
      * @param $json
-     * @param string $query
+     * @param string $path
      * @param array $expectedValue
      * @dataProvider providerParser
      */
-    public function testParser($json, string $query, array $expectedValue): void
+    public function testParser($json, string $path, array $expectedValue): void
     {
-        $actualValue = Processor::create()
-            ->readDecoded($query, $json)
-            ->asJson();
+        $jsonPath = JsonPath::create();
+        $result = $jsonPath
+            ->createProcessor()
+            ->select(
+                $jsonPath->createQuery($path),
+                $jsonPath->readDecodedJson($json)
+            );
 
-        self::assertEquals($expectedValue, $actualValue);
+        self::assertEquals($expectedValue, $result->asJson());
     }
 
     public function providerParser(): array
