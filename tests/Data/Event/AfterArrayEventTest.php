@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\Test\Event;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Event\AfterArrayEvent;
 
 /**

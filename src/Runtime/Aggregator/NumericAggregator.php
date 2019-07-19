@@ -6,10 +6,10 @@ namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 use function array_map;
 use function is_float;
 use function is_int;
-use Remorhaz\JSON\Data\ArrayValueInterface;
-use Remorhaz\JSON\Data\ScalarValueInterface;
-use Remorhaz\JSON\Data\ValueInterface;
-use Remorhaz\JSON\Data\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
+use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {

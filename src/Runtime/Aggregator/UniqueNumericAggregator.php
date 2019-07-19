@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Data\ScalarValueInterface;
-use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 abstract class UniqueNumericAggregator extends NumericAggregator
 {

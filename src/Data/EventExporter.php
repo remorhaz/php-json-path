@@ -5,6 +5,10 @@ namespace Remorhaz\JSON\Data;
 
 use Iterator;
 use Remorhaz\JSON\Data\Exception;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\ObjectValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
 
 final class EventExporter
 {

@@ -10,11 +10,11 @@ use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 use Remorhaz\JSON\Path\Exception;
-use Remorhaz\JSON\Data\ArrayValueInterface;
-use Remorhaz\JSON\Data\ObjectValueInterface;
-use Remorhaz\JSON\Data\ScalarValueInterface;
-use Remorhaz\JSON\Data\ValueInterface;
-use Remorhaz\JSON\Data\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\ObjectValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
+use Remorhaz\JSON\Data\Value\ValueIteratorFactoryInterface;
 use stdClass;
 use Throwable;
 

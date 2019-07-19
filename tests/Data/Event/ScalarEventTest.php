@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Data\Test\Event;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Event\ScalarEvent;
-use Remorhaz\JSON\Data\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 
 /**
  * @covers \Remorhaz\JSON\Data\Event\ScalarEvent

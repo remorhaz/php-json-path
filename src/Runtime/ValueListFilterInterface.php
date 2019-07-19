@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Data\NodeValueListInterface;
+use Remorhaz\JSON\Data\Value\NodeValueListInterface;
 
 interface ValueListFilterInterface
 {

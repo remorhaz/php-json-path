@@ -7,9 +7,9 @@ use function array_map;
 use function array_sum;
 use function count;
 use function is_nan;
-use Remorhaz\JSON\Data\LiteralScalarValue;
-use Remorhaz\JSON\Data\ScalarValueInterface;
-use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\Value\LiteralScalarValue;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 use function sqrt;
 
 final class StdDevAggregator extends NumericAggregator

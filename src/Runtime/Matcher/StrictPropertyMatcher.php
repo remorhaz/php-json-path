@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use function array_keys;
 use function in_array;
-use Remorhaz\JSON\Data\ValueListInterface;
+use Remorhaz\JSON\Data\Value\ValueListInterface;
 
 final class StrictPropertyMatcher implements ChildMatcherInterface
 {

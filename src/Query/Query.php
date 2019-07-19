@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Query;
 
 use function call_user_func;
-use Remorhaz\JSON\Data\NodeValueInterface;
-use Remorhaz\JSON\Data\ValueListInterface;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Data\Value\ValueListInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 
 final class Query implements QueryInterface

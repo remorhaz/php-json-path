@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Event;
 
-use Remorhaz\JSON\Data\ObjectValueInterface;
-use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\Value\ObjectValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class AfterObjectEvent implements AfterObjectEventInterface
 {

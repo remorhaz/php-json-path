@@ -6,16 +6,16 @@ namespace Remorhaz\JSON\Path\Runtime;
 use function array_push;
 use Iterator;
 use function max;
-use Remorhaz\JSON\Data\ArrayValueInterface;
-use Remorhaz\JSON\Data\DecodedJson\Exception;
-use Remorhaz\JSON\Data\IndexMap;
-use Remorhaz\JSON\Data\NodeValueInterface;
-use Remorhaz\JSON\Data\NodeValueList;
-use Remorhaz\JSON\Data\NodeValueListInterface;
-use Remorhaz\JSON\Data\ObjectValueInterface;
-use Remorhaz\JSON\Data\ScalarValueInterface;
-use Remorhaz\JSON\Data\ValueIteratorFactory;
-use Remorhaz\JSON\Data\ValueListInterface;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\DecodedJson\Exception;
+use Remorhaz\JSON\Data\Value\IndexMap;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Data\Value\NodeValueList;
+use Remorhaz\JSON\Data\Value\NodeValueListInterface;
+use Remorhaz\JSON\Data\Value\ObjectValueInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Value\ValueListInterface;
 
 final class Fetcher
 {

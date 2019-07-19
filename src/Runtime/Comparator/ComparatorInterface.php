@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
-use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ComparatorInterface
 {

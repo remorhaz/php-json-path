@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data;
 
-use Remorhaz\JSON\Data\DecodedJson;
-use Remorhaz\JSON\Data\NodeValueInterface;
-use Remorhaz\JSON\Data\Path;
-use Remorhaz\JSON\Data\PathInterface;
+use Remorhaz\JSON\Data\Value\DecodedJson;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Data\Value\Path;
+use Remorhaz\JSON\Data\Value\PathInterface;
 
 final class JsonFactory
 {

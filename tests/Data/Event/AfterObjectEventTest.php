@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Data\Test\Event;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Event\AfterObjectEvent;
-use Remorhaz\JSON\Data\ObjectValueInterface;
+use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 
 /**
  * @covers \Remorhaz\JSON\Data\Event\AfterObjectEvent
