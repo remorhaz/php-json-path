@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\DecodedJson\Exception;
 
 use Remorhaz\JSON\Data\Exception\ExceptionInterface;
+use Remorhaz\JSON\Data\Exception\PathAwareExceptionTrait;
 use Remorhaz\JSON\Data\PathInterface;
 use RuntimeException;
 use Throwable;
@@ -11,9 +12,9 @@ use Throwable;
 class InvalidNodeDataException extends RuntimeException implements ExceptionInterface
 {
 
-    private $data;
+    use PathAwareExceptionTrait;
 
-    private $path;
+    private $data;
 
     public function __construct($data, PathInterface $path, Throwable $previous = null)
     {
@@ -24,12 +25,7 @@ class InvalidNodeDataException extends RuntimeException implements ExceptionInte
 
     private function buildMessage(): string
     {
-        return "Invalid data in decoded JSON";
-    }
-
-    public function getPath(): PathInterface
-    {
-        return $this->path;
+        return "Invalid data in decoded JSON at {$this->buildPath()}";
     }
 
     public function getData()

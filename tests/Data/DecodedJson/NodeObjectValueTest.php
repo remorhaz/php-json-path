@@ -1,29 +1,33 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Test\Iterator\DecodedJson;
+namespace Remorhaz\JSON\Data\Test\DecodedJson;
 
-use function get_class;
 use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\EventExporter;
+use Remorhaz\JSON\Data\DecodedJson\NodeObjectValue;
 use Remorhaz\JSON\Data\DecodedJson\NodeScalarValue;
+use Remorhaz\JSON\Data\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Data\Event\ScalarEvent;
 use Remorhaz\JSON\Data\Event\ValueEventInterface;
+use Remorhaz\JSON\Data\Event\AfterObjectEvent;
+use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
+use Remorhaz\JSON\Data\Event\PropertyEvent;
 use Remorhaz\JSON\Data\Event\DataEventInterface;
-use Remorhaz\JSON\Data\DecodedJson\Exception\InvalidNodeDataException;
 use Remorhaz\JSON\Data\Event\ElementEventInterface;
 use Remorhaz\JSON\Data\Event\PropertyEventInterface;
 use Remorhaz\JSON\Data\Path;
 use Remorhaz\JSON\Data\PathAwareInterface;
 use Remorhaz\JSON\Data\ValueInterface;
 use Remorhaz\JSON\Data\ValueIteratorFactory;
+use stdClass;
 
 /**
- * @covers \Remorhaz\JSON\Data\DecodedJson\NodeScalarValue
+ * @covers \Remorhaz\JSON\Data\DecodedJson\NodeObjectValue
  */
-class NodeScalarValueTest extends TestCase
+class NodeObjectValueTest extends TestCase
 {
 
     /**
@@ -35,101 +39,119 @@ class NodeScalarValueTest extends TestCase
         $data,
         array $expectedValue
     ): void {
-        $iteratorFactory = new NodeScalarValue($data, new Path);
+        $value = new NodeObjectValue($data, new Path, new NodeValueFactory);
 
-        $actualEvents = iterator_to_array($iteratorFactory->createIterator(), false);
+        $actualEvents = iterator_to_array($value->createIterator(), false);
         self::assertSame($expectedValue, $this->exportEvents(...$actualEvents));
     }
 
     public function providerValidData(): array
     {
         return [
-            'Integer data' => [
-                1,
+            'Empty object' => [
+                (object) [],
                 [
+                    [
+                        'class' => BeforeObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => []],
+                            'path' => [],
+                        ],
+                    ],
+                    [
+                        'class' => AfterObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => []],
+                            'path' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'Object with scalar property' => [
+                (object) ['a' => 1],
+                [
+                    [
+                        'class' => BeforeObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => ['a' => 1]],
+                            'path' => [],
+                        ],
+                    ],
+                    ['class' => PropertyEvent::class, 'path' => [], 'name' => 'a'],
                     [
                         'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
                             'data' => 1,
+                            'path' => ['a'],
+                        ],
+                    ],
+                    [
+                        'class' => AfterObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => ['a' => 1]],
                             'path' => [],
                         ],
                     ],
                 ],
             ],
-            'String data' => [
-                'a',
+            'Object with object property' => [
+                (object) ['a' => (object) ['b' => 1]],
                 [
                     [
-                        'class' => ScalarEvent::class,
+                        'class' => BeforeObjectEvent::class,
                         'value' => [
-                            'class' => NodeScalarValue::class,
-                            'data' => 'a',
+                            'class' => NodeObjectValue::class,
+                            'data' => [
+                                'class' => stdClass::class,
+                                'data' => ['a' => ['class' => stdClass::class, 'data' => ['b' => 1]]],
+                            ],
                             'path' => [],
-                        ]
-                    ]
-                ],
-            ],
-            'Float data' => [
-                1.2,
-                [
-                    [
-                        'class' => ScalarEvent::class,
-                        'value' => [
-                            'class' => NodeScalarValue::class,
-                            'data' => 1.2,
-                            'path' => [],
-                        ]
+                        ],
                     ],
-                ],
-            ],
-            'Boolean data' => [
-                true,
-                [
+                    ['class' => PropertyEvent::class, 'path' => [], 'name' => 'a'],
+                    [
+                        'class' => BeforeObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => ['b' => 1]],
+                            'path' => ['a'],
+                        ],
+                    ],
+                    ['class' => PropertyEvent::class, 'path' => ['a'], 'name' => 'b'],
                     [
                         'class' => ScalarEvent::class,
                         'value' => [
                             'class' => NodeScalarValue::class,
-                            'data' => true,
+                            'data' => 1,
+                            'path' => ['a', 'b'],
+                        ],
+                    ],
+                    [
+                        'class' => AfterObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => ['class' => stdClass::class, 'data' => ['b' => 1]],
+                            'path' => ['a'],
+                        ],
+                    ],
+                    [
+                        'class' => AfterObjectEvent::class,
+                        'value' => [
+                            'class' => NodeObjectValue::class,
+                            'data' => [
+                                'class' => stdClass::class,
+                                'data' => ['a' => ['class' => stdClass::class, 'data' => ['b' => 1]]],
+                            ],
                             'path' => [],
                         ],
                     ],
                 ],
             ],
-            'NULL data' => [
-                null,
-                [
-                    [
-                        'class' => ScalarEvent::class,
-                        'value' => [
-                            'class' => NodeScalarValue::class,
-                            'data' => null,
-                            'path' => [],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @param $data
-     * @dataProvider providerInvalidData
-     */
-    public function testConstruct_InvalidData_ThrowsMatchingException($data): void
-    {
-        $this->expectException(InvalidNodeDataException::class);
-        new NodeScalarValue($data, new Path);
-    }
-
-    public function providerInvalidData(): array
-    {
-        return [
-            'Resource' => [STDERR],
-            'Invalid object' => [new class {
-            }],
-            'Array' => [[]],
-            'Object' => [(object) []],
         ];
     }
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Test\Iterator\DecodedJson;
+namespace Remorhaz\JSON\Data\Test\DecodedJson;
 
 use Iterator;
 use function iterator_to_array;

@@ -8,7 +8,6 @@ use Iterator;
 use Remorhaz\JSON\Data\Event\AfterObjectEvent;
 use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
 use Remorhaz\JSON\Data\Event\PropertyEvent;
-use Remorhaz\JSON\Data\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Data\ObjectValueInterface;
 use Remorhaz\JSON\Data\PathInterface;
 use Remorhaz\JSON\Data\NodeValueInterface;

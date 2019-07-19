@@ -3,17 +3,27 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\DecodedJson\Exception;
 
+use function gettype;
+use function is_int;
+use function is_string;
 use Remorhaz\JSON\Data\Exception\ExceptionInterface;
+use Remorhaz\JSON\Data\Exception\PathAwareExceptionTrait;
 use Remorhaz\JSON\Data\PathInterface;
+use RuntimeException;
 use Throwable;
 
-class InvalidElementKeyException extends \RuntimeException implements ExceptionInterface
+class InvalidElementKeyException extends RuntimeException implements ExceptionInterface
 {
+
+    use PathAwareExceptionTrait;
 
     private $key;
 
-    private $path;
-
+    /**
+     * @param mixed $key
+     * @param PathInterface $path
+     * @param Throwable|null $previous
+     */
     public function __construct($key, PathInterface $path, Throwable $previous = null)
     {
         $this->key = $key;
@@ -23,16 +33,26 @@ class InvalidElementKeyException extends \RuntimeException implements ExceptionI
 
     private function buildMessage(): string
     {
-        return "Invalid element key in decoded JSON";
-    }
-
-    public function getPath(): PathInterface
-    {
-        return $this->path;
+        return "Invalid element key in decoded JSON: {$this->buildKey()} at {$this->buildPath()}";
     }
 
     public function getKey()
     {
         return $this->key;
+    }
+
+    private function buildKey(): string
+    {
+        if (is_string($this->key)) {
+            return $this->key;
+        }
+
+        if (is_int($this->key)) {
+            return (string) $this->key;
+        }
+
+        $type = gettype($this->key);
+
+        return "<{$type}>";
     }
 }

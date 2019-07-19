@@ -30,7 +30,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Remorhaz\\JSON\\Path\\Test\\": "tests/"
+      "Remorhaz\\JSON\\Path\\Test\\": "tests/",
+      "Remorhaz\\JSON\\Data\\Test\\": "tests/Data/"
     }
   }
 }
