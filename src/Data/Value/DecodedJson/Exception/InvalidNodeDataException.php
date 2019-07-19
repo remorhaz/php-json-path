@@ -11,9 +11,10 @@ use Remorhaz\JSON\Data\Value\PathInterface;
 use RuntimeException;
 use Throwable;
 
-class InvalidNodeDataException
-    extends RuntimeException
-    implements ExceptionInterface, PathAwareInterface, DataAwareInterface
+class InvalidNodeDataException extends RuntimeException implements
+    ExceptionInterface,
+    PathAwareInterface,
+    DataAwareInterface
 {
 
     use PathAwareExceptionTrait;

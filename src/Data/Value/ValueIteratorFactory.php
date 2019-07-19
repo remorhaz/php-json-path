@@ -25,7 +25,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
     {
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeArrayEventInterface) {
-            throw new Exception\UnexpectedDataEventException($event);
+            throw new Exception\UnexpectedDataEventException($event, BeforeArrayEventInterface::class);
         }
 
         do {
@@ -35,7 +35,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
             }
 
             if (!$event instanceof ElementEventInterface) {
-                throw new Exception\UnexpectedDataEventException($event);
+                throw new Exception\UnexpectedDataEventException($event, ElementEventInterface::class);
             }
             $index = $event->getIndex();
 
@@ -51,7 +51,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
     {
         $event = $this->fetchEvent($iterator);
         if (!$event instanceof BeforeObjectEventInterface) {
-            throw new Exception\UnexpectedDataEventException($event);
+            throw new Exception\UnexpectedDataEventException($event, BeforeObjectEventInterface::class);
         }
 
         do {
@@ -61,7 +61,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
             }
 
             if (!$event instanceof PropertyEventInterface) {
-                throw new Exception\UnexpectedDataEventException($event);
+                throw new Exception\UnexpectedDataEventException($event, PropertyEventInterface::class);
             }
             $property = $event->getName();
 
@@ -72,7 +72,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
     private function fetchEvent(Iterator $iterator): DataEventInterface
     {
         if (!$iterator->valid()) {
-            throw new Exception\UnexpectedEndOfData();
+            throw new Exception\UnexpectedEndOfDataEventsException;
         }
         $event = $iterator->current();
         $iterator->next();

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Value;
 
-use Remorhaz\JSON\Data\Exception;
-
 final class EvaluatedValueList implements EvaluatedValueListInterface
 {
 
@@ -24,7 +22,7 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
     {
         $values = $this->getValues();
         if (!isset($values[$index])) {
-            throw new Exception\ValueNotFoundException($index);
+            throw new Exception\ValueNotFoundException($index, $this);
         }
 
         return $values[$index];
@@ -43,7 +41,7 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
     public function getResult(int $index): bool
     {
         if (!isset($this->results[$index])) {
-            throw new Exception\ResultNotFoundException($index);
+            throw new Exception\ResultNotFoundException($index, $this);
         }
 
         return $this->results[$index];

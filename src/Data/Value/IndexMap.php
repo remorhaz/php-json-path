@@ -34,7 +34,7 @@ final class IndexMap implements IndexMapInterface
     public function getOuterIndex(int $innerIndex): int
     {
         if (!isset($this->map[$innerIndex])) {
-            throw new Exception\ValueOuterIndexNotFoundException($innerIndex);
+            throw new Exception\OuterIndexNotFoundException($innerIndex, $this);
         }
 
         return $this->map[$innerIndex];

@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Value\EvaluatedValueList;
 use Remorhaz\JSON\Data\Value\EvaluatedValueListInterface;
+use Remorhaz\JSON\Data\Value\IndexMap;
 use Remorhaz\JSON\Data\Value\LiteralArrayValueList;
 use Remorhaz\JSON\Data\Value\LiteralScalarValue;
 use Remorhaz\JSON\Data\Value\LiteralValueInterface;
@@ -29,7 +30,7 @@ final class Runtime implements RuntimeInterface
 
     public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
     {
-        return NodeValueList::createRoot($rootValue);
+        return new NodeValueList(new IndexMap(0), $rootValue);
     }
 
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface

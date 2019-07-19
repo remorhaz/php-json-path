@@ -5,7 +5,6 @@ namespace Remorhaz\JSON\Data\Value;
 
 use function array_fill;
 use function count;
-use Remorhaz\JSON\Data\Exception;
 
 final class LiteralValueList implements LiteralValueListInterface
 {
@@ -31,7 +30,7 @@ final class LiteralValueList implements LiteralValueListInterface
     {
         $values = $this->getValues();
         if (!isset($values[$index])) {
-            throw new Exception\ValueNotFoundException($index);
+            throw new Exception\ValueNotFoundException($index, $this);
         }
 
         return $values[$index];
