@@ -5,9 +5,9 @@ namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
 use function array_sum;
 use function count;
-use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
-use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Data\LiteralScalarValue;
+use Remorhaz\JSON\Data\ScalarValueInterface;
+use Remorhaz\JSON\Data\ValueInterface;
 
 final class AvgAggregator extends NumericAggregator
 {

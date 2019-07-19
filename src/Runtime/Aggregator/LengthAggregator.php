@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
-use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\ArrayValueInterface;
+use Remorhaz\JSON\Data\LiteralScalarValue;
+use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 
 final class LengthAggregator implements ValueAggregatorInterface
 {

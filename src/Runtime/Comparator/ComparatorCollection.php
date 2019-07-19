@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 
 final class ComparatorCollection
 {

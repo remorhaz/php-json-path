@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-use Remorhaz\JSON\Path\Iterator\ValueListInterface;
+use Remorhaz\JSON\Data\ValueListInterface;
 
 interface ResultFactoryInterface
 {

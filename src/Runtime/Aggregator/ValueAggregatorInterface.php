@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
+use Remorhaz\JSON\Data\ValueInterface;
 
 interface ValueAggregatorInterface
 {

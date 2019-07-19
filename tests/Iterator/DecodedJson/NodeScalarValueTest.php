@@ -7,21 +7,21 @@ use function get_class;
 use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Iterator\EventExporter;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue;
-use Remorhaz\JSON\Path\Iterator\Event\ScalarEvent;
-use Remorhaz\JSON\Path\Iterator\Event\ValueEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\DataEventInterface;
-use Remorhaz\JSON\Path\Iterator\DecodedJson\Exception\InvalidNodeDataException;
-use Remorhaz\JSON\Path\Iterator\Event\ElementEventInterface;
-use Remorhaz\JSON\Path\Iterator\Event\PropertyEventInterface;
-use Remorhaz\JSON\Path\Iterator\Path;
-use Remorhaz\JSON\Path\Iterator\PathAwareInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\EventExporter;
+use Remorhaz\JSON\Data\DecodedJson\NodeScalarValue;
+use Remorhaz\JSON\Data\Event\ScalarEvent;
+use Remorhaz\JSON\Data\Event\ValueEventInterface;
+use Remorhaz\JSON\Data\Event\DataEventInterface;
+use Remorhaz\JSON\Data\DecodedJson\Exception\InvalidNodeDataException;
+use Remorhaz\JSON\Data\Event\ElementEventInterface;
+use Remorhaz\JSON\Data\Event\PropertyEventInterface;
+use Remorhaz\JSON\Data\Path;
+use Remorhaz\JSON\Data\PathAwareInterface;
+use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 
 /**
- * @covers \Remorhaz\JSON\Path\Iterator\DecodedJson\NodeScalarValue
+ * @covers \Remorhaz\JSON\Data\DecodedJson\NodeScalarValue
  */
 class NodeScalarValueTest extends TestCase
 {

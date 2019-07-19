@@ -7,9 +7,9 @@ use Collator;
 use function is_float;
 use function is_int;
 use function is_string;
-use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\ScalarValueInterface;
+use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 
 final class GreaterValueComparator implements ComparatorInterface
 {

@@ -5,11 +5,11 @@ namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
 use function is_string;
-use Remorhaz\JSON\Path\Iterator\ArrayValueInterface;
-use Remorhaz\JSON\Path\Iterator\ObjectValueInterface;
-use Remorhaz\JSON\Path\Iterator\ScalarValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueInterface;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\ArrayValueInterface;
+use Remorhaz\JSON\Data\ObjectValueInterface;
+use Remorhaz\JSON\Data\ScalarValueInterface;
+use Remorhaz\JSON\Data\ValueInterface;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 
 final class EqualValueComparator implements ComparatorInterface
 {

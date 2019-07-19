@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Path\Iterator\EvaluatedValueList;
-use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Iterator\LiteralArrayValueList;
-use Remorhaz\JSON\Path\Iterator\LiteralScalarValue;
-use Remorhaz\JSON\Path\Iterator\LiteralValueInterface;
-use Remorhaz\JSON\Path\Iterator\LiteralValueList;
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
-use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
-use Remorhaz\JSON\Path\Iterator\ValueListInterface;
+use Remorhaz\JSON\Data\EvaluatedValueList;
+use Remorhaz\JSON\Data\EvaluatedValueListInterface;
+use Remorhaz\JSON\Data\LiteralArrayValueList;
+use Remorhaz\JSON\Data\LiteralScalarValue;
+use Remorhaz\JSON\Data\LiteralValueInterface;
+use Remorhaz\JSON\Data\LiteralValueList;
+use Remorhaz\JSON\Data\NodeValueInterface;
+use Remorhaz\JSON\Data\NodeValueList;
+use Remorhaz\JSON\Data\NodeValueListInterface;
+use Remorhaz\JSON\Data\ValueListInterface;
 
 final class Runtime implements RuntimeInterface
 {

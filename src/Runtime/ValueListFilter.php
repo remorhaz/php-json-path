@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Path\Iterator\IndexMap;
-use Remorhaz\JSON\Path\Iterator\NodeValueListInterface;
-use Remorhaz\JSON\Path\Iterator\EvaluatedValueInterface;
-use Remorhaz\JSON\Path\Iterator\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Iterator\NodeValueList;
-use Remorhaz\JSON\Path\Iterator\ValueListInterface;
+use Remorhaz\JSON\Data\IndexMap;
+use Remorhaz\JSON\Data\NodeValueListInterface;
+use Remorhaz\JSON\Data\EvaluatedValueInterface;
+use Remorhaz\JSON\Data\EvaluatedValueListInterface;
+use Remorhaz\JSON\Data\NodeValueList;
+use Remorhaz\JSON\Data\ValueListInterface;
 
 class ValueListFilter implements ValueListFilterInterface
 {

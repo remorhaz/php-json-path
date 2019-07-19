@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use function in_array;
-use Remorhaz\JSON\Path\Iterator\ValueListInterface;
+use Remorhaz\JSON\Data\ValueListInterface;
 
 final class StrictElementMatcher implements ChildMatcherInterface
 {

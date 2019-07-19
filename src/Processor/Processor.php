@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Data\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 

@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path;
 
 use Collator;
-use Remorhaz\JSON\Path\Iterator\NodeValueInterface;
+use Remorhaz\JSON\Data\NodeValueInterface;
 use Remorhaz\JSON\Path\Processor\SelectResultInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
 use Remorhaz\JSON\Path\Runtime\Fetcher;
-use Remorhaz\JSON\Path\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Parser\Ll1ParserFactory;
 use Remorhaz\JSON\Path\Parser\Parser;
 use Remorhaz\JSON\Path\Query\QueryAstTranslator;
