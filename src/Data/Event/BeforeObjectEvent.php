@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Event;
 
+use Remorhaz\JSON\Data\ObjectValueInterface;
 use Remorhaz\JSON\Data\ValueInterface;
 
 final class BeforeObjectEvent implements BeforeObjectEventInterface
@@ -10,7 +11,7 @@ final class BeforeObjectEvent implements BeforeObjectEventInterface
 
     private $value;
 
-    public function __construct(ValueInterface $value)
+    public function __construct(ObjectValueInterface $value)
     {
         $this->value = $value;
     }

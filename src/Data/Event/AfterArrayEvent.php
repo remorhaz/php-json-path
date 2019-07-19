@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Event;
 
+use Remorhaz\JSON\Data\ArrayValueInterface;
 use Remorhaz\JSON\Data\ValueInterface;
 
 final class AfterArrayEvent implements AfterArrayEventInterface
@@ -10,7 +11,7 @@ final class AfterArrayEvent implements AfterArrayEventInterface
 
     private $value;
 
-    public function __construct(ValueInterface $value)
+    public function __construct(ArrayValueInterface $value)
     {
         $this->value = $value;
     }
