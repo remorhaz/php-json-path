@@ -3,13 +3,17 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\DecodedJson\Exception;
 
+use Remorhaz\JSON\Data\DataAwareInterface;
 use Remorhaz\JSON\Data\Exception\ExceptionInterface;
 use Remorhaz\JSON\Data\Exception\PathAwareExceptionTrait;
+use Remorhaz\JSON\Data\PathAwareInterface;
 use Remorhaz\JSON\Data\PathInterface;
 use RuntimeException;
 use Throwable;
 
-class InvalidNodeDataException extends RuntimeException implements ExceptionInterface
+class InvalidNodeDataException
+    extends RuntimeException
+    implements ExceptionInterface, PathAwareInterface, DataAwareInterface
 {
 
     use PathAwareExceptionTrait;
