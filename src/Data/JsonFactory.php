@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path;
+namespace Remorhaz\JSON\Data;
 
 use Remorhaz\JSON\Data\DecodedJson;
 use Remorhaz\JSON\Data\NodeValueInterface;
 use Remorhaz\JSON\Data\Path;
 use Remorhaz\JSON\Data\PathInterface;
 
-final class JsonDataFactory
+final class JsonFactory
 {
 
     private $emptyPath;

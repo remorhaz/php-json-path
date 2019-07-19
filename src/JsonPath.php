@@ -32,6 +32,14 @@ final class JsonPath implements QueryFactoryInterface, ProcessorInterface
 
     public static function create(): self
     {
+        return new self(
+            self::createProcessor(),
+            self::createQueryFactory()
+        );
+    }
+
+    private static function createProcessor(): ProcessorInterface
+    {
         $valueIteratorFactory = new ValueIteratorFactory;
         $runtime = new Runtime(
             new Fetcher($valueIteratorFactory),
@@ -40,18 +48,17 @@ final class JsonPath implements QueryFactoryInterface, ProcessorInterface
                 new AggregatorCollection($valueIteratorFactory)
             )
         );
-        $processor = new Processor(
+        return new Processor(
             $runtime,
             new ResultFactory($valueIteratorFactory)
         );
-        $queryFactory = new QueryFactory(
+    }
+
+    private static function createQueryFactory(): QueryFactoryInterface
+    {
+        return new QueryFactory(
             new Parser(new Ll1ParserFactory),
             new QueryAstTranslator(new QueryCallbackBuilder)
-        );
-
-        return new self(
-            $processor,
-            $queryFactory
         );
     }
 

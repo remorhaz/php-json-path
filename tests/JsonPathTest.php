@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Test;
 use function file_get_contents;
 use function json_decode;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\JsonDataFactory;
+use Remorhaz\JSON\Data\JsonFactory;
 use Remorhaz\JSON\Path\JsonPath;
 
 /**
@@ -32,7 +32,7 @@ class JsonPathTest extends TestCase
         $jsonPath = JsonPath::create();
         $result = $jsonPath->select(
             $jsonPath->createQuery($path),
-            JsonDataFactory::create()->fromDecodedJson($this->example)
+            JsonFactory::create()->fromDecodedJson($this->example)
         );
 
         self::assertEquals($expectedValue, $result->asJson());
