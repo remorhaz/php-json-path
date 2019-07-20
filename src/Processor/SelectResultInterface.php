@@ -6,6 +6,9 @@ namespace Remorhaz\JSON\Path\Processor;
 interface SelectResultInterface
 {
 
+    /**
+     * @return mixed
+     */
     public function decode();
 
     /**

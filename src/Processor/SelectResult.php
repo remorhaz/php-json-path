@@ -17,21 +17,28 @@ final class SelectResult implements SelectResultInterface
 
     private $values;
 
-    public function __construct(
-        EncoderInterface $encoder,
-        DecoderInterface $decoder,
-        ValueInterface ...$values
-    ) {
+    public function __construct(EncoderInterface $encoder, DecoderInterface $decoder, ValueInterface ...$values)
+    {
         $this->encoder = $encoder;
         $this->decoder = $decoder;
         $this->values = $values;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return array
+     */
     public function decode(): array
     {
         return array_map([$this->decoder, 'exportValue'], $this->values);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return array
+     */
     public function asJson(): array
     {
         return array_map([$this->encoder, 'exportValue'], $this->values);
