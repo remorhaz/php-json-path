@@ -14,7 +14,7 @@
     "php": "^7.3",
     "ext-intl": "*",
     "ext-json": "*",
-    "remorhaz/php-unilex": "0.0.13",
+    "remorhaz/php-unilex": "^0.0.14",
     "nikic/php-parser": "^4.2"
   },
   "require-dev": {
