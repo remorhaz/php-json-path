@@ -3,7 +3,7 @@
 namespace Remorhaz\JSON\Path\Test\Parser;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\JsonFactory;
+use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\JsonPath;
 
 class TranslationSchemeTest extends TestCase
@@ -27,7 +27,7 @@ class TranslationSchemeTest extends TestCase
         $jsonPath = JsonPath::create();
         $result = $jsonPath->select(
             $jsonPath->createQuery($path),
-            JsonFactory::create()->fromDecodedJson($json)
+            (new NodeValueFactory)->createValue($json)
         );
 
         self::assertEquals($expectedValue, $result->asJson());

@@ -65,6 +65,16 @@ class NodeValueFactoryTest extends TestCase
 
     /**
      * @param mixed $data
+     * @dataProvider providerScalarDataOrNull
+     */
+    public function testCreateValue_ScalarValueAndNoPath_ResultHasEmptyPath($data): void
+    {
+        $actualValue = (new NodeValueFactory)->createValue($data);
+        self::assertEmpty($actualValue->getPath()->getElements());
+    }
+
+    /**
+     * @param mixed $data
      * @param $expectedValue
      * @dataProvider providerScalarDataOrNull
      */
@@ -89,6 +99,12 @@ class NodeValueFactoryTest extends TestCase
         self::assertSame($path, $actualValue->getPath());
     }
 
+    public function testCreateValue_ArrayValueAndNoPath_ResultHasEmptyPath(): void
+    {
+        $actualValue = (new NodeValueFactory)->createValue([]);
+        self::assertEmpty($actualValue->getPath()->getElements());
+    }
+
     public function testCreateValue_ObjectValue_ReturnsNodeObjectValue(): void
     {
         $actualValue = (new NodeValueFactory)->createValue((object) [], new Path);
@@ -100,6 +116,12 @@ class NodeValueFactoryTest extends TestCase
         $path = new Path;
         $actualValue = (new NodeValueFactory)->createValue((object) [], $path);
         self::assertSame($path, $actualValue->getPath());
+    }
+
+    public function testCreateValue_ObjectValueAndNoPath_ResultHasSamePathInstance(): void
+    {
+        $actualValue = (new NodeValueFactory)->createValue((object) []);
+        self::assertEmpty($actualValue->getPath()->getElements());
     }
 
     public function testCreateValue_NonScalarValue_ThrowsException(): void

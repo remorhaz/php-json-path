@@ -14,8 +14,8 @@ interface NodeValueFactoryInterface
      * Converts decoded JSON to JSON node value.
      *
      * @param array|bool|float|int|stdClass|string|null $data
-     * @param PathInterface $path
+     * @param PathInterface|null $path
      * @return NodeValueInterface
      */
-    public function createValue($data, PathInterface $path): NodeValueInterface;
+    public function createValue($data, ?PathInterface $path = null): NodeValueInterface;
 }
