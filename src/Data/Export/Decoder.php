@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\Export;
 
 use Iterator;
-use Remorhaz\JSON\Data\Exception;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;

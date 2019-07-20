@@ -34,7 +34,7 @@ final class Encoder implements EncoderInterface
                 JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
             );
         } catch (Throwable $e) {
-            throw new Exception\JsonExportFailedException($decodedValue, $e);
+            throw new Exception\EncodingFailedException($decodedValue, $e);
         }
     }
 
