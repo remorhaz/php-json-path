@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
+use Remorhaz\JSON\Path\Parser\Ll1ParserFactory;
+use Remorhaz\JSON\Path\Parser\Parser;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
 
 final class QueryFactory implements QueryFactoryInterface
@@ -11,6 +13,14 @@ final class QueryFactory implements QueryFactoryInterface
     private $parser;
 
     private $astTranslator;
+
+    public static function create(): QueryFactoryInterface
+    {
+        return new QueryFactory(
+            new Parser(new Ll1ParserFactory),
+            new QueryAstTranslator(new QueryCallbackBuilder)
+        );
+    }
 
     public function __construct(ParserInterface $parser, QueryAstTranslatorInterface $astTranslator)
     {

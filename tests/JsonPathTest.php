@@ -7,7 +7,8 @@ use function file_get_contents;
 use function json_decode;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
-use Remorhaz\JSON\Path\JsonPath;
+use Remorhaz\JSON\Path\Processor\Processor;
+use Remorhaz\JSON\Path\Query\QueryFactory;
 
 /**
  * @coversNothing
@@ -29,9 +30,8 @@ class JsonPathTest extends TestCase
      */
     public function testSelect_GoessnerExamples_WorkAsExpected(string $path, array $expectedValue): void
     {
-        $jsonPath = JsonPath::create();
-        $result = $jsonPath->select(
-            $jsonPath->createQuery($path),
+        $result = Processor::create()->select(
+            QueryFactory::create()->createQuery($path),
             (new NodeValueFactory)->createValue($this->example)
         );
 

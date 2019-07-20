@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\Test\Value\DecodedJson;
 
 use function get_class;
-use Iterator;
 use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\EventExporter;
+use Remorhaz\JSON\Data\Export\Decoder;
+use Remorhaz\JSON\Data\Export\ExporterInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Data\Event\ScalarEvent;
 use Remorhaz\JSON\Data\Event\ValueEventInterface;
@@ -25,6 +25,16 @@ use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
  */
 class NodeScalarValueTest extends TestCase
 {
+
+    /**
+     * @var ExporterInterface
+     */
+    private $exporter;
+
+    public function setUp(): void
+    {
+        $this->exporter = new Decoder(new ValueIteratorFactory);
+    }
 
     /**
      * @param $data
@@ -172,7 +182,7 @@ class NodeScalarValueTest extends TestCase
     {
         $result = [
             'class' => get_class($value),
-            'data' => $this->exportData($this->exportIterator($value->createIterator())),
+            'data' => $this->exportData($this->exporter->exportValue($value)),
         ];
 
         if ($value instanceof PathAwareInterface) {
@@ -204,10 +214,5 @@ class NodeScalarValueTest extends TestCase
         }
 
         return $data;
-    }
-
-    private function exportIterator(Iterator $iterator)
-    {
-        return (new EventExporter(new ValueIteratorFactory))->export($iterator);
     }
 }

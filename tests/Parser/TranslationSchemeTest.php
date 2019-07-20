@@ -4,7 +4,8 @@ namespace Remorhaz\JSON\Path\Test\Parser;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
-use Remorhaz\JSON\Path\JsonPath;
+use Remorhaz\JSON\Path\Processor\Processor;
+use Remorhaz\JSON\Path\Query\QueryFactory;
 
 class TranslationSchemeTest extends TestCase
 {
@@ -24,9 +25,8 @@ class TranslationSchemeTest extends TestCase
         string $path,
         array $expectedValue
     ): void {
-        $jsonPath = JsonPath::create();
-        $result = $jsonPath->select(
-            $jsonPath->createQuery($path),
+        $result = Processor::create()->select(
+            QueryFactory::create()->createQuery($path),
             (new NodeValueFactory)->createValue($json)
         );
 

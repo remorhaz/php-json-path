@@ -3,21 +3,25 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Data\Export\DecoderInterface;
+use Remorhaz\JSON\Data\Export\EncoderInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class ResultFactory implements ResultFactoryInterface
 {
 
-    private $valueIteratorFactoryInterface;
+    private $encoder;
 
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
+    private $decoder;
+
+    public function __construct(EncoderInterface $encoder, DecoderInterface $decoder)
     {
-        $this->valueIteratorFactoryInterface = $valueIteratorFactory;
+        $this->encoder = $encoder;
+        $this->decoder = $decoder;
     }
 
     public function createResult(ValueListInterface $values): SelectResultInterface
     {
-        return new SelectResult($this->valueIteratorFactoryInterface, ...$values->getValues());
+        return new SelectResult($this->encoder, $this->decoder, ...$values->getValues());
     }
 }

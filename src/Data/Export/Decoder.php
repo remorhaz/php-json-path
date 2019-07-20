@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data;
+namespace Remorhaz\JSON\Data\Export;
 
 use Iterator;
 use Remorhaz\JSON\Data\Exception;
@@ -9,8 +9,9 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
-final class EventExporter
+final class Decoder implements DecoderInterface
 {
 
     private $valueIteratorFactory;
@@ -20,7 +21,7 @@ final class EventExporter
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
-    public function export(Iterator $iterator)
+    public function exportEvents(Iterator $iterator)
     {
         $value = $this->valueIteratorFactory->fetchValue($iterator);
         if ($value instanceof ScalarValueInterface) {
@@ -31,7 +32,7 @@ final class EventExporter
             $result = [];
             $arrayIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
             foreach ($arrayIterator as $index => $element) {
-                $result[$index] = $this->export($element->createIterator());
+                $result[$index] = $this->exportValue($element);
             }
 
             return $result;
@@ -41,12 +42,17 @@ final class EventExporter
             $result = (object) [];
             $objectIterator = $this->valueIteratorFactory->createObjectIterator($value->createIterator());
             foreach ($objectIterator as $name => $property) {
-                $result->{$name} = $this->export($property->createIterator());
+                $result->{$name} = $this->exportValue($property);
             }
 
             return $result;
         }
 
         throw new Exception\UnexpectedValueException($value);
+    }
+
+    public function exportValue(ValueInterface $value)
+    {
+        return $this->exportEvents($value->createIterator());
     }
 }
