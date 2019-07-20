@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Path\Value;
 
-use function array_keys;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class NodeValueList implements NodeValueListInterface
 {

@@ -9,7 +9,7 @@ use function is_int;
 use function is_string;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class GreaterValueComparator implements ComparatorInterface
 {

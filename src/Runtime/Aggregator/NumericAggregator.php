@@ -9,7 +9,7 @@ use function is_int;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {

@@ -1,11 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Path\Value;
 
 use Generator;
 use Iterator;
 use Remorhaz\JSON\Data\Event;
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Path\Path;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterface
 {

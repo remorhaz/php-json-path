@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Data\Test\Value\DecodedJson\Exception;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidNodeDataException;
-use Remorhaz\JSON\Data\Value\Path;
+use Remorhaz\JSON\Data\Path\Path;
 
 /**
  * @covers \Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidNodeDataException

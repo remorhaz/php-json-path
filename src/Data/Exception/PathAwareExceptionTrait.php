@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Exception;
 
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 
 trait PathAwareExceptionTrait
 {

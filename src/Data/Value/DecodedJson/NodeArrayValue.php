@@ -9,7 +9,7 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Event\AfterArrayEvent;
 use Remorhaz\JSON\Data\Event\BeforeArrayEvent;
 use Remorhaz\JSON\Data\Event\ElementEvent;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface

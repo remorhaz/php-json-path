@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Path\Value;
 
 interface LiteralValueListInterface extends ValueListInterface
 {

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value\Exception;
+namespace Remorhaz\JSON\Path\Value\Exception;
 
 use OutOfRangeException;
-use Remorhaz\JSON\Data\Value\IndexMapInterface;
+use Remorhaz\JSON\Path\Value\IndexMapInterface;
 use Throwable;
 
 final class OuterIndexNotFoundException extends OutOfRangeException implements ExceptionInterface

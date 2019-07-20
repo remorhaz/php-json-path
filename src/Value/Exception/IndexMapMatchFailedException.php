@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value\Exception;
+namespace Remorhaz\JSON\Path\Value\Exception;
 
 use LogicException;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Throwable;
 
 final class IndexMapMatchFailedException extends LogicException implements ExceptionInterface

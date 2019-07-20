@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Data\Test\Value\DecodedJson;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidElementKeyException;
-use Remorhaz\JSON\Data\Value\Path;
+use Remorhaz\JSON\Data\Path\Path;
 
 /**
  * @covers \Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidElementKeyException
@@ -28,6 +28,7 @@ class InvalidElementKeyExceptionTest extends TestCase
 
     public function providerKeyMessage(): array
     {
+        /** @noinspection HtmlUnknownTag */
         return [
             'Float key with empty path' => [0.5, [], 'Invalid element key in decoded JSON: <double> at /'],
             'Integer key with empty path' => [1, [], 'Invalid element key in decoded JSON: 1 at /'],

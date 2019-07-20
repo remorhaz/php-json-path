@@ -7,13 +7,13 @@ use function array_fill;
 use function count;
 use function is_bool;
 use function preg_match;
-use Remorhaz\JSON\Data\Value\EvaluatedValueList;
-use Remorhaz\JSON\Data\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Data\Value\IndexMap;
-use Remorhaz\JSON\Data\Value\LiteralValueListInterface;
-use Remorhaz\JSON\Data\Value\NodeValueList;
+use Remorhaz\JSON\Path\Value\EvaluatedValueList;
+use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
+use Remorhaz\JSON\Path\Value\IndexMap;
+use Remorhaz\JSON\Path\Value\LiteralValueListInterface;
+use Remorhaz\JSON\Path\Value\NodeValueList;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class Evaluator
 {

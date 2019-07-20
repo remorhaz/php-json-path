@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Path\Value;
 
 use function array_keys;
 use function count;

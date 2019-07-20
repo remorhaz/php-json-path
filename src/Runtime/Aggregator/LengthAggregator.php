@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
-use Remorhaz\JSON\Data\Value\LiteralScalarValue;
+use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class LengthAggregator implements ValueAggregatorInterface
 {

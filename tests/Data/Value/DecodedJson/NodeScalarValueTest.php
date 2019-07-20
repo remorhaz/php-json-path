@@ -15,10 +15,10 @@ use Remorhaz\JSON\Data\Event\DataEventInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidNodeDataException;
 use Remorhaz\JSON\Data\Event\ElementEventInterface;
 use Remorhaz\JSON\Data\Event\PropertyEventInterface;
-use Remorhaz\JSON\Data\Value\Path;
-use Remorhaz\JSON\Data\Value\PathAwareInterface;
+use Remorhaz\JSON\Data\Path\Path;
+use Remorhaz\JSON\Data\Path\PathAwareInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 /**
  * @covers \Remorhaz\JSON\Data\Value\DecodedJson\NodeScalarValue

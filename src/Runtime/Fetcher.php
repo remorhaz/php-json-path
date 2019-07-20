@@ -8,14 +8,14 @@ use Iterator;
 use function max;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\Exception;
-use Remorhaz\JSON\Data\Value\IndexMap;
+use Remorhaz\JSON\Path\Value\IndexMap;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\NodeValueList;
-use Remorhaz\JSON\Data\Value\NodeValueListInterface;
+use Remorhaz\JSON\Path\Value\NodeValueList;
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class Fetcher
 {

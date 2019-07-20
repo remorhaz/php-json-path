@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value\Exception;
+namespace Remorhaz\JSON\Data\Iterator\Exception;
 
 use RuntimeException;
 use Throwable;

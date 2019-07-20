@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Data\Iterator;
 
 use Generator;
 use Iterator;
@@ -13,6 +13,7 @@ use Remorhaz\JSON\Data\Event\DataEventInterface;
 use Remorhaz\JSON\Data\Event\ElementEventInterface;
 use Remorhaz\JSON\Data\Event\PropertyEventInterface;
 use Remorhaz\JSON\Data\Event\ScalarEventInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class ValueIteratorFactory implements ValueIteratorFactoryInterface
 {

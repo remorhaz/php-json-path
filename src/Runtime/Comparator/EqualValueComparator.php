@@ -9,7 +9,7 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class EqualValueComparator implements ComparatorInterface
 {

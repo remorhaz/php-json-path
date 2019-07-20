@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
+use function array_keys;
 use function in_array;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class StrictElementMatcher implements ChildMatcherInterface
 {
@@ -18,7 +19,7 @@ final class StrictElementMatcher implements ChildMatcherInterface
      */
     public static function populate(ValueListInterface $valueList, array ...$indexLists): array
     {
-        if (\array_keys($indexLists) !== $valueList->getIndexMap()->getInnerIndice()) {
+        if (array_keys($indexLists) !== $valueList->getIndexMap()->getInnerIndice()) {
             throw new Exception\InvalidIndexListException();
         }
 

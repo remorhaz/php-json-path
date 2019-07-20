@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Data\Value\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class AggregatorCollection
 {

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Data\Iterator;
 
 use Generator;
 use Iterator;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ValueIteratorFactoryInterface
 {

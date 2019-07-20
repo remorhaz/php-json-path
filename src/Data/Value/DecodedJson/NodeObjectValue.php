@@ -9,7 +9,7 @@ use Remorhaz\JSON\Data\Event\AfterObjectEvent;
 use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
 use Remorhaz\JSON\Data\Event\PropertyEvent;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use stdClass;
 

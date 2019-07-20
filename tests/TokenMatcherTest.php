@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Path\Test;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\Parser\TokenType;
+use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Lexer\TokenFactory;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Unicode\CharBufferFactory;
@@ -18,7 +19,7 @@ class TokenMatcherTest extends TestCase
     /**
      * @param string $input
      * @param array $expectedValue
-     * @throws \Remorhaz\UniLex\Exception
+     * @throws UniLexException
      * @dataProvider providerValidInputTokenTypeList
      */
     public function testMatch_TokenReaderUsedToMatchAllTokensFromValidInput_ProducesMatchingTokenTypeList(

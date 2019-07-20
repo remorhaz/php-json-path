@@ -6,8 +6,8 @@ namespace Remorhaz\JSON\Data\Value\DecodedJson\Exception;
 use Remorhaz\JSON\Data\Value\DataAwareInterface;
 use Remorhaz\JSON\Data\Exception\ExceptionInterface;
 use Remorhaz\JSON\Data\Exception\PathAwareExceptionTrait;
-use Remorhaz\JSON\Data\Value\PathAwareInterface;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathAwareInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use RuntimeException;
 use Throwable;
 

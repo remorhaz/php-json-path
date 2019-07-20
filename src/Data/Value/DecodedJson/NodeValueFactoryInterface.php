@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\Value\DecodedJson;
 
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use stdClass;
 
 interface NodeValueFactoryInterface

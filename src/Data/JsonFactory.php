@@ -5,13 +5,13 @@ namespace Remorhaz\JSON\Data;
 
 use Remorhaz\JSON\Data\Value\DecodedJson;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\Path;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\Path;
+use Remorhaz\JSON\Data\Path\PathInterface;
 
 final class JsonFactory
 {
 
-    private $emptyPath;
+    private $path;
 
     private $decodedJsonNodeValueFactory;
 
@@ -21,10 +21,10 @@ final class JsonFactory
     }
 
     public function __construct(
-        PathInterface $emptyPath,
+        PathInterface $path,
         DecodedJson\NodeValueFactoryInterface $decodedJsonNodeValueFactory
     ) {
-        $this->emptyPath = $emptyPath;
+        $this->path = $path;
         $this->decodedJsonNodeValueFactory = $decodedJsonNodeValueFactory;
     }
 
@@ -32,6 +32,6 @@ final class JsonFactory
     {
         return $this
             ->decodedJsonNodeValueFactory
-            ->createValue($json, $this->emptyPath);
+            ->createValue($json, $this->path);
     }
 }

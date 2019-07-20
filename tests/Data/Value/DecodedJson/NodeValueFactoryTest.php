@@ -20,7 +20,7 @@ use Remorhaz\JSON\Data\Event\DataEventInterface;
 use Remorhaz\JSON\Data\Event\ElementEvent;
 use Remorhaz\JSON\Data\Event\PropertyEvent;
 use Remorhaz\JSON\Data\Event\ScalarEvent;
-use Remorhaz\JSON\Data\Value\Path;
+use Remorhaz\JSON\Data\Path\Path;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use const STDOUT;

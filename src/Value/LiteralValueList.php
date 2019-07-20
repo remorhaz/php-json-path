@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value;
+namespace Remorhaz\JSON\Path\Value;
 
 use function array_fill;
 use function count;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class LiteralValueList implements LiteralValueListInterface
 {

@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Data\Value\Exception;
+namespace Remorhaz\JSON\Data\Iterator\Exception;
 
+use function get_class;
 use LogicException;
 use Remorhaz\JSON\Data\Event\DataEventInterface;
 use Throwable;
@@ -23,7 +24,7 @@ final class UnexpectedDataEventException extends LogicException implements Excep
 
     private function buildMessage(): string
     {
-        $actualClass = \get_class($this->event);
+        $actualClass = get_class($this->event);
 
         return "Unexpected data event: {$actualClass} instead of {$this->expectedClass}";
     }

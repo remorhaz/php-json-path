@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Data\Value\DecodedJson;
 use function is_array;
 use function is_scalar;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\PathInterface;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use stdClass;
 
 final class NodeValueFactory implements NodeValueFactoryInterface

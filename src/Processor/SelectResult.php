@@ -14,7 +14,7 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Value\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use stdClass;
 use Throwable;
 

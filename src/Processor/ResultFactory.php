@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-use Remorhaz\JSON\Data\Value\ValueIteratorFactoryInterface;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class ResultFactory implements ResultFactoryInterface
 {

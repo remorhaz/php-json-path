@@ -12,7 +12,7 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\ValueListInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node;
@@ -66,7 +66,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
             ->param('input')
             ->setType(NodeValueInterface::class)
             ->getNode();
-        $stmts = \array_map(
+        $stmts = array_map(
             function (\PhpParser\Node $stmt): \PhpParser\Node {
                 return $stmt instanceof Expr ? new Expression($stmt): $stmt;
             },

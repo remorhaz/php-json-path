@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Data\Test\Event;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Event\ElementEvent;
-use Remorhaz\JSON\Data\Value\Path;
+use Remorhaz\JSON\Data\Path\Path;
 
 /**
  * @covers \Remorhaz\JSON\Data\Event\ElementEvent
