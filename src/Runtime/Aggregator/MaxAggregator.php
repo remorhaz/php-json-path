@@ -16,6 +16,6 @@ final class MaxAggregator extends UniqueNumericAggregator
             return $elements[$elementIndex];
         }
 
-        throw new Exception\AggregateFunctionFailedException('max');
+        throw new Exception\MaxElementNotFoundException($dataList, $elements);
     }
 }

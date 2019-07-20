@@ -20,11 +20,11 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 final class Fetcher
 {
 
-    private $valueIterator;
+    private $valueIteratorFactory;
 
-    public function __construct(ValueIteratorFactory $valueIterator)
+    public function __construct(ValueIteratorFactory $valueIteratorFactory)
     {
-        $this->valueIterator = $valueIterator;
+        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     /**
@@ -113,7 +113,7 @@ final class Fetcher
     private function fetchDeepElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIterator->createArrayIterator($iterator) as $index => $element) {
+        foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
             if ($matcher->match($index)) {
                 $results[] = $element;
             }
@@ -129,7 +129,7 @@ final class Fetcher
     private function fetchDeepProperties(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIterator->createObjectIterator($iterator) as $name => $property) {
+        foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
             if ($matcher->match($name)) {
                 $results[] = $property;
             }
@@ -166,7 +166,7 @@ final class Fetcher
     private function fetchElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIterator->createArrayIterator($iterator) as $index => $element) {
+        foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
             if ($matcher->match($index)) {
                 $results[] = $element;
             }
@@ -178,7 +178,7 @@ final class Fetcher
     private function fetchProperties(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIterator->createObjectIterator($iterator) as $name => $property) {
+        foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
             if ($matcher->match($name)) {
                 $results[] = $property;
             }
@@ -208,7 +208,7 @@ final class Fetcher
             }
 
             $indice = [];
-            $elementIterator = $this->valueIterator->createArrayIterator($value->createIterator());
+            $elementIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
             foreach ($elementIterator as $index => $element) {
                 $indice[] = $index;
             }

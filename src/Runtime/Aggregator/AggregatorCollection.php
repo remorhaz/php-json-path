@@ -25,46 +25,21 @@ final class AggregatorCollection
     {
         switch ($name) {
             case self::MIN:
-                return $this->min();
+                return new MinAggregator($this->valueIteratorFactory);
 
             case self::MAX:
-                return $this->max();
+                return new MaxAggregator($this->valueIteratorFactory);
 
             case self::LENGTH:
-                return $this->length();
+                return new LengthAggregator($this->valueIteratorFactory);
 
             case self::AVG:
-                return $this->avg();
+                return new AvgAggregator($this->valueIteratorFactory);
 
             case self::STDDEV:
-                return $this->stdDev();
+                return new StdDevAggregator($this->valueIteratorFactory);
         }
 
-        throw new Exception\AggregateFunctionNotFound($name);
-    }
-
-    public function min(): ValueAggregatorInterface
-    {
-        return new MinAggregator($this->valueIteratorFactory);
-    }
-
-    public function max(): ValueAggregatorInterface
-    {
-        return new MaxAggregator($this->valueIteratorFactory);
-    }
-
-    public function length(): ValueAggregatorInterface
-    {
-        return new LengthAggregator($this->valueIteratorFactory);
-    }
-
-    public function avg(): ValueAggregatorInterface
-    {
-        return new AvgAggregator($this->valueIteratorFactory);
-    }
-
-    public function stdDev(): ValueAggregatorInterface
-    {
-        return new StdDevAggregator($this->valueIteratorFactory);
+        throw new Exception\AggregateFunctionNotFoundException($name);
     }
 }

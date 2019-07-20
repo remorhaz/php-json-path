@@ -16,6 +16,6 @@ final class MinAggregator extends UniqueNumericAggregator
             return $elements[$elementIndex];
         }
 
-        throw new Exception\AggregateFunctionFailedException('min');
+        throw new Exception\MinElementNotFoundException($dataList, $elements);
     }
 }
