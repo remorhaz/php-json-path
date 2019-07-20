@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Path\Query;
 
 use Remorhaz\UniLex\AST\Translator;
 use Remorhaz\UniLex\AST\Tree;
+use Throwable;
 
 final class QueryAstTranslator implements QueryAstTranslatorInterface
 {
@@ -18,8 +19,12 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
 
     public function buildQuery(Tree $queryAst): QueryInterface
     {
-        $translator = new Translator($queryAst, $this->queryCallbackBuilder);
-        $translator->run();
+        try {
+            $translator = new Translator($queryAst, $this->queryCallbackBuilder);
+            $translator->run();
+        } catch (Throwable $e) {
+            throw new Exception\QueryAstNotTranslatedException($queryAst);
+        }
 
         $callback = $this
             ->queryCallbackBuilder

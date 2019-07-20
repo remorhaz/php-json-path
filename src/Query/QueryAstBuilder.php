@@ -235,6 +235,11 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
             ->getId();
     }
 
+    /**
+     * @param int $sourceId
+     * @return int
+     * @throws UniLexException
+     */
     public function matchAnyChild(int $sourceId): int
     {
         return $this

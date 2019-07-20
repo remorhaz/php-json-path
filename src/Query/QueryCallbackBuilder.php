@@ -42,7 +42,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
     public function getQueryCallback(): callable
     {
         if (!isset($this->queryCallback)) {
-            throw new Exception\QueryCallbackUndefinedException;
+            throw new Exception\QueryCallbackNotFoundException;
         }
 
         return $this->queryCallback;
@@ -367,7 +367,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
     private function setReference(Node $node, Expr $expr): void
     {
         if (isset($this->references[$node->getId()])) {
-            throw new Exception\ReferenceAlreadyExistsException;
+            throw new Exception\ReferenceAlreadyExistsException($node->getId());
         }
 
         $this->references[$node->getId()] = $expr;
@@ -381,7 +381,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
     private function getReference(Node $node): Expr
     {
         if (!isset($this->references[$node->getId()])) {
-            throw new Exception\ReferenceNotFoundException;
+            throw new Exception\ReferenceNotFoundException($node->getId());
         }
 
         return $this->references[$node->getId()];
