@@ -126,8 +126,6 @@ final class Runtime implements RuntimeInterface
         NodeValueListInterface $values,
         Matcher\ChildMatcherInterface ...$matchers
     ): NodeValueListInterface {
-        //$matchers = ChildMatcherList::populate($matcher, ...$values->getIndexMap()->getInnerIndice());
-
         return $this
             ->fetcher
             ->fetchChildren($values, ...$matchers);

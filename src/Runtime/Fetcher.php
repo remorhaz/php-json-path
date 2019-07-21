@@ -7,7 +7,6 @@ use function array_push;
 use Iterator;
 use function max;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
-use Remorhaz\JSON\Data\Value\DecodedJson\Exception;
 use Remorhaz\JSON\Path\Value\IndexMap;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
@@ -88,7 +87,7 @@ final class Fetcher
             return $this->fetchProperties($value->createIterator(), $matcher);
         }
 
-        throw new Exception\InvalidValueException($value);
+        throw new Exception\UnexpectedNodeValueFetchedException($value);
     }
 
     private function fetchValueDeepChildren(
@@ -107,7 +106,7 @@ final class Fetcher
             return $this->fetchDeepProperties($value->createIterator(), $matcher);
         }
 
-        throw new Exception\InvalidValueException($value);
+        throw new Exception\UnexpectedNodeValueFetchedException($value);
     }
 
     private function fetchDeepElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array

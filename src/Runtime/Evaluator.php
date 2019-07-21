@@ -170,7 +170,7 @@ final class Evaluator
             }
         }
 
-        throw new Exception\LiteralEvaluationErrorException($literal);
+        throw new Exception\LiteralEvaluationFailedException($literal);
     }
 
     private function getEqualIndexMap(

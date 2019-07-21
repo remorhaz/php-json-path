@@ -8,7 +8,6 @@ use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
-use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 class ValueListFilter implements ValueListFilterInterface
 {
@@ -21,20 +20,20 @@ class ValueListFilter implements ValueListFilterInterface
     }
 
     /**
-     * @param ValueListInterface $valueList
-     * @return ValueListInterface
+     * @param NodeValueListInterface $valueList
+     * @return NodeValueListInterface
      */
     public function filterValues(NodeValueListInterface $valueList): NodeValueListInterface
     {
         if (!$valueList->getIndexMap()->equals($this->filterValueList->getIndexMap())) {
-            throw new Exception\InvalidIndexMapException($valueList);
+            throw new Exception\IndexMapMatchFailedException($valueList, $this->filterValueList);
         }
         $values = [];
         $indexMap = [];
         foreach ($valueList->getValues() as $index => $value) {
             $filterValue = $this->filterValueList->getValue($index);
             if (!$filterValue instanceof EvaluatedValueInterface) {
-                throw new Exception\InvalidResultException($filterValue);
+                throw new Exception\InvalidFilterValueException($filterValue);
             }
             if (!$filterValue->getData()) {
                 continue;

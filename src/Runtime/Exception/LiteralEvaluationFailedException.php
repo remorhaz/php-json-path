@@ -7,7 +7,7 @@ use LogicException;
 use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Throwable;
 
-final class LiteralEvaluationErrorException extends LogicException implements ExceptionInterface
+final class LiteralEvaluationFailedException extends LogicException implements ExceptionInterface
 {
 
     private $literal;
