@@ -13,6 +13,11 @@ use stdClass;
 final class NodeValueFactory implements NodeValueFactoryInterface
 {
 
+    public static function create(): NodeValueFactoryInterface
+    {
+        return new self;
+    }
+
     /**
      * {@inheritDoc}
      *
