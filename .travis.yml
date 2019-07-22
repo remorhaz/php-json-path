@@ -21,7 +21,7 @@ install:
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
   - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml
-  - "[ $RUN_INFECTION == 'YES' ] && vendor/bin/infection --coverage=build/logs --threads=4  --no-progress"
+  - if [ "$RUN_INFECTION" == "YES" ]; then vendor/bin/infection --coverage=build/logs --threads=4  --no-progress; fi
 
 after_script:
   - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
