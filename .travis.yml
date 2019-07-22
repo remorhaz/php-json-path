@@ -17,7 +17,8 @@ install:
 
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
-  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml
+  - vendor/bin/infection --coverage=build/logs --threads=4  --no-progress
 
 after_script:
   - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
