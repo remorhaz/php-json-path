@@ -3,9 +3,9 @@ language: php
 matrix:
   include:
     - php: '7.3'
-      env: RUN_INFECTION=YES
+      env: XDEBUG=YES
     - php: '7.4snapshot'
-      env: RUN_INFECTION=NO
+      env: XDEBUG=NO
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -20,8 +20,8 @@ install:
 
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
-  - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml
-  - if [ "$RUN_INFECTION" == "YES" ]; then vendor/bin/infection --coverage=build/logs --threads=4  --no-progress; fi
+  - if [ "$XDEBUG" == "YES" ]; then vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml; else vendor/bin/phpunit; fi
+  - if [ "$XDEBUG" == "YES" ]; then vendor/bin/infection --coverage=build/logs --threads=4  --no-progress; fi
 
 after_script:
   - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
