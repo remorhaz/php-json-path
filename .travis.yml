@@ -4,6 +4,17 @@ php:
   - '7.3'
   - '7.4snapshot'
 
+env:
+  - RUN_INFECTION=YES
+  - RUN_INFECTION=NO
+
+matrix:
+  include:
+    - php: '7.3'
+    - env: RUN_INFECTION=YES
+    - php: '7.4snapshot'
+    - env: RUN_INFECTION=NO
+
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -18,7 +29,7 @@ install:
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
   - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/phpunit.junit.xml
-  - vendor/bin/infection --coverage=build/logs --threads=4  --no-progress
+  - [ ${RUN_INFECTION} == YES ] && vendor/bin/infection --coverage=build/logs --threads=4  --no-progress
 
 after_script:
   - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
