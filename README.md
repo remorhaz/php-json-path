@@ -2,8 +2,7 @@
 [![License](https://poser.pugx.org/remorhaz/php-json-path/license)](https://packagist.org/packages/remorhaz/php-json-path)
 [![Build Status](https://travis-ci.org/remorhaz/php-json-path.svg?branch=master)](https://travis-ci.org/remorhaz/php-json-path)
 [![Latest Stable Version](https://poser.pugx.org/remorhaz/php-json-path/version)](https://packagist.org/packages/remorhaz/php-json-path)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b905555b5d1fbdc6cc91/maintainability)](https://codeclimate.com/github/remorhaz/php-json-path/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/b905555b5d1fbdc6cc91/test_coverage)](https://codeclimate.com/github/remorhaz/php-json-path/test_coverage)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/remorhaz/php-json-path/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/remorhaz/php-json-path/?branch=master)
 [![codecov](https://codecov.io/gh/remorhaz/php-json-path/branch/master/graph/badge.svg)](https://codecov.io/gh/remorhaz/php-json-path)
 
 JSONPath is a simple query language for JSON documents, inspired by XPath for XML and originally designed by [Stefan Goessner](https://goessner.net/articles/JsonPath/).
