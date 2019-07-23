@@ -46,7 +46,7 @@ final class LazyQuery implements QueryInterface
             ->parser
             ->buildQueryAst($this->path);
 
-        return $queryCallback = $this
+        return $this
             ->astTranslator
             ->buildQuery($queryAst);
     }

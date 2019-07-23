@@ -12,7 +12,7 @@ use Remorhaz\UniLex\Grammar\ContextFree\GrammarLoader;
 use Remorhaz\UniLex\Grammar\ContextFree\TokenFactory;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Lexer\TokenReaderInterface;
-use Remorhaz\UniLex\Parser\LL1\Parser;
+use Remorhaz\UniLex\Parser\LL1\Parser as Ll1Parser;
 use Remorhaz\UniLex\Parser\LL1\TranslationSchemeApplier;
 use Remorhaz\UniLex\Unicode\CharBufferFactory;
 use Throwable;
@@ -22,11 +22,11 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
 
     private $grammar;
 
-    public function createParser(string $path, Tree $queryAst): Parser
+    public function createParser(string $path, Tree $queryAst): Ll1Parser
     {
         try {
             $scheme = new TranslationScheme(new QueryAstBuilder($queryAst));
-            $parser = new Parser(
+            $parser = new Ll1Parser(
                 $this->getGrammar(),
                 $this->createPathReader($path),
                 new TranslationSchemeApplier($scheme)
