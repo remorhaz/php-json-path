@@ -72,9 +72,57 @@ matched with child operators and filters:
 |`['a']`|Property `a` of current object (bracket-notation).|
 |`['a', 'b']`|Properties `a` and `b` of current object.|
 |`[1, 3]`|Indexes `1` and `3` of current array.|
+|`[3:10:2]`|Sequence of indexes from `3` to `10` with step `2`.|
 |`*`|Wildcard that matches any property of current object / index of current array.|
-|`[?(<expression>)]`|Filters values.|
+|`[?(<expression>)]`|Filters values by expression.|
 
+### Child operators
+There are two notations for selecting structure children: _dot_-notation and _bracket_-notation.
+
+Dot-notation allows to select either exactly one property or all children (using a wildcard). _Double-dot_ notation
+walks through the JSON structure recursively.
+
+|Example|Description|
+|---|---|
+|`$.a`|Selects property `a` of a root object.|
+|`$.*`|Selects all properties of a root objects or all elements of a root array.|
+|`$..a`|Selects property `a` of all objects recursively.|
+|`$..*`|Selects all properties/elements of all objects/arrays recursively.|
+
+Bracket-notation allows to select a set of properties/elements:
+
+|Example|Description|
+|---|---|
+|`$['a', 'b']`|Selects properties `a` and `b` of a root object.|
+|`$[2, 3]`|Selects elements `2` and `3` from a root array.|
+|`$[3:10:2]`|Selects a sequence of elements from `3` up to `10` with step `2`. This equivalent query is `$[3, 5, 7, 9]`. The notation is same as in Python.|
+|`$[*]`|Selecta all children. Same as `$.*`.|
+
+### Filter expressions
+When filter is being applied to nodeset, it leaves only those nodes for which the expression evaluates to true.
+
+|Example|Description|
+|---|---|
+|`$..a[?(@.b]`|Selects all properties `a` that contain objects with property `b`.|
+|`$..a[?(@.b > 2)]`|Selects all properties `a` that contain objects with property `b` that is number greater than `2`.|
+|`$..a[?(true)]`|Boolean `true` is the only literal that evaluates to `true`; so this query is equivalent to `$..a`.|
+|`$..a[?(1)]`|**Attention!** This evaluates to `false`, selecting nothing, because no automatic typecasting is performed.|
+
+#### Filter context
+Expression `@` points to the value to which the filter was applied.
+
+#### Operators
+_Comparison operators_ can be used to compare value with another value or with a literal. Supported operators are: 
+`==`, `!=`, `>`, `>=`, `<` and `<=`. Brackets can be used for _grouping_, and _logical operators_ `&&`, `||` and `!` 
+are also supported. _Regular expressions_ can be matched using `=~` operator.
+
+|Example|Description|
+|---|---|
+|`$..a[?(@.b == @.c)]`|Selects property `a` of any object that is object with properties `b` and `c` with equal values.|
+|`$..a[?(@.b || (@.c <= 1))]`|Selects property `a` of any object that is object with either property `b` or property `c` with int/float value lesser or equal to `1`.|
+|`$..a[?(@.b =~ /^b/i)]`|Selects property `a` of any object that is object with string property `b` that starts from `b` or `B`.|
+
+### Original definition
 Goessner described JSONPath grammar with providing a set of example queries on JSON sample. Here's his original 
 data sample:
 ```json
