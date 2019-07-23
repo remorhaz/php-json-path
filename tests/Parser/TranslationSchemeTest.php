@@ -30,7 +30,7 @@ class TranslationSchemeTest extends TestCase
             (new NodeValueFactory)->createValue($json)
         );
 
-        self::assertEquals($expectedValue, $result->asJson());
+        self::assertEquals($expectedValue, $result->encode());
     }
 
     public function providerParser(): array

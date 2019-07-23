@@ -14,5 +14,11 @@ interface SelectResultInterface
     /**
      * @return string[]
      */
-    public function asJson(): array;
+    public function encode(): array;
+
+    /**
+     * @return string[]
+     * @deprecated
+     */
+    public function toJson(): array;
 }

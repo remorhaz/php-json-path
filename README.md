@@ -45,7 +45,7 @@ $jsonDocument2 = DecodedJson\NodeValueFactory::create()->createValue($json2);
 // Applying same query to new document and getting result as encoded JSON:
 $result2 = $processor
     ->select($query1, $jsonDocument2)
-    ->asJson();
+    ->encode();
 // $result2 now contains array of JSON strings:
 //     ['{"a":1,"b":2}', '1']
 
@@ -55,7 +55,7 @@ $query2 = $queryFactory->createQuery('$..a[?(@.b=2)]');
 // Applying new query to same data and getting result as encoded JSON
 $result3 = $processor
     ->select($query2, $jsonDocument2)
-    ->asJson();
+    ->encode();
 // $result3 now contains array of JSON strings:
 //     ['{"a":1,"b":2}']
 ```

@@ -35,7 +35,7 @@ class JsonPathTest extends TestCase
             (new NodeValueFactory)->createValue($this->example)
         );
 
-        self::assertEquals($expectedValue, $result->asJson());
+        self::assertEquals($expectedValue, $result->encode());
     }
 
     public function providerGoessnerExamples(): array

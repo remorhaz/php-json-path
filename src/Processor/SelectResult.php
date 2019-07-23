@@ -37,10 +37,21 @@ final class SelectResult implements SelectResultInterface
     /**
      * {@inheritDoc}
      *
-     * @return array
+     * @return string[]
      */
-    public function asJson(): array
+    public function encode(): array
     {
         return array_map([$this->encoder, 'exportValue'], $this->values);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string[]
+     * @deprecated
+     */
+    public function toJson(): array
+    {
+        return $this->encode();
     }
 }
