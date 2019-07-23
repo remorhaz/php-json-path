@@ -50,7 +50,7 @@ $result2 = $processor
 //     ['{"a":1,"b":2}', '1']
 
 // Creating another query:
-$query2 = $queryFactory->createQuery('$..a[?(@b=2)]');
+$query2 = $queryFactory->createQuery('$..a[?(@.b=2)]');
 
 // Applying new query to same data and getting result as encoded JSON
 $result3 = $processor
