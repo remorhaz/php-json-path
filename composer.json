@@ -3,6 +3,7 @@
   "description": "JSONPath implementation in PHP",
   "homepage": "https://github.com/remorhaz/php-json-path",
   "license": "MIT",
+  "keywords": ["json", "jsonpath", "json path"],
   "authors": [
     {
       "name": "Edward Surov",
