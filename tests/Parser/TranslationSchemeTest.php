@@ -16,17 +16,23 @@ class TranslationSchemeTest extends TestCase
      * @param $json
      * @param string $path
      * @param array $expectedValue
+     * @param bool $isDefinite
      * @dataProvider providerParser
-     * @covers \Remorhaz\JSON\Path\Parser\TranslationScheme
+     * @covers       \Remorhaz\JSON\Path\Parser\TranslationScheme
      * @todo Maybe it's better to test in isolation, checking the resulting AST.
      */
     public function testAllMethods_AssembledWithParser_QueryWorksAsExpected(
         $json,
         string $path,
-        array $expectedValue
+        array $expectedValue,
+        bool $isDefinite
     ): void {
+        $query = QueryFactory::create()->createQuery($path);
+        // TODO: extract isDefinite test
+        self::assertSame($isDefinite, $query->isDefinite());
+
         $result = Processor::create()->select(
-            QueryFactory::create()->createQuery($path),
+            $query,
             (new NodeValueFactory)->createValue($json)
         );
 
@@ -40,151 +46,181 @@ class TranslationSchemeTest extends TestCase
                 (object) ['a' => true],
                 '$.a',
                 ['true'],
+                true,
             ],
             'Dot-notation null' => [
                 (object) ['null' => true],
                 '$.null',
                 ['true'],
+                true,
             ],
             'Dot-notation true' => [
                 (object) ['true' => true],
                 '$.true',
                 ['true'],
+                true,
             ],
             'Dot-notation false' => [
                 (object) ['false' => true],
                 '$.false',
                 ['true'],
+                true,
             ],
             'Bracket-notation property' => [
                 (object) ['a' => true],
                 '$["a"]',
                 ['true'],
+                true,
             ],
             'Single index' => [
                 ['a', 'b'],
                 '$[1]',
                 ['"b"'],
+                true,
             ],
             'Nested dot-notation properties' => [
                 (object) ['a' => (object) ['b' => false]],
                 '$.a.b',
                 ['false'],
+                true,
             ],
             'All properties dot-notation' => [
                 (object) ['a' => true, 'b' => false],
                 '$.*',
                 ['true', 'false'],
+                false,
             ],
             'All indice dot-notation' => [
                 ['a', 1],
                 '$.*',
                 ['"a"', '1'],
+                false,
             ],
             'All properties bracket-notation' => [
                 (object) ['a' => true, 'b' => false],
                 '$[*]',
                 ['true', 'false'],
+                false,
             ],
             'All indice bracket-notation' => [
                 ['a', 1],
                 '$[*]',
                 ['"a"', '1'],
+                false,
             ],
             'Strict property list' => [
                 (object) ['a' => true, 'b' => false, 'c' => 1],
                 '$["a", "c"]',
                 ['true', '1'],
+                false,
             ],
             'Strict index list' => [
                 [true, false, 1],
                 '$[0, 2]',
                 ['true', '1'],
+                false,
             ],
             'Fully defined slice' => [
                 [1, 2, 3, 4, 5, 6, 7],
                 '$[1:6:2]',
                 ['2', '4', '6'],
+                false,
             ],
             'Slice defined without start' => [
                 [1, 2, 3, 4, 5, 6, 7],
                 '$[:6:2]',
                 ['1', '3', '5'],
+                false,
             ],
             'Slice defined without end' => [
                 [1, 2, 3, 4, 5, 6, 7],
                 '$[0::2]',
                 ['1', '3', '5', '7'],
+                false,
             ],
             'Slice defined without step value' => [
                 [1, 2, 3, 4, 5, 6, 7],
                 '$[1:3:]',
                 ['2', '3'],
+                false,
             ],
             'Slice defined without step' => [
                 [1, 2, 3, 4, 5, 6, 7],
                 '$[1:3]',
                 ['2', '3'],
+                false,
             ],
             'Slice defined without all values' => [
                 [1, 2, 3],
                 '$[::]',
                 ['1', '2', '3'],
+                false,
             ],
             'Slice defined without all values and step' => [
                 [1, 2, 3],
                 '$[:]',
                 ['1', '2', '3'],
+                false,
             ],
             'Slice defined with just negative start' => [
                 [1, 2, 3],
                 '$[-1:]',
                 ['3'],
+                false,
             ],
             'Slice defined with just negative end' => [
                 [1, 2, 3],
                 '$[:-1]',
                 ['1', '2'],
+                false,
             ],
             'Slice defined with just negative step' => [
                 [1, 2, 3],
                 '$[::-1]',
                 ['1', '2', '3'],
+                false,
             ],
             'Slice defined with start and negative step' => [
                 [1, 2, 3],
                 '$[1::-1]',
                 ['1', '2'],
+                false,
             ],
             'Slice fully defined with and negative end and step' => [
                 [1, 2, 3],
                 '$[1:-4:-1]',
                 ['1', '2'],
+                false,
             ],
             'Simple filter with true' => [
                 [1, 2, 3],
                 '$[?(true)]',
                 ['1', '2', '3'],
+                false,
             ],
             'Simple filter with false' => [
                 [1, 2, 3],
                 '$[?(false)]',
                 [],
+                false,
             ],
             'Simple filter with true on all indice' => [
                 [[1, 2], [3]],
                 '$[*][?(true)]',
                 ['1', '2', '3'],
+                false,
             ],
             'Simple filter with existing path' => [
                 (object) ['a' => (object) ['b' => 'c']],
                 '$.a[?(@.b)]',
                 ['{"b":"c"}'],
+                false,
             ],
             'Simple filter with non-existing path' => [
                 (object) ['a' => (object) ['c' => 'd']],
                 '$.a[?(@.b)]',
                 [],
+                false,
             ],
             'Simple filter with partially existing path' => [
                 [
@@ -194,6 +230,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a.b)]',
                 ['{"a":{"b":"c"}}'],
+                false,
             ],
             'Filter with EQ check on int' => [
                 [
@@ -202,6 +239,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == 1)]',
                 ['{"a":1}'],
+                false,
             ],
             'Filter with equality check on null' => [
                 [
@@ -210,6 +248,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == null)]',
                 ['{"a":null}'],
+                false,
             ],
             'Filter with equality check on true' => [
                 [
@@ -218,6 +257,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == true)]',
                 ['{"a":true}'],
+                false,
             ],
             'Filter with equality check on string' => [
                 [
@@ -227,6 +267,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == "b")]',
                 ['{"a":"b"}'],
+                false,
             ],
             'Filter with equality check on false' => [
                 [
@@ -235,51 +276,61 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == false)]',
                 ['{"a":false}'],
+                false,
             ],
             'Filter with equality check on boolean literals evaluating to true' => [
                 [1, 2, 3],
                 '$[?(true == true)]',
                 ['1', '2', '3'],
+                false,
             ],
             'Filter with equality check on boolean literals evaluating to false' => [
                 [1, 2, 3],
                 '$[?(true == false)]',
                 [],
+                false,
             ],
             'Filter with equality check on integer literals evaluating to true' => [
                 [1, 2, 3],
                 '$[?(1 == 1)]',
                 ['1', '2', '3'],
+                false,
             ],
             'Filter with equality check on integer literals evaluating to false' => [
                 [1, 2, 3],
                 '$[?(1 == 2)]',
                 [],
+                false,
             ],
             'Filter with equality check on string literals evaluating to true' => [
                 [1, 2, 3],
                 '$[?("a" == "a")]',
                 ['1', '2', '3'],
+                false,
             ],
             'Filter with equality check on string literals evaluating to false' => [
                 [1, 2, 3],
                 '$[?("a" == "b")]',
                 [],
+                false,
             ],
             'Filter with equality check on mixed type literals evaluating to false' => [
                 [1, 2, 3],
                 '$[?("a" == 1)]',
                 [],
+                false,
             ],
             'Filter with equality check on existing string paths evaluating to true' => [
                 (object) ['a' => 'b', 'c' => 'b'],
                 '$[?(@.a == @.c)]',
                 ['{"a":"b","c":"b"}'],
+                false,
             ],
             'Filter with equality check on existing string paths evaluating to false' => [
                 (object) ['a' => 'b', 'c' => 'd'],
                 '$[?(@.a == @.c)]',
                 [],
+                false,
             ],
             'Filter with equality check on existing array paths' => [
                 [
@@ -289,6 +340,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == @.c)]',
                 ['{"a":["b","d"],"c":["b","d"]}'],
+                false,
             ],
             'Filter with equality check on existing object paths' => [
                 [
@@ -299,6 +351,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == @.c)]',
                 ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
+                false,
             ],
             'Filter with OR' => [
                 [
@@ -309,6 +362,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a || @.b)]',
                 ['{"a":1,"b":2}', '{"a":3}', '{"b":5}'],
+                false,
             ],
             'Filter with AND' => [
                 [
@@ -319,6 +373,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a && @.b)]',
                 ['{"a":1,"b":2}'],
+                false,
             ],
             'Filter with AND before OR without brackets' => [
                 [
@@ -329,6 +384,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a && @.b || @.c)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
+                false,
             ],
             'Filter with AND after OR without brackets' => [
                 [
@@ -339,6 +395,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.c || @.a && @.b)]',
                 ['{"a":1,"b":2}', '{"c":4}'],
+                false,
             ],
             'Filter with AND after OR with brackets' => [
                 [
@@ -349,6 +406,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?((@.c || @.a) && @.b)]',
                 ['{"a":1,"b":2}'],
+                false,
             ],
             'Filter with OR after OR without brackets' => [
                 [
@@ -359,6 +417,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.c || @.a || @.b)]',
                 ['{"a":1,"b":2}', '{"a":3}', '{"c":4}', '{"b":5}'],
+                false,
             ],
             'Filter with AND after AND without brackets' => [
                 [
@@ -369,6 +428,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.c && @.a && @.b)]',
                 ['{"a":1,"b":2,"c":3}'],
+                false,
             ],
             'Filter with EQ after EQ without brackets' => [
                 [
@@ -379,6 +439,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.c == @.a == @.b)]',
                 ['{"a":1,"b":true,"c":1}', '{"a":1,"b":false,"c":2}'],
+                false,
             ],
             'Filter with EQ after EQ with brackets' => [
                 [
@@ -389,21 +450,25 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.c == (@.a == @.b))]',
                 ['{"a":3,"b":3,"c":true}', '{"a":3,"b":4,"c":false}'],
+                false,
             ],
             'Filter with true in brackets' => [
                 [1, 2, 3],
                 '$[?((true))]',
                 ['1', '2', '3'],
+                false,
             ],
             'Filter with false in brackets' => [
                 [1, 2, 3],
                 '$[?((false))]',
                 [],
+                false,
             ],
             'Filter with negated false' => [
                 [1, 2, 3],
                 '$[?(!false)]',
                 ['1', '2', '3'],
+                false,
             ],
             'Filter with EQ check on sring' => [
                 [
@@ -412,6 +477,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == "а")]',
                 ['{"a":"а"}'],
+                false,
             ],
             'Filter with NEQ check on int' => [
                 [
@@ -420,6 +486,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a != 1)]',
                 ['{"a":2}'],
+                false,
             ],
             'Filter with NEQ check on sring' => [
                 [
@@ -428,6 +495,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a != "а")]',
                 ['{"a":"б"}'],
+                false,
             ],
             'Filter with G check on int' => [
                 [
@@ -436,6 +504,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a > 1)]',
                 ['{"a":2}'],
+                false,
             ],
             'Filter with G check on string' => [
                 [
@@ -444,6 +513,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a > "а")]',
                 ['{"a":"б"}'],
+                false,
             ],
             'Filter with LE check on int' => [
                 [
@@ -452,6 +522,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a <= 1)]',
                 ['{"a":1}'],
+                false,
             ],
             'Filter with L check on int' => [
                 [
@@ -460,6 +531,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a < 2)]',
                 ['{"a":1}'],
+                false,
             ],
             'Filter with GE check on int' => [
                 [
@@ -468,6 +540,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a >= 1)]',
                 ['{"a":1}','{"a":2}'],
+                false,
             ],
             'Filter with path comparison to array' => [
                 [
@@ -477,6 +550,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == [1])]',
                 ['{"a":[1]}'],
+                false,
             ],
             'Filter with path comparison to array with path' => [
                 [
@@ -486,6 +560,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == [1, @.b])]',
                 ['{"a":[1,2],"b":2}'],
+                false,
             ],
             'Deep scan of a property' => [
                 [
@@ -495,6 +570,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a',
                 ['1', '{"b":{"a":2}}', '2'],
+                false,
             ],
             'Deep scan of true property' => [
                 [
@@ -504,6 +580,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..true',
                 ['2', '{"c":3}'],
+                false,
             ],
             'Deep scan of false property' => [
                 [
@@ -513,6 +590,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..false',
                 ['2', '{"c":3}'],
+                false,
             ],
             'Deep scan of null property' => [
                 [
@@ -522,6 +600,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..null',
                 ['2', '{"c":3}'],
+                false,
             ],
             'Deep scan of all children' => [
                 [
@@ -543,6 +622,7 @@ class TranslationSchemeTest extends TestCase
                     '{"c":3}',
                     '3',
                 ],
+                false,
             ],
             'Deep scan of all children with comparative condition' => [
                 [
@@ -552,6 +632,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..*[?(@ < 3)]',
                 ['1', '2'],
+                false,
             ],
             'Filter with regular expression without modofier' => [
                 [
@@ -561,6 +642,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a =~ /bc$/)]',
                 ['{"a":"abc"}'],
+                false,
             ],
             'Filter with regular expression with modofier' => [
                 [
@@ -570,6 +652,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a =~ /bc$/i)]',
                 ['{"a":"abc"}', '{"a":"Bc"}'],
+                false,
             ],
             'Filter with regular expression with escaped slash' => [
                 [
@@ -579,6 +662,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a =~ /b\/c$/i)]',
                 ['{"a":"ab/c"}', '{"a":"B/c"}'],
+                false,
             ],
             'Filter with regular expression with escaped backslash' => [
                 [
@@ -588,6 +672,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a =~ /b\\\\c$/i)]',
                 ['{"a":"ab\\\\c"}', '{"a":"B\\\\c"}'],
+                false,
             ],
             'Filter with regular expression with escaped non-slash' => [
                 [
@@ -597,6 +682,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a =~ /b\\c$/i)]',
                 ['{"a":"abc"}', '{"a":"Bc"}'],
+                false,
             ],
             'Aggregate function MIN' => [
                 [
@@ -606,6 +692,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a.min()',
                 ['1', '2.1'],
+                false,
             ],
             'Aggregate function MAX' => [
                 [
@@ -615,6 +702,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a.max()',
                 ['3', '2.1'],
+                false,
             ],
             'Aggregate function LENGTH' => [
                 [
@@ -626,6 +714,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a.length()',
                 ['3', '0', '1', '2'],
+                false,
             ],
             'Aggregate function AVG' => [
                 [
@@ -635,6 +724,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a.avg()',
                 ['2', '1.5'],
+                false,
             ],
             'Aggregate function STDDEV' => [
                 [
@@ -645,6 +735,7 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$..a.stddev()',
                 ['1', '0.5'],
+                false,
             ],
         ];
     }

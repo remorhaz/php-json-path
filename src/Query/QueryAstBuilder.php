@@ -35,9 +35,10 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
 
     /**
      * @param int $id
+     * @param bool $isDefinite
      * @throws UniLexException
      */
-    public function setOutput(int $id): void
+    public function setOutput(int $id, bool $isDefinite): void
     {
         $this
             ->tree
@@ -46,6 +47,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
                     ->tree
                     ->createNode(QueryAstNodeType::SET_OUTPUT)
                     ->addChild($this->tree->getNode($id))
+                    ->setAttribute('is_definite', $isDefinite)
             );
     }
 

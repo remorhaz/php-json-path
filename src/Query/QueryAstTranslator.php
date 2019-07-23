@@ -26,10 +26,9 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
             throw new Exception\QueryAstNotTranslatedException($queryAst);
         }
 
-        $callback = $this
-            ->queryCallbackBuilder
-            ->getQueryCallback();
-
-        return new Query($callback);
+        return new Query(
+            $this->queryCallbackBuilder->getQueryCallback(),
+            $this->queryCallbackBuilder->isDefinite()
+        );
     }
 }

@@ -11,4 +11,6 @@ interface QueryInterface
 {
 
     public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface;
+
+    public function isDefinite(): bool;
 }

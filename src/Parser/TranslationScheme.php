@@ -53,12 +53,16 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_JSON_PATH, 1:T_EOI ]
                 $this
                     ->queryAstBuilder
-                    ->setOutput($symbols[0]['s.value_list_id']);
+                    ->setOutput(
+                        $symbols[0]['s.value_list_id'],
+                        $symbols[0]['s.is_definite']
+                    );
                 break;
 
             case SymbolType::NT_JSON_PATH . ".0":
                 // [ 0:NT_PATH ]
                 $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
 
             case SymbolType::NT_PATH . ".0":
@@ -66,6 +70,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_PATH . ".1":
                 // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".0":
@@ -76,11 +81,13 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.filter_name'],
                         $header['i.value_list_id']
                     );
+                $header['s.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1":
                 // [ 0:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".0":
@@ -88,6 +95,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOT_FILTER . ".1":
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0':
@@ -95,13 +103,19 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1':
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".0":
                 // [ 0:T_DOT, 1:NT_DOT_FILTER ]
+                $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
+                break;
+
             case SymbolType::NT_FILTER_LIST . ".1":
                 // [ 0:T_DOUBLE_DOT, 1:NT_DOUBLE_DOT_FILTER ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2":
@@ -113,11 +127,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 //   4:NT_FILTER_LIST
                 // ]
                 $header['s.value_list_id'] = $symbols[4]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[4]['s.is_definite'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".3":
                 // [ ]
                 $header['s.value_list_id'] = $header['i.value_list_id'];
+                $header['s.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".0":
@@ -216,11 +232,13 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         ...$symbols[1]['s.int_list']
                     );
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_INT_NEXT . '.1':
                 // [ 0:NT_INT_SLICE ]
                 $header['s.int_lists_id'] = $symbols[0]['s.int_lists_id'];
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_INT_SLICE . '.0':
@@ -258,23 +276,31 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_INT_NEXT_LIST . ".0":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
                 $header['s.int_list'] = $symbols[4]['s.int_list'];
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_INT_NEXT_LIST . ".1":
                 // [ ]
                 $header['s.int_list'] = $header['i.int_list'];
+                $header['s.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0":
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
                 $header['s.text_list'] = $symbols[4]['s.text_list'];
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".1":
+                // [ ]
                 $header['s.text_list'] = $header['i.text_list'];
+                $header['s.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_STRING_LIST . ".0":
+                // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
                 $header['s.text_list'] = $symbols[2]['s.text_list'];
+                $header['s.is_definite'] = $symbols[2]['s.is_definite'];
                 break;
 
             case SymbolType::NT_STRING . ".0":
@@ -318,6 +344,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
                     );
+                $header['s.is_definite'] = false;
                 break;
             case SymbolType::NT_BRACKET_FILTER . ".1":
                 // [ 0:NT_STRING_LIST ]
@@ -334,6 +361,7 @@ class TranslationScheme implements TranslationSchemeInterface
                                 )
                             )
                     );
+                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".2":
@@ -346,6 +374,7 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->matchElementStrictly($symbols[1]['s.int_lists_id'])
                     );
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.3':
@@ -356,6 +385,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $symbols[0]['s.value_list_id'],
                         $this->queryAstBuilder->matchElementStrictly($symbols[0]['s.int_lists_id'])
                     );
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".4":
@@ -371,6 +401,7 @@ class TranslationScheme implements TranslationSchemeInterface
                                 $symbols[3]['s.value_list_id']
                             )
                     );
+                $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP . ".0":
@@ -555,27 +586,34 @@ class TranslationScheme implements TranslationSchemeInterface
         $hash = "{$production->getHeader()->getSymbolId()}.{$production->getIndex()}.{$symbolIndex}";
         switch ($hash) {
             case SymbolType::NT_JSON_PATH . ".0.0":
-                $symbols[0]['i.is_inline_path'] = false;
+                // [ 0:NT_PATH ]
+                $symbols[0]['i.is_definite'] = true;
                 break;
 
             case SymbolType::NT_PATH . ".0.1":
                 // [ 0:T_ROOT_ABSOLUTE, 1:NT_FILTER_LIST ]
-                $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
                 $symbols[1]['i.value_list_id'] = $this
                     ->queryAstBuilder
                     ->getInput();
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_PATH . ".1.1":
                 // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
-                $symbols[1]['i.is_inline_path'] = $header['i.is_inline_path'];
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . ".1.0":
+                // [ 0:NT_STRING_LIST ]
+                $symbols[0]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . ".2.1":
                 // 0:NT_INT, 1:NT_INT_NEXT
                 $symbols[1]['i.int'] = $symbols[0]['s.int'];
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.3.0':
@@ -696,7 +734,7 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_EXPR_ARG_SCALAR . ".1.0":
                 // [ 0:NT_PATH, 1:NT_WS_OPT ]
-                $symbols[0]['i.is_inline_path'] = false;
+                $symbols[0]['i.is_definite'] = false;
                 $symbols[0]['i.value_list_id'] = $header['i.value_list_id'];
                 break;
 
@@ -810,20 +848,25 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_STRING_LIST . ".0.2":
                 // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
                 $symbols[2]['i.text_list'] = [$symbols[0]['s.text']];
+                $symbols[2]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_STRING_NEXT . ".0.4":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
                 $symbols[4]['i.text_list'] = array_merge($header['i.text_list'], [$symbols[2]['s.text']]);
+                $symbols[4]['i.is_definite'] = false;
                 break;
 
             case SymbolType::NT_INT_NEXT . ".0.1":
+                // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
                 $symbols[1]['i.int_list'] = [$header['i.int']];
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_INT_NEXT_LIST . ".0.4":
                 // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_INT, 3:NT_WS_OPT, 4:NT_INT_NEXT_LIST ]
                 $symbols[4]['i.int_list'] = array_merge($header['i.int_list'], [$symbols[2]['s.int']]);
+                $symbols[4]['i.is_definite'] = false;
                 break;
 
             case SymbolType::NT_INT_NEXT . '.1.0':
@@ -835,6 +878,7 @@ class TranslationScheme implements TranslationSchemeInterface
             case SymbolType::NT_FILTER_LIST . ".0.1":
                 // [ 0:T_DOT, 1:NT_DOT_FILTER ]
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".1.1":
@@ -851,6 +895,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 //   4:NT_FILTER_LIST
                 // ]
                 $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[2]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . ".2.4":
@@ -862,12 +907,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 //   4:NT_FILTER_LIST
                 // ]
                 $symbols[4]['i.value_list_id'] = $symbols[2]['s.value_list_id'];
+                $symbols[4]['i.is_definite'] = $symbols[2]['s.is_definite'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".0.1":
                 // [ 0:T_NAME, 1:NT_DOT_FILTER_NEXT ]
                 $symbols[1]['i.filter_name'] = $symbols[0]['s.text'];
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . ".1.1":
@@ -878,6 +925,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
                     );
+                $symbols[1]['i.is_definite'] = false;
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . ".1.0":
@@ -895,6 +943,7 @@ class TranslationScheme implements TranslationSchemeInterface
                                 )
                             )
                     );
+                $symbols[0]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0.1':
@@ -912,6 +961,7 @@ class TranslationScheme implements TranslationSchemeInterface
                                 )
                             )
                     );
+                $symbols[1]['i.is_definite'] = false;
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1.1':
@@ -922,6 +972,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
                     );
+                $symbols[1]['i.is_definite'] = false;
                 break;
 
             case SymbolType::NT_STRING . ".0.1":

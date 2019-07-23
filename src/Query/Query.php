@@ -13,13 +13,21 @@ final class Query implements QueryInterface
 
     private $callback;
 
-    public function __construct(callable $callback)
+    private $isDefinite;
+
+    public function __construct(callable $callback, bool $isDefinite)
     {
         $this->callback = $callback;
+        $this->isDefinite = $isDefinite;
     }
 
     public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface
     {
         return call_user_func($this->callback, $runtime, $rootNode);
+    }
+
+    public function isDefinite(): bool
+    {
+        return $this->isDefinite;
     }
 }

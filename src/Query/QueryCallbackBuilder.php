@@ -34,6 +34,8 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
 
     private $queryCallback;
 
+    private $isDefinite;
+
     public function __construct()
     {
         $this->php = new BuilderFactory;
@@ -41,11 +43,20 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
 
     public function getQueryCallback(): callable
     {
-        if (!isset($this->queryCallback)) {
-            throw new Exception\QueryCallbackNotFoundException;
+        if (isset($this->queryCallback)) {
+            return $this->queryCallback;
         }
 
-        return $this->queryCallback;
+        throw new Exception\QueryCallbackNotFoundException;
+    }
+
+    public function isDefinite(): bool
+    {
+        if (isset($this->isDefinite)) {
+            return $this->isDefinite;
+        }
+
+        throw new Exception\IsDefiniteFlagNotFoundException;
     }
 
     public function onStart(Node $node): void
@@ -110,6 +121,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener
                 break;
 
             case QueryAstNodeType::SET_OUTPUT:
+                $this->isDefinite = $node->getAttribute('is_definite');
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 
