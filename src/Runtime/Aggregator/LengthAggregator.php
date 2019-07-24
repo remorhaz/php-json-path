@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
+use function iterator_count;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Data\Value\ValueInterface;
@@ -36,12 +37,7 @@ final class LengthAggregator implements ValueAggregatorInterface
         $arrayIterator = $this
             ->valueIteratorFactory
             ->createArrayIterator($value->createIterator());
-        $count = 0;
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        foreach ($arrayIterator as $element) {
-            $count++;
-        }
 
-        return $count;
+        return iterator_count($arrayIterator);
     }
 }
