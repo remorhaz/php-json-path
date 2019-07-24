@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Query;
 
 use function array_map;
+use function array_reverse;
 use PhpParser\BuilderFactory;
+use PhpParser\Node as PhpAstNode;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
@@ -15,12 +17,16 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
-use Remorhaz\UniLex\AST\Node;
+use Remorhaz\UniLex\AST\Node as QueryAstNode;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
 final class QueryCallbackBuilder extends AbstractTranslatorListener implements QueryCallbackBuilderInterface
 {
+
+    private const ARG_RUNTIME = 'runtime';
+
+    private const ARG_INPUT = 'input';
 
     private $php;
 
@@ -59,26 +65,26 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         throw new Exception\IsDefiniteFlagNotFoundException;
     }
 
-    public function onStart(Node $node): void
+    public function onStart(QueryAstNode $node): void
     {
-        $this->runtime = $this->php->var('runtime');
-        $this->input = $this->php->var('input');
+        $this->runtime = $this->php->var(self::ARG_RUNTIME);
+        $this->input = $this->php->var(self::ARG_INPUT);
     }
 
     public function onFinish(): void
     {
         $runtimeParam = $this
             ->php
-            ->param('runtime')
+            ->param(self::ARG_RUNTIME)
             ->setType(RuntimeInterface::class)
             ->getNode();
         $inputParam = $this
             ->php
-            ->param('input')
+            ->param(self::ARG_INPUT)
             ->setType(NodeValueInterface::class)
             ->getNode();
         $stmts = array_map(
-            function (\PhpParser\Node $stmt): \PhpParser\Node {
+            function (PhpAstNode $stmt): PhpAstNode {
                 return $stmt instanceof Expr ? new Expression($stmt): $stmt;
             },
             $this->stmts
@@ -97,16 +103,16 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         $this->queryCallback = eval($callbackCode);
     }
 
-    public function onBeginProduction(Node $node, PushInterface $stack): void
+    public function onBeginProduction(QueryAstNode $node, PushInterface $stack): void
     {
-        $stack->push(...$node->getChildList());
+        $stack->push(...array_reverse($node->getChildList()));
     }
 
     /**
-     * @param Node $node
+     * @param QueryAstNode $node
      * @throws UniLexException
      */
-    public function onFinishProduction(Node $node): void
+    public function onFinishProduction(QueryAstNode $node): void
     {
         if ($this->hasReference($node)) {
             return;
@@ -363,12 +369,12 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         }
     }
 
-    private function getVarName(Node $node): string
+    private function getVarName(QueryAstNode $node): string
     {
         return "var{$node->getId()}";
     }
 
-    private function createReference(Node $node): Expr
+    private function createReference(QueryAstNode $node): Expr
     {
         $reference = $this->php->var($this->getVarName($node));
         $this->setReference($node, $reference);
@@ -376,7 +382,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         return $reference;
     }
 
-    private function setReference(Node $node, Expr $expr): void
+    private function setReference(QueryAstNode $node, Expr $expr): void
     {
         if (isset($this->references[$node->getId()])) {
             throw new Exception\ReferenceAlreadyExistsException($node->getId());
@@ -385,12 +391,12 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         $this->references[$node->getId()] = $expr;
     }
 
-    private function hasReference(Node $node): bool
+    private function hasReference(QueryAstNode $node): bool
     {
         return isset($this->references[$node->getId()]);
     }
 
-    private function getReference(Node $node): Expr
+    private function getReference(QueryAstNode $node): Expr
     {
         if (!isset($this->references[$node->getId()])) {
             throw new Exception\ReferenceNotFoundException($node->getId());
@@ -399,7 +405,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         return $this->references[$node->getId()];
     }
 
-    private function addMethodCall(Node $node, string $method, \PhpParser\Node ...$args): void
+    private function addMethodCall(QueryAstNode $node, string $method, PhpAstNode ...$args): void
     {
         $methodCall = $this
             ->php
