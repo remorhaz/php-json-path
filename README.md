@@ -81,6 +81,7 @@ matched with child operators and filters:
 |`[3:10:2]`|Sequence of indexes from `3` to `10` with step `2`.|
 |`*`|Wildcard that matches any property of current object / index of current array.|
 |`[?(<expression>)]`|Filters values by expression.|
+|`.length()`|Aggregate function.|
 
 ### Child operators
 There are two notations for selecting structure children: _dot_-notation and _bracket_-notation.
@@ -102,7 +103,20 @@ Bracket-notation allows to select a set of properties/elements:
 |`$['a', 'b']`|Selects properties `a` and `b` of a root object.|
 |`$[2, 3]`|Selects elements `2` and `3` from a root array.|
 |`$[3:10:2]`|Selects a sequence of elements from `3` up to `10` with step `2`. This equivalent query is `$[3, 5, 7, 9]`. The notation is same as in Python.|
-|`$[*]`|Selecta all children. Same as `$.*`.|
+|`$[*]`|Select all children. Same as `$.*`.|
+
+### Aggregate functions
+Aggregate functions can be appended to any path in query and it will return calculated value.
+
+|Function|Description|
+|---|---|
+|`.min()`|Returns minimal number from current array.|
+|`.max()`|Returns maximal number from current array.|
+|`.length()`|Returns amount of elements in current array.|
+|`.avg()`|Returns average value from numbers in current array.|
+|`.stddev()`|Retuns standard deviation from numbers in current array.|
+
+The set of aggregate functions and idea itself is taken from [Java implementation](https://github.com/json-path/JsonPath).
 
 ### Filter expressions
 When filter is being applied to nodeset, it leaves only those nodes for which the expression evaluates to true.
