@@ -5,10 +5,13 @@ namespace Remorhaz\JSON\Path\Test\Query;
 
 use Closure;
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Exception\IsDefiniteFlagNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\QueryCallbackNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
 use Remorhaz\JSON\Path\Query\QueryCallbackBuilder;
+use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\UniLex\AST\Node;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
@@ -53,7 +56,6 @@ class QueryCallbackBuilderTest extends TestCase
         bool $expectedValue
     ): void {
         $callbackBuilder = new QueryCallbackBuilder;
-
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -97,10 +99,9 @@ class QueryCallbackBuilderTest extends TestCase
     /**
      * @throws UniLexException
      */
-    public function testOnFinishProduction_SetOutputChildWithoutReference_ThrowsException(): void
+    public function testOnFinishProduction_SetOutputWithChildWithoutReference_ThrowsException(): void
     {
         $callbackBuilder = new QueryCallbackBuilder;
-
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -110,5 +111,66 @@ class QueryCallbackBuilderTest extends TestCase
 
         $this->expectException(ReferenceNotFoundException::class);
         $callbackBuilder->onFinishProduction($setOutputNode);
+    }
+
+    /**
+     * @throws UniLexException
+     */
+    public function testOnFinishProduction_SetOutputWithInputChild_CallbackPassesRootValueToRuntime(): void
+    {
+        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder->onStart($this->createMock(Node::class));
+
+        $inputNode = new Node(1, 'get_input');
+        $callbackBuilder->onFinishProduction($inputNode);
+
+        $setOutputNode = new Node(2, 'set_output');
+        $setOutputNode->setAttribute('is_definite', true);
+        $setOutputNode->addChild($inputNode);
+
+        $callbackBuilder->onFinishProduction($setOutputNode);
+
+        $callbackBuilder->onFinish();
+
+        $rootValue = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $callback = $callbackBuilder->getQueryCallback();
+
+        $runtime
+            ->expects(self::once())
+            ->method('getInput')
+            ->with($rootValue);
+        $callback($runtime, $rootValue);
+    }
+
+    /**
+     * @throws UniLexException
+     */
+    public function testOnFinishProduction_SetOutputWithInputChild_CallbackReturnsValueListFromRuntime(): void
+    {
+        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder->onStart($this->createMock(Node::class));
+
+        $inputNode = new Node(1, 'get_input');
+        $callbackBuilder->onFinishProduction($inputNode);
+
+        $setOutputNode = new Node(2, 'set_output');
+        $setOutputNode->setAttribute('is_definite', true);
+        $setOutputNode->addChild($inputNode);
+
+        $callbackBuilder->onFinishProduction($setOutputNode);
+
+        $callbackBuilder->onFinish();
+
+        $rootValue = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $callback = $callbackBuilder->getQueryCallback();
+
+        $values = $this->createMock(NodeValueListInterface::class);
+        $runtime
+            ->method('getInput')
+            ->willReturn($values);
+        $actualValue = $callback($runtime, $rootValue);
+        self::assertSame($values, $actualValue);
     }
 }
