@@ -8,6 +8,12 @@
 
 JSONPath is a simple query language for JSON documents, inspired by XPath for XML and originally designed by [Stefan Goessner](https://goessner.net/articles/JsonPath/).
 
+## Requirements
+
+- PHP 7.3+
+- [JSON extension](https://www.php.net/manual/en/book.json.php) (ext-json)
+- [Internationalization functions](https://www.php.net/manual/en/book.intl.php) (ext-intl)
+
 ## Installation
 You can use Composer to install this package:
 ```
@@ -167,7 +173,7 @@ And here are his original example queries with result descriptions:
 |`$.store.*`|All things in store, which are some books and a red bicycle.|Yes| |
 |`$.store..price`|The price of everything in the store.|Yes| |
 |`$..book[2]`|The third book.|Yes| |
-|`$..book[(@.length-1)]`|The last book in order.|No|Original implementation uses _underlying script engine_ in expressions. This behaviour can break interoperability, so expressions are not implemented.|
+|`$..book[(@.length-1)]`|The last book in order.|No|Original implementation uses _underlying script engine_ (JavaScript, in his case) in expressions. In case of PHP allowing to call arbitrary code from expression is unsafe, so script expressions are not implemented.|
 |`$..book[-1:]`|The last book in order.|Yes| |
 |`$..book[0,1]`|The first two books.|Yes| |
 |`$..book[:2]`|The first two books.|Yes| |
