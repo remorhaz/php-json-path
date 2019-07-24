@@ -12,7 +12,7 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
 
     private $queryCallbackBuilder;
 
-    public function __construct(QueryCallbackBuilder $callbackBuilder)
+    public function __construct(QueryCallbackBuilderInterface $callbackBuilder)
     {
         $this->queryCallbackBuilder = $callbackBuilder;
     }

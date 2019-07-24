@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `QueryInterface::isDefinite()` method that returns true if given query can address
 only one value.
-### Changed
-- `SelectResultInterface::encode()` method added that deprecates `::toJson()`.
+- `QueryCallbackBuilderInterface` implemented.
+### Deprecated
+- `SelectResultInterface::encode()` method deprecates `::toJson()`.
 
 ## [0.1.0] - 2019-07-23
 - Initial release.

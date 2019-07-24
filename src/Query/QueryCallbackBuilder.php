@@ -19,7 +19,7 @@ use Remorhaz\UniLex\AST\Node;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
-final class QueryCallbackBuilder extends AbstractTranslatorListener
+final class QueryCallbackBuilder extends AbstractTranslatorListener implements QueryCallbackBuilderInterface
 {
 
     private $php;
