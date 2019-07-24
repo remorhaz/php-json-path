@@ -16,4 +16,9 @@ final class ReferenceAlreadyExistsException extends LogicException implements Ex
         $this->referenceId = $referenceId;
         parent::__construct("Reference #{$this->referenceId} already exists", 0, $previous);
     }
+
+    public function getReferenceId(): int
+    {
+        return $this->referenceId;
+    }
 }

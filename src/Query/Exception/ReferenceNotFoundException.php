@@ -14,6 +14,11 @@ final class ReferenceNotFoundException extends OutOfRangeException implements Ex
     public function __construct(int $referenceId, Throwable $previous = null)
     {
         $this->referenceId = $referenceId;
-        parent::__construct("Reference #{$this->referenceId}", 0, $previous);
+        parent::__construct("Reference #{$this->referenceId} not found", 0, $previous);
+    }
+
+    public function getReferenceId(): int
+    {
+        return $this->referenceId;
     }
 }
