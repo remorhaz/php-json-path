@@ -31,11 +31,22 @@ final class LazyQuery implements QueryInterface
         return $this->getLoadedQuery()($runtime, $rootNode);
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isDefinite(): bool
     {
         return $this
-            ->getLoadedQuery()
+            ->getProperties()
             ->isDefinite();
+    }
+
+    public function getProperties(): QueryPropertiesInterface
+    {
+        return $this
+            ->getLoadedQuery()
+            ->getProperties();
     }
 
     private function getLoadedQuery(): QueryInterface

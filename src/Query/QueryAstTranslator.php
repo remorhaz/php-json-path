@@ -28,7 +28,7 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
 
         return new Query(
             $this->queryCallbackBuilder->getQueryCallback(),
-            $this->queryCallbackBuilder->isDefinite()
+            $this->queryCallbackBuilder->getQueryProperties()
         );
     }
 }

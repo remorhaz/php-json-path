@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Test\Query;
 use Closure;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Path\Query\Exception\IsDefiniteFlagNotFoundException;
+use Remorhaz\JSON\Path\Query\Exception\PropertiesNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\QueryCallbackNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
 use Remorhaz\JSON\Path\Query\QueryCallbackBuilder;
@@ -41,7 +41,7 @@ class QueryCallbackBuilderTest extends TestCase
     {
         $callbackBuilder = new QueryCallbackBuilder;
 
-        $this->expectException(IsDefiniteFlagNotFoundException::class);
+        $this->expectException(PropertiesNotFoundException::class);
         $callbackBuilder->isDefinite();
     }
 
@@ -62,8 +62,10 @@ class QueryCallbackBuilderTest extends TestCase
         $callbackBuilder->onFinishProduction($inputNode);
 
         $setOutputNode = new Node(2, 'set_output');
-        $setOutputNode->setAttribute('is_definite', $isDefinite);
-        $setOutputNode->addChild($inputNode);
+        $setOutputNode
+            ->setAttribute('is_definite', $isDefinite)
+            ->setAttribute('is_path', false)
+            ->addChild($inputNode);
 
         $callbackBuilder->onFinishProduction($setOutputNode);
 
@@ -106,8 +108,10 @@ class QueryCallbackBuilderTest extends TestCase
 
         $inputNode = new Node(1, 'get_input');
         $setOutputNode = new Node(2, 'set_output');
-        $setOutputNode->setAttribute('is_definite', true);
-        $setOutputNode->addChild($inputNode);
+        $setOutputNode
+            ->setAttribute('is_definite', true)
+            ->setAttribute('is_path', false)
+            ->addChild($inputNode);
 
         $this->expectException(ReferenceNotFoundException::class);
         $callbackBuilder->onFinishProduction($setOutputNode);
@@ -125,8 +129,10 @@ class QueryCallbackBuilderTest extends TestCase
         $callbackBuilder->onFinishProduction($inputNode);
 
         $setOutputNode = new Node(2, 'set_output');
-        $setOutputNode->setAttribute('is_definite', true);
-        $setOutputNode->addChild($inputNode);
+        $setOutputNode
+            ->setAttribute('is_definite', true)
+            ->setAttribute('is_path', false)
+            ->addChild($inputNode);
 
         $callbackBuilder->onFinishProduction($setOutputNode);
 
@@ -155,8 +161,10 @@ class QueryCallbackBuilderTest extends TestCase
         $callbackBuilder->onFinishProduction($inputNode);
 
         $setOutputNode = new Node(2, 'set_output');
-        $setOutputNode->setAttribute('is_definite', true);
-        $setOutputNode->addChild($inputNode);
+        $setOutputNode
+            ->setAttribute('is_definite', true)
+            ->setAttribute('is_path', false)
+            ->addChild($inputNode);
 
         $callbackBuilder->onFinishProduction($setOutputNode);
 

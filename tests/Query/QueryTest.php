@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\QueryInterface;
+use Remorhaz\JSON\Path\Query\QueryPropertiesInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -19,7 +20,10 @@ class QueryTest extends TestCase
     public function testInvoke_ConstructedWithCallback_CallsSameCallback(): void
     {
         $callback = $this->createMock(QueryInterface::class);
-        $query = new Query($callback, true);
+        $query = new Query(
+            $callback,
+            $this->createMock(QueryPropertiesInterface::class)
+        );
         $runtime = $this->createMock(RuntimeInterface::class);
         $rootValue = $this->createMock(NodeValueInterface::class);
 
@@ -37,7 +41,10 @@ class QueryTest extends TestCase
         $callback
             ->method('__invoke')
             ->willReturn($values);
-        $query = new Query($callback, true);
+        $query = new Query(
+            $callback,
+            $this->createMock(QueryPropertiesInterface::class)
+        );
 
         $actualValue = $query(
             $this->createMock(RuntimeInterface::class),
@@ -46,19 +53,13 @@ class QueryTest extends TestCase
         self::assertSame($values, $actualValue);
     }
 
-    /**
-     * @param bool $isDefinite
-     * @param bool $expectedValue
-     * @dataProvider providerIsDefinite
-     */
-    public function testIsDefinite_ConstructedWithIsDefinite_ReturnsSameValue(
-        bool $isDefinite,
-        bool $expectedValue
-    ): void {
+    public function testGetProperties_ConstructedWithGivenProperties_ReturnsSameInstance(): void
+    {
+        $properties = $this->createMock(QueryPropertiesInterface::class);
         $callback = $this->createMock(QueryInterface::class);
-        $query = new Query($callback, $isDefinite);
+        $query = new Query($callback, $properties);
 
-        self::assertSame($expectedValue, $query->isDefinite());
+        self::assertSame($properties, $query->getProperties());
     }
 
     public function providerIsDefinite(): array

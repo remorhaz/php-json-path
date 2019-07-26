@@ -10,5 +10,11 @@ interface QueryCallbackBuilderInterface extends TranslatorListenerInterface
 
     public function getQueryCallback(): callable;
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isDefinite(): bool;
+
+    public function getQueryProperties(): QueryPropertiesInterface;
 }

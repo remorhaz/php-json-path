@@ -8,7 +8,7 @@ interface QueryAstBuilderInterface
 
     public function getInput(): int;
 
-    public function setOutput(int $id, bool $isDefinite): void;
+    public function setOutput(int $id, bool $isDefinite, bool $isPath): void;
 
     public function createFilterContext(int $id): int;
 

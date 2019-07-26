@@ -9,6 +9,7 @@ use Remorhaz\JSON\Path\Parser\ParserInterface;
 use Remorhaz\JSON\Path\Query\LazyQuery;
 use Remorhaz\JSON\Path\Query\QueryAstTranslatorInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
+use Remorhaz\JSON\Path\Query\QueryProperties;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 
@@ -80,7 +81,7 @@ class LazyQueryTest extends TestCase
         );
     }
 
-    public function testIsDefinite_ConstructedWithPath_PassesSamePathToParser(): void
+    public function testGetProperties_ConstructedWithPath_PassesSamePathToParser(): void
     {
         $parser = $this->createMock(ParserInterface::class);
         $lazyQuery = new LazyQuery(
@@ -93,11 +94,11 @@ class LazyQueryTest extends TestCase
             ->expects(self::once())
             ->method('buildQueryAst')
             ->with('a');
-        $lazyQuery->isDefinite();
+        $lazyQuery->getProperties();
     }
 
 
-    public function testIsDefinite_ParserReturnsAst_PassesSameAstToTranslator(): void
+    public function testGetProperties_ParserReturnsAst_PassesSameAstToTranslator(): void
     {
         $tree = new Tree;
         $parser = $this->createMock(ParserInterface::class);
@@ -111,23 +112,17 @@ class LazyQueryTest extends TestCase
             ->expects(self::once())
             ->method('buildQuery')
             ->with($tree);
-        $lazyQuery->isDefinite();
+        $lazyQuery->getProperties();
     }
 
 
-    /**
-     * @param bool $isDefinite
-     * @param bool $expectedValue
-     * @dataProvider providerIsDefinite
-     */
-    public function testIsDefinite_AstTranslatorReturnsQueryWithIsDefinite_ReturnsSameValue(
-        bool $isDefinite,
-        bool $expectedValue
-    ): void {
+    public function testGetProperties_AstTranslatorReturnsQueryWithGivenProperties_ReturnsSameInstance(): void
+    {
+        $properties = new QueryProperties(false, false);
         $query = $this->createMock(QueryInterface::class);
         $query
-            ->method('isDefinite')
-            ->willReturn($isDefinite);
+            ->method('getProperties')
+            ->willReturn($properties);
         $astTranslator = $this->createMock(QueryAstTranslatorInterface::class);
         $astTranslator
             ->method('buildQuery')
@@ -139,14 +134,6 @@ class LazyQueryTest extends TestCase
             $astTranslator
         );
 
-        self::assertSame($expectedValue, $lazyQuery->isDefinite());
-    }
-
-    public function providerIsDefinite(): array
-    {
-        return [
-            'TRUE' => [true, true],
-            'FALSE' => [false, false],
-        ];
+        self::assertSame($properties, $lazyQuery->getProperties());
     }
 }

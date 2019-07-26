@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test;
 
 use function file_get_contents;
-use function json_decode;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
+use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
@@ -20,7 +19,7 @@ class JsonPathTest extends TestCase
 
     public function setUp(): void
     {
-        $this->example = json_decode(file_get_contents(__DIR__ . '/goessner.json'));
+        $this->example = file_get_contents(__DIR__ . '/goessner.json');
     }
 
     /**
@@ -32,7 +31,7 @@ class JsonPathTest extends TestCase
     {
         $result = Processor::create()->select(
             QueryFactory::create()->createQuery($path),
-            (new NodeValueFactory)->createValue($this->example)
+            NodeValueFactory::create()->createValue($this->example)
         );
 
         self::assertEquals($expectedValue, $result->encode());

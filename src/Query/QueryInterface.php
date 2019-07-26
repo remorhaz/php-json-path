@@ -12,5 +12,11 @@ interface QueryInterface
 
     public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface;
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isDefinite(): bool;
+
+    public function getProperties(): QueryPropertiesInterface;
 }

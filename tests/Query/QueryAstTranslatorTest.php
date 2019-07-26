@@ -11,6 +11,7 @@ use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\QueryAstTranslator;
 use Remorhaz\JSON\Path\Query\QueryCallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
+use Remorhaz\JSON\Path\Query\QueryPropertiesInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
@@ -111,32 +112,20 @@ class QueryAstTranslatorTest extends TestCase
     }
 
     /**
-     * @param bool $isDefinite
-     * @param bool $expectedValue
      * @throws UniLexException
-     * @dataProvider providerIsDefinite
      */
-    public function testBuildQuery_CallbackBuilderProvidesIsDefinite_ResultHasSameIsDefinite(
-        bool $isDefinite,
-        bool $expectedValue
-    ): void {
+    public function testBuildQuery_CallbackBuilderProvidesGivenQueryProperties_ResultHasSamePropertiesInstance(): void
+    {
+        $properties = $this->createMock(QueryPropertiesInterface::class);
         $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
         $callbackBuilder
-            ->method('isDefinite')
-            ->willReturn($isDefinite);
+            ->method('getQueryProperties')
+            ->willReturn($properties);
         $translator = new QueryAstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
         $query = $translator->buildQuery($tree);
-        self::assertSame($expectedValue, $query->isDefinite());
-    }
-
-    public function providerIsDefinite(): array
-    {
-        return [
-            'TRUE' => [true, true],
-            'FALSE' => [false, false],
-        ];
+        self::assertSame($properties, $query->getProperties());
     }
 }

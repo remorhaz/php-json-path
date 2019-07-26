@@ -40,7 +40,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
 
     private $queryCallback;
 
-    private $isDefinite;
+    private $properties;
 
     public function __construct()
     {
@@ -56,13 +56,24 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         throw new Exception\QueryCallbackNotFoundException;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return bool
+     * @deprecated
+     */
     public function isDefinite(): bool
     {
-        if (isset($this->isDefinite)) {
-            return $this->isDefinite;
+        return $this->getQueryProperties()->isDefinite();
+    }
+
+    public function getQueryProperties(): QueryPropertiesInterface
+    {
+        if (isset($this->properties)) {
+            return $this->properties;
         }
 
-        throw new Exception\IsDefiniteFlagNotFoundException;
+        throw new Exception\PropertiesNotFoundException;
     }
 
     public function onStart(QueryAstNode $node): void
@@ -127,7 +138,10 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 break;
 
             case QueryAstNodeType::SET_OUTPUT:
-                $this->isDefinite = $node->getAttribute('is_definite');
+                $this->properties = new QueryProperties(
+                    $node->getAttribute('is_definite'),
+                    $node->getAttribute('is_path')
+                );
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 

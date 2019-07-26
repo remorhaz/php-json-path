@@ -13,12 +13,12 @@ final class Query implements QueryInterface
 
     private $callback;
 
-    private $isDefinite;
+    private $properties;
 
-    public function __construct(callable $callback, bool $isDefinite)
+    public function __construct(callable $callback, QueryPropertiesInterface $properties)
     {
         $this->callback = $callback;
-        $this->isDefinite = $isDefinite;
+        $this->properties = $properties;
     }
 
     public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface
@@ -26,8 +26,17 @@ final class Query implements QueryInterface
         return call_user_func($this->callback, $runtime, $rootNode);
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isDefinite(): bool
     {
-        return $this->isDefinite;
+        return $this->properties->isDefinite();
+    }
+
+    public function getProperties(): QueryPropertiesInterface
+    {
+        return $this->properties;
     }
 }
