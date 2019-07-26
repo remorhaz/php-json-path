@@ -7,8 +7,38 @@ use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
+/**
+ * @covers       \Remorhaz\JSON\Path\Parser\TranslationScheme
+ * @todo Maybe it's better to test in isolation, checking the resulting AST.
+ */
 class TranslationSchemeTest extends TestCase
 {
+
+    /**
+     * @param string $path
+     * @param bool $expectedValue
+     * @dataProvider providerIsPath
+     */
+    public function testIsPathProperty_GivenQueryParsed_ContainsMatchingValue(string $path, bool $expectedValue): void
+    {
+        $query = QueryFactory::create()->createQuery($path);
+
+        self::assertSame($expectedValue, $query->getProperties()->isPath());
+    }
+
+    public function providerIsPath(): array
+    {
+        return [
+            'Dot-notation star' => ['$.*', true],
+            'Dot-notation property' => ['$.a', true],
+            'Double-dot-notation star' => ['$..*', true],
+            'Double-dot-notation property' => ['$..a', true],
+            'Aggregate function' => ['$.length()', false],
+            'Filter by absolute property' => ['$.a[?($.b)]', true],
+            'Filter by relative property' => ['$.a[?(@.b)]', true],
+            'Filter by aggregate function' => ['$.a[?(@.b.length() > 1)]', true],
+        ];
+    }
 
     /**
      * Because of the scheme complexity it's more convenient to test it in full integration.
@@ -18,8 +48,6 @@ class TranslationSchemeTest extends TestCase
      * @param array $expectedValue
      * @param bool $isDefinite
      * @dataProvider providerParser
-     * @covers       \Remorhaz\JSON\Path\Parser\TranslationScheme
-     * @todo Maybe it's better to test in isolation, checking the resulting AST.
      */
     public function testAllMethods_AssembledWithParser_QueryWorksAsExpected(
         $json,
@@ -33,7 +61,7 @@ class TranslationSchemeTest extends TestCase
 
         $result = Processor::create()->select(
             $query,
-            (new NodeValueFactory)->createValue($json)
+            NodeValueFactory::create()->createValue($json)
         );
 
         self::assertEquals($expectedValue, $result->encode());
