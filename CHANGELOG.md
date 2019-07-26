@@ -6,8 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Added `QueryInterface::isDefinite()` method that returns true if given query can address
-only one value.
+- Query object now provides properties interface with `isPath` and `isDefinite` flags.
 - `QueryCallbackBuilderInterface` implemented.
 ### Deprecated
 - `SelectResultInterface::encode()` method deprecates `::toJson()`.

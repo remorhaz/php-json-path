@@ -10,13 +10,13 @@ use Remorhaz\JSON\Path\Query\Exception\PropertiesNotFoundException;
 /**
  * @covers \Remorhaz\JSON\Path\Query\Exception\PropertiesNotFoundException
  */
-class IsDefiniteFlagNotFoundExceptionTest extends TestCase
+class PropertiesNotFoundExceptionTest extends TestCase
 {
 
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new PropertiesNotFoundException;
-        self::assertSame('IsDefinite flag is accessed before being set', $exception->getMessage());
+        self::assertSame('Properties are accessed before being set', $exception->getMessage());
     }
 
     public function testGetCode_Always_ReturnsZero(): void

@@ -11,6 +11,6 @@ final class PropertiesNotFoundException extends LogicException implements Except
 
     public function __construct(Throwable $previous = null)
     {
-        parent::__construct("IsDefinite flag is accessed before being set", 0, $previous);
+        parent::__construct("Properties are accessed before being set", 0, $previous);
     }
 }

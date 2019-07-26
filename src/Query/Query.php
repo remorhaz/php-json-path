@@ -26,15 +26,6 @@ final class Query implements QueryInterface
         return call_user_func($this->callback, $runtime, $rootNode);
     }
 
-    /**
-     * @return bool
-     * @deprecated
-     */
-    public function isDefinite(): bool
-    {
-        return $this->properties->isDefinite();
-    }
-
     public function getProperties(): QueryPropertiesInterface
     {
         return $this->properties;

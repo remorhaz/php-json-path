@@ -29,7 +29,7 @@ class TranslationSchemeTest extends TestCase
     ): void {
         $query = QueryFactory::create()->createQuery($path);
         // TODO: extract isDefinite test
-        self::assertSame($isDefinite, $query->isDefinite());
+        self::assertSame($isDefinite, $query->getProperties()->isDefinite());
 
         $result = Processor::create()->select(
             $query,
