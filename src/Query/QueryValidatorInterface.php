@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
-
-use Remorhaz\JSON\Path\Query\QueryInterface;
+namespace Remorhaz\JSON\Path\Query;
 
 interface QueryValidatorInterface
 {

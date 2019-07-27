@@ -94,7 +94,7 @@ class AstTranslatorTest extends TestCase
         $callback = $this->createMock(QueryInterface::class);
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
-            ->method('getQueryCallback')
+            ->method('getCallback')
             ->willReturn($callback);
         $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
@@ -119,7 +119,7 @@ class AstTranslatorTest extends TestCase
         $properties = $this->createMock(CapabilitiesInterface::class);
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
-            ->method('getQueryCapabilities')
+            ->method('getCapabilities')
             ->willReturn($properties);
         $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;

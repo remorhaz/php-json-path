@@ -28,8 +28,8 @@ final class AstTranslator implements AstTranslatorInterface
 
         return new Query(
             $source,
-            $this->queryCallbackBuilder->getQueryCallback(),
-            $this->queryCallbackBuilder->getQueryCapabilities()
+            $this->queryCallbackBuilder->getCallback(),
+            $this->queryCallbackBuilder->getCapabilities()
         );
     }
 }

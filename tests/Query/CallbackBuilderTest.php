@@ -22,27 +22,27 @@ use Remorhaz\UniLex\Stack\PushInterface;
 class CallbackBuilderTest extends TestCase
 {
 
-    public function testGetQueryCallback_CallbackIsNotSet_ThrowsException(): void
+    public function testGetCallback_CallbackIsNotSet_ThrowsException(): void
     {
         $callbackBuilder = new CallbackBuilder;
 
         $this->expectException(QueryCallbackNotFoundException::class);
-        $callbackBuilder->getQueryCallback();
+        $callbackBuilder->getCallback();
     }
 
-    public function testGetQueryCallback_OnFinishCalled_ReturnsClosureInstance(): void
+    public function testGetCallback_OnFinishCalled_ReturnsClosureInstance(): void
     {
         $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onFinish();
-        self::assertInstanceOf(Closure::class, $callbackBuilder->getQueryCallback());
+        self::assertInstanceOf(Closure::class, $callbackBuilder->getCallback());
     }
 
-    public function testGetQueryCapabilities_QueryCapabilitiesNotSet_ThrowsException(): void
+    public function testGetCapabilities_QueryCapabilitiesNotSet_ThrowsException(): void
     {
         $callbackBuilder = new CallbackBuilder;
 
         $this->expectException(CapabilitiesNotFoundException::class);
-        $callbackBuilder->getQueryCapabilities();
+        $callbackBuilder->getCapabilities();
     }
 
     /**
@@ -69,7 +69,7 @@ class CallbackBuilderTest extends TestCase
 
         $callbackBuilder->onFinishProduction($setOutputNode);
 
-        self::assertSame($expectedValue, $callbackBuilder->getQueryCapabilities()->isDefinite());
+        self::assertSame($expectedValue, $callbackBuilder->getCapabilities()->isDefinite());
     }
 
     public function providerIsDefinite(): array
@@ -140,7 +140,7 @@ class CallbackBuilderTest extends TestCase
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
-        $callback = $callbackBuilder->getQueryCallback();
+        $callback = $callbackBuilder->getCallback();
 
         $runtime
             ->expects(self::once())
@@ -172,7 +172,7 @@ class CallbackBuilderTest extends TestCase
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
-        $callback = $callbackBuilder->getQueryCallback();
+        $callback = $callbackBuilder->getCallback();
 
         $values = $this->createMock(NodeValueListInterface::class);
         $runtime

@@ -71,4 +71,14 @@ class QueryTest extends TestCase
             'FALSE' => [false, false],
         ];
     }
+
+    public function testGetSource_ConstructedWithGivenSource_ReturnsSameValue(): void
+    {
+        $query = new Query(
+            'a',
+            $this->createMock(QueryInterface::class),
+            $this->createMock(CapabilitiesInterface::class)
+        );
+        self::assertSame('a', $query->getSource());
+    }
 }

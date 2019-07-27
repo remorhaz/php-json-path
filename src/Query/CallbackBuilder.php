@@ -47,7 +47,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         $this->php = new BuilderFactory;
     }
 
-    public function getQueryCallback(): callable
+    public function getCallback(): callable
     {
         if (isset($this->queryCallback)) {
             return $this->queryCallback;
@@ -56,7 +56,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         throw new Exception\QueryCallbackNotFoundException;
     }
 
-    public function getQueryCapabilities(): CapabilitiesInterface
+    public function getCapabilities(): CapabilitiesInterface
     {
         if (isset($this->capabilities)) {
             return $this->capabilities;

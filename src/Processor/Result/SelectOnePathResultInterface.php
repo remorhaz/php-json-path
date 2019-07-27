@@ -8,6 +8,8 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 interface SelectOnePathResultInterface
 {
 
+    public function exists(): bool;
+
     public function get(): PathInterface;
 
     /**

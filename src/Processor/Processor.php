@@ -15,6 +15,8 @@ use Remorhaz\JSON\Path\Processor\Result\SelectOneResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectPathsResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectResultInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
+use Remorhaz\JSON\Path\Query\QueryValidator;
+use Remorhaz\JSON\Path\Query\QueryValidatorInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
 use Remorhaz\JSON\Path\Runtime\Evaluator;

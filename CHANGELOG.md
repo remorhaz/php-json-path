@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Processor supports selecting value paths (single and multiple).
 - Processor supports selecting single value.
 - Query object now provides query source for convenience.
-### Deprecated
-- `QueryInterface::getCapabilities()` method deprecates `::getProperties()`.
+### Removed
+- `QueryInterface::getCapabilities()` method replaces `::getProperties()`.
+- `SelectResultInterface::toJson()` method removed.
 ### Changed
 - Many classes from `Query` namespace were renamed.
 - Processor results moved in new namespace.
+- `Query` suffix removed from`CallbackBuilderInterface` methods.
 
 ## [0.1.1] - 2019-07-26
 ### Added

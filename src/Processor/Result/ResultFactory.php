@@ -67,9 +67,12 @@ final class ResultFactory implements ResultFactoryInterface
     public function createSelectOnePathResult(ValueListInterface $values): SelectOnePathResultInterface
     {
         $value = $this->findSingleValue($values);
+        $path = isset($value)
+            ? $this->getValuePath($value)
+            : null;
 
-        return isset($values)
-            ? new ExistingSelectOnePathResult($this->pathsEncoder, $this->getValuePath($value))
+        return isset($path)
+            ? new ExistingSelectOnePathResult($this->pathsEncoder, $path)
             : new NonExistingSelectOnePathResult;
     }
 

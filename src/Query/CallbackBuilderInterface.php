@@ -8,7 +8,7 @@ use Remorhaz\UniLex\AST\TranslatorListenerInterface;
 interface CallbackBuilderInterface extends TranslatorListenerInterface
 {
 
-    public function getQueryCallback(): callable;
+    public function getCallback(): callable;
 
-    public function getQueryCapabilities(): CapabilitiesInterface;
+    public function getCapabilities(): CapabilitiesInterface;
 }

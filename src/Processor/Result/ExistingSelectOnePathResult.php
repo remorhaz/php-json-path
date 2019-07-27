@@ -13,6 +13,11 @@ final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
 
     private $encoder;
 
+    public function exists(): bool
+    {
+        return true;
+    }
+
     public function __construct(PathEncoder $encoder, PathInterface $path)
     {
         $this->encoder = $encoder;

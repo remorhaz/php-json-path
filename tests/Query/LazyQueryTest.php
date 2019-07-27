@@ -115,7 +115,6 @@ class LazyQueryTest extends TestCase
         $lazyQuery->getCapabilities();
     }
 
-
     public function testGetCapabilities_AstTranslatorReturnsQueryWithGivenProperties_ReturnsSameInstance(): void
     {
         $properties = new Capabilities(false, false);
@@ -135,5 +134,15 @@ class LazyQueryTest extends TestCase
         );
 
         self::assertSame($properties, $lazyQuery->getCapabilities());
+    }
+
+    public function testGetSource_ConstructedWithGivenSource_ReturnsSameValue(): void
+    {
+        $lazyQuery = new LazyQuery(
+            'a',
+            $this->createMock(ParserInterface::class),
+            $this->createMock(AstTranslatorInterface::class)
+        );
+        self::assertSame('a', $lazyQuery->getSource());
     }
 }
