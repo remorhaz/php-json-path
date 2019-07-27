@@ -29,7 +29,7 @@ class ProcessorTest extends TestCase
             QueryFactory::create()->createQuery($path),
             NodeValueFactory::create()->createValue($json)
         );
-        self::assertSame($expectedValue, $actualValue);
+        self::assertSame($expectedValue, $actualValue->encode());
     }
 
     public function providerSelectPaths(): array

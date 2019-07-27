@@ -11,12 +11,15 @@ use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 final class Query implements QueryInterface
 {
 
+    private $source;
+
     private $callback;
 
     private $properties;
 
-    public function __construct(callable $callback, QueryPropertiesInterface $properties)
+    public function __construct(string $source, callable $callback, QueryCapabilitiesInterface $properties)
     {
+        $this->source = $source;
         $this->callback = $callback;
         $this->properties = $properties;
     }
@@ -26,8 +29,22 @@ final class Query implements QueryInterface
         return call_user_func($this->callback, $runtime, $rootNode);
     }
 
-    public function getProperties(): QueryPropertiesInterface
+    /**
+     * @return QueryCapabilitiesInterface
+     * @deprecated
+     */
+    public function getProperties(): QueryCapabilitiesInterface
+    {
+        return $this->getCapabilities();
+    }
+
+    public function getCapabilities(): QueryCapabilitiesInterface
     {
         return $this->properties;
+    }
+
+    public function getSource(): string
+    {
+        return $this->source;
     }
 }

@@ -16,5 +16,5 @@ interface QueryCallbackBuilderInterface extends TranslatorListenerInterface
      */
     public function isDefinite(): bool;
 
-    public function getQueryProperties(): QueryPropertiesInterface;
+    public function getQueryProperties(): QueryCapabilitiesInterface;
 }

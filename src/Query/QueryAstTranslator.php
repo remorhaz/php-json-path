@@ -17,7 +17,7 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
         $this->queryCallbackBuilder = $callbackBuilder;
     }
 
-    public function buildQuery(Tree $queryAst): QueryInterface
+    public function buildQuery(string $source, Tree $queryAst): QueryInterface
     {
         try {
             $translator = new Translator($queryAst, $this->queryCallbackBuilder);
@@ -27,6 +27,7 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
         }
 
         return new Query(
+            $source,
             $this->queryCallbackBuilder->getQueryCallback(),
             $this->queryCallbackBuilder->getQueryProperties()
         );

@@ -11,5 +11,9 @@ interface ProcessorInterface
 
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface;
 
-    public function selectPaths(QueryInterface $query, NodeValueInterface $rootNode): array;
+    public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): SelectOneResultInterface;
+
+    public function selectPaths(QueryInterface $query, NodeValueInterface $rootNode): SelectPathsResultInterface;
+
+    public function selectOnePath(QueryInterface $query, NodeValueInterface $rootNode): SelectOnePathResultInterface;
 }

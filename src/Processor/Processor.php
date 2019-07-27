@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
 
-use function array_map;
 use Collator;
 use Remorhaz\JSON\Data\Export\Decoder;
 use Remorhaz\JSON\Data\Export\Encoder;
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
-use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
@@ -25,7 +23,7 @@ final class Processor implements ProcessorInterface
 
     private $resultFactory;
 
-    private $pathEncoder;
+    private $queryValidator;
 
     public static function create(): ProcessorInterface
     {
@@ -37,61 +35,65 @@ final class Processor implements ProcessorInterface
                 new AggregatorCollection($valueIteratorFactory)
             )
         );
-        $decoder = new Decoder($valueIteratorFactory);
-        $encoder = new Encoder($decoder);
+        $jsonDecoder = new Decoder($valueIteratorFactory);
+        $jsonEncoder = new Encoder($jsonDecoder);
 
         return new self(
             $runtime,
-            new ResultFactory($encoder, $decoder),
-            new PathEncoder
+            new ResultFactory($jsonEncoder, $jsonDecoder, new PathEncoder),
+            new QueryValidator
         );
     }
 
     public function __construct(
         RuntimeInterface $runtime,
         ResultFactoryInterface $resultFactory,
-        PathEncoderInterface $pathEncoder
+        QueryValidatorInterface $queryValidator
     ) {
         $this->runtime = $runtime;
         $this->resultFactory = $resultFactory;
-        $this->pathEncoder = $pathEncoder;
+        $this->queryValidator = $queryValidator;
     }
 
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
     {
+        $values = $query($this->runtime, $rootNode);
+
         return $this
             ->resultFactory
-            ->createResult($query($this->runtime, $rootNode));
+            ->createSelectResult($values);
     }
 
-    public function selectPaths(QueryInterface $query, NodeValueInterface $rootNode): array
+    public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): SelectOneResultInterface
     {
-        return array_map(
-            [$this->pathEncoder, 'encodePath'],
-            $this->selectValuePaths($query, $rootNode)
-        );
+        $values = $this
+            ->queryValidator
+            ->getDefiniteQuery($query)($this->runtime, $rootNode);
+
+        return $this
+            ->resultFactory
+            ->createSelectOneResult($values);
     }
 
-    /**
-     * @param QueryInterface $query
-     * @param NodeValueInterface $rootNode
-     * @return PathInterface[]
-     */
-    private function selectValuePaths(QueryInterface $query, NodeValueInterface $rootNode): array
+    public function selectPaths(QueryInterface $query, NodeValueInterface $rootNode): SelectPathsResultInterface
     {
-        if (!$query->getProperties()->isPath()) {
-            throw new Exception\PathNotSelectableException($query);
-        }
+        $values = $this
+            ->queryValidator
+            ->getPathQuery($query)($this->runtime, $rootNode);
 
-        $results = [];
-        foreach ($query($this->runtime, $rootNode)->getValues() as $value) {
-            if (!$value instanceof NodeValueInterface) {
-                throw new Exception\PathNotFoundInValueException($value);
-            }
+        return $this
+            ->resultFactory
+            ->createSelectPathsResult($values);
+    }
 
-            $results[] = $value->getPath();
-        }
+    public function selectOnePath(QueryInterface $query, NodeValueInterface $rootNode): SelectOnePathResultInterface
+    {
+        $values = $this
+            ->queryValidator
+            ->getPathQuery($query)($this->runtime, $rootNode);
 
-        return $results;
+        return $this
+            ->resultFactory
+            ->createSelectOnePathResult($values);
     }
 }

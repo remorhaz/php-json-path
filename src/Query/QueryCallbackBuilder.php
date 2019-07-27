@@ -67,7 +67,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
         return $this->getQueryProperties()->isDefinite();
     }
 
-    public function getQueryProperties(): QueryPropertiesInterface
+    public function getQueryProperties(): QueryCapabilitiesInterface
     {
         if (isset($this->properties)) {
             return $this->properties;
@@ -138,7 +138,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 break;
 
             case QueryAstNodeType::SET_OUTPUT:
-                $this->properties = new QueryProperties(
+                $this->properties = new QueryCapabilities(
                     $node->getAttribute('is_definite'),
                     $node->getAttribute('is_path')
                 );

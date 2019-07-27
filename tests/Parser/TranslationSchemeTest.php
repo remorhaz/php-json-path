@@ -23,7 +23,7 @@ class TranslationSchemeTest extends TestCase
     {
         $query = QueryFactory::create()->createQuery($path);
 
-        self::assertSame($expectedValue, $query->getProperties()->isPath());
+        self::assertSame($expectedValue, $query->getCapabilities()->isPath());
     }
 
     public function providerIsPath(): array
@@ -57,7 +57,7 @@ class TranslationSchemeTest extends TestCase
     ): void {
         $query = QueryFactory::create()->createQuery($path);
         // TODO: extract isDefinite test
-        self::assertSame($isDefinite, $query->getProperties()->isDefinite());
+        self::assertSame($isDefinite, $query->getCapabilities()->isDefinite());
 
         $result = Processor::create()->select(
             $query,

@@ -8,5 +8,5 @@ use Remorhaz\UniLex\AST\Tree;
 interface QueryAstTranslatorInterface
 {
 
-    public function buildQuery(Tree $queryAst): QueryInterface;
+    public function buildQuery(string $source, Tree $queryAst): QueryInterface;
 }

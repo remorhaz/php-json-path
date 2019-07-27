@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Processor supports selecting value paths.
+- Processor supports selecting value paths (single and multiple).
+- Processor supports selecting single value.
+- Query object now provides query source for convenience.
+### Deprecated
+- `QueryInterface::getCapabilities()` method deprecates `::getProperties()`.
 
 ## [0.1.1] - 2019-07-26
 ### Added

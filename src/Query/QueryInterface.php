@@ -12,5 +12,13 @@ interface QueryInterface
 
     public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface;
 
-    public function getProperties(): QueryPropertiesInterface;
+    /**
+     * @return QueryCapabilitiesInterface
+     * @deprecated
+     */
+    public function getProperties(): QueryCapabilitiesInterface;
+
+    public function getCapabilities(): QueryCapabilitiesInterface;
+
+    public function getSource(): string;
 }

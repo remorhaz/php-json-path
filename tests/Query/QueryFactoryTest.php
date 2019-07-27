@@ -91,7 +91,7 @@ class QueryFactoryTest extends TestCase
         $astTranslator
             ->expects(self::once())
             ->method('buildQuery')
-            ->with($ast);
+            ->with('a', $ast);
         $lazyQuery(
             $this->createMock(RuntimeInterface::class),
             $this->createMock(NodeValueInterface::class)

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\QueryInterface;
-use Remorhaz\JSON\Path\Query\QueryPropertiesInterface;
+use Remorhaz\JSON\Path\Query\QueryCapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -21,8 +21,9 @@ class QueryTest extends TestCase
     {
         $callback = $this->createMock(QueryInterface::class);
         $query = new Query(
+            'a',
             $callback,
-            $this->createMock(QueryPropertiesInterface::class)
+            $this->createMock(QueryCapabilitiesInterface::class)
         );
         $runtime = $this->createMock(RuntimeInterface::class);
         $rootValue = $this->createMock(NodeValueInterface::class);
@@ -42,8 +43,9 @@ class QueryTest extends TestCase
             ->method('__invoke')
             ->willReturn($values);
         $query = new Query(
+            'a',
             $callback,
-            $this->createMock(QueryPropertiesInterface::class)
+            $this->createMock(QueryCapabilitiesInterface::class)
         );
 
         $actualValue = $query(
@@ -55,11 +57,11 @@ class QueryTest extends TestCase
 
     public function testGetProperties_ConstructedWithGivenProperties_ReturnsSameInstance(): void
     {
-        $properties = $this->createMock(QueryPropertiesInterface::class);
+        $properties = $this->createMock(QueryCapabilitiesInterface::class);
         $callback = $this->createMock(QueryInterface::class);
-        $query = new Query($callback, $properties);
+        $query = new Query('a', $callback, $properties);
 
-        self::assertSame($properties, $query->getProperties());
+        self::assertSame($properties, $query->getCapabilities());
     }
 
     public function providerIsDefinite(): array

@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Query\QueryProperties;
+use Remorhaz\JSON\Path\Query\QueryCapabilities;
 
 /**
- * @covers \Remorhaz\JSON\Path\Query\QueryProperties
+ * @covers \Remorhaz\JSON\Path\Query\QueryCapabilities
  */
 class QueryPropertiesTest extends TestCase
 {
@@ -21,7 +21,7 @@ class QueryPropertiesTest extends TestCase
         bool $isDefinite,
         bool $expectedValue
     ): void {
-        $properties = new QueryProperties($isDefinite, false);
+        $properties = new QueryCapabilities($isDefinite, false);
         self::assertSame($expectedValue, $properties->isDefinite());
     }
 
@@ -42,7 +42,7 @@ class QueryPropertiesTest extends TestCase
         bool $isPath,
         bool $expectedValue
     ): void {
-        $properties = new QueryProperties(false, $isPath);
+        $properties = new QueryCapabilities(false, $isPath);
         self::assertSame($expectedValue, $properties->isPath());
     }
 
