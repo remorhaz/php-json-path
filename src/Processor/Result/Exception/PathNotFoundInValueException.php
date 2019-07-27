@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor\Exception;
+namespace Remorhaz\JSON\Path\Processor\Result\Exception;
 
 use LogicException;
 use Remorhaz\JSON\Data\Value\ValueInterface;

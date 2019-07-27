@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
+namespace Remorhaz\JSON\Path\Processor\Result;
 
 use function array_map;
 use function count;
@@ -10,6 +10,7 @@ use Remorhaz\JSON\Data\Export\EncoderInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
+use Remorhaz\JSON\Path\Processor\PathEncoder;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class ResultFactory implements ResultFactoryInterface

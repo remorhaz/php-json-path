@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
+namespace Remorhaz\JSON\Path\Processor\Result;
 
 use Remorhaz\JSON\Data\Export\DecoderInterface;
 use Remorhaz\JSON\Data\Export\EncoderInterface;

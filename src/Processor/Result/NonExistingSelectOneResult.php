@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
+namespace Remorhaz\JSON\Path\Processor\Result;
 
 final class NonExistingSelectOneResult implements SelectOneResultInterface
 {
@@ -13,11 +13,11 @@ final class NonExistingSelectOneResult implements SelectOneResultInterface
 
     public function encode(): string
     {
-        throw new Exception\ValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException;
     }
 
     public function decode()
     {
-        throw new Exception\ValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException;
     }
 }

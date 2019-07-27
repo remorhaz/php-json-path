@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Processor;
+namespace Remorhaz\JSON\Path\Processor\Result;
 
 use Remorhaz\JSON\Data\Path\PathInterface;
+use Remorhaz\JSON\Path\Processor\PathEncoder;
 
 final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
 {
