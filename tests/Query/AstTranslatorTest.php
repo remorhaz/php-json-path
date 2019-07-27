@@ -19,7 +19,7 @@ use Remorhaz\UniLex\Exception as UniLexException;
 /**
  * @covers \Remorhaz\JSON\Path\Query\AstTranslator
  */
-class QueryAstTranslatorTest extends TestCase
+class AstTranslatorTest extends TestCase
 {
 
     /**

@@ -9,7 +9,7 @@ use Remorhaz\JSON\Path\Query\Capabilities;
 /**
  * @covers \Remorhaz\JSON\Path\Query\Capabilities
  */
-class QueryPropertiesTest extends TestCase
+class CapabilitiesTest extends TestCase
 {
 
     /**

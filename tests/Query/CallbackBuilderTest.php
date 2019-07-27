@@ -19,7 +19,7 @@ use Remorhaz\UniLex\Stack\PushInterface;
 /**
  * @covers \Remorhaz\JSON\Path\Query\CallbackBuilder
  */
-class QueryCallbackBuilderTest extends TestCase
+class CallbackBuilderTest extends TestCase
 {
 
     public function testGetQueryCallback_CallbackIsNotSet_ThrowsException(): void
