@@ -29,7 +29,7 @@ final class NodeValueFactory implements NodeValueFactoryInterface
     public function createValue(string $json, ?PathInterface $path = null): NodeValueInterface
     {
         try {
-            $decodedData = json_decode($json, false, JSON_THROW_ON_ERROR);
+            $decodedData = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
         } catch (Throwable $e) {
             throw new Exception\JsonDecodingFailedException($json, $e);
         }
