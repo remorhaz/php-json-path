@@ -37,12 +37,12 @@ class QueryCallbackBuilderTest extends TestCase
         self::assertInstanceOf(Closure::class, $callbackBuilder->getQueryCallback());
     }
 
-    public function testIsDefinite_IsDefiniteIsNotSet_ThrowsException(): void
+    public function testGetQueryCapabilities_QueryCapabilitiesNotSet_ThrowsException(): void
     {
         $callbackBuilder = new CallbackBuilder;
 
         $this->expectException(CapabilitiesNotFoundException::class);
-        $callbackBuilder->isDefinite();
+        $callbackBuilder->getQueryCapabilities();
     }
 
     /**
@@ -51,7 +51,7 @@ class QueryCallbackBuilderTest extends TestCase
      * @throws UniLexException
      * @dataProvider providerIsDefinite
      */
-    public function testIsDefinite_SetOutputProductionFinishedWithGivenIsDefinite_ReturnsSameValue(
+    public function testGetCapabilities_SetOutputProductionFinishedWithGivenCapabilities_ReturnsMatchingCapabilities(
         bool $isDefinite,
         bool $expectedValue
     ): void {
@@ -69,7 +69,7 @@ class QueryCallbackBuilderTest extends TestCase
 
         $callbackBuilder->onFinishProduction($setOutputNode);
 
-        self::assertSame($expectedValue, $callbackBuilder->isDefinite());
+        self::assertSame($expectedValue, $callbackBuilder->getQueryCapabilities()->isDefinite());
     }
 
     public function providerIsDefinite(): array

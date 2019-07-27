@@ -31,15 +31,6 @@ final class LazyQuery implements QueryInterface
         return $this->getLoadedQuery()($runtime, $rootNode);
     }
 
-    /**
-     * @return CapabilitiesInterface
-     * @deprecated
-     */
-    public function getProperties(): CapabilitiesInterface
-    {
-        return $this->getCapabilities();
-    }
-
     public function getCapabilities(): CapabilitiesInterface
     {
         return $this

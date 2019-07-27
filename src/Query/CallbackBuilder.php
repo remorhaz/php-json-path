@@ -56,26 +56,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         throw new Exception\QueryCallbackNotFoundException;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return bool
-     * @deprecated
-     */
-    public function isDefinite(): bool
-    {
-        return $this->getQueryCapabilities()->isDefinite();
-    }
-
-    /**
-     * @return CapabilitiesInterface
-     * @deprecated
-     */
-    public function getQueryProperties(): CapabilitiesInterface
-    {
-        return $this->getQueryCapabilities();
-    }
-
     public function getQueryCapabilities(): CapabilitiesInterface
     {
         if (isset($this->capabilities)) {

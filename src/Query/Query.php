@@ -29,15 +29,6 @@ final class Query implements QueryInterface
         return call_user_func($this->callback, $runtime, $rootNode);
     }
 
-    /**
-     * @return CapabilitiesInterface
-     * @deprecated
-     */
-    public function getProperties(): CapabilitiesInterface
-    {
-        return $this->getCapabilities();
-    }
-
     public function getCapabilities(): CapabilitiesInterface
     {
         return $this->properties;
