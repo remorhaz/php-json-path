@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query object now provides query source for convenience.
 ### Deprecated
 - `QueryInterface::getCapabilities()` method deprecates `::getProperties()`.
+### Changed
+- Many classes from `Query` namespace were renamed.
+- Processor results moved in new namespace.
 
 ## [0.1.1] - 2019-07-26
 ### Added

@@ -18,11 +18,11 @@ final class QueryFactory implements QueryFactoryInterface
     {
         return new QueryFactory(
             new Parser(new Ll1ParserFactory),
-            new QueryAstTranslator(new QueryCallbackBuilder)
+            new AstTranslator(new CallbackBuilder)
         );
     }
 
-    public function __construct(ParserInterface $parser, QueryAstTranslatorInterface $astTranslator)
+    public function __construct(ParserInterface $parser, AstTranslatorInterface $astTranslator)
     {
         $this->parser = $parser;
         $this->astTranslator = $astTranslator;

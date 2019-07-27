@@ -8,16 +8,16 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Exception\QueryAstNotTranslatedException;
 use Remorhaz\JSON\Path\Query\Query;
-use Remorhaz\JSON\Path\Query\QueryAstTranslator;
-use Remorhaz\JSON\Path\Query\QueryCallbackBuilderInterface;
+use Remorhaz\JSON\Path\Query\AstTranslator;
+use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
-use Remorhaz\JSON\Path\Query\QueryCapabilitiesInterface;
+use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
 
 /**
- * @covers \Remorhaz\JSON\Path\Query\QueryAstTranslator
+ * @covers \Remorhaz\JSON\Path\Query\AstTranslator
  */
 class QueryAstTranslatorTest extends TestCase
 {
@@ -27,8 +27,8 @@ class QueryAstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_ReturnsQueryInstance(): void
     {
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
         self::assertInstanceOf(Query::class, $translator->buildQuery('b', $tree));
@@ -39,8 +39,8 @@ class QueryAstTranslatorTest extends TestCase
      */
     public function testBuildQuery_ThrowsExceptionOnTranslation_ThrowsException(): void
     {
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
@@ -56,8 +56,8 @@ class QueryAstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_StartsTreeTranslation(): void
     {
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $rootNode = $tree->createNode('a');
         $tree->setRootNode($rootNode);
@@ -74,8 +74,8 @@ class QueryAstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_FinishesTreeTranslation(): void
     {
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
@@ -92,11 +92,11 @@ class QueryAstTranslatorTest extends TestCase
     public function testBuildQuery_CallbackBuilderProvidesCallback_OnInvocationResultInvokesSameCallback(): void
     {
         $callback = $this->createMock(QueryInterface::class);
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
             ->method('getQueryCallback')
             ->willReturn($callback);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
@@ -116,12 +116,12 @@ class QueryAstTranslatorTest extends TestCase
      */
     public function testBuildQuery_CallbackBuilderProvidesGivenQueryProperties_ResultHasSamePropertiesInstance(): void
     {
-        $properties = $this->createMock(QueryCapabilitiesInterface::class);
-        $callbackBuilder = $this->createMock(QueryCallbackBuilderInterface::class);
+        $properties = $this->createMock(CapabilitiesInterface::class);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
             ->method('getQueryProperties')
             ->willReturn($properties);
-        $translator = new QueryAstTranslator($callbackBuilder);
+        $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 

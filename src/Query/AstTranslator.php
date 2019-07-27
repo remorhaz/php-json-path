@@ -7,12 +7,12 @@ use Remorhaz\UniLex\AST\Translator;
 use Remorhaz\UniLex\AST\Tree;
 use Throwable;
 
-final class QueryAstTranslator implements QueryAstTranslatorInterface
+final class AstTranslator implements AstTranslatorInterface
 {
 
     private $queryCallbackBuilder;
 
-    public function __construct(QueryCallbackBuilderInterface $callbackBuilder)
+    public function __construct(CallbackBuilderInterface $callbackBuilder)
     {
         $this->queryCallbackBuilder = $callbackBuilder;
     }
@@ -29,7 +29,7 @@ final class QueryAstTranslator implements QueryAstTranslatorInterface
         return new Query(
             $source,
             $this->queryCallbackBuilder->getQueryCallback(),
-            $this->queryCallbackBuilder->getQueryProperties()
+            $this->queryCallbackBuilder->getQueryCapabilities()
         );
     }
 }

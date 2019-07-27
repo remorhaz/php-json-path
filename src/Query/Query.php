@@ -17,7 +17,7 @@ final class Query implements QueryInterface
 
     private $properties;
 
-    public function __construct(string $source, callable $callback, QueryCapabilitiesInterface $properties)
+    public function __construct(string $source, callable $callback, CapabilitiesInterface $properties)
     {
         $this->source = $source;
         $this->callback = $callback;
@@ -30,15 +30,15 @@ final class Query implements QueryInterface
     }
 
     /**
-     * @return QueryCapabilitiesInterface
+     * @return CapabilitiesInterface
      * @deprecated
      */
-    public function getProperties(): QueryCapabilitiesInterface
+    public function getProperties(): CapabilitiesInterface
     {
         return $this->getCapabilities();
     }
 
-    public function getCapabilities(): QueryCapabilitiesInterface
+    public function getCapabilities(): CapabilitiesInterface
     {
         return $this->properties;
     }

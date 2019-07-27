@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Query;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
 
-final class QueryAstBuilder implements QueryAstBuilderInterface
+final class AstBuilder implements AstBuilderInterface
 {
 
     private $inputId;
@@ -26,7 +26,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
         if (!isset($this->inputId)) {
             $this->inputId = $this
                 ->tree
-                ->createNode(QueryAstNodeType::GET_INPUT)
+                ->createNode(AstNodeType::GET_INPUT)
                 ->getId();
         }
 
@@ -46,7 +46,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
             ->setRootNode(
                 $this
                     ->tree
-                    ->createNode(QueryAstNodeType::SET_OUTPUT)
+                    ->createNode(AstNodeType::SET_OUTPUT)
                     ->addChild($this->tree->getNode($id))
                     ->setAttribute('is_definite', $isDefinite)
                     ->setAttribute('is_path', $isPath)
@@ -62,7 +62,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CREATE_FILTER_CONTEXT)
+            ->createNode(AstNodeType::CREATE_FILTER_CONTEXT)
             ->addChild($this->tree->getNode($id))
             ->getId();
     }
@@ -76,7 +76,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::SPLIT)
+            ->createNode(AstNodeType::SPLIT)
             ->addChild($this->tree->getNode($id))
             ->getId();
     }
@@ -91,7 +91,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::EVALUATE)
+            ->createNode(AstNodeType::EVALUATE)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($id))
             ->getId();
@@ -107,7 +107,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::FILTER)
+            ->createNode(AstNodeType::FILTER)
             ->addChild($this->tree->getNode($contextId))
             ->addChild($this->tree->getNode($evaluatedId))
             ->getId();
@@ -123,7 +123,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::EVALUATE_LOGICAL_OR)
+            ->createNode(AstNodeType::EVALUATE_LOGICAL_OR)
             ->addChild($this->tree->getNode($leftEvaluatedId))
             ->addChild($this->tree->getNode($rightEvaluatedId))
             ->getId();
@@ -139,7 +139,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::EVALUATE_LOGICAL_AND)
+            ->createNode(AstNodeType::EVALUATE_LOGICAL_AND)
             ->addChild($this->tree->getNode($leftEvaluatedId))
             ->addChild($this->tree->getNode($rightEvaluatedId))
             ->getId();
@@ -154,7 +154,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::EVALUATE_LOGICAL_NOT)
+            ->createNode(AstNodeType::EVALUATE_LOGICAL_NOT)
             ->addChild($this->tree->getNode($evaluatedId))
             ->getId();
     }
@@ -169,7 +169,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CALCULATE_IS_EQUAL)
+            ->createNode(AstNodeType::CALCULATE_IS_EQUAL)
             ->addChild($this->tree->getNode($leftId))
             ->addChild($this->tree->getNode($rightId))
             ->getId();
@@ -185,7 +185,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CALCULATE_IS_GREATER)
+            ->createNode(AstNodeType::CALCULATE_IS_GREATER)
             ->addChild($this->tree->getNode($leftId))
             ->addChild($this->tree->getNode($rightId))
             ->getId();
@@ -201,7 +201,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CALCULATE_IS_REGEXP)
+            ->createNode(AstNodeType::CALCULATE_IS_REGEXP)
             ->addChild($this->tree->getNode($id))
             ->setAttribute('pattern', $pattern)
             ->getId();
@@ -217,7 +217,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::FETCH_CHILDREN)
+            ->createNode(AstNodeType::FETCH_CHILDREN)
             ->addChild($this->tree->getNode($id))
             ->addChild($this->tree->getNode($matcherId))
             ->getId();
@@ -233,7 +233,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::FETCH_CHILDREN_DEEP)
+            ->createNode(AstNodeType::FETCH_CHILDREN_DEEP)
             ->addChild($this->tree->getNode($id))
             ->addChild($this->tree->getNode($matcherId))
             ->getId();
@@ -248,7 +248,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::MATCH_ANY_CHILD)
+            ->createNode(AstNodeType::MATCH_ANY_CHILD)
             ->addChild($this->tree->getNode($sourceId))
             ->getId();
     }
@@ -262,7 +262,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::MATCH_PROPERTY_STRICTLY)
+            ->createNode(AstNodeType::MATCH_PROPERTY_STRICTLY)
             ->addChild($this->tree->getNode($nameListId))
             ->getId();
     }
@@ -276,7 +276,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::MATCH_ELEMENT_STRICTLY)
+            ->createNode(AstNodeType::MATCH_ELEMENT_STRICTLY)
             ->addChild($this->tree->getNode($indexListId))
             ->getId();
     }
@@ -291,7 +291,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::AGGREGATE)
+            ->createNode(AstNodeType::AGGREGATE)
             ->addChild($this->tree->getNode($id))
             ->setAttribute('name', $name)
             ->getId();
@@ -307,7 +307,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::POPULATE_LITERAL)
+            ->createNode(AstNodeType::POPULATE_LITERAL)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($valueId))
             ->getId();
@@ -323,7 +323,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::POPULATE_LITERAL_ARRAY)
+            ->createNode(AstNodeType::POPULATE_LITERAL_ARRAY)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($arrayId))
             ->getId();
@@ -339,7 +339,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::POPULATE_INDEX_LIST)
+            ->createNode(AstNodeType::POPULATE_INDEX_LIST)
             ->addChild($this->tree->getNode($sourceId))
             ->setAttribute('indexList', $indexList)
             ->getId();
@@ -357,7 +357,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::POPULATE_INDEX_SLICE)
+            ->createNode(AstNodeType::POPULATE_INDEX_SLICE)
             ->addChild($this->tree->getNode($sourceId))
             ->setAttribute('start', $start)
             ->setAttribute('end', $end)
@@ -375,7 +375,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::POPULATE_NAME_LIST)
+            ->createNode(AstNodeType::POPULATE_NAME_LIST)
             ->addChild($this->tree->getNode($sourceId))
             ->setAttribute('nameList', $nameList)
             ->getId();
@@ -390,7 +390,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CREATE_SCALAR)
+            ->createNode(AstNodeType::CREATE_SCALAR)
             ->setAttribute('value', $value)
             ->getId();
     }
@@ -399,7 +399,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(QueryAstNodeType::CREATE_ARRAY)
+            ->createNode(AstNodeType::CREATE_ARRAY)
             ->getId();
     }
 
@@ -413,7 +413,7 @@ final class QueryAstBuilder implements QueryAstBuilderInterface
     {
         $appendNode = $this
             ->tree
-            ->createNode(QueryAstNodeType::APPEND_TO_ARRAY)
+            ->createNode(AstNodeType::APPEND_TO_ARRAY)
             ->addChild($this->tree->getNode($valueId));
 
         return $this

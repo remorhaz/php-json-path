@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Query;
 
 use Remorhaz\UniLex\AST\Tree;
 
-interface QueryAstTranslatorInterface
+interface AstTranslatorInterface
 {
 
     public function buildQuery(string $source, Tree $queryAst): QueryInterface;

@@ -6,10 +6,10 @@ namespace Remorhaz\JSON\Path\Test\Query;
 use Closure;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Path\Query\Exception\PropertiesNotFoundException;
+use Remorhaz\JSON\Path\Query\Exception\CapabilitiesNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\QueryCallbackNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
-use Remorhaz\JSON\Path\Query\QueryCallbackBuilder;
+use Remorhaz\JSON\Path\Query\CallbackBuilder;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\UniLex\AST\Node;
@@ -17,14 +17,14 @@ use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
 /**
- * @covers \Remorhaz\JSON\Path\Query\QueryCallbackBuilder
+ * @covers \Remorhaz\JSON\Path\Query\CallbackBuilder
  */
 class QueryCallbackBuilderTest extends TestCase
 {
 
     public function testGetQueryCallback_CallbackIsNotSet_ThrowsException(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
 
         $this->expectException(QueryCallbackNotFoundException::class);
         $callbackBuilder->getQueryCallback();
@@ -32,16 +32,16 @@ class QueryCallbackBuilderTest extends TestCase
 
     public function testGetQueryCallback_OnFinishCalled_ReturnsClosureInstance(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onFinish();
         self::assertInstanceOf(Closure::class, $callbackBuilder->getQueryCallback());
     }
 
     public function testIsDefinite_IsDefiniteIsNotSet_ThrowsException(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
 
-        $this->expectException(PropertiesNotFoundException::class);
+        $this->expectException(CapabilitiesNotFoundException::class);
         $callbackBuilder->isDefinite();
     }
 
@@ -55,7 +55,7 @@ class QueryCallbackBuilderTest extends TestCase
         bool $isDefinite,
         bool $expectedValue
     ): void {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -82,7 +82,7 @@ class QueryCallbackBuilderTest extends TestCase
 
     public function testOnBeginProduction_QueryAstNodeWithChildren_PushesReversedChildrenInStack(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
 
         $node = new Node(1, 'a');
         $firstChild = new Node(2, 'b');
@@ -103,7 +103,7 @@ class QueryCallbackBuilderTest extends TestCase
      */
     public function testOnFinishProduction_SetOutputWithChildWithoutReference_ThrowsException(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -122,7 +122,7 @@ class QueryCallbackBuilderTest extends TestCase
      */
     public function testOnFinishProduction_SetOutputWithInputChild_CallbackPassesRootValueToRuntime(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -154,7 +154,7 @@ class QueryCallbackBuilderTest extends TestCase
      */
     public function testOnFinishProduction_SetOutputWithInputChild_CallbackReturnsValueListFromRuntime(): void
     {
-        $callbackBuilder = new QueryCallbackBuilder;
+        $callbackBuilder = new CallbackBuilder;
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');

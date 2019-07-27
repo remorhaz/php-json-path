@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
 use Remorhaz\JSON\Path\Query\LazyQuery;
-use Remorhaz\JSON\Path\Query\QueryAstTranslatorInterface;
+use Remorhaz\JSON\Path\Query\AstTranslatorInterface;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
@@ -28,7 +28,7 @@ class QueryFactoryTest extends TestCase
     {
         $factory = new QueryFactory(
             $this->createMock(ParserInterface::class),
-            $this->createMock(QueryAstTranslatorInterface::class)
+            $this->createMock(AstTranslatorInterface::class)
         );
 
         $actualValue = $factory->createQuery('a');
@@ -38,7 +38,7 @@ class QueryFactoryTest extends TestCase
     public function testCreateQuery_AstTranslatorReturnsQuery_ResultInvocationInvokesSameInstance(): void
     {
         $query = $this->createMock(QueryInterface::class);
-        $astTranslator = $this->createMock(QueryAstTranslatorInterface::class);
+        $astTranslator = $this->createMock(AstTranslatorInterface::class);
         $astTranslator
             ->method('buildQuery')
             ->willReturn($query);
@@ -63,7 +63,7 @@ class QueryFactoryTest extends TestCase
 
         $factory = new QueryFactory(
             $parser,
-            $this->createMock(QueryAstTranslatorInterface::class)
+            $this->createMock(AstTranslatorInterface::class)
         );
         $lazyQuery = $factory->createQuery('a');
 
@@ -84,7 +84,7 @@ class QueryFactoryTest extends TestCase
         $parser
             ->method('buildQueryAst')
             ->willReturn($ast);
-        $astTranslator = $this->createMock(QueryAstTranslatorInterface::class);
+        $astTranslator = $this->createMock(AstTranslatorInterface::class);
         $factory = new QueryFactory($parser, $astTranslator);
         $lazyQuery = $factory->createQuery('a');
 

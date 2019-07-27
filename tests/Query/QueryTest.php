@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\QueryInterface;
-use Remorhaz\JSON\Path\Query\QueryCapabilitiesInterface;
+use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -23,7 +23,7 @@ class QueryTest extends TestCase
         $query = new Query(
             'a',
             $callback,
-            $this->createMock(QueryCapabilitiesInterface::class)
+            $this->createMock(CapabilitiesInterface::class)
         );
         $runtime = $this->createMock(RuntimeInterface::class);
         $rootValue = $this->createMock(NodeValueInterface::class);
@@ -45,7 +45,7 @@ class QueryTest extends TestCase
         $query = new Query(
             'a',
             $callback,
-            $this->createMock(QueryCapabilitiesInterface::class)
+            $this->createMock(CapabilitiesInterface::class)
         );
 
         $actualValue = $query(
@@ -57,7 +57,7 @@ class QueryTest extends TestCase
 
     public function testGetProperties_ConstructedWithGivenProperties_ReturnsSameInstance(): void
     {
-        $properties = $this->createMock(QueryCapabilitiesInterface::class);
+        $properties = $this->createMock(CapabilitiesInterface::class);
         $callback = $this->createMock(QueryInterface::class);
         $query = new Query('a', $callback, $properties);
 

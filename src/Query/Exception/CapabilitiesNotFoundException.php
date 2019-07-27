@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Query\Exception;
 use LogicException;
 use Throwable;
 
-final class PropertiesNotFoundException extends LogicException implements ExceptionInterface
+final class CapabilitiesNotFoundException extends LogicException implements ExceptionInterface
 {
 
     public function __construct(Throwable $previous = null)

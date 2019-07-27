@@ -19,7 +19,7 @@ final class LazyQuery implements QueryInterface
 
     private $astTranslator;
 
-    public function __construct(string $source, ParserInterface $parser, QueryAstTranslatorInterface $astTranslator)
+    public function __construct(string $source, ParserInterface $parser, AstTranslatorInterface $astTranslator)
     {
         $this->source = $source;
         $this->parser = $parser;
@@ -32,15 +32,15 @@ final class LazyQuery implements QueryInterface
     }
 
     /**
-     * @return QueryCapabilitiesInterface
+     * @return CapabilitiesInterface
      * @deprecated
      */
-    public function getProperties(): QueryCapabilitiesInterface
+    public function getProperties(): CapabilitiesInterface
     {
         return $this->getCapabilities();
     }
 
-    public function getCapabilities(): QueryCapabilitiesInterface
+    public function getCapabilities(): CapabilitiesInterface
     {
         return $this
             ->getLoadedQuery()

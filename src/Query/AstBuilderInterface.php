@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
-interface QueryAstBuilderInterface
+interface AstBuilderInterface
 {
 
     public function getInput(): int;

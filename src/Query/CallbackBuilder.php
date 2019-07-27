@@ -21,7 +21,7 @@ use Remorhaz\UniLex\AST\Node as QueryAstNode;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
-final class QueryCallbackBuilder extends AbstractTranslatorListener implements QueryCallbackBuilderInterface
+final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
 {
 
     private const ARG_RUNTIME = 'runtime';
@@ -40,7 +40,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
 
     private $queryCallback;
 
-    private $properties;
+    private $capabilities;
 
     public function __construct()
     {
@@ -64,16 +64,25 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
      */
     public function isDefinite(): bool
     {
-        return $this->getQueryProperties()->isDefinite();
+        return $this->getQueryCapabilities()->isDefinite();
     }
 
-    public function getQueryProperties(): QueryCapabilitiesInterface
+    /**
+     * @return CapabilitiesInterface
+     * @deprecated
+     */
+    public function getQueryProperties(): CapabilitiesInterface
     {
-        if (isset($this->properties)) {
-            return $this->properties;
+        return $this->getQueryCapabilities();
+    }
+
+    public function getQueryCapabilities(): CapabilitiesInterface
+    {
+        if (isset($this->capabilities)) {
+            return $this->capabilities;
         }
 
-        throw new Exception\PropertiesNotFoundException;
+        throw new Exception\CapabilitiesNotFoundException;
     }
 
     public function onStart(QueryAstNode $node): void
@@ -129,7 +138,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
             return;
         }
         switch ($node->getName()) {
-            case QueryAstNodeType::GET_INPUT:
+            case AstNodeType::GET_INPUT:
                 $this->addMethodCall(
                     $node,
                     'getInput',
@@ -137,15 +146,15 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::SET_OUTPUT:
-                $this->properties = new QueryCapabilities(
+            case AstNodeType::SET_OUTPUT:
+                $this->capabilities = new Capabilities(
                     $node->getAttribute('is_definite'),
                     $node->getAttribute('is_path')
                 );
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 
-            case QueryAstNodeType::CREATE_FILTER_CONTEXT:
+            case AstNodeType::CREATE_FILTER_CONTEXT:
                 $this->addMethodCall(
                     $node,
                     'createFilterContext',
@@ -153,7 +162,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::SPLIT:
+            case AstNodeType::SPLIT:
                 $this->addMethodCall(
                     $node,
                     'split',
@@ -161,7 +170,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::EVALUATE:
+            case AstNodeType::EVALUATE:
                 $this->addMethodCall(
                     $node,
                     'evaluate',
@@ -170,7 +179,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::FILTER:
+            case AstNodeType::FILTER:
                 $this->addMethodCall(
                     $node,
                     'filter',
@@ -179,7 +188,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::EVALUATE_LOGICAL_OR:
+            case AstNodeType::EVALUATE_LOGICAL_OR:
                 $this->addMethodCall(
                     $node,
                     'evaluateLogicalOr',
@@ -188,7 +197,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::EVALUATE_LOGICAL_AND:
+            case AstNodeType::EVALUATE_LOGICAL_AND:
                 $this->addMethodCall(
                     $node,
                     'evaluateLogicalAnd',
@@ -197,7 +206,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::EVALUATE_LOGICAL_NOT:
+            case AstNodeType::EVALUATE_LOGICAL_NOT:
                 $this->addMethodCall(
                     $node,
                     'evaluateLogicalNot',
@@ -205,7 +214,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::CALCULATE_IS_EQUAL:
+            case AstNodeType::CALCULATE_IS_EQUAL:
                 $this->addMethodCall(
                     $node,
                     'calculateIsEqual',
@@ -214,7 +223,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::CALCULATE_IS_GREATER:
+            case AstNodeType::CALCULATE_IS_GREATER:
                 $this->addMethodCall(
                     $node,
                     'calculateIsGreater',
@@ -223,7 +232,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::CALCULATE_IS_REGEXP:
+            case AstNodeType::CALCULATE_IS_REGEXP:
                 $this->addMethodCall(
                     $node,
                     'calculateIsRegExp',
@@ -232,7 +241,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::FETCH_CHILDREN:
+            case AstNodeType::FETCH_CHILDREN:
                 $this->addMethodCall(
                     $node,
                     'fetchChildren',
@@ -245,7 +254,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::FETCH_CHILDREN_DEEP:
+            case AstNodeType::FETCH_CHILDREN_DEEP:
                 $this->addMethodCall(
                     $node,
                     'fetchChildrenDeep',
@@ -258,7 +267,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::MATCH_ANY_CHILD:
+            case AstNodeType::MATCH_ANY_CHILD:
                 $this->addMethodCall(
                     $node,
                     'matchAnyChild',
@@ -266,7 +275,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::MATCH_PROPERTY_STRICTLY:
+            case AstNodeType::MATCH_PROPERTY_STRICTLY:
                 $this->addMethodCall(
                     $node,
                     'matchPropertyStrictly',
@@ -274,7 +283,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::MATCH_ELEMENT_STRICTLY:
+            case AstNodeType::MATCH_ELEMENT_STRICTLY:
                 $this->addMethodCall(
                     $node,
                     'matchElementStrictly',
@@ -282,7 +291,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::AGGREGATE:
+            case AstNodeType::AGGREGATE:
                 $this->addMethodCall(
                     $node,
                     'aggregate',
@@ -291,7 +300,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::POPULATE_LITERAL:
+            case AstNodeType::POPULATE_LITERAL:
                 $this->addMethodCall(
                     $node,
                     'populateLiteral',
@@ -300,7 +309,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::POPULATE_LITERAL_ARRAY:
+            case AstNodeType::POPULATE_LITERAL_ARRAY:
                 $this->addMethodCall(
                     $node,
                     'populateLiteralArray',
@@ -313,7 +322,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::POPULATE_INDEX_LIST:
+            case AstNodeType::POPULATE_INDEX_LIST:
                 $this->addMethodCall(
                     $node,
                     'populateIndexList',
@@ -325,7 +334,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::POPULATE_INDEX_SLICE:
+            case AstNodeType::POPULATE_INDEX_SLICE:
                 $attributes = $node->getAttributeList();
                 $this->addMethodCall(
                     $node,
@@ -338,7 +347,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
 
                 break;
 
-            case QueryAstNodeType::POPULATE_NAME_LIST:
+            case AstNodeType::POPULATE_NAME_LIST:
                 $this->addMethodCall(
                     $node,
                     'populateNameList',
@@ -350,7 +359,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::CREATE_SCALAR:
+            case AstNodeType::CREATE_SCALAR:
                 $attributes = $node->getAttributeList();
                 // TODO: allow accessing null attributes
                 $value = $this->php->val($attributes['value'] ?? null);
@@ -361,7 +370,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::CREATE_ARRAY:
+            case AstNodeType::CREATE_ARRAY:
                 // [ X:APPEND_TO_ARRAY ]
                 $items = [];
                 foreach ($node->getChildList() as $child) {
@@ -373,7 +382,7 @@ final class QueryCallbackBuilder extends AbstractTranslatorListener implements Q
                 );
                 break;
 
-            case QueryAstNodeType::APPEND_TO_ARRAY:
+            case AstNodeType::APPEND_TO_ARRAY:
                 // [ 0:<value> ]
                 $this->setReference(
                     $node,

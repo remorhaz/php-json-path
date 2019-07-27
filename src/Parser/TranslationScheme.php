@@ -3,7 +3,7 @@
 namespace Remorhaz\JSON\Path\Parser;
 
 use function array_merge;
-use Remorhaz\JSON\Path\Query\QueryAstBuilderInterface;
+use Remorhaz\JSON\Path\Query\AstBuilderInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
 use Remorhaz\UniLex\Parser\Production;
@@ -14,7 +14,7 @@ class TranslationScheme implements TranslationSchemeInterface
 
     private $queryAstBuilder;
 
-    public function __construct(QueryAstBuilderInterface $queryAstBuilder)
+    public function __construct(AstBuilderInterface $queryAstBuilder)
     {
         $this->queryAstBuilder = $queryAstBuilder;
     }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
-abstract class QueryAstNodeType
+abstract class AstNodeType
 {
 
     public const GET_INPUT = 'get_input';

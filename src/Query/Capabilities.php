@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
-final class QueryCapabilities implements QueryCapabilitiesInterface
+final class Capabilities implements CapabilitiesInterface
 {
 
     private $isDefinite;

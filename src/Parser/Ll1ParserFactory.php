@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Parser;
 
-use Remorhaz\JSON\Path\Query\QueryAstBuilder;
+use Remorhaz\JSON\Path\Query\AstBuilder;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UnilexException;
@@ -25,7 +25,7 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
     public function createParser(string $path, Tree $queryAst): Ll1Parser
     {
         try {
-            $scheme = new TranslationScheme(new QueryAstBuilder($queryAst));
+            $scheme = new TranslationScheme(new AstBuilder($queryAst));
             $parser = new Ll1Parser(
                 $this->getGrammar(),
                 $this->createPathReader($path),
