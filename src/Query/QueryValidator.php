@@ -25,4 +25,9 @@ final class QueryValidator implements QueryValidatorInterface
 
         return $query;
     }
+
+    public function getDefinitePathQuery(QueryInterface $query): QueryInterface
+    {
+        return $this->getPathQuery($this->getDefiniteQuery($query));
+    }
 }
