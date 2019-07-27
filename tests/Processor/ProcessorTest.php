@@ -109,7 +109,7 @@ class ProcessorTest extends TestCase
         $processor->selectOne($query, $rootValue);
     }
 
-    public function testSelectOnePath_DefiniteQueryMatchesData_ReturnsMatchingData(): void
+    public function testSelectOnePath_DefinitePathQueryMatchesData_ReturnsMatchingData(): void
     {
         $actualData = Processor::create()->selectOnePath(
             QueryFactory::create()->createQuery('$.a'),
@@ -118,7 +118,7 @@ class ProcessorTest extends TestCase
         self::assertSame("\$['a']", $actualData->encode());
     }
 
-    public function testSelectOnePath_DefiniteQueryMatchesNothing_ResultNotExists(): void
+    public function testSelectOnePath_DefinitePathQueryMatchesNothing_ResultNotExists(): void
     {
         $actualData = Processor::create()->selectOnePath(
             QueryFactory::create()->createQuery('$.a'),
@@ -127,13 +127,23 @@ class ProcessorTest extends TestCase
         self::assertFalse($actualData->exists());
     }
 
-    public function testSelectOnePath_NonPathQuery_ThrowsException(): void
+    public function testSelectOnePath_DefiniteNonPathQuery_ThrowsException(): void
     {
         $processor = Processor::create();
-        $query = QueryFactory::create()->createQuery('$..a.length()');
+        $query = QueryFactory::create()->createQuery('$.a.length()');
         $rootValue = NodeValueFactory::create()->createValue('{"a":1}');
 
         $this->expectException(PathNotSelectableException::class);
+        $processor->selectOnePath($query, $rootValue);
+    }
+
+    public function testSelectOnePath_IndefiniteQuery_ThrowsException(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$..a');
+        $rootValue = NodeValueFactory::create()->createValue('{"a":1}');
+
+        $this->expectException(IndefiniteQueryException::class);
         $processor->selectOnePath($query, $rootValue);
     }
 }

@@ -98,7 +98,11 @@ final class Processor implements ProcessorInterface
     {
         $values = $this
             ->queryValidator
-            ->getPathQuery($query)($this->runtime, $rootNode);
+            ->getPathQuery(
+                $this
+                    ->queryValidator
+                    ->getDefiniteQuery($query)
+            )($this->runtime, $rootNode);
 
         return $this
             ->resultFactory
