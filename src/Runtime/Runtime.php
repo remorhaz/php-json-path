@@ -113,6 +113,22 @@ final class Runtime implements RuntimeInterface
         );
     }
 
+    public function matchElementSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array
+    {
+        $counts = array_map(
+            'count',
+            $this
+                ->fetcher
+                ->fetchIndice($source)
+        );
+        return array_map(
+            function (int $count) use ($start, $end, $step): Matcher\ChildMatcherInterface {
+                return new Matcher\SliceElementMatcher($count, $start, $end, $step);
+            },
+            $counts
+        );
+    }
+
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface
     {
         return new LiteralValueList($source->getIndexMap(), $value);
@@ -149,13 +165,6 @@ final class Runtime implements RuntimeInterface
                 ->getInnerIndice(),
             $indexList
         );
-    }
-
-    public function populateIndexSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array
-    {
-        return $this
-            ->fetcher
-            ->fetchSliceIndice($source, $start, $end, $step);
     }
 
     public function populateNameList(NodeValueListInterface $source, string ...$nameList): array

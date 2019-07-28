@@ -23,7 +23,7 @@ final class AstTranslator implements AstTranslatorInterface
             $translator = new Translator($queryAst, $this->queryCallbackBuilder);
             $translator->run();
         } catch (Throwable $e) {
-            throw new Exception\QueryAstNotTranslatedException($queryAst);
+            throw new Exception\QueryAstNotTranslatedException($queryAst, $e);
         }
 
         return new Query(

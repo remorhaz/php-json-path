@@ -282,6 +282,23 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 );
                 break;
 
+            case AstNodeType::MATCH_ELEMENT_SLICE:
+                $this->addRuntimeMethodCall(
+                    $node,
+                    'matchElementSlice',
+                    $this->getReference($node->getChild(0)),
+                    $this
+                        ->php
+                        ->val($node->getAttribute('hasStart') ? $node->getAttribute('start') : null),
+                    $this
+                        ->php
+                        ->val($node->getAttribute('hasEnd') ? $node->getAttribute('end') : null),
+                    $this
+                        ->php
+                        ->val($node->getAttribute('step')),
+                );
+                break;
+
             case AstNodeType::AGGREGATE:
                 $this->addEvaluatorMethodCall(
                     $node,
@@ -296,7 +313,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'populateLiteral',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -309,7 +326,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                         $this->getReference($node->getChild(1)),
                         false,
                         true
-                    )
+                    ),
                 );
                 break;
 
@@ -321,21 +338,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     ...array_map(
                         [$this->php, 'val'],
                         $node->getAttribute('indexList')
-                    )
+                    ),
                 );
-                break;
-
-            case AstNodeType::POPULATE_INDEX_SLICE:
-                $attributes = $node->getAttributeList();
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'populateIndexSlice',
-                    $this->getReference($node->getChild(0)),
-                    $this->php->val($attributes['start'] ?? null),
-                    $this->php->val($attributes['end'] ?? null),
-                    $this->php->val($attributes['step'] ?? null)
-                );
-
                 break;
 
             case AstNodeType::POPULATE_NAME_LIST:
@@ -345,8 +349,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $this->getReference($node->getChild(0)),
                     ...array_map(
                         [$this->php, 'val'],
-                        $node->getAttribute('nameList')
-                    )
+                        $node->getAttribute('nameList'),
+                    ),
                 );
                 break;
 
@@ -357,7 +361,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'createScalar',
-                    $value
+                    $value,
                 );
                 break;
 
@@ -369,7 +373,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 }
                 $this->stmts[] = new Assign(
                     $this->createReference($node),
-                    $this->php->val($items)
+                    $this->php->val($items),
                 );
                 break;
 
@@ -389,8 +393,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     new Arg(
                         $this->getReference($node->getChild(1)),
                         false,
-                        true
-                    )
+                        true,
+                    ),
                 );
                 break;
         }

@@ -40,6 +40,8 @@ interface RuntimeInterface
 
     public function matchElementStrictly(array $indexLists): array;
 
+    public function matchElementSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array;
+
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
 
     public function populateArrayElements(
@@ -48,8 +50,6 @@ interface RuntimeInterface
     ): array;
 
     public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array;
-
-    public function populateIndexSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array;
 
     public function populateNameList(NodeValueListInterface $source, string ...$nameList): array;
 

@@ -242,31 +242,32 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . ".0":
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
-                $header['s.int_lists_id'] = $this
+                $header['s.matcher_id'] = $this
                     ->queryAstBuilder
-                    ->populateIndexList(
-                        $header['i.value_list_id'],
-                        ...$symbols[1]['s.int_list']
+                    ->matchElementStrictly(
+                        $this
+                            ->queryAstBuilder
+                            ->populateIndexList($header['i.value_list_id'], ...$symbols[1]['s.int_list'])
                     );
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
             case SymbolType::NT_INT_NEXT . '.1':
                 // [ 0:NT_INT_SLICE ]
-                $header['s.int_lists_id'] = $symbols[0]['s.int_lists_id'];
+                $header['s.matcher_id'] = $symbols[0]['s.matcher_id'];
                 $header['s.is_definite'] = false;
                 break;
 
             case SymbolType::NT_INT_SLICE . '.0':
                 // [ 0:T_COLON, 1:NT_INT_OPT, 2:NT_INT_SLICE_STEP, 3:NT_WS_OPT ]
                 $header['s.value_list_id'] = $header['i.value_list_id'];
-                $header['s.int_lists_id'] = $this
+                $header['s.matcher_id'] = $this
                     ->queryAstBuilder
-                    ->populateIndexSlice(
+                    ->matchElementSlice(
                         $header['i.value_list_id'],
                         $header['i.int_start'],
                         $symbols[1]['s.int'],
-                        $symbols[2]['s.int']
+                        $symbols[2]['s.int'],
                     );
                 break;
 
@@ -384,12 +385,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_INT, 1:NT_INT_NEXT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->fetchChildren(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->matchElementStrictly($symbols[1]['s.int_lists_id'])
-                    );
+                    ->fetchChildren($header['i.value_list_id'], $symbols[1]['s.matcher_id']);
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
@@ -397,10 +393,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_INT_SLICE ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->fetchChildren(
-                        $symbols[0]['s.value_list_id'],
-                        $this->queryAstBuilder->matchElementStrictly($symbols[0]['s.int_lists_id'])
-                    );
+                    ->fetchChildren($symbols[0]['s.value_list_id'], $symbols[0]['s.matcher_id']);
                 $header['s.is_definite'] = false;
                 break;
 
@@ -412,10 +405,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $symbols[3]['i.context_value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->evaluate(
-                                $symbols[3]['i.value_list_id'],
-                                $symbols[3]['s.value_list_id']
-                            )
+                            ->evaluate($symbols[3]['i.value_list_id'], $symbols[3]['s.value_list_id'])
                     );
                 $header['s.is_definite'] = false;
                 break;
@@ -427,10 +417,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->evaluateLogicalNot(
                         $this
                             ->queryAstBuilder
-                            ->evaluate(
-                                $header['i.value_list_id'],
-                                $symbols[1]['s.value_list_id']
-                            )
+                            ->evaluate($header['i.value_list_id'], $symbols[1]['s.value_list_id'])
                     );
                 break;
 
@@ -458,10 +445,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_OP_REGEX, 1:NT_WS_OPT, 2:NT_REGEXP ],
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->calculateIsRegExp(
-                        $symbols[2]['s.text'],
-                        $header['i.left_value_list_id']
-                    );
+                    ->calculateIsRegExp($symbols[2]['s.text'], $header['i.left_value_list_id']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_COMP_TAIL . ".8":

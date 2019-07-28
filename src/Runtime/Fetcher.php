@@ -5,7 +5,6 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 use function array_push;
 use Iterator;
-use function max;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
@@ -227,51 +226,6 @@ final class Fetcher
                 $indice[] = $index;
             }
             $result[$valueIndex] = $indice;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param ValueListInterface $valueList
-     * @param int|null $start
-     * @param int|null $end
-     * @param int|null $step
-     * @return int[][]
-     */
-    public function fetchSliceIndice(ValueListInterface $valueList, ?int $start, ?int $end, ?int $step): array
-    {
-        $fullIndexList = $this->fetchIndice($valueList);
-
-        $result = [];
-        foreach ($fullIndexList as $valueIndex => $allIndice) {
-            if (!isset($step)) {
-                $step = 1;
-            }
-            $isReverse = $step < 0;
-            $indexCount = count($allIndice);
-            if (!isset($start)) {
-                $start = $isReverse ? -1 : 0;
-            }
-            if ($start < 0) {
-                $start = max($start + $indexCount, 0);
-            }
-            if (!isset($end)) {
-                $end = $isReverse ? -$indexCount - 1 : $indexCount;
-            }
-            if ($end > $indexCount) {
-                $end = $indexCount;
-            }
-            if ($end < 0) {
-                $end = max($end + $indexCount, $isReverse ? -1 : 0);
-            }
-            $indice = [];
-            $index = $start;
-            while ($isReverse ? $index > $end : $index < $end) {
-                $indice[] = $allIndice[$index];
-                $index += $step;
-            }
-            $result[] = $indice;
         }
 
         return $result;

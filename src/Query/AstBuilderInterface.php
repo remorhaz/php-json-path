@@ -40,6 +40,8 @@ interface AstBuilderInterface
 
     public function matchElementStrictly(int $id): int;
 
+    public function matchElementSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int;
+
     public function aggregate(string $name, int $id): int;
 
     public function populateLiteral(int $sourceId, int $valueId): int;
@@ -47,8 +49,6 @@ interface AstBuilderInterface
     public function populateArrayElements(int $sourceId, int $arrayId): int;
 
     public function populateIndexList(int $sourceId, int ...$indexList): int;
-
-    public function populateIndexSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int;
 
     public function populateNameList(int $sourceId, string ...$nameList): int;
 

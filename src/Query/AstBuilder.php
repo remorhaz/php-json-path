@@ -282,6 +282,28 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
+     * @param int $sourceId
+     * @param int|null $start
+     * @param int|null $end
+     * @param int|null $step
+     * @return int
+     * @throws UniLexException
+     */
+    public function matchElementSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int
+    {
+        return $this
+            ->tree
+            ->createNode(AstNodeType::MATCH_ELEMENT_SLICE)
+            ->addChild($this->tree->getNode($sourceId))
+            ->setAttribute('hasStart', isset($start))
+            ->setAttribute('start', $start)
+            ->setAttribute('hasEnd', isset($end))
+            ->setAttribute('end', $end)
+            ->setAttribute('step', $step ?? 1)
+            ->getId();
+    }
+
+    /**
      * @param string $name
      * @param int $id
      * @return int
@@ -358,26 +380,6 @@ final class AstBuilder implements AstBuilderInterface
             ->createNode(AstNodeType::POPULATE_INDEX_LIST)
             ->addChild($this->tree->getNode($sourceId))
             ->setAttribute('indexList', $indexList)
-            ->getId();
-    }
-
-    /**
-     * @param int $sourceId
-     * @param int|null $start
-     * @param int|null $end
-     * @param int|null $step
-     * @return int
-     * @throws UniLexException
-     */
-    public function populateIndexSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int
-    {
-        return $this
-            ->tree
-            ->createNode(AstNodeType::POPULATE_INDEX_SLICE)
-            ->addChild($this->tree->getNode($sourceId))
-            ->setAttribute('start', $start)
-            ->setAttribute('end', $end)
-            ->setAttribute('step', $step)
             ->getId();
     }
 

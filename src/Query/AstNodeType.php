@@ -23,11 +23,11 @@ abstract class AstNodeType
     public const MATCH_ANY_CHILD = 'match_any_child';
     public const MATCH_PROPERTY_STRICTLY = 'match_property_strictly';
     public const MATCH_ELEMENT_STRICTLY = 'match_element_strictly';
+    public const MATCH_ELEMENT_SLICE = 'match_element_slice';
     public const AGGREGATE = 'aggregate';
     public const POPULATE_LITERAL = 'populate_literal';
     public const POPULATE_ARRAY_ELEMENTS = 'populate_array_elements';
     public const POPULATE_INDEX_LIST = 'populate_index_list';
-    public const POPULATE_INDEX_SLICE = 'populate_index_slice';
     public const POPULATE_NAME_LIST = 'populate_name_list';
 
     public const CREATE_SCALAR = 'create_scalar';
