@@ -23,12 +23,9 @@ final class Runtime implements RuntimeInterface
 
     private $fetcher;
 
-    private $evaluator;
-
-    public function __construct(Fetcher $fetcher, Evaluator $evaluator)
+    public function __construct(Fetcher $fetcher)
     {
         $this->fetcher = $fetcher;
-        $this->evaluator = $evaluator;
     }
 
     public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
@@ -51,13 +48,6 @@ final class Runtime implements RuntimeInterface
         );
     }
 
-    public function evaluate(ValueListInterface $source, ValueListInterface $values): EvaluatedValueListInterface
-    {
-        return $this
-            ->evaluator
-            ->evaluate($source, $values);
-    }
-
     public function filter(
         NodeValueListInterface $contextValues,
         EvaluatedValueListInterface $evaluatedValues
@@ -73,56 +63,6 @@ final class Runtime implements RuntimeInterface
                 ),
                 $contextValues
             );
-    }
-
-    public function evaluateLogicalOr(
-        EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
-    ): EvaluatedValueListInterface {
-        return $this
-            ->evaluator
-            ->logicalOr($leftValues, $rightValues);
-    }
-
-    public function evaluateLogicalAnd(
-        EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
-    ): EvaluatedValueListInterface {
-        return $this
-            ->evaluator
-            ->logicalAnd($leftValues, $rightValues);
-    }
-
-    public function evaluateLogicalNot(EvaluatedValueListInterface $values): EvaluatedValueListInterface
-    {
-        return $this
-            ->evaluator
-            ->logicalNot($values);
-    }
-
-    public function calculateIsEqual(
-        ValueListInterface $leftValues,
-        ValueListInterface $rightValues
-    ): ValueListInterface {
-        return $this
-            ->evaluator
-            ->isEqual($leftValues, $rightValues);
-    }
-
-    public function calculateIsGreater(
-        ValueListInterface $leftValues,
-        ValueListInterface $rightValues
-    ): ValueListInterface {
-        return $this
-            ->evaluator
-            ->isGreater($leftValues, $rightValues);
-    }
-
-    public function calculateIsRegExp(string $pattern, ValueListInterface $values): ValueListInterface
-    {
-        return $this
-            ->evaluator
-            ->isRegExp($values, $pattern); // TODO: Make arguments order consistent
     }
 
     public function fetchChildren(
@@ -171,13 +111,6 @@ final class Runtime implements RuntimeInterface
             },
             $indexLists
         );
-    }
-
-    public function aggregate(string $name, NodeValueListInterface $values): ValueListInterface
-    {
-        return $this
-            ->evaluator
-            ->aggregate($name, $values);
     }
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface

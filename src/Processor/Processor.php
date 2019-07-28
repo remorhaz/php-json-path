@@ -20,6 +20,7 @@ use Remorhaz\JSON\Path\Query\QueryValidatorInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\Fetcher;
 use Remorhaz\JSON\Path\Runtime\Runtime;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
@@ -29,6 +30,8 @@ final class Processor implements ProcessorInterface
 
     private $runtime;
 
+    private $evaluator;
+
     private $resultFactory;
 
     private $queryValidator;
@@ -36,18 +39,19 @@ final class Processor implements ProcessorInterface
     public static function create(): ProcessorInterface
     {
         $valueIteratorFactory = new ValueIteratorFactory;
+        $evaluator = new Evaluator(
+            new ComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
+            new AggregatorCollection($valueIteratorFactory)
+        );
         $runtime = new Runtime(
-            new Fetcher($valueIteratorFactory),
-            new Evaluator(
-                new ComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
-                new AggregatorCollection($valueIteratorFactory)
-            )
+            new Fetcher($valueIteratorFactory)
         );
         $jsonDecoder = new Decoder($valueIteratorFactory);
         $jsonEncoder = new Encoder($jsonDecoder);
 
         return new self(
             $runtime,
+            $evaluator,
             new ResultFactory($jsonEncoder, $jsonDecoder, new PathEncoder),
             new QueryValidator
         );
@@ -55,17 +59,19 @@ final class Processor implements ProcessorInterface
 
     public function __construct(
         RuntimeInterface $runtime,
+        EvaluatorInterface $evaluator,
         ResultFactoryInterface $resultFactory,
         QueryValidatorInterface $queryValidator
     ) {
         $this->runtime = $runtime;
+        $this->evaluator = $evaluator;
         $this->resultFactory = $resultFactory;
         $this->queryValidator = $queryValidator;
     }
 
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
     {
-        $values = $query($this->runtime, $rootNode);
+        $values = $query($rootNode, $this->runtime, $this->evaluator);
 
         return $this
             ->resultFactory
@@ -76,7 +82,7 @@ final class Processor implements ProcessorInterface
     {
         $values = $this
             ->queryValidator
-            ->getDefiniteQuery($query)($this->runtime, $rootNode);
+            ->getDefiniteQuery($query)($rootNode, $this->runtime, $this->evaluator);
 
         return $this
             ->resultFactory
@@ -87,7 +93,7 @@ final class Processor implements ProcessorInterface
     {
         $values = $this
             ->queryValidator
-            ->getPathQuery($query)($this->runtime, $rootNode);
+            ->getPathQuery($query)($rootNode, $this->runtime, $this->evaluator);
 
         return $this
             ->resultFactory
@@ -98,7 +104,7 @@ final class Processor implements ProcessorInterface
     {
         $values = $this
             ->queryValidator
-            ->getDefinitePathQuery($query)($this->runtime, $rootNode);
+            ->getDefinitePathQuery($query)($rootNode, $this->runtime, $this->evaluator);
 
         return $this
             ->resultFactory

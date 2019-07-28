@@ -8,6 +8,7 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -25,14 +26,15 @@ class QueryTest extends TestCase
             $callback,
             $this->createMock(CapabilitiesInterface::class)
         );
-        $runtime = $this->createMock(RuntimeInterface::class);
         $rootValue = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
 
         $callback
             ->expects(self::once())
             ->method('__invoke')
-            ->with($runtime, $rootValue);
-        $query($runtime, $rootValue);
+            ->with($rootValue, $runtime, $evaluator);
+        $query($rootValue, $runtime, $evaluator);
     }
 
     public function testInvoke_CallbackReturnsValueList_ReturnsSameInstance(): void
@@ -49,8 +51,9 @@ class QueryTest extends TestCase
         );
 
         $actualValue = $query(
+            $this->createMock(NodeValueInterface::class),
             $this->createMock(RuntimeInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(EvaluatorInterface::class),
         );
         self::assertSame($values, $actualValue);
     }

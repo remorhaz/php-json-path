@@ -10,6 +10,7 @@ use Remorhaz\JSON\Path\Query\Exception\CapabilitiesNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\QueryCallbackNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
 use Remorhaz\JSON\Path\Query\CallbackBuilder;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\UniLex\AST\Node;
@@ -140,13 +141,14 @@ class CallbackBuilderTest extends TestCase
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
         $callback = $callbackBuilder->getCallback();
 
         $runtime
             ->expects(self::once())
             ->method('getInput')
             ->with($rootValue);
-        $callback($runtime, $rootValue);
+        $callback($rootValue, $runtime, $evaluator);
     }
 
     /**
@@ -172,13 +174,14 @@ class CallbackBuilderTest extends TestCase
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
         $callback = $callbackBuilder->getCallback();
 
         $values = $this->createMock(NodeValueListInterface::class);
         $runtime
             ->method('getInput')
             ->willReturn($values);
-        $actualValue = $callback($runtime, $rootValue);
+        $actualValue = $callback($rootValue, $runtime, $evaluator);
         self::assertSame($values, $actualValue);
     }
 }

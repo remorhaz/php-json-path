@@ -10,6 +10,7 @@ use Remorhaz\JSON\Path\Query\LazyQuery;
 use Remorhaz\JSON\Path\Query\AstTranslatorInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\Capabilities;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 
@@ -33,13 +34,14 @@ class LazyQueryTest extends TestCase
             $astTranslator
         );
 
-        $runtime = $this->createMock(RuntimeInterface::class);
         $rootNode = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
         $query
             ->expects(self::once())
             ->method('__invoke')
-            ->with($runtime, $rootNode);
-        $lazyQuery($runtime, $rootNode);
+            ->with($rootNode, $runtime, $evaluator);
+        $lazyQuery($rootNode, $runtime, $evaluator);
     }
 
     public function testInvoke_ConstructedWithPath_PassesSamePathToParser(): void
@@ -56,8 +58,9 @@ class LazyQueryTest extends TestCase
             ->method('buildQueryAst')
             ->with('a');
         $lazyQuery(
+            $this->createMock(NodeValueInterface::class),
             $this->createMock(RuntimeInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(EvaluatorInterface::class)
         );
     }
 
@@ -76,8 +79,9 @@ class LazyQueryTest extends TestCase
             ->method('buildQuery')
             ->with('a', $tree);
         $lazyQuery(
+            $this->createMock(NodeValueInterface::class),
             $this->createMock(RuntimeInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(EvaluatorInterface::class)
         );
     }
 

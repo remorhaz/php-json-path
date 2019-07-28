@@ -16,7 +16,7 @@ use Remorhaz\JSON\Path\Value\NodeValueList;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-final class Evaluator
+final class Evaluator implements EvaluatorInterface
 {
 
     private $comparators;
@@ -110,7 +110,7 @@ final class Evaluator
         );
     }
 
-    public function isRegExp(ValueListInterface $values, string $regExp): EvaluatedValueListInterface
+    public function isRegExp(string $regExp, ValueListInterface $values): EvaluatedValueListInterface
     {
         $results = [];
 

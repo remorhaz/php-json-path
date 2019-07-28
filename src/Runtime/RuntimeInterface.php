@@ -19,36 +19,10 @@ interface RuntimeInterface
 
     public function split(NodeValueListInterface $values): NodeValueListInterface;
 
-    public function evaluate(ValueListInterface $source, ValueListInterface $values): EvaluatedValueListInterface;
-
     public function filter(
         NodeValueListInterface $contextValues,
         EvaluatedValueListInterface $evaluatedValues
     ): NodeValueListInterface;
-
-    public function evaluateLogicalOr(
-        EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
-    ): EvaluatedValueListInterface;
-
-    public function evaluateLogicalAnd(
-        EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
-    ): EvaluatedValueListInterface;
-
-    public function evaluateLogicalNot(EvaluatedValueListInterface $values): EvaluatedValueListInterface;
-
-    public function calculateIsEqual(
-        ValueListInterface $leftValues,
-        ValueListInterface $rightValues
-    ): ValueListInterface;
-
-    public function calculateIsGreater(
-        ValueListInterface $leftValues,
-        ValueListInterface $rightValues
-    ): ValueListInterface;
-
-    public function calculateIsRegExp(string $pattern, ValueListInterface $values): ValueListInterface;
 
     public function fetchChildren(
         NodeValueListInterface $values,
@@ -65,8 +39,6 @@ interface RuntimeInterface
     public function matchPropertyStrictly(array $nameLists): array;
 
     public function matchElementStrictly(array $indexLists): array;
-
-    public function aggregate(string $name, NodeValueListInterface $values): ValueListInterface;
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
 

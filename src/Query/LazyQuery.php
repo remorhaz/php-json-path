@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Query;
 
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
@@ -26,9 +27,12 @@ final class LazyQuery implements QueryInterface
         $this->astTranslator = $astTranslator;
     }
 
-    public function __invoke(RuntimeInterface $runtime, NodeValueInterface $rootNode): ValueListInterface
-    {
-        return $this->getLoadedQuery()($runtime, $rootNode);
+    public function __invoke(
+        NodeValueInterface $rootNode,
+        RuntimeInterface $runtime,
+        EvaluatorInterface $evaluator
+    ): ValueListInterface {
+        return $this->getLoadedQuery()($rootNode, $runtime, $evaluator);
     }
 
     public function getCapabilities(): CapabilitiesInterface

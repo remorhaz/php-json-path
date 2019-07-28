@@ -12,6 +12,7 @@ use Remorhaz\JSON\Path\Query\AstTranslator;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
@@ -102,13 +103,14 @@ class AstTranslatorTest extends TestCase
 
         $query = $translator->buildQuery('b', $tree);
 
-        $runtime = $this->createMock(RuntimeInterface::class);
         $rootValue = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
         $callback
             ->expects(self::once())
             ->method('__invoke')
-            ->with($runtime, $rootValue);
-        $query($runtime, $rootValue);
+            ->with($rootValue, $runtime, $evaluator);
+        $query($rootValue, $runtime, $evaluator);
     }
 
     /**
