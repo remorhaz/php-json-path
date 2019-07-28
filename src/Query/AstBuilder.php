@@ -319,13 +319,29 @@ final class AstBuilder implements AstBuilderInterface
      * @return int
      * @throws UniLexException
      */
-    public function populateLiteralArray(int $sourceId, int $arrayId): int
+    public function populateArrayElements(int $sourceId, int $arrayId): int
     {
         return $this
             ->tree
-            ->createNode(AstNodeType::POPULATE_LITERAL_ARRAY)
+            ->createNode(AstNodeType::POPULATE_ARRAY_ELEMENTS)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($arrayId))
+            ->getId();
+    }
+
+    /**
+     * @param int $sourceId
+     * @param int $elementsId
+     * @return int
+     * @throws UniLexException
+     */
+    public function createLiteralArray(int $sourceId, int $elementsId): int
+    {
+        return $this
+            ->tree
+            ->createNode(AstNodeType::CREATE_LITERAL_ARRAY)
+            ->addChild($this->tree->getNode($sourceId))
+            ->addChild($this->tree->getNode($elementsId))
             ->getId();
     }
 

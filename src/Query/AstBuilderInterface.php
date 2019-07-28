@@ -44,7 +44,7 @@ interface AstBuilderInterface
 
     public function populateLiteral(int $sourceId, int $valueId): int;
 
-    public function populateLiteralArray(int $sourceId, int $arrayId): int;
+    public function populateArrayElements(int $sourceId, int $arrayId): int;
 
     public function populateIndexList(int $sourceId, int ...$indexList): int;
 
@@ -57,4 +57,6 @@ interface AstBuilderInterface
     public function createArray(): int;
 
     public function appendToArray(int $arrayId, int $valueId): int;
+
+    public function createLiteralArray(int $sourceId, int $elementsId): int;
 }

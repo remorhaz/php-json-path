@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
@@ -69,10 +70,10 @@ interface RuntimeInterface
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
 
-    public function populateLiteralArray(
+    public function populateArrayElements(
         NodeValueListInterface $source,
         ValueListInterface ...$values
-    ): ValueListInterface;
+    ): array;
 
     public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array;
 
@@ -81,4 +82,6 @@ interface RuntimeInterface
     public function populateNameList(NodeValueListInterface $source, string ...$nameList): array;
 
     public function createScalar($value): LiteralValueInterface;
+
+    public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface;
 }

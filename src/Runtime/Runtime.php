@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Value\IndexMap;
+use Remorhaz\JSON\Path\Value\LiteralArrayValue;
 use Remorhaz\JSON\Path\Value\LiteralArrayValueList;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Path\Value\LiteralValueInterface;
@@ -182,11 +185,27 @@ final class Runtime implements RuntimeInterface
         return new LiteralValueList($source->getIndexMap(), $value);
     }
 
-    public function populateLiteralArray(
+    public function populateArrayElements(
         NodeValueListInterface $source,
         ValueListInterface ...$values
-    ): ValueListInterface {
-        return new LiteralArrayValueList($source->getIndexMap(), ...$values);
+    ): array {
+        foreach ($values as $valueList) {
+            if (!$source->getIndexMap()->equals($valueList->getIndexMap())) {
+                throw new Exception\IndexMapMatchFailedException($valueList, $source);
+            }
+        }
+        $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndice(), []);
+        foreach ($values as $valueList) {
+            foreach ($valueList->getValues() as $innerIndex => $value) {
+                $elementLists[$innerIndex][] = $value;
+            }
+        }
+
+        $createArrayElement = function (array $elements) use ($source): ValueInterface {
+            return new LiteralArrayValue($source->getIndexMap(), ...$elements);
+        };
+
+        return array_map($createArrayElement, $elementLists);
     }
 
     public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array
@@ -219,5 +238,10 @@ final class Runtime implements RuntimeInterface
     public function createScalar($value): LiteralValueInterface
     {
         return new LiteralScalarValue($value);
+    }
+
+    public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface
+    {
+        return new LiteralArrayValueList($source->getIndexMap(), ...$elements);
     }
 }

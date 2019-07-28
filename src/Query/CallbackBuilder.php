@@ -289,10 +289,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 );
                 break;
 
-            case AstNodeType::POPULATE_LITERAL_ARRAY:
+            case AstNodeType::POPULATE_ARRAY_ELEMENTS:
                 $this->addMethodCall(
                     $node,
-                    'populateLiteralArray',
+                    'populateArrayElements',
                     $this->getReference($node->getChild(0)),
                     new Arg(
                         $this->getReference($node->getChild(1)),
@@ -367,6 +367,19 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->setReference(
                     $node,
                     $this->getReference($node->getChild(0))
+                );
+                break;
+
+            case AstNodeType::CREATE_LITERAL_ARRAY:
+                $this->addMethodCall(
+                    $node,
+                    'createArray',
+                    $this->getReference($node->getChild(0)),
+                    new Arg(
+                        $this->getReference($node->getChild(1)),
+                        false,
+                        true
+                    )
                 );
                 break;
         }
