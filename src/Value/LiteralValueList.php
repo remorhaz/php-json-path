@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use function array_fill;
-use function count;
+use function array_fill_keys;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class LiteralValueList implements LiteralValueListInterface
@@ -40,7 +39,7 @@ final class LiteralValueList implements LiteralValueListInterface
     public function getValues(): array
     {
         if (!isset($this->values)) {
-            $this->values = array_fill(0, count($this->indexMap), $this->value);
+            $this->values = array_fill_keys($this->indexMap->getInnerIndice(), $this->value);
         }
 
         return $this->values;
