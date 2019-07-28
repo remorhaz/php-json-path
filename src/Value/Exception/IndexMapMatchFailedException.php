@@ -10,32 +10,27 @@ use Throwable;
 final class IndexMapMatchFailedException extends LogicException implements ExceptionInterface
 {
 
-    private $descendant;
+    private $leftValues;
 
-    private $ancestor;
+    private $rightValues;
 
     public function __construct(
-        ValueListInterface $descendant,
-        ValueListInterface $ancestor,
+        ValueListInterface $leftValues,
+        ValueListInterface $rightValues,
         Throwable $previous = null
     ) {
-        $this->descendant = $descendant;
-        $this->ancestor = $ancestor;
-        parent::__construct($this->buildMessage(), 0, $previous);
+        $this->leftValues = $leftValues;
+        $this->rightValues = $rightValues;
+        parent::__construct("Index map match failed", 0, $previous);
     }
 
-    private function buildMessage(): string
+    public function getLeftValues(): ValueListInterface
     {
-        return "Index map match failed";
+        return $this->leftValues;
     }
 
-    public function getDescendant(): ValueListInterface
+    public function getRightValues(): ValueListInterface
     {
-        return $this->descendant;
-    }
-
-    public function getAncestor(): ValueListInterface
-    {
-        return $this->ancestor;
+        return $this->rightValues;
     }
 }

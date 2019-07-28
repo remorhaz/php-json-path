@@ -12,12 +12,12 @@ final class ResultNotFoundException extends OutOfRangeException implements Excep
 
     private $index;
 
-    private $valueList;
+    private $values;
 
     public function __construct(int $index, ValueListInterface $valueList, Throwable $previous = null)
     {
         $this->index = $index;
-        $this->valueList = $valueList;
+        $this->values = $valueList;
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
@@ -31,8 +31,8 @@ final class ResultNotFoundException extends OutOfRangeException implements Excep
         return $this->index;
     }
 
-    public function getValueList(): ValueListInterface
+    public function getValues(): ValueListInterface
     {
-        return $this->valueList;
+        return $this->values;
     }
 }
