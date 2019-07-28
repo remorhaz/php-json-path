@@ -7,10 +7,10 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
-use Remorhaz\JSON\Path\Value\LiteralArrayValueList;
+use Remorhaz\JSON\Path\Value\ValueList;
 
 /**
- * @covers \Remorhaz\JSON\Path\Value\LiteralArrayValueList
+ * @covers \Remorhaz\JSON\Path\Value\ValueList
  */
 class LiteralArrayValueListExceptionTest extends TestCase
 {
@@ -18,14 +18,14 @@ class LiteralArrayValueListExceptionTest extends TestCase
     public function testGetIndexMap_ConstructedWithGivenIndexMap_ReturnsSameInstance(): void
     {
         $indexMap = $this->createMock(IndexMapInterface::class);
-        $values = new LiteralArrayValueList($indexMap);
+        $values = new ValueList($indexMap);
         self::assertSame($indexMap, $values->getIndexMap());
     }
 
     public function testGetValues_ConstructedWithoutValues_ReturnsEmptyArray(): void
     {
         $indexMap = $this->createMock(IndexMapInterface::class);
-        $values = new LiteralArrayValueList($indexMap);
+        $values = new ValueList($indexMap);
         self::assertSame([], $values->getValues());
     }
 
@@ -33,7 +33,7 @@ class LiteralArrayValueListExceptionTest extends TestCase
     {
         $value = $this->createMock(ArrayValueInterface::class);
         $indexMap = $this->createMock(IndexMapInterface::class);
-        $values = new LiteralArrayValueList($indexMap, $value);
+        $values = new ValueList($indexMap, $value);
         self::assertSame([$value], $values->getValues());
     }
 
@@ -41,7 +41,7 @@ class LiteralArrayValueListExceptionTest extends TestCase
     {
         $value = $this->createMock(ArrayValueInterface::class);
         $indexMap = $this->createMock(IndexMapInterface::class);
-        $values = new LiteralArrayValueList($indexMap, $value);
+        $values = new ValueList($indexMap, $value);
         self::assertSame($value, $values->getValue(0));
     }
 
@@ -50,7 +50,7 @@ class LiteralArrayValueListExceptionTest extends TestCase
         $value = $this->createMock(ArrayValueInterface::class);
         $indexMap = $this->createMock(IndexMapInterface::class);
 
-        $values = new LiteralArrayValueList($indexMap, $value);
+        $values = new ValueList($indexMap, $value);
         $this->expectException(ValueNotFoundException::class);
         $values->getValue(1);
     }

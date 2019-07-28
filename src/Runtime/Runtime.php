@@ -7,14 +7,14 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Value\IndexMap;
 use Remorhaz\JSON\Path\Value\LiteralArrayValue;
-use Remorhaz\JSON\Path\Value\LiteralArrayValueList;
+use Remorhaz\JSON\Path\Value\ValueList;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralValueList;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
+use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -30,7 +30,9 @@ final class Runtime implements RuntimeInterface
 
     public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
     {
-        return new NodeValueList(new IndexMap(0), $rootValue);
+        return (new NodeValueListBuilder)
+            ->addValue($rootValue, 0)
+            ->build();
     }
 
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface
@@ -54,12 +56,10 @@ final class Runtime implements RuntimeInterface
     ): NodeValueListInterface {
         return $this
             ->fetcher
-            ->filterValues(
-                new ValueListFilter(
-                    new EvaluatedValueList(
-                        $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
-                        ...$evaluatedValues->getResults()
-                    )
+            ->fetchFilteredValues(
+                new EvaluatedValueList(
+                    $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
+                    ...$evaluatedValues->getResults()
                 ),
                 $contextValues
             );
@@ -175,6 +175,6 @@ final class Runtime implements RuntimeInterface
 
     public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface
     {
-        return new LiteralArrayValueList($source->getIndexMap(), ...$elements);
+        return new ValueList($source->getIndexMap(), ...$elements);
     }
 }

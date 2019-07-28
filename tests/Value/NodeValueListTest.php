@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Value;
 
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\Value\ValueInterface;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
@@ -30,8 +30,8 @@ class NodeValueListTest extends TestCase
 
     public function testGetValues_ConstructedWithTwoValues_ReturnsSameInstances(): void
     {
-        $firstValue = $this->createMock(ValueInterface::class);
-        $secondValue = $this->createMock(ValueInterface::class);
+        $firstValue = $this->createMock(NodeValueInterface::class);
+        $secondValue = $this->createMock(NodeValueInterface::class);
         $valueList = new NodeValueList(
             $this->createMock(IndexMapInterface::class),
             $firstValue,
@@ -42,7 +42,7 @@ class NodeValueListTest extends TestCase
 
     public function testGeValue_ValueExistsAtGivenIndex_ReturnsMatchingInstance(): void
     {
-        $value = $this->createMock(ValueInterface::class);
+        $value = $this->createMock(NodeValueInterface::class);
         $valueList = new NodeValueList(
             $this->createMock(IndexMapInterface::class),
             $value

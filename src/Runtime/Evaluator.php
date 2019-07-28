@@ -9,10 +9,9 @@ use function is_bool;
 use function preg_match;
 use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Value\IndexMap;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
+use Remorhaz\JSON\Path\Value\ValueListBuilder;
 use Remorhaz\JSON\Path\Value\LiteralValueListInterface;
-use Remorhaz\JSON\Path\Value\NodeValueList;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -188,16 +187,17 @@ final class Evaluator implements EvaluatorInterface
     public function aggregate(string $functionName, ValueListInterface $values): ValueListInterface
     {
         $aggregator = $this->aggregators->byName($functionName);
-        $results = [];
-        $indexMap = [];
+        $valuesBuilder = new ValueListBuilder;
         foreach ($values->getValues() as $innerIndex => $value) {
             $minValue = $aggregator->tryAggregate($value);
             if (isset($minValue)) {
-                $results[] = $minValue;
-                $indexMap[] = $values->getIndexMap()->getOuterIndex($innerIndex);
+                $valuesBuilder->addValue(
+                    $minValue,
+                    $values->getIndexMap()->getOuterIndex($innerIndex)
+                );
             }
         }
 
-        return new NodeValueList(new IndexMap(...$indexMap), ...$results);
+        return $valuesBuilder->build();
     }
 }

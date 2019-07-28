@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
-final class LiteralArrayValueList implements ValueListInterface
+final class ValueList implements ValueListInterface
 {
 
     private $indexMap;
 
     private $values;
 
-    public function __construct(IndexMapInterface $indexMap, ArrayValueInterface ...$values)
+    public function __construct(IndexMapInterface $indexMap, ValueInterface ...$values)
     {
         $this->indexMap = $indexMap;
         $this->values = $values;

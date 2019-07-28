@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class NodeValueList implements NodeValueListInterface
@@ -12,7 +13,7 @@ final class NodeValueList implements NodeValueListInterface
 
     private $indexMap;
 
-    public function __construct(IndexMapInterface $indexMap, ValueInterface ...$values)
+    public function __construct(IndexMapInterface $indexMap, NodeValueInterface ...$values)
     {
         $this->values = $values;
         $this->indexMap = $indexMap;

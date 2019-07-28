@@ -7,9 +7,10 @@ use function array_push;
 use Iterator;
 use function max;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
-use Remorhaz\JSON\Path\Value\IndexMap;
+use Remorhaz\JSON\Path\Value\EvaluatedValueInterface;
+use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Path\Value\NodeValueList;
+use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
@@ -35,35 +36,33 @@ final class Fetcher
         NodeValueListInterface $source,
         Matcher\ChildMatcherInterface ...$matcherList
     ): NodeValueListInterface {
-        $values = [];
-        $indexMap = [];
+        $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $matcher = $matcherList[$sourceIndex];
             $children = $this->fetchValueChildren($matcher, $sourceValue);
+            $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
-                $values[] = $child;
-                $indexMap[] = $source->getIndexMap()->getOuterIndex($sourceIndex);
+                $nodesBuilder->addValue($child, $outerIndex);
             }
         }
 
-        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
+        return $nodesBuilder->build();
     }
 
     public function fetchDeepChildren(
         Matcher\ChildMatcherInterface $matcher,
         NodeValueListInterface $source
     ): NodeValueListInterface {
-        $values = [];
-        $indexMap = [];
+        $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this->fetchValueDeepChildren($matcher, $sourceValue);
+            $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
-                $values[] = $child;
-                $indexMap[] = $source->getIndexMap()->getOuterIndex($sourceIndex);
+                $nodesBuilder->addValue($child, $outerIndex);
             }
         }
 
-        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
+        return $nodesBuilder->build();
     }
 
     /**
@@ -143,8 +142,7 @@ final class Fetcher
 
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
     {
-        $values = [];
-        $indexMap = [];
+        $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             if (!$sourceValue instanceof NodeValueInterface) {
                 throw new Exception\InvalidContextValueException($sourceValue);
@@ -154,12 +152,36 @@ final class Fetcher
                 ? $this->fetchValueChildren(new Matcher\AnyChildMatcher, $sourceValue)
                 : [$sourceValue];
             foreach ($children as $child) {
-                $values[] = $child;
-                $indexMap[] = $outerIndex;
+                $nodesBuilder->addValue($child, $outerIndex);
             }
         }
 
-        return new NodeValueList(new IndexMap(...$indexMap), ...$values);
+        return $nodesBuilder->build();
+    }
+
+    public function fetchFilteredValues(
+        EvaluatedValueListInterface $results,
+        NodeValueListInterface $values
+    ): NodeValueListInterface {
+        if (!$values->getIndexMap()->equals($results->getIndexMap())) {
+            throw new Exception\IndexMapMatchFailedException($values, $results);
+        }
+        $nodesBuilder = new NodeValueListBuilder;
+        foreach ($values->getValues() as $index => $value) {
+            $evaluatedValue = $results->getValue($index);
+            if (!$evaluatedValue instanceof EvaluatedValueInterface) {
+                throw new Exception\InvalidFilterValueException($evaluatedValue);
+            }
+            if (!$evaluatedValue->getData()) {
+                continue;
+            }
+            $nodesBuilder->addValue(
+                $value,
+                $values->getIndexMap()->getOuterIndex($index)
+            );
+        }
+
+        return $nodesBuilder->build();
     }
 
     private function fetchElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
@@ -184,13 +206,6 @@ final class Fetcher
         }
 
         return $results;
-    }
-
-    public function filterValues(
-        ValueListFilterInterface $matcher,
-        NodeValueListInterface $values
-    ): NodeValueListInterface {
-        return $matcher->filterValues($values);
     }
 
     /**
