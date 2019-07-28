@@ -27,6 +27,6 @@ after_script:
   - ./cc-test-reporter after-build --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash -s "build/logs")
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --access-token=$SCRUTINIZER_TOKEN --format=php-clover build/logs/clover.xml
+  - if [ "$XDEBUG" == "YES" ]; then bash <(curl -s https://codecov.io/bash -s "build/logs"); fi
+  - if [ "$XDEBUG" == "YES" ]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+  - if [ "$XDEBUG" == "YES" ]; then php ocular.phar code-coverage:upload --access-token=$SCRUTINIZER_TOKEN --format=php-clover build/logs/clover.xml; fi
