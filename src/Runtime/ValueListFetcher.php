@@ -10,9 +10,8 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
-use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-final class Fetcher
+final class ValueListFetcher
 {
 
     private $valueIteratorFactory;
@@ -111,29 +110,5 @@ final class Fetcher
         }
 
         return $nodesBuilder->build();
-    }
-
-    /**
-     * @param ValueListInterface $valueList
-     * @return int[][]
-     */
-    public function fetchIndice(ValueListInterface $valueList): array
-    {
-        $result = [];
-        foreach ($valueList->getValues() as $valueIndex => $value) {
-            if (!$value instanceof ArrayValueInterface) {
-                $result[$valueIndex] = [];
-                continue;
-            }
-
-            $indice = [];
-            $elementIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
-            foreach ($elementIterator as $index => $element) {
-                $indice[] = $index;
-            }
-            $result[$valueIndex] = $indice;
-        }
-
-        return $result;
     }
 }

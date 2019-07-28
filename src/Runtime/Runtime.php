@@ -25,7 +25,7 @@ final class Runtime implements RuntimeInterface
 
     private $valueFetcher;
 
-    public function __construct(Fetcher $fetcher, ValueFetcherInterface $valueFetcher)
+    public function __construct(ValueListFetcher $fetcher, ValueFetcherInterface $valueFetcher)
     {
         $this->fetcher = $fetcher;
         $this->valueFetcher = $valueFetcher;
