@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use function array_push;
-use Iterator;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
-use Remorhaz\JSON\Data\Value\ObjectValueInterface;
-use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -21,9 +17,12 @@ final class Fetcher
 
     private $valueIteratorFactory;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory)
+    private $valueFetcher;
+
+    public function __construct(ValueIteratorFactory $valueIteratorFactory, ValueFetcherInterface $valueFetcher)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
+        $this->valueFetcher = $valueFetcher;
     }
 
     /**
@@ -38,7 +37,9 @@ final class Fetcher
         $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $matcher = $matcherList[$sourceIndex];
-            $children = $this->fetchValueChildren($matcher, $sourceValue);
+            $children = $this
+                ->valueFetcher
+                ->fetchValueChildren($matcher, $sourceValue);
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -54,7 +55,9 @@ final class Fetcher
     ): NodeValueListInterface {
         $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
-            $children = $this->fetchValueDeepChildren($matcher, $sourceValue);
+            $children = $this
+                ->valueFetcher
+                ->fetchValueDeepChildren($matcher, $sourceValue);
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -62,81 +65,6 @@ final class Fetcher
         }
 
         return $nodesBuilder->build();
-    }
-
-    /**
-     * @param Matcher\ChildMatcherInterface $matcher
-     * @param NodeValueInterface $value
-     * @return NodeValueInterface[]
-     */
-    private function fetchValueChildren(
-        Matcher\ChildMatcherInterface $matcher,
-        NodeValueInterface $value
-    ): array {
-        if ($value instanceof ScalarValueInterface) {
-            return [];
-        }
-
-        if ($value instanceof ArrayValueInterface) {
-            return $this->fetchElements($value->createIterator(), $matcher);
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            return $this->fetchProperties($value->createIterator(), $matcher);
-        }
-
-        throw new Exception\UnexpectedNodeValueFetchedException($value);
-    }
-
-    private function fetchValueDeepChildren(
-        Matcher\ChildMatcherInterface $matcher,
-        NodeValueInterface $value
-    ): array {
-        if ($value instanceof ScalarValueInterface) {
-            return [];
-        }
-
-        if ($value instanceof ArrayValueInterface) {
-            return $this->fetchDeepElements($value->createIterator(), $matcher);
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            return $this->fetchDeepProperties($value->createIterator(), $matcher);
-        }
-
-        throw new Exception\UnexpectedNodeValueFetchedException($value);
-    }
-
-    private function fetchDeepElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
-            if ($matcher->match($index, $element)) {
-                $results[] = $element;
-            }
-            array_push(
-                $results,
-                ...$this->fetchValueDeepChildren($matcher, $element)
-            );
-        }
-
-        return $results;
-    }
-
-    private function fetchDeepProperties(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
-            if ($matcher->match($name, $property)) {
-                $results[] = $property;
-            }
-            array_push(
-                $results,
-                ...$this->fetchValueDeepChildren($matcher, $property)
-            );
-        }
-
-        return $results;
     }
 
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
@@ -148,7 +76,9 @@ final class Fetcher
             }
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             $children = $sourceValue instanceof ArrayValueInterface
-                ? $this->fetchValueChildren(new Matcher\AnyChildMatcher, $sourceValue)
+                ? $this
+                    ->valueFetcher
+                    ->fetchValueChildren(new Matcher\AnyChildMatcher, $sourceValue)
                 : [$sourceValue];
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -181,30 +111,6 @@ final class Fetcher
         }
 
         return $nodesBuilder->build();
-    }
-
-    private function fetchElements(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
-            if ($matcher->match($index, $element)) {
-                $results[] = $element;
-            }
-        }
-
-        return $results;
-    }
-
-    private function fetchProperties(Iterator $iterator, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
-            if ($matcher->match($name, $property)) {
-                $results[] = $property;
-            }
-        }
-
-        return $results;
     }
 
     /**

@@ -23,9 +23,12 @@ final class Runtime implements RuntimeInterface
 
     private $fetcher;
 
-    public function __construct(Fetcher $fetcher)
+    private $valueFetcher;
+
+    public function __construct(Fetcher $fetcher, ValueFetcherInterface $valueFetcher)
     {
         $this->fetcher = $fetcher;
+        $this->valueFetcher = $valueFetcher;
     }
 
     public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
@@ -115,17 +118,11 @@ final class Runtime implements RuntimeInterface
 
     public function matchElementSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array
     {
-        $counts = array_map(
-            'count',
-            $this
-                ->fetcher
-                ->fetchIndice($source)
-        );
         return array_map(
-            function (int $count) use ($start, $end, $step): Matcher\ChildMatcherInterface {
-                return new Matcher\SliceElementMatcher($count, $start, $end, $step);
+            function () use ($start, $end, $step): Matcher\ChildMatcherInterface {
+                return new Matcher\SliceElementMatcher($this->valueFetcher, $start, $end, $step);
             },
-            $counts
+            $source->getIndexMap()->getInnerIndice()
         );
     }
 

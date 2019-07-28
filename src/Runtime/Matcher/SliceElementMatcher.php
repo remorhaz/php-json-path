@@ -5,12 +5,13 @@ namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use function is_int;
 use function max;
-use Remorhaz\JSON\Data\Value\ValueInterface;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Runtime\ValueFetcherInterface;
 
 final class SliceElementMatcher implements ChildMatcherInterface
 {
 
-    private $count;
+    private $valueFetcher;
 
     private $start;
 
@@ -20,9 +21,9 @@ final class SliceElementMatcher implements ChildMatcherInterface
 
     private $isReverse;
 
-    public function __construct(int $count, ?int $start, ?int $end, ?int $step)
+    public function __construct(ValueFetcherInterface $valueFetcher, ?int $start, ?int $end, ?int $step)
     {
-        $this->count = $count;
+        $this->valueFetcher = $valueFetcher;
         $this->step = $step ?? 1;
         $this->isReverse = $step < 0;
 
@@ -30,15 +31,32 @@ final class SliceElementMatcher implements ChildMatcherInterface
         $this->end = $end;
     }
 
-    public function match($address, ValueInterface $value): bool
+    public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
-        if (0 == $this->step || !is_int($address) || 0 == $this->count) {
+        if (0 == $this->step || !is_int($address)) {
             return false;
         }
-        $start = $this->detectStart($this->count);
-        $end = $this->detectEnd($this->count);
+
+        $count = $this->findArrayLength($container);
+        if (!isset($count)) {
+            return false;
+        }
+
+        $start = $this->detectStart($count);
+        $end = $this->detectEnd($count);
 
         return $this->isInRange($address, $start, $end) && $this->isOnStep($address, $start);
+    }
+
+    private function findArrayLength(NodeValueInterface $value): ?int
+    {
+        $count = $this
+            ->valueFetcher
+            ->fetchArrayLength($value);
+
+        return isset($count) && $count > 0
+            ? $count
+            : null;
     }
 
     private function detectStart(int $count): int

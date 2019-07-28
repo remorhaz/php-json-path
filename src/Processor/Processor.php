@@ -24,6 +24,7 @@ use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\Fetcher;
 use Remorhaz\JSON\Path\Runtime\Runtime;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Remorhaz\JSON\Path\Runtime\ValueFetcher;
 
 final class Processor implements ProcessorInterface
 {
@@ -43,8 +44,13 @@ final class Processor implements ProcessorInterface
             new ComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
             new AggregatorCollection($valueIteratorFactory)
         );
+        $valueFetcher = new ValueFetcher($valueIteratorFactory);
         $runtime = new Runtime(
-            new Fetcher($valueIteratorFactory)
+            new Fetcher(
+                $valueIteratorFactory,
+                $valueFetcher
+            ),
+            $valueFetcher
         );
         $jsonDecoder = new Decoder($valueIteratorFactory);
         $jsonEncoder = new Encoder($jsonDecoder);
