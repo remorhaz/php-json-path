@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Evaluator is no more part of runtime object.
 - Query invocation signature changed.
 - Filter object joined with fetcher.
+- Child matchers accept both address and value now.
 
 ## [0.2.0] - 2019-07-28
 ### Added

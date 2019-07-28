@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use function in_array;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class StrictElementMatcher implements ChildMatcherInterface
 {
@@ -15,7 +16,7 @@ final class StrictElementMatcher implements ChildMatcherInterface
         $this->indice = $indice;
     }
 
-    public function match($address): bool
+    public function match($address, ValueInterface $value): bool
     {
         return in_array($address, $this->indice, true);
     }

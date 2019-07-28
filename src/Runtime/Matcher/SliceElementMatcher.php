@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use function is_int;
 use function max;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class SliceElementMatcher implements ChildMatcherInterface
 {
@@ -29,9 +30,9 @@ final class SliceElementMatcher implements ChildMatcherInterface
         $this->end = $end;
     }
 
-    public function match($address): bool
+    public function match($address, ValueInterface $value): bool
     {
-        if (0 == $this->step || !is_int($address)) {
+        if (0 == $this->step || !is_int($address) || 0 == $this->count) {
             return false;
         }
         $start = $this->detectStart($this->count);

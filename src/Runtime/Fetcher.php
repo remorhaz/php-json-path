@@ -111,7 +111,7 @@ final class Fetcher
     {
         $results = [];
         foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
-            if ($matcher->match($index)) {
+            if ($matcher->match($index, $element)) {
                 $results[] = $element;
             }
             array_push(
@@ -127,7 +127,7 @@ final class Fetcher
     {
         $results = [];
         foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
-            if ($matcher->match($name)) {
+            if ($matcher->match($name, $property)) {
                 $results[] = $property;
             }
             array_push(
@@ -187,7 +187,7 @@ final class Fetcher
     {
         $results = [];
         foreach ($this->valueIteratorFactory->createArrayIterator($iterator) as $index => $element) {
-            if ($matcher->match($index)) {
+            if ($matcher->match($index, $element)) {
                 $results[] = $element;
             }
         }
@@ -199,7 +199,7 @@ final class Fetcher
     {
         $results = [];
         foreach ($this->valueIteratorFactory->createObjectIterator($iterator) as $name => $property) {
-            if ($matcher->match($name)) {
+            if ($matcher->match($name, $property)) {
                 $results[] = $property;
             }
         }
