@@ -46,10 +46,7 @@ final class Processor implements ProcessorInterface
         );
         $valueFetcher = new ValueFetcher($valueIteratorFactory);
         $runtime = new Runtime(
-            new ValueListFetcher(
-                $valueIteratorFactory,
-                $valueFetcher
-            ),
+            new ValueListFetcher($valueFetcher),
             $valueFetcher
         );
         $jsonDecoder = new Decoder($valueIteratorFactory);

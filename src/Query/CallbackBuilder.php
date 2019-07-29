@@ -130,6 +130,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         }
         switch ($node->getName()) {
             case AstNodeType::GET_INPUT:
+                /** @see RuntimeInterface::getInput() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'getInput',
@@ -146,6 +147,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CREATE_FILTER_CONTEXT:
+                /** @see RuntimeInterface::createFilterContext() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'createFilterContext',
@@ -154,6 +156,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::SPLIT:
+                /** @see RuntimeInterface::split() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'split',
@@ -162,6 +165,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::EVALUATE:
+                /** @see EvaluatorInterface::evaluate() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'evaluate',
@@ -171,6 +175,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::FILTER:
+                /** @see RuntimeInterface::filter() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'filter',
@@ -180,6 +185,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::EVALUATE_LOGICAL_OR:
+                /** @see EvaluatorInterface::logicalOr() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'logicalOr',
@@ -189,6 +195,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::EVALUATE_LOGICAL_AND:
+                /** @see EvaluatorInterface::logicalAnd() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'logicalAnd',
@@ -198,6 +205,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::EVALUATE_LOGICAL_NOT:
+                /** @see EvaluatorInterface::logicalNot() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'logicalNot',
@@ -206,6 +214,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CALCULATE_IS_EQUAL:
+                /** @see EvaluatorInterface::isEqual() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'isEqual',
@@ -215,6 +224,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CALCULATE_IS_GREATER:
+                /** @see EvaluatorInterface::isGreater() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'isGreater',
@@ -224,6 +234,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CALCULATE_IS_REGEXP:
+                /** @see EvaluatorInterface::isRegExp() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'isRegExp',
@@ -233,6 +244,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::FETCH_CHILDREN:
+                /** @see RuntimeInterface::fetchChildren() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'fetchChildren',
@@ -246,6 +258,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::FETCH_CHILDREN_DEEP:
+                /** @see RuntimeInterface::fetchChildrenDeep() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'fetchChildrenDeep',
@@ -259,6 +272,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_ANY_CHILD:
+                /** @see RuntimeInterface::matchAnyChild() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchAnyChild',
@@ -267,6 +281,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_PROPERTY_STRICTLY:
+                /** @see RuntimeInterface::matchPropertyStrictly() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchPropertyStrictly',
@@ -275,6 +290,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_ELEMENT_STRICTLY:
+                /** @see RuntimeInterface::matchElementStrictly() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchElementStrictly',
@@ -283,6 +299,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_ELEMENT_SLICE:
+                /** @see RuntimeInterface::matchElementSlice() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchElementSlice',
@@ -300,6 +317,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::AGGREGATE:
+                /** @see EvaluatorInterface::aggregate() */
                 $this->addEvaluatorMethodCall(
                     $node,
                     'aggregate',
@@ -309,6 +327,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::POPULATE_LITERAL:
+                /** @see RuntimeInterface::populateLiteral() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'populateLiteral',
@@ -318,6 +337,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::POPULATE_ARRAY_ELEMENTS:
+                /** @see RuntimeInterface::populateArrayElements() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'populateArrayElements',
@@ -331,6 +351,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::POPULATE_INDEX_LIST:
+                /** @see RuntimeInterface::populateIndexList() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'populateIndexList',
@@ -343,6 +364,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::POPULATE_NAME_LIST:
+                /** @see RuntimeInterface::populateNameList() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'populateNameList',
@@ -358,6 +380,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $attributes = $node->getAttributeList();
                 // TODO: allow accessing null attributes
                 $value = $this->php->val($attributes['value'] ?? null);
+                /** @see RuntimeInterface::createScalar() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'createScalar',
@@ -386,6 +409,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CREATE_LITERAL_ARRAY:
+                /** @see RuntimeInterface::createArray() */
                 $this->addRuntimeMethodCall(
                     $node,
                     'createArray',

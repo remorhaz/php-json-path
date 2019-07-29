@@ -21,13 +21,13 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 final class Runtime implements RuntimeInterface
 {
 
-    private $fetcher;
+    private $valueListFetcher;
 
     private $valueFetcher;
 
-    public function __construct(ValueListFetcher $fetcher, ValueFetcherInterface $valueFetcher)
+    public function __construct(ValueListFetcher $valueListFetcher, ValueFetcherInterface $valueFetcher)
     {
-        $this->fetcher = $fetcher;
+        $this->valueListFetcher = $valueListFetcher;
         $this->valueFetcher = $valueFetcher;
     }
 
@@ -41,7 +41,7 @@ final class Runtime implements RuntimeInterface
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface
     {
         return $this
-            ->fetcher
+            ->valueListFetcher
             ->fetchFilterContext($values);
     }
 
@@ -58,7 +58,7 @@ final class Runtime implements RuntimeInterface
         EvaluatedValueListInterface $evaluatedValues
     ): NodeValueListInterface {
         return $this
-            ->fetcher
+            ->valueListFetcher
             ->fetchFilteredValues(
                 new EvaluatedValueList(
                     $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
@@ -73,7 +73,7 @@ final class Runtime implements RuntimeInterface
         Matcher\ChildMatcherInterface ...$matchers
     ): NodeValueListInterface {
         return $this
-            ->fetcher
+            ->valueListFetcher
             ->fetchChildren($values, ...$matchers);
     }
 
@@ -82,7 +82,7 @@ final class Runtime implements RuntimeInterface
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
         return $this
-            ->fetcher
+            ->valueListFetcher
             ->fetchDeepChildren($matcher, $values);
     }
 

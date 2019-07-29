@@ -9,18 +9,14 @@ use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class ValueListFetcher
 {
 
-    private $valueIteratorFactory;
-
     private $valueFetcher;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory, ValueFetcherInterface $valueFetcher)
+    public function __construct(ValueFetcherInterface $valueFetcher)
     {
-        $this->valueIteratorFactory = $valueIteratorFactory;
         $this->valueFetcher = $valueFetcher;
     }
 
