@@ -13,8 +13,6 @@ final class LiteralValueList implements LiteralValueListInterface
 
     private $value;
 
-    private $values;
-
     public function __construct(IndexMapInterface $indexMap, LiteralValueInterface $value)
     {
         $this->indexMap = $indexMap;
@@ -28,21 +26,17 @@ final class LiteralValueList implements LiteralValueListInterface
 
     public function getValue(int $index): ValueInterface
     {
-        $values = $this->getValues();
-        if (!isset($values[$index])) {
+        $innerIndexes = $this->indexMap->getInnerIndice();
+        if (!isset($innerIndexes[$index])) {
             throw new Exception\ValueNotFoundException($index, $this);
         }
 
-        return $values[$index];
+        return $this->value;
     }
 
     public function getValues(): array
     {
-        if (!isset($this->values)) {
-            $this->values = array_fill_keys($this->indexMap->getInnerIndice(), $this->value);
-        }
-
-        return $this->values;
+        return array_fill_keys($this->indexMap->getInnerIndice(), $this->value);
     }
 
     public function getIndexMap(): IndexMapInterface
