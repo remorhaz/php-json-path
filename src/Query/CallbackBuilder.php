@@ -134,14 +134,14 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'getInput',
-                    $this->input
+                    $this->input,
                 );
                 break;
 
             case AstNodeType::SET_OUTPUT:
                 $this->capabilities = new Capabilities(
                     $node->getAttribute('is_definite'),
-                    $node->getAttribute('is_path')
+                    $node->getAttribute('is_path'),
                 );
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
@@ -151,16 +151,26 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'createFilterContext',
-                    $this->getReference($node->getChild(0))
+                    $this->getReference($node->getChild(0)),
                 );
                 break;
 
-            case AstNodeType::SPLIT:
-                /** @see RuntimeInterface::split() */
+            case AstNodeType::SPLIT_FILTER_CONTEXT:
+                /** @see RuntimeInterface::splitFilterContext() */
                 $this->addRuntimeMethodCall(
                     $node,
-                    'split',
-                    $this->getReference($node->getChild(0))
+                    'splitFilterContext',
+                    $this->getReference($node->getChild(0)),
+                );
+                break;
+
+            case AstNodeType::JOIN_FILTER_RESULTS:
+                /** @see RuntimeInterface::joinFilterResults() */
+                $this->addRuntimeMethodCall(
+                    $node,
+                    'joinFilterResults',
+                    $this->getReference($node->getChild(0)),
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -170,17 +180,17 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'evaluate',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
             case AstNodeType::FILTER:
-                /** @see RuntimeInterface::filter() */
+                /** @see RuntimeInterface::fetchFilteredValues() */
                 $this->addRuntimeMethodCall(
                     $node,
-                    'filter',
+                    'fetchFilteredValues',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -190,7 +200,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'logicalOr',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -200,7 +210,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'logicalAnd',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -209,7 +219,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addEvaluatorMethodCall(
                     $node,
                     'logicalNot',
-                    $this->getReference($node->getChild(0))
+                    $this->getReference($node->getChild(0)),
                 );
                 break;
 
@@ -219,7 +229,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'isEqual',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -229,7 +239,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'isGreater',
                     $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1))
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -239,7 +249,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'isRegExp',
                     $this->php->val($node->getAttribute('pattern')),
-                    $this->getReference($node->getChild(0))
+                    $this->getReference($node->getChild(0)),
                 );
                 break;
 
@@ -252,8 +262,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     new Arg(
                         $this->getReference($node->getChild(1)),
                         false,
-                        true
-                    )
+                        true,
+                    ),
                 );
                 break;
 
@@ -266,8 +276,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     new Arg(
                         $this->getReference($node->getChild(1)),
                         false,
-                        true
-                    )
+                        true,
+                    ),
                 );
                 break;
 
@@ -276,7 +286,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchAnyChild',
-                    $this->getReference($node->getChild(0))
+                    $this->getReference($node->getChild(0)),
                 );
                 break;
 
@@ -345,7 +355,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     new Arg(
                         $this->getReference($node->getChild(1)),
                         false,
-                        true
+                        true,
                     ),
                 );
                 break;
@@ -358,7 +368,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $this->getReference($node->getChild(0)),
                     ...array_map(
                         [$this->php, 'val'],
-                        $node->getAttribute('indexList')
+                        $node->getAttribute('indexList'),
                     ),
                 );
                 break;
@@ -404,7 +414,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 // [ 0:<value> ]
                 $this->setReference(
                     $node,
-                    $this->getReference($node->getChild(0))
+                    $this->getReference($node->getChild(0)),
                 );
                 break;
 

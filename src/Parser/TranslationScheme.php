@@ -416,7 +416,12 @@ class TranslationScheme implements TranslationSchemeInterface
                         $symbols[3]['i.context_value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->evaluate($symbols[3]['i.value_list_id'], $symbols[3]['s.value_list_id'])
+                            ->joinFilterResults(
+                                $this
+                                    ->queryAstBuilder
+                                    ->evaluate($symbols[3]['i.value_list_id'], $symbols[3]['s.value_list_id']),
+                                $symbols[3]['i.context_value_list_id'],
+                            )
                     );
                 $header['s.is_definite'] = false;
                 break;
@@ -642,7 +647,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->createFilterContext($header['i.value_list_id']);
                 $symbols[3]['i.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->split($symbols[3]['i.context_value_list_id']);
+                    ->splitFilterContext($symbols[3]['i.context_value_list_id']);
                 break;
 
             case SymbolType::NT_EXPR . '.0.0':

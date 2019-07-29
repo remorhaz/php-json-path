@@ -12,7 +12,9 @@ interface AstBuilderInterface
 
     public function createFilterContext(int $id): int;
 
-    public function split(int $id): int;
+    public function splitFilterContext(int $id): int;
+
+    public function joinFilterResults(int $evaluatedId, int $contextId): int;
 
     public function evaluate(int $sourceId, int $id): int;
 

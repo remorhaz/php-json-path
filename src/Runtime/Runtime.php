@@ -45,7 +45,7 @@ final class Runtime implements RuntimeInterface
             ->fetchFilterContext($values);
     }
 
-    public function split(NodeValueListInterface $values): NodeValueListInterface
+    public function splitFilterContext(NodeValueListInterface $values): NodeValueListInterface
     {
         return new NodeValueList(
             $values->getIndexMap()->split(),
@@ -53,19 +53,23 @@ final class Runtime implements RuntimeInterface
         );
     }
 
-    public function filter(
+    public function joinFilterResults(
+        EvaluatedValueListInterface $evaluatedValues,
+        NodeValueListInterface $contextValues
+    ): EvaluatedValueListInterface {
+        return new EvaluatedValueList(
+            $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
+            ...$evaluatedValues->getResults()
+        );
+    }
+
+    public function fetchFilteredValues(
         NodeValueListInterface $contextValues,
         EvaluatedValueListInterface $evaluatedValues
     ): NodeValueListInterface {
         return $this
             ->valueListFetcher
-            ->fetchFilteredValues(
-                new EvaluatedValueList(
-                    $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
-                    ...$evaluatedValues->getResults()
-                ),
-                $contextValues
-            );
+            ->fetchFilteredValues($evaluatedValues, $contextValues);
     }
 
     public function fetchChildren(

@@ -72,12 +72,28 @@ final class AstBuilder implements AstBuilderInterface
      * @return int
      * @throws UniLexException
      */
-    public function split(int $id): int
+    public function splitFilterContext(int $id): int
     {
         return $this
             ->tree
-            ->createNode(AstNodeType::SPLIT)
+            ->createNode(AstNodeType::SPLIT_FILTER_CONTEXT)
             ->addChild($this->tree->getNode($id))
+            ->getId();
+    }
+
+    /**
+     * @param int $evaluatedId
+     * @param int $contextId
+     * @return int
+     * @throws UniLexException
+     */
+    public function joinFilterResults(int $evaluatedId, int $contextId): int
+    {
+        return $this
+            ->tree
+            ->createNode(AstNodeType::JOIN_FILTER_RESULTS)
+            ->addChild($this->tree->getNode($evaluatedId))
+            ->addChild($this->tree->getNode($contextId))
             ->getId();
     }
 

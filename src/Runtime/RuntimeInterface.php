@@ -17,9 +17,14 @@ interface RuntimeInterface
 
     public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 
-    public function split(NodeValueListInterface $values): NodeValueListInterface;
+    public function splitFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 
-    public function filter(
+    public function joinFilterResults(
+        EvaluatedValueListInterface $evaluatedValues,
+        NodeValueListInterface $contextValues
+    ): EvaluatedValueListInterface;
+
+    public function fetchFilteredValues(
         NodeValueListInterface $contextValues,
         EvaluatedValueListInterface $evaluatedValues
     ): NodeValueListInterface;

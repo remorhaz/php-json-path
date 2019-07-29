@@ -9,7 +9,8 @@ abstract class AstNodeType
     public const GET_INPUT = 'get_input';
     public const SET_OUTPUT = 'set_output';
     public const CREATE_FILTER_CONTEXT = 'create_filter_context';
-    public const SPLIT = 'split'; // TODO: rename to FETCH_AS_ROOTS?
+    public const SPLIT_FILTER_CONTEXT = 'split_filter_context';
+    public const JOIN_FILTER_RESULTS = 'join_filter_results';
     public const EVALUATE = 'evaluate';
     public const FILTER = 'filter';
     public const EVALUATE_LOGICAL_OR = 'evaluate_logical_or';
