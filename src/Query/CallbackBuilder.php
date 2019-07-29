@@ -146,11 +146,11 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 
-            case AstNodeType::CREATE_FILTER_CONTEXT:
-                /** @see RuntimeInterface::createFilterContext() */
+            case AstNodeType::FETCH_FILTER_CONTEXT:
+                /** @see RuntimeInterface::fetchFilterContext() */
                 $this->addRuntimeMethodCall(
                     $node,
-                    'createFilterContext',
+                    'fetchFilterContext',
                     $this->getReference($node->getChild(0)),
                 );
                 break;
@@ -259,11 +259,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'fetchChildren',
                     $this->getReference($node->getChild(0)),
-                    new Arg(
-                        $this->getReference($node->getChild(1)),
-                        false,
-                        true,
-                    ),
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -273,11 +269,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     $node,
                     'fetchChildrenDeep',
                     $this->getReference($node->getChild(0)),
-                    new Arg(
-                        $this->getReference($node->getChild(1)),
-                        false,
-                        true,
-                    ),
+                    $this->getReference($node->getChild(1)),
                 );
                 break;
 
@@ -286,7 +278,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchAnyChild',
-                    $this->getReference($node->getChild(0)),
                 );
                 break;
 
@@ -295,7 +286,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchPropertyStrictly',
-                    $this->getReference($node->getChild(0)),
+                    ...array_map(
+                        [$this->php, 'val'],
+                        $node->getAttribute('names')
+                    ),
                 );
                 break;
 
@@ -304,7 +298,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchElementStrictly',
-                    $this->getReference($node->getChild(0)),
+                    ...array_map(
+                        [$this->php, 'val'],
+                        $node->getAttribute('indexes')
+                    ),
                 );
                 break;
 
@@ -313,7 +310,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->addRuntimeMethodCall(
                     $node,
                     'matchElementSlice',
-                    $this->getReference($node->getChild(0)),
                     $this
                         ->php
                         ->val($node->getAttribute('hasStart') ? $node->getAttribute('start') : null),
@@ -356,32 +352,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                         $this->getReference($node->getChild(1)),
                         false,
                         true,
-                    ),
-                );
-                break;
-
-            case AstNodeType::POPULATE_INDEX_LIST:
-                /** @see RuntimeInterface::populateIndexList() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'populateIndexList',
-                    $this->getReference($node->getChild(0)),
-                    ...array_map(
-                        [$this->php, 'val'],
-                        $node->getAttribute('indexList'),
-                    ),
-                );
-                break;
-
-            case AstNodeType::POPULATE_NAME_LIST:
-                /** @see RuntimeInterface::populateNameList() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'populateNameList',
-                    $this->getReference($node->getChild(0)),
-                    ...array_map(
-                        [$this->php, 'val'],
-                        $node->getAttribute('nameList'),
                     ),
                 );
                 break;

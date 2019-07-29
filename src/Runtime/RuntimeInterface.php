@@ -15,7 +15,7 @@ interface RuntimeInterface
 
     public function getInput(NodeValueInterface $rootValue): NodeValueListInterface;
 
-    public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface;
+    public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 
     public function splitFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 
@@ -31,7 +31,7 @@ interface RuntimeInterface
 
     public function fetchChildren(
         NodeValueListInterface $values,
-        Matcher\ChildMatcherInterface ...$matchers
+        Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface;
 
     public function fetchChildrenDeep(
@@ -39,13 +39,13 @@ interface RuntimeInterface
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface;
 
-    public function matchAnyChild(NodeValueListInterface $source): array;
+    public function matchAnyChild(): Matcher\ChildMatcherInterface;
 
-    public function matchPropertyStrictly(array $nameLists): array;
+    public function matchPropertyStrictly(string ...$nameList): Matcher\ChildMatcherInterface;
 
-    public function matchElementStrictly(array $indexLists): array;
+    public function matchElementStrictly(int ...$indexList): Matcher\ChildMatcherInterface;
 
-    public function matchElementSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array;
+    public function matchElementSlice(?int $start, ?int $end, ?int $step): Matcher\ChildMatcherInterface;
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
 
@@ -53,10 +53,6 @@ interface RuntimeInterface
         NodeValueListInterface $source,
         ValueListInterface ...$values
     ): array;
-
-    public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array;
-
-    public function populateNameList(NodeValueListInterface $source, string ...$nameList): array;
 
     public function createScalar($value): LiteralValueInterface;
 

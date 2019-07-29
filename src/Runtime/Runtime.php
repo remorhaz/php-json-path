@@ -38,7 +38,7 @@ final class Runtime implements RuntimeInterface
             ->build();
     }
 
-    public function createFilterContext(NodeValueListInterface $values): NodeValueListInterface
+    public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface
     {
         return $this
             ->valueListFetcher
@@ -74,11 +74,11 @@ final class Runtime implements RuntimeInterface
 
     public function fetchChildren(
         NodeValueListInterface $values,
-        Matcher\ChildMatcherInterface ...$matchers
+        Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
         return $this
             ->valueListFetcher
-            ->fetchChildren($values, ...$matchers);
+            ->fetchChildren($values, $matcher);
     }
 
     public function fetchChildrenDeep(
@@ -87,47 +87,27 @@ final class Runtime implements RuntimeInterface
     ): NodeValueListInterface {
         return $this
             ->valueListFetcher
-            ->fetchDeepChildren($matcher, $values);
+            ->fetchDeepChildren($values, $matcher);
     }
 
-    public function matchAnyChild(NodeValueListInterface $source): array
+    public function matchAnyChild(): Matcher\ChildMatcherInterface
     {
-        return array_map(
-            function (): Matcher\ChildMatcherInterface {
-                return new Matcher\AnyChildMatcher;
-            },
-            $source->getIndexMap()->getInnerIndice()
-        );
+        return new Matcher\AnyChildMatcher;
     }
 
-    public function matchPropertyStrictly(array $nameLists): array
+    public function matchPropertyStrictly(string ...$nameList): Matcher\ChildMatcherInterface
     {
-        return array_map(
-            function (array $nameList): Matcher\ChildMatcherInterface {
-                return new Matcher\StrictPropertyMatcher(...$nameList);
-            },
-            $nameLists
-        );
+        return new Matcher\StrictPropertyMatcher(...$nameList);
     }
 
-    public function matchElementStrictly(array $indexLists): array
+    public function matchElementStrictly(int ...$indexList): Matcher\ChildMatcherInterface
     {
-        return array_map(
-            function (array $indexList): Matcher\ChildMatcherInterface {
-                return new Matcher\StrictElementMatcher(...$indexList);
-            },
-            $indexLists
-        );
+        return new Matcher\StrictElementMatcher(...$indexList);
     }
 
-    public function matchElementSlice(NodeValueListInterface $source, ?int $start, ?int $end, ?int $step): array
+    public function matchElementSlice(?int $start, ?int $end, ?int $step): Matcher\ChildMatcherInterface
     {
-        return array_map(
-            function () use ($start, $end, $step): Matcher\ChildMatcherInterface {
-                return new Matcher\SliceElementMatcher($this->valueFetcher, $start, $end, $step);
-            },
-            $source->getIndexMap()->getInnerIndice()
-        );
+        return new Matcher\SliceElementMatcher($this->valueFetcher, $start, $end, $step);
     }
 
     public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface
@@ -156,26 +136,6 @@ final class Runtime implements RuntimeInterface
         };
 
         return array_map($createArrayElement, $elementLists);
-    }
-
-    public function populateIndexList(NodeValueListInterface $source, int ...$indexList): array
-    {
-        return array_fill_keys(
-            $source
-                ->getIndexMap()
-                ->getInnerIndice(),
-            $indexList
-        );
-    }
-
-    public function populateNameList(NodeValueListInterface $source, string ...$nameList): array
-    {
-        return array_fill_keys(
-            $source
-                ->getIndexMap()
-                ->getInnerIndice(),
-            $nameList
-        );
     }
 
     public function createScalar($value): LiteralValueInterface

@@ -58,11 +58,11 @@ final class AstBuilder implements AstBuilderInterface
      * @return int
      * @throws UniLexException
      */
-    public function createFilterContext(int $id): int
+    public function fetchFilterContext(int $id): int
     {
         return $this
             ->tree
-            ->createNode(AstNodeType::CREATE_FILTER_CONTEXT)
+            ->createNode(AstNodeType::FETCH_FILTER_CONTEXT)
             ->addChild($this->tree->getNode($id))
             ->getId();
     }
@@ -256,61 +256,56 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $sourceId
      * @return int
-     * @throws UniLexException
      */
-    public function matchAnyChild(int $sourceId): int
+    public function matchAnyChild(): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::MATCH_ANY_CHILD)
-            ->addChild($this->tree->getNode($sourceId))
             ->getId();
     }
 
     /**
-     * @param int $nameListId
+     * @param string ...$names
      * @return int
      * @throws UniLexException
      */
-    public function matchPropertyStrictly(int $nameListId): int
+    public function matchPropertyStrictly(string ...$names): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::MATCH_PROPERTY_STRICTLY)
-            ->addChild($this->tree->getNode($nameListId))
+            ->setAttribute('names', $names)
             ->getId();
     }
 
     /**
-     * @param int $indexListId
+     * @param int ...$indexes
      * @return int
      * @throws UniLexException
      */
-    public function matchElementStrictly(int $indexListId): int
+    public function matchElementStrictly(int ...$indexes): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::MATCH_ELEMENT_STRICTLY)
-            ->addChild($this->tree->getNode($indexListId))
+            ->setAttribute('indexes', $indexes)
             ->getId();
     }
 
     /**
-     * @param int $sourceId
      * @param int|null $start
      * @param int|null $end
      * @param int|null $step
      * @return int
      * @throws UniLexException
      */
-    public function matchElementSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int
+    public function matchElementSlice(?int $start, ?int $end, ?int $step): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::MATCH_ELEMENT_SLICE)
-            ->addChild($this->tree->getNode($sourceId))
             ->setAttribute('hasStart', isset($start))
             ->setAttribute('start', $start)
             ->setAttribute('hasEnd', isset($end))
@@ -380,38 +375,6 @@ final class AstBuilder implements AstBuilderInterface
             ->createNode(AstNodeType::CREATE_LITERAL_ARRAY)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($elementsId))
-            ->getId();
-    }
-
-    /**
-     * @param int $sourceId
-     * @param int ...$indexList
-     * @return int
-     * @throws UniLexException
-     */
-    public function populateIndexList(int $sourceId, int ...$indexList): int
-    {
-        return $this
-            ->tree
-            ->createNode(AstNodeType::POPULATE_INDEX_LIST)
-            ->addChild($this->tree->getNode($sourceId))
-            ->setAttribute('indexList', $indexList)
-            ->getId();
-    }
-
-    /**
-     * @param int $sourceId
-     * @param string ...$nameList
-     * @return int
-     * @throws UniLexException
-     */
-    public function populateNameList(int $sourceId, string ...$nameList): int
-    {
-        return $this
-            ->tree
-            ->createNode(AstNodeType::POPULATE_NAME_LIST)
-            ->addChild($this->tree->getNode($sourceId))
-            ->setAttribute('nameList', $nameList)
             ->getId();
     }
 

@@ -22,16 +22,15 @@ final class ValueListFetcher
 
     /**
      * @param NodeValueListInterface $source
-     * @param Matcher\ChildMatcherInterface ...$matcherList
+     * @param Matcher\ChildMatcherInterface $matcher
      * @return NodeValueListInterface
      */
     public function fetchChildren(
         NodeValueListInterface $source,
-        Matcher\ChildMatcherInterface ...$matcherList
+        Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
         $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
-            $matcher = $matcherList[$sourceIndex];
             $children = $this
                 ->valueFetcher
                 ->fetchValueChildren($matcher, $sourceValue);
@@ -45,8 +44,8 @@ final class ValueListFetcher
     }
 
     public function fetchDeepChildren(
-        Matcher\ChildMatcherInterface $matcher,
-        NodeValueListInterface $source
+        NodeValueListInterface $source,
+        Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
         $nodesBuilder = new NodeValueListBuilder;
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {

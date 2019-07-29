@@ -10,7 +10,7 @@ interface AstBuilderInterface
 
     public function setOutput(int $id, bool $isDefinite, bool $isPath): void;
 
-    public function createFilterContext(int $id): int;
+    public function fetchFilterContext(int $id): int;
 
     public function splitFilterContext(int $id): int;
 
@@ -36,23 +36,19 @@ interface AstBuilderInterface
 
     public function fetchChildrenDeep(int $id, int $matcherId): int;
 
-    public function matchAnyChild(int $sourceId): int;
+    public function matchAnyChild(): int;
 
-    public function matchPropertyStrictly(int $id): int;
+    public function matchPropertyStrictly(string ...$names): int;
 
-    public function matchElementStrictly(int $id): int;
+    public function matchElementStrictly(int ...$indexes): int;
 
-    public function matchElementSlice(int $sourceId, ?int $start, ?int $end, ?int $step): int;
+    public function matchElementSlice(?int $start, ?int $end, ?int $step): int;
 
     public function aggregate(string $name, int $id): int;
 
     public function populateLiteral(int $sourceId, int $valueId): int;
 
     public function populateArrayElements(int $sourceId, int $arrayId): int;
-
-    public function populateIndexList(int $sourceId, int ...$indexList): int;
-
-    public function populateNameList(int $sourceId, string ...$nameList): int;
 
     public function createScalar($value): int;
 

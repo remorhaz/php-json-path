@@ -8,7 +8,7 @@ abstract class AstNodeType
 
     public const GET_INPUT = 'get_input';
     public const SET_OUTPUT = 'set_output';
-    public const CREATE_FILTER_CONTEXT = 'create_filter_context';
+    public const FETCH_FILTER_CONTEXT = 'fetch_filter_context';
     public const SPLIT_FILTER_CONTEXT = 'split_filter_context';
     public const JOIN_FILTER_RESULTS = 'join_filter_results';
     public const EVALUATE = 'evaluate';
@@ -28,9 +28,6 @@ abstract class AstNodeType
     public const AGGREGATE = 'aggregate';
     public const POPULATE_LITERAL = 'populate_literal';
     public const POPULATE_ARRAY_ELEMENTS = 'populate_array_elements';
-    public const POPULATE_INDEX_LIST = 'populate_index_list';
-    public const POPULATE_NAME_LIST = 'populate_name_list';
-
     public const CREATE_SCALAR = 'create_scalar';
     public const CREATE_LITERAL_ARRAY = 'create_literal_array';
     public const CREATE_ARRAY = 'create_array';

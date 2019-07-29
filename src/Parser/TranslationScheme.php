@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpDuplicateSwitchCaseBodyInspection */
+declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Parser;
 
@@ -246,11 +247,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
                 $header['s.matcher_id'] = $this
                     ->queryAstBuilder
-                    ->matchElementStrictly(
-                        $this
-                            ->queryAstBuilder
-                            ->populateIndexList($header['i.value_list_id'], ...$symbols[1]['s.int_list'])
-                    );
+                    ->matchElementStrictly(...$symbols[1]['s.int_list']);
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
@@ -266,7 +263,6 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.matcher_id'] = $this
                     ->queryAstBuilder
                     ->matchElementSlice(
-                        $header['i.value_list_id'],
                         $header['i.int_start'],
                         $symbols[1]['s.int'],
                         $symbols[2]['s.int'],
@@ -370,7 +366,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
+                        $this->queryAstBuilder->matchAnyChild()
                     );
                 $header['s.is_definite'] = false;
                 break;
@@ -382,12 +378,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(
-                                $this->queryAstBuilder->populateNameList(
-                                    $header['i.value_list_id'],
-                                    ...$symbols[0]['s.text_list']
-                                )
-                            )
+                            ->matchPropertyStrictly(...$symbols[0]['s.text_list'])
                     );
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
@@ -644,7 +635,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $symbols[3]['i.context_value_list_id'] = $this
                     ->queryAstBuilder
-                    ->createFilterContext($header['i.value_list_id']);
+                    ->fetchFilterContext($header['i.value_list_id']);
                 $symbols[3]['i.value_list_id'] = $this
                     ->queryAstBuilder
                     ->splitFilterContext($symbols[3]['i.context_value_list_id']);
@@ -945,7 +936,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
+                        $this->queryAstBuilder->matchAnyChild()
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_path'] = $header['i.is_path'];
@@ -959,12 +950,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(
-                                $this->queryAstBuilder->populateNameList(
-                                    $header['i.value_list_id'],
-                                    $header['i.filter_name']
-                                )
-                            )
+                            ->matchPropertyStrictly($header['i.filter_name'])
                     );
                 $symbols[0]['i.is_definite'] = $header['i.is_definite'];
                 $symbols[0]['i.is_path'] = $header['i.is_path'];
@@ -978,12 +964,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(
-                                $this->queryAstBuilder->populateNameList(
-                                    $header['i.value_list_id'],
-                                    $symbols[0]['s.text']
-                                )
-                            )
+                            ->matchPropertyStrictly($symbols[0]['s.text'])
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_path'] = $header['i.is_path'];
@@ -995,7 +976,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildrenDeep(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild($header['i.value_list_id'])
+                        $this->queryAstBuilder->matchAnyChild()
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_path'] = $header['i.is_path'];
