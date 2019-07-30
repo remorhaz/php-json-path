@@ -20,6 +20,8 @@ use Remorhaz\JSON\Path\Query\QueryValidatorInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
+use Remorhaz\JSON\Path\Runtime\LiteralFactory;
+use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactory;
 use Remorhaz\JSON\Path\Runtime\ValueListFetcher;
 use Remorhaz\JSON\Path\Runtime\Runtime;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
@@ -44,8 +46,9 @@ final class Processor implements ProcessorInterface
         $valueFetcher = new ValueFetcher($valueIteratorFactory);
         $runtime = new Runtime(
             new ValueListFetcher($valueFetcher),
-            $valueFetcher,
             $evaluator,
+            new LiteralFactory,
+            new MatcherFactory($valueFetcher),
         );
         $jsonDecoder = new Decoder($valueIteratorFactory);
         $jsonEncoder = new Encoder($jsonDecoder);

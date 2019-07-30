@@ -11,7 +11,11 @@ use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\AstTranslator;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
+use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
+use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
+use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactoryInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\UniLex\AST\Tree;
@@ -99,17 +103,38 @@ class AstTranslatorTest extends TestCase
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
+        $valueListFetcher = $this->createMock(ValueListFetcherInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
+        $literalFactory = $this->createMock(LiteralFactoryInterface::class);
+        $matcherFactory = $this->createMock(MatcherFactoryInterface::class);
+        $runtime
+            ->method('getValueListFetcher')
+            ->willReturn($valueListFetcher);
+        $runtime
+            ->method('getEvaluator')
+            ->willReturn($evaluator);
+        $runtime
+            ->method('getLiteralFactory')
+            ->willReturn($literalFactory);
+        $runtime
+            ->method('getMatcherFactory')
+            ->willReturn($matcherFactory);
 
         $isCallbackCalledWithMatchingArgs = null;
-        $callback = function (
-            NodeValueListInterface $inputArg,
-            RuntimeInterface $runtimeArg
-        ) use (
+        $callback = function () use (
             $rootValue,
-            $runtime,
+            $valueListFetcher,
+            $evaluator,
+            $literalFactory,
+            $matcherFactory,
             &$isCallbackCalledWithMatchingArgs
         ): ValueListInterface {
-            $isCallbackCalledWithMatchingArgs = $inputArg->getValues() === [$rootValue] && $runtimeArg === $runtime;
+            $args = func_get_args();
+            /** @var NodeValueListInterface $input */
+            $input = array_shift($args);
+            $isCallbackCalledWithMatchingArgs =
+                $input->getValues() === [$rootValue] &&
+                [$valueListFetcher, $evaluator, $literalFactory, $matcherFactory] === $args;
 
             return $this->createMock(ValueListInterface::class);
         };

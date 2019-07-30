@@ -5,12 +5,14 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueInterface;
+use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Value\NodeValueList;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 
-final class ValueListFetcher
+final class ValueListFetcher implements ValueListFetcherInterface
 {
 
     private $valueFetcher;
@@ -43,7 +45,7 @@ final class ValueListFetcher
         return $nodesBuilder->build();
     }
 
-    public function fetchDeepChildren(
+    public function fetchChildrenDeep(
         NodeValueListInterface $source,
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
@@ -83,8 +85,8 @@ final class ValueListFetcher
     }
 
     public function fetchFilteredValues(
-        EvaluatedValueListInterface $results,
-        NodeValueListInterface $values
+        NodeValueListInterface $values,
+        EvaluatedValueListInterface $results
     ): NodeValueListInterface {
         if (!$values->getIndexMap()->equals($results->getIndexMap())) {
             throw new Exception\IndexMapMatchFailedException($values, $results);
@@ -105,5 +107,23 @@ final class ValueListFetcher
         }
 
         return $nodesBuilder->build();
+    }
+
+    public function splitFilterContext(NodeValueListInterface $values): NodeValueListInterface
+    {
+        return new NodeValueList(
+            $values->getIndexMap()->split(),
+            ...$values->getValues(),
+        );
+    }
+
+    public function joinFilterResults(
+        EvaluatedValueListInterface $evaluatedValues,
+        NodeValueListInterface $contextValues
+    ): EvaluatedValueListInterface {
+        return new EvaluatedValueList(
+            $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
+            ...$evaluatedValues->getResults()
+        );
     }
 }

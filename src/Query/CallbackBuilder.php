@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
+use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
+use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactoryInterface;
+use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use function array_map;
 use function array_reverse;
@@ -14,10 +17,8 @@ use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
-use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node as QueryAstNode;
 use Remorhaz\UniLex\Exception as UniLexException;
@@ -26,21 +27,31 @@ use Remorhaz\UniLex\Stack\PushInterface;
 final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
 {
 
+    private const ARG_INPUT = 'input';
+
     private const ARG_RUNTIME = 'runtime';
+
+    private const ARG_VALUE_LIST_FETCHER = 'valueListFetcher';
 
     private const ARG_EVALUATOR = 'evaluator';
 
-    private const ARG_INPUT = 'input';
+    private const ARG_LITERAL_FACTORY = 'literalFactory';
+
+    private const ARG_MATCHER_FACTORY = 'matcherFactory';
 
     private $php;
 
     private $references = [];
 
-    private $runtime;
+    private $input;
+
+    private $valueListFetcher;
 
     private $evaluator;
 
-    private $input;
+    private $literalFactory;
+
+    private $matcherFactory;
 
     private $stmts = [];
 
@@ -73,9 +84,11 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     public function onStart(QueryAstNode $node): void
     {
-        $this->runtime = $this->php->var(self::ARG_RUNTIME);
-        $this->evaluator = $this->php->var(self::ARG_EVALUATOR);
         $this->input = $this->php->var(self::ARG_INPUT);
+        $this->valueListFetcher = $this->php->var(self::ARG_VALUE_LIST_FETCHER);
+        $this->evaluator = $this->php->var(self::ARG_EVALUATOR);
+        $this->literalFactory = $this->php->var(self::ARG_LITERAL_FACTORY);
+        $this->matcherFactory = $this->php->var(self::ARG_MATCHER_FACTORY);
     }
 
     public function onFinish(): void
@@ -85,15 +98,25 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             ->param(self::ARG_INPUT)
             ->setType(NodeValueListInterface::class)
             ->getNode();
-        $runtimeParam = $this
+        $valueListFetcherParam = $this
             ->php
-            ->param(self::ARG_RUNTIME)
-            ->setType(RuntimeInterface::class)
+            ->param(self::ARG_VALUE_LIST_FETCHER)
+            ->setType(ValueListFetcherInterface::class)
             ->getNode();
         $evaluatorParam = $this
             ->php
             ->param(self::ARG_EVALUATOR)
             ->setType(EvaluatorInterface::class)
+            ->getNode();
+        $literalFactoryParam = $this
+            ->php
+            ->param(self::ARG_LITERAL_FACTORY)
+            ->setType(LiteralFactoryInterface::class)
+            ->getNode();
+        $matcherFactoryParam = $this
+            ->php
+            ->param(self::ARG_MATCHER_FACTORY)
+            ->setType(MatcherFactoryInterface::class)
             ->getNode();
         $stmts = array_map(
             function (PhpAstNode $stmt): PhpAstNode {
@@ -106,7 +129,13 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             [
                 'stmts' => $stmts,
                 'returnType' => ValueListInterface::class,
-                'params' => [$inputParam, $runtimeParam, $evaluatorParam],
+                'params' => [
+                    $inputParam,
+                    $valueListFetcherParam,
+                    $evaluatorParam,
+                    $literalFactoryParam,
+                    $matcherFactoryParam
+                ],
             ]
         );
         $return = new Return_($closure);
@@ -142,29 +171,65 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;
 
-            case AstNodeType::FETCH_FILTER_CONTEXT:
-                /** @see RuntimeInterface::fetchFilterContext() */
-                $this->addRuntimeMethodCall(
+            case AstNodeType::FETCH_CHILDREN:
+                /** @see ValueListFetcherInterface::fetchChildren() */
+                $this->addMethodCall(
                     $node,
+                    $this->valueListFetcher,
+                    'fetchChildren',
+                    $this->getReference($node->getChild(0)),
+                    $this->getReference($node->getChild(1)),
+                );
+                break;
+
+            case AstNodeType::FETCH_CHILDREN_DEEP:
+                /** @see ValueListFetcherInterface::fetchChildrenDeep() */
+                $this->addMethodCall(
+                    $node,
+                    $this->valueListFetcher,
+                    'fetchChildrenDeep',
+                    $this->getReference($node->getChild(0)),
+                    $this->getReference($node->getChild(1)),
+                );
+                break;
+
+            case AstNodeType::FETCH_FILTER_CONTEXT:
+                /** @see ValueListFetcherInterface::fetchFilterContext() */
+                $this->addMethodCall(
+                    $node,
+                    $this->valueListFetcher,
                     'fetchFilterContext',
                     $this->getReference($node->getChild(0)),
                 );
                 break;
 
             case AstNodeType::SPLIT_FILTER_CONTEXT:
-                /** @see RuntimeInterface::splitFilterContext() */
-                $this->addRuntimeMethodCall(
+                /** @see ValueListFetcherInterface::splitFilterContext() */
+                $this->addMethodCall(
                     $node,
+                    $this->valueListFetcher,
                     'splitFilterContext',
                     $this->getReference($node->getChild(0)),
                 );
                 break;
 
             case AstNodeType::JOIN_FILTER_RESULTS:
-                /** @see RuntimeInterface::joinFilterResults() */
-                $this->addRuntimeMethodCall(
+                /** @see ValueListFetcherInterface::joinFilterResults() */
+                $this->addMethodCall(
                     $node,
+                    $this->valueListFetcher,
                     'joinFilterResults',
+                    $this->getReference($node->getChild(0)),
+                    $this->getReference($node->getChild(1)),
+                );
+                break;
+
+            case AstNodeType::FILTER:
+                /** @see ValueListFetcherInterface::fetchFilteredValues() */
+                $this->addMethodCall(
+                    $node,
+                    $this->valueListFetcher,
+                    'fetchFilteredValues',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
                 );
@@ -172,19 +237,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::EVALUATE:
                 /** @see EvaluatorInterface::evaluate() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'evaluate',
-                    $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1)),
-                );
-                break;
-
-            case AstNodeType::FILTER:
-                /** @see RuntimeInterface::fetchFilteredValues() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'fetchFilteredValues',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
                 );
@@ -192,8 +248,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::EVALUATE_LOGICAL_OR:
                 /** @see EvaluatorInterface::logicalOr() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'logicalOr',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
@@ -202,8 +259,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::EVALUATE_LOGICAL_AND:
                 /** @see EvaluatorInterface::logicalAnd() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'logicalAnd',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
@@ -212,8 +270,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::EVALUATE_LOGICAL_NOT:
                 /** @see EvaluatorInterface::logicalNot() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'logicalNot',
                     $this->getReference($node->getChild(0)),
                 );
@@ -221,8 +280,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::CALCULATE_IS_EQUAL:
                 /** @see EvaluatorInterface::isEqual() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'isEqual',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
@@ -231,8 +291,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::CALCULATE_IS_GREATER:
                 /** @see EvaluatorInterface::isGreater() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'isGreater',
                     $this->getReference($node->getChild(0)),
                     $this->getReference($node->getChild(1)),
@@ -241,46 +302,29 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::CALCULATE_IS_REGEXP:
                 /** @see EvaluatorInterface::isRegExp() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'isRegExp',
                     $this->php->val($node->getAttribute('pattern')),
                     $this->getReference($node->getChild(0)),
                 );
                 break;
 
-            case AstNodeType::FETCH_CHILDREN:
-                /** @see RuntimeInterface::fetchChildren() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'fetchChildren',
-                    $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1)),
-                );
-                break;
-
-            case AstNodeType::FETCH_CHILDREN_DEEP:
-                /** @see RuntimeInterface::fetchChildrenDeep() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'fetchChildrenDeep',
-                    $this->getReference($node->getChild(0)),
-                    $this->getReference($node->getChild(1)),
-                );
-                break;
-
             case AstNodeType::MATCH_ANY_CHILD:
-                /** @see RuntimeInterface::matchAnyChild() */
-                $this->addRuntimeMethodCall(
+                /** @see MatcherFactoryInterface::matchAnyChild() */
+                $this->addMethodCall(
                     $node,
+                    $this->matcherFactory,
                     'matchAnyChild',
                 );
                 break;
 
             case AstNodeType::MATCH_PROPERTY_STRICTLY:
-                /** @see RuntimeInterface::matchPropertyStrictly() */
-                $this->addRuntimeMethodCall(
+                /** @see MatcherFactoryInterface::matchPropertyStrictly() */
+                $this->addMethodCall(
                     $node,
+                    $this->matcherFactory,
                     'matchPropertyStrictly',
                     ...array_map(
                         [$this->php, 'val'],
@@ -290,9 +334,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_ELEMENT_STRICTLY:
-                /** @see RuntimeInterface::matchElementStrictly() */
-                $this->addRuntimeMethodCall(
+                /** @see MatcherFactoryInterface::matchElementStrictly() */
+                $this->addMethodCall(
                     $node,
+                    $this->matcherFactory,
                     'matchElementStrictly',
                     ...array_map(
                         [$this->php, 'val'],
@@ -302,9 +347,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::MATCH_ELEMENT_SLICE:
-                /** @see RuntimeInterface::matchElementSlice() */
-                $this->addRuntimeMethodCall(
+                /** @see MatcherFactoryInterface::matchElementSlice() */
+                $this->addMethodCall(
                     $node,
+                    $this->matcherFactory,
                     'matchElementSlice',
                     $this
                         ->php
@@ -320,8 +366,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
             case AstNodeType::AGGREGATE:
                 /** @see EvaluatorInterface::aggregate() */
-                $this->addEvaluatorMethodCall(
+                $this->addMethodCall(
                     $node,
+                    $this->evaluator,
                     'aggregate',
                     $this->php->val($node->getAttribute('name')),
                     $this->getReference($node->getChild(0)),
@@ -331,12 +378,28 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             case AstNodeType::CREATE_LITERAL_SCALAR:
                 $attributes = $node->getAttributeList();
                 $value = $attributes['value'] ?? null; // TODO: allow pass null in attribute
-                /** @see RuntimeInterface::createLiteralScalar() */
-                $this->addRuntimeMethodCall(
+                /** @see LiteralFactoryInterface::createScalar() */
+                $this->addMethodCall(
                     $node,
-                    'createLiteralScalar',
+                    $this->literalFactory,
+                    'createScalar',
                     $this->getReference($node->getChild(0)),
                     $this->php->val($value),
+                );
+                break;
+
+            case AstNodeType::CREATE_LITERAL_ARRAY:
+                /** @see LiteralFactoryInterface::createArray() */
+                $this->addMethodCall(
+                    $node,
+                    $this->literalFactory,
+                    'createArray',
+                    $this->getReference($node->getChild(0)),
+                    new Arg(
+                        $this->getReference($node->getChild(1)),
+                        false,
+                        true,
+                    ),
                 );
                 break;
 
@@ -357,20 +420,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 $this->setReference(
                     $node,
                     $this->getReference($node->getChild(0)),
-                );
-                break;
-
-            case AstNodeType::CREATE_LITERAL_ARRAY:
-                /** @see RuntimeInterface::createLiteralArray() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'createLiteralArray',
-                    $this->getReference($node->getChild(0)),
-                    new Arg(
-                        $this->getReference($node->getChild(1)),
-                        false,
-                        true,
-                    ),
                 );
                 break;
         }
@@ -412,19 +461,11 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         return $this->references[$node->getId()];
     }
 
-    private function addRuntimeMethodCall(QueryAstNode $node, string $method, PhpAstNode ...$args): void
+    private function addMethodCall(QueryAstNode $node, Expr $object, string $method, PhpAstNode ...$args): void
     {
         $methodCall = $this
             ->php
-            ->methodCall($this->runtime, $method, $args);
-        $this->stmts[] = new Assign($this->createReference($node), $methodCall);
-    }
-
-    private function addEvaluatorMethodCall(QueryAstNode $node, string $method, PhpAstNode ...$args): void
-    {
-        $methodCall = $this
-            ->php
-            ->methodCall($this->evaluator, $method, $args);
+            ->methodCall($object, $method, $args);
         $this->stmts[] = new Assign($this->createReference($node), $methodCall);
     }
 }

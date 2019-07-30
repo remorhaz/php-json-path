@@ -32,7 +32,14 @@ final class Query implements QueryInterface
             ->addValue($rootNode, 0)
             ->build();
 
-        return call_user_func($this->callback, $input, $runtime, $runtime->getEvaluator());
+        return call_user_func(
+            $this->callback,
+            $input,
+            $runtime->getValueListFetcher(),
+            $runtime->getEvaluator(),
+            $runtime->getLiteralFactory(),
+            $runtime->getMatcherFactory(),
+        );
     }
 
     public function getCapabilities(): CapabilitiesInterface

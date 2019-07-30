@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query invocation signature changed.
 - Filter object joined with fetcher.
 - Child matchers accept address, value and container now.
+- Runtime object is now just an aggregate of lesser parts (like evaluator and matcher factory) and is not passed to callback anymore.
 
 ## [0.2.0] - 2019-07-28
 ### Added
