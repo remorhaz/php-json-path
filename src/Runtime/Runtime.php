@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
@@ -100,36 +99,40 @@ final class Runtime implements RuntimeInterface
         return new Matcher\SliceElementMatcher($this->valueFetcher, $start, $end, $step);
     }
 
-    public function createScalar(NodeValueListInterface $source, $value): ValueListInterface
+    public function createLiteralScalar(NodeValueListInterface $source, $value): ValueListInterface
     {
         return new LiteralValueList($source->getIndexMap(), new LiteralScalarValue($value));
     }
 
-    public function populateArrayElements(
+    public function createLiteralArray(
         NodeValueListInterface $source,
-        ValueListInterface ...$values
-    ): array {
-        foreach ($values as $valueList) {
+        ValueListInterface ...$valueLists
+    ): ValueListInterface {
+        $createArrayElement = function (array $elements) use ($source): ValueInterface {
+            return new LiteralArrayValue($source->getIndexMap(), ...$elements);
+        };
+
+        return new ValueList(
+            $source->getIndexMap(),
+            ...array_map(
+                $createArrayElement,
+                $this->buildArrayElementLists($source, ...$valueLists)
+            )
+        );
+    }
+
+    private function buildArrayElementLists(NodeValueListInterface $source, ValueListInterface ...$valueLists): array
+    {
+        $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndice(), []);
+        foreach ($valueLists as $valueList) {
             if (!$source->getIndexMap()->equals($valueList->getIndexMap())) {
                 throw new Exception\IndexMapMatchFailedException($valueList, $source);
             }
-        }
-        $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndice(), []);
-        foreach ($values as $valueList) {
             foreach ($valueList->getValues() as $innerIndex => $value) {
                 $elementLists[$innerIndex][] = $value;
             }
         }
 
-        $createArrayElement = function (array $elements) use ($source): ValueInterface {
-            return new LiteralArrayValue($source->getIndexMap(), ...$elements);
-        };
-
-        return array_map($createArrayElement, $elementLists);
-    }
-
-    public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface
-    {
-        return new ValueList($source->getIndexMap(), ...$elements);
+        return $elementLists;
     }
 }

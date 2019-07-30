@@ -169,15 +169,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_ARRAY, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->createLiteralArray(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->populateArrayElements(
-                                $header['i.value_list_id'],
-                                $symbols[0]['s.array_id']
-                            )
-                    );
+                    ->createLiteralArray($header['i.value_list_id'], $symbols[0]['s.array_id']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.4':

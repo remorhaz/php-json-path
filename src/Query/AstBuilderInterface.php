@@ -48,11 +48,9 @@ interface AstBuilderInterface
 
     public function createScalar(int $sourceId, $value): int;
 
-    public function populateArrayElements(int $sourceId, int $arrayId): int;
-
     public function createArray(): int;
 
     public function appendToArray(int $arrayId, int $valueId): int;
 
-    public function createLiteralArray(int $sourceId, int $elementsId): int;
+    public function createLiteralArray(int $sourceId, int $arrayId): int;
 }

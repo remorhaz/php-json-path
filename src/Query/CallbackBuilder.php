@@ -328,29 +328,15 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 );
                 break;
 
-            case AstNodeType::CREATE_SCALAR:
+            case AstNodeType::CREATE_LITERAL_SCALAR:
                 $attributes = $node->getAttributeList();
                 $value = $attributes['value'] ?? null; // TODO: allow pass null in attribute
-                /** @see RuntimeInterface::createScalar() */
+                /** @see RuntimeInterface::createLiteralScalar() */
                 $this->addRuntimeMethodCall(
                     $node,
-                    'createScalar',
+                    'createLiteralScalar',
                     $this->getReference($node->getChild(0)),
                     $this->php->val($value),
-                );
-                break;
-
-            case AstNodeType::POPULATE_ARRAY_ELEMENTS:
-                /** @see RuntimeInterface::populateArrayElements() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'populateArrayElements',
-                    $this->getReference($node->getChild(0)),
-                    new Arg(
-                        $this->getReference($node->getChild(1)),
-                        false,
-                        true,
-                    ),
                 );
                 break;
 
@@ -375,10 +361,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 break;
 
             case AstNodeType::CREATE_LITERAL_ARRAY:
-                /** @see RuntimeInterface::createArray() */
+                /** @see RuntimeInterface::createLiteralArray() */
                 $this->addRuntimeMethodCall(
                     $node,
-                    'createArray',
+                    'createLiteralArray',
                     $this->getReference($node->getChild(0)),
                     new Arg(
                         $this->getReference($node->getChild(1)),

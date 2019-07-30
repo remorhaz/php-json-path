@@ -340,7 +340,7 @@ final class AstBuilder implements AstBuilderInterface
     {
         return $this
             ->tree
-            ->createNode(AstNodeType::CREATE_SCALAR)
+            ->createNode(AstNodeType::CREATE_LITERAL_SCALAR)
             ->setAttribute('value', $value)
             ->addChild($this->tree->getNode($sourceId))
             ->getId();
@@ -352,29 +352,13 @@ final class AstBuilder implements AstBuilderInterface
      * @return int
      * @throws UniLexException
      */
-    public function populateArrayElements(int $sourceId, int $arrayId): int
-    {
-        return $this
-            ->tree
-            ->createNode(AstNodeType::POPULATE_ARRAY_ELEMENTS)
-            ->addChild($this->tree->getNode($sourceId))
-            ->addChild($this->tree->getNode($arrayId))
-            ->getId();
-    }
-
-    /**
-     * @param int $sourceId
-     * @param int $elementsId
-     * @return int
-     * @throws UniLexException
-     */
-    public function createLiteralArray(int $sourceId, int $elementsId): int
+    public function createLiteralArray(int $sourceId, int $arrayId): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::CREATE_LITERAL_ARRAY)
             ->addChild($this->tree->getNode($sourceId))
-            ->addChild($this->tree->getNode($elementsId))
+            ->addChild($this->tree->getNode($arrayId))
             ->getId();
     }
 

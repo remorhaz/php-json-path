@@ -26,8 +26,7 @@ abstract class AstNodeType
     public const MATCH_ELEMENT_STRICTLY = 'match_element_strictly';
     public const MATCH_ELEMENT_SLICE = 'match_element_slice';
     public const AGGREGATE = 'aggregate';
-    public const POPULATE_ARRAY_ELEMENTS = 'populate_array_elements';
-    public const CREATE_SCALAR = 'create_scalar';
+    public const CREATE_LITERAL_SCALAR = 'create_literal_scalar';
     public const CREATE_LITERAL_ARRAY = 'create_literal_array';
     public const CREATE_ARRAY = 'create_array';
     public const APPEND_TO_ARRAY = 'append_to_array';
