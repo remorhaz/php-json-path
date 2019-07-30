@@ -10,10 +10,11 @@ use Remorhaz\JSON\Path\Query\Exception\QueryAstNotTranslatedException;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\AstTranslator;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
-use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
 
@@ -92,25 +93,41 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_CallbackBuilderProvidesCallback_OnInvocationResultInvokesSameCallback(): void
     {
-        $callback = $this->createMock(QueryInterface::class);
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $callbackBuilder
-            ->method('getCallback')
-            ->willReturn($callback);
         $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
-        $query = $translator->buildQuery('b', $tree);
 
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
         $evaluator = $this->createMock(EvaluatorInterface::class);
-        $callback
-            ->expects(self::once())
-            ->method('__invoke')
-            ->with($rootValue, $runtime, $evaluator);
+
+        $isCallbackCalledWithMatchingArgs = null;
+        $callback = function (
+            NodeValueListInterface $inputArg,
+            RuntimeInterface $runtimeArg,
+            EvaluatorInterface $evaluatorArg
+        ) use (
+            $rootValue,
+            $runtime,
+            $evaluator,
+            &$isCallbackCalledWithMatchingArgs
+        ): ValueListInterface {
+            $isCallbackCalledWithMatchingArgs =
+                $inputArg->getValues() === [$rootValue] &&
+                $runtimeArg === $runtime &&
+                $evaluatorArg === $evaluator;
+
+            return $this->createMock(ValueListInterface::class);
+        };
+        $callbackBuilder
+            ->method('getCallback')
+            ->willReturn($callback);
+        $query = $translator->buildQuery('b', $tree);
+
         $query($rootValue, $runtime, $evaluator);
+        self::assertTrue($isCallbackCalledWithMatchingArgs);
     }
 
     /**

@@ -11,9 +11,7 @@ use Remorhaz\JSON\Path\Value\LiteralArrayValue;
 use Remorhaz\JSON\Path\Value\ValueList;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Path\Value\LiteralValueList;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
-use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
@@ -28,13 +26,6 @@ final class Runtime implements RuntimeInterface
     {
         $this->valueListFetcher = $valueListFetcher;
         $this->valueFetcher = $valueFetcher;
-    }
-
-    public function getInput(NodeValueInterface $rootValue): NodeValueListInterface
-    {
-        return (new NodeValueListBuilder)
-            ->addValue($rootValue, 0)
-            ->build();
     }
 
     public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface

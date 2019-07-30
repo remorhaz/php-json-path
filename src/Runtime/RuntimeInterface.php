@@ -5,14 +5,11 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 interface RuntimeInterface
 {
-
-    public function getInput(NodeValueInterface $rootValue): NodeValueListInterface;
 
     public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 

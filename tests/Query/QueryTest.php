@@ -10,6 +10,7 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 /**
@@ -20,30 +21,44 @@ class QueryTest extends TestCase
 
     public function testInvoke_ConstructedWithCallback_CallsSameCallback(): void
     {
-        $callback = $this->createMock(QueryInterface::class);
+        $rootValue = $this->createMock(NodeValueInterface::class);
+        $runtime = $this->createMock(RuntimeInterface::class);
+        $evaluator = $this->createMock(EvaluatorInterface::class);
+        $isCallbackCalledWithMatchingArgs = null;
+        $callback = function (
+            NodeValueListInterface $inputArg,
+            RuntimeInterface $runtimeArg,
+            EvaluatorInterface $evaluatorArg
+        ) use (
+            $rootValue,
+            $runtime,
+            $evaluator,
+            &$isCallbackCalledWithMatchingArgs
+        ): ValueListInterface {
+            $isCallbackCalledWithMatchingArgs =
+                $inputArg->getValues() === [$rootValue] &&
+                $runtimeArg === $runtime &&
+                $evaluatorArg === $evaluator;
+
+            return $this->createMock(ValueListInterface::class);
+        };
+
         $query = new Query(
             'a',
             $callback,
             $this->createMock(CapabilitiesInterface::class)
         );
-        $rootValue = $this->createMock(NodeValueInterface::class);
-        $runtime = $this->createMock(RuntimeInterface::class);
-        $evaluator = $this->createMock(EvaluatorInterface::class);
 
-        $callback
-            ->expects(self::once())
-            ->method('__invoke')
-            ->with($rootValue, $runtime, $evaluator);
         $query($rootValue, $runtime, $evaluator);
+        self::assertTrue($isCallbackCalledWithMatchingArgs);
     }
 
     public function testInvoke_CallbackReturnsValueList_ReturnsSameInstance(): void
     {
         $values = $this->createMock(ValueListInterface::class);
-        $callback = $this->createMock(QueryInterface::class);
-        $callback
-            ->method('__invoke')
-            ->willReturn($values);
+        $callback = function () use ($values): ValueListInterface {
+            return $values;
+        };
         $query = new Query(
             'a',
             $callback,

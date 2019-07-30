@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
+use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use function call_user_func;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
@@ -30,7 +31,11 @@ final class Query implements QueryInterface
         RuntimeInterface $runtime,
         EvaluatorInterface $evaluator
     ): ValueListInterface {
-        return call_user_func($this->callback, $rootNode, $runtime, $evaluator);
+        $input = (new NodeValueListBuilder)
+            ->addValue($rootNode, 0)
+            ->build();
+
+        return call_user_func($this->callback, $input, $runtime, $evaluator);
     }
 
     public function getCapabilities(): CapabilitiesInterface

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use function array_map;
 use function array_reverse;
 use PhpParser\BuilderFactory;
@@ -82,7 +83,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         $inputParam = $this
             ->php
             ->param(self::ARG_INPUT)
-            ->setType(NodeValueInterface::class)
+            ->setType(NodeValueListInterface::class)
             ->getNode();
         $runtimeParam = $this
             ->php
@@ -130,12 +131,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         }
         switch ($node->getName()) {
             case AstNodeType::GET_INPUT:
-                /** @see RuntimeInterface::getInput() */
-                $this->addRuntimeMethodCall(
-                    $node,
-                    'getInput',
-                    $this->input,
-                );
+                $this->setReference($node, $this->input);
                 break;
 
             case AstNodeType::SET_OUTPUT:
