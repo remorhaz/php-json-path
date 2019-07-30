@@ -10,7 +10,6 @@ use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
 use Remorhaz\JSON\Path\Value\LiteralArrayValue;
 use Remorhaz\JSON\Path\Value\ValueList;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
-use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralValueList;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
@@ -110,9 +109,9 @@ final class Runtime implements RuntimeInterface
         return new Matcher\SliceElementMatcher($this->valueFetcher, $start, $end, $step);
     }
 
-    public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface
+    public function createScalar(NodeValueListInterface $source, $value): ValueListInterface
     {
-        return new LiteralValueList($source->getIndexMap(), $value);
+        return new LiteralValueList($source->getIndexMap(), new LiteralScalarValue($value));
     }
 
     public function populateArrayElements(
@@ -136,11 +135,6 @@ final class Runtime implements RuntimeInterface
         };
 
         return array_map($createArrayElement, $elementLists);
-    }
-
-    public function createScalar($value): LiteralValueInterface
-    {
-        return new LiteralScalarValue($value);
     }
 
     public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface

@@ -5,7 +5,6 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
@@ -47,14 +46,12 @@ interface RuntimeInterface
 
     public function matchElementSlice(?int $start, ?int $end, ?int $step): Matcher\ChildMatcherInterface;
 
-    public function populateLiteral(NodeValueListInterface $source, LiteralValueInterface $value): ValueListInterface;
+    public function createScalar(NodeValueListInterface $source, $value): ValueListInterface;
 
     public function populateArrayElements(
         NodeValueListInterface $source,
         ValueListInterface ...$values
     ): array;
-
-    public function createScalar($value): LiteralValueInterface;
 
     public function createArray(ValueListInterface $source, ArrayValueInterface ...$elements): ValueListInterface;
 }

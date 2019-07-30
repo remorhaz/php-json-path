@@ -162,12 +162,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_INT, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->populateLiteral(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->createScalar($symbols[0]['s.int'])
-                    );
+                    ->createScalar($header['i.value_list_id'], $symbols[0]['s.int']);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.3':
@@ -189,48 +184,28 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_NULL, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->populateLiteral(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->createScalar(null)
-                    );
+                    ->createScalar($header['i.value_list_id'], null);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.5':
                 // [ 0:T_TRUE, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->populateLiteral(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->createScalar(true)
-                    );
+                    ->createScalar($header['i.value_list_id'], true);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.6':
                 // [ 0:T_FALSE, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->populateLiteral(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->createScalar(false)
-                    );
+                    ->createScalar($header['i.value_list_id'], false);
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.7':
                 // [ 0:NT_STRING, 1:NT_WS_OPT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->populateLiteral(
-                        $header['i.value_list_id'],
-                        $this
-                            ->queryAstBuilder
-                            ->createScalar($symbols[0]['s.text'])
-                    );
+                    ->createScalar($header['i.value_list_id'], $symbols[0]['s.text']);
                 break;
 
             case SymbolType::NT_INT . '.0':

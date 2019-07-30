@@ -46,11 +46,9 @@ interface AstBuilderInterface
 
     public function aggregate(string $name, int $id): int;
 
-    public function populateLiteral(int $sourceId, int $valueId): int;
+    public function createScalar(int $sourceId, $value): int;
 
     public function populateArrayElements(int $sourceId, int $arrayId): int;
-
-    public function createScalar($value): int;
 
     public function createArray(): int;
 

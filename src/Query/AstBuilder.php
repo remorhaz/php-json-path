@@ -332,17 +332,17 @@ final class AstBuilder implements AstBuilderInterface
 
     /**
      * @param int $sourceId
-     * @param int $valueId
+     * @param mixed $value
      * @return int
      * @throws UniLexException
      */
-    public function populateLiteral(int $sourceId, int $valueId): int
+    public function createScalar(int $sourceId, $value): int
     {
         return $this
             ->tree
-            ->createNode(AstNodeType::POPULATE_LITERAL)
+            ->createNode(AstNodeType::CREATE_SCALAR)
+            ->setAttribute('value', $value)
             ->addChild($this->tree->getNode($sourceId))
-            ->addChild($this->tree->getNode($valueId))
             ->getId();
     }
 
@@ -375,20 +375,6 @@ final class AstBuilder implements AstBuilderInterface
             ->createNode(AstNodeType::CREATE_LITERAL_ARRAY)
             ->addChild($this->tree->getNode($sourceId))
             ->addChild($this->tree->getNode($elementsId))
-            ->getId();
-    }
-
-    /**
-     * @param $value
-     * @return int
-     * @throws UniLexException
-     */
-    public function createScalar($value): int
-    {
-        return $this
-            ->tree
-            ->createNode(AstNodeType::CREATE_SCALAR)
-            ->setAttribute('value', $value)
             ->getId();
     }
 
