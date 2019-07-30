@@ -10,6 +10,8 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 interface RuntimeInterface
 {
 
+    public function getEvaluator(): EvaluatorInterface;
+
     public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface;
 
     public function splitFilterContext(NodeValueListInterface $values): NodeValueListInterface;

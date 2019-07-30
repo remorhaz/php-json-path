@@ -24,6 +24,10 @@ class QueryTest extends TestCase
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
         $evaluator = $this->createMock(EvaluatorInterface::class);
+        $runtime
+            ->method('getEvaluator')
+            ->willReturn($evaluator);
+
         $isCallbackCalledWithMatchingArgs = null;
         $callback = function (
             NodeValueListInterface $inputArg,

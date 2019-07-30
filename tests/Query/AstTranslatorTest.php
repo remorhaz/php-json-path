@@ -11,7 +11,6 @@ use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\AstTranslator;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
-use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
@@ -98,26 +97,19 @@ class AstTranslatorTest extends TestCase
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
 
-
         $rootValue = $this->createMock(NodeValueInterface::class);
         $runtime = $this->createMock(RuntimeInterface::class);
-        $evaluator = $this->createMock(EvaluatorInterface::class);
 
         $isCallbackCalledWithMatchingArgs = null;
         $callback = function (
             NodeValueListInterface $inputArg,
-            RuntimeInterface $runtimeArg,
-            EvaluatorInterface $evaluatorArg
+            RuntimeInterface $runtimeArg
         ) use (
             $rootValue,
             $runtime,
-            $evaluator,
             &$isCallbackCalledWithMatchingArgs
         ): ValueListInterface {
-            $isCallbackCalledWithMatchingArgs =
-                $inputArg->getValues() === [$rootValue] &&
-                $runtimeArg === $runtime &&
-                $evaluatorArg === $evaluator;
+            $isCallbackCalledWithMatchingArgs = $inputArg->getValues() === [$rootValue] && $runtimeArg === $runtime;
 
             return $this->createMock(ValueListInterface::class);
         };
@@ -126,7 +118,7 @@ class AstTranslatorTest extends TestCase
             ->willReturn($callback);
         $query = $translator->buildQuery('b', $tree);
 
-        $query($rootValue, $runtime, $evaluator);
+        $query($rootValue, $runtime);
         self::assertTrue($isCallbackCalledWithMatchingArgs);
     }
 

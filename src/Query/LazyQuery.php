@@ -27,12 +27,9 @@ final class LazyQuery implements QueryInterface
         $this->astTranslator = $astTranslator;
     }
 
-    public function __invoke(
-        NodeValueInterface $rootNode,
-        RuntimeInterface $runtime,
-        EvaluatorInterface $evaluator
-    ): ValueListInterface {
-        return $this->getLoadedQuery()($rootNode, $runtime, $evaluator);
+    public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
+    {
+        return $this->getLoadedQuery()($rootNode, $runtime);
     }
 
     public function getCapabilities(): CapabilitiesInterface

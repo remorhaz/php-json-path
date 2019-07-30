@@ -21,10 +21,21 @@ final class Runtime implements RuntimeInterface
 
     private $valueFetcher;
 
-    public function __construct(ValueListFetcher $valueListFetcher, ValueFetcherInterface $valueFetcher)
-    {
+    private $evaluator;
+
+    public function __construct(
+        ValueListFetcher $valueListFetcher,
+        ValueFetcherInterface $valueFetcher,
+        EvaluatorInterface $evaluator
+    ) {
         $this->valueListFetcher = $valueListFetcher;
         $this->valueFetcher = $valueFetcher;
+        $this->evaluator = $evaluator;
+    }
+
+    public function getEvaluator(): EvaluatorInterface
+    {
+        return $this->evaluator;
     }
 
     public function fetchFilterContext(NodeValueListInterface $values): NodeValueListInterface

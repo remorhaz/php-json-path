@@ -26,16 +26,13 @@ final class Query implements QueryInterface
         $this->properties = $properties;
     }
 
-    public function __invoke(
-        NodeValueInterface $rootNode,
-        RuntimeInterface $runtime,
-        EvaluatorInterface $evaluator
-    ): ValueListInterface {
+    public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
+    {
         $input = (new NodeValueListBuilder)
             ->addValue($rootNode, 0)
             ->build();
 
-        return call_user_func($this->callback, $input, $runtime, $evaluator);
+        return call_user_func($this->callback, $input, $runtime, $runtime->getEvaluator());
     }
 
     public function getCapabilities(): CapabilitiesInterface
