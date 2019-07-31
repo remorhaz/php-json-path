@@ -123,7 +123,7 @@ When filter is being applied to nodeset, it leaves only those nodes for which th
 
 |Example|Description|
 |---|---|
-|`$..a[?(@.b]`|Selects all properties `a` that contain objects with property `b`.|
+|`$..a[?(@.b)]`|Selects all properties `a` that contain objects with property `b`.|
 |`$..a[?(@.b > 2)]`|Selects all properties `a` that contain objects with property `b` that is number greater than `2`.|
 |`$..a[?(true)]`|Boolean `true` is the only literal that evaluates to `true`; so this query is equivalent to `$..a`.|
 |`$..a[?(1)]`|**Attention!** This evaluates to `false`, selecting nothing, because no automatic typecasting is performed.|
