@@ -212,9 +212,10 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . '.0':
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
+                $indexes = $symbols[1]['s.int_list']; // TODO: direct unpacking throws notice in PHP 7.4
                 $header['s.matcher_id'] = $this
                     ->queryAstBuilder
-                    ->matchElementStrictly(...$symbols[1]['s.int_list']);
+                    ->matchElementStrictly(...$indexes);
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
@@ -339,13 +340,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
             case SymbolType::NT_BRACKET_FILTER . '.1':
                 // [ 0:NT_STRING_LIST ]
+                $names = $symbols[0]['s.text_list']; // TODO: direct unpacking throws notice in PHP 7.4
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(...$symbols[0]['s.text_list'])
+                            ->matchPropertyStrictly(...$names)
                     );
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
