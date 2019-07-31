@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Value list builders implemented.
+- Interface for value list fetcher.
 ## Changed
 - Evaluator is no more part of runtime object.
 - Query invocation signature changed.
