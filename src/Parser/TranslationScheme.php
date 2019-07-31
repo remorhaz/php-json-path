@@ -212,7 +212,7 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . '.0':
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
-                $indexes = $symbols[1]['s.int_list']; // TODO: direct unpacking throws notice in PHP 7.4
+                $indexes = $symbols[1]['s.int_list']; // TODO: PHP bug #78356 workaround
                 $header['s.matcher_id'] = $this
                     ->queryAstBuilder
                     ->matchElementStrictly(...$indexes);
@@ -340,7 +340,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
             case SymbolType::NT_BRACKET_FILTER . '.1':
                 // [ 0:NT_STRING_LIST ]
-                $names = $symbols[0]['s.text_list']; // TODO: direct unpacking throws notice in PHP 7.4
+                $names = $symbols[0]['s.text_list']; // TODO: PHP bug #78356 workaround
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildren(
