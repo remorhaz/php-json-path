@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Query capability `isPath` renamed to `isAddressable`. 
+- Query constructor accepts callback builder instead of it's parts.
+- Query rethrows convenient exception on failure. It contains original query source and source code of generated callback.
 
 ## [0.3.0] - 2019-07-31
 ### Added

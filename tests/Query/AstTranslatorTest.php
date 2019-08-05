@@ -36,7 +36,7 @@ class AstTranslatorTest extends TestCase
         $translator = new AstTranslator($callbackBuilder);
         $tree = new Tree;
         $tree->setRootNode($tree->createNode('a'));
-        self::assertInstanceOf(Query::class, $translator->buildQuery('b', $tree));
+        self::assertInstanceOf(Query::class, $translator->buildQuery('return;', $tree));
     }
 
     /**

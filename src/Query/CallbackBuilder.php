@@ -23,13 +23,12 @@ use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node as QueryAstNode;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
+use function is_callable;
 
 final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
 {
 
     private const ARG_INPUT = 'input';
-
-    private const ARG_RUNTIME = 'runtime';
 
     private const ARG_VALUE_LIST_FETCHER = 'valueListFetcher';
 
@@ -55,7 +54,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     private $stmts = [];
 
-    private $queryCallback;
+    private $callback;
+
+    private $callbackCode;
 
     private $capabilities;
 
@@ -66,11 +67,24 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     public function getCallback(): callable
     {
-        if (isset($this->queryCallback)) {
-            return $this->queryCallback;
+        if (!isset($this->callback)) {
+            $callback = eval($this->getCallbackCode());
+            if (!is_callable($callback)) {
+                throw new Exception\InvalidCallbackCodeException($this->getCallbackCode());
+            }
+            $this->callback = $callback;
         }
 
-        throw new Exception\QueryCallbackNotFoundException;
+        return $this->callback;
+    }
+
+    public function getCallbackCode(): string
+    {
+        if (isset($this->callbackCode)) {
+            return $this->callbackCode;
+        }
+
+        throw new Exception\QueryCallbackCodeNotFoundException;
     }
 
     public function getCapabilities(): CapabilitiesInterface
@@ -140,8 +154,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         );
         $return = new Return_($closure);
 
-        $callbackCode = (new Standard)->prettyPrint([$return]);
-        $this->queryCallback = eval($callbackCode);
+        $this->callbackCode = (new Standard)->prettyPrint([$return]);
+        $this->callback = eval($this->callbackCode);
     }
 
     public function onBeginProduction(QueryAstNode $node, PushInterface $stack): void

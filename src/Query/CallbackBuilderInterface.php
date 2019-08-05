@@ -10,5 +10,7 @@ interface CallbackBuilderInterface extends TranslatorListenerInterface
 
     public function getCallback(): callable;
 
+    public function getCallbackCode(): string;
+
     public function getCapabilities(): CapabilitiesInterface;
 }

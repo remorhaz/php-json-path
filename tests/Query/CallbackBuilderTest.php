@@ -3,16 +3,11 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Exception\CapabilitiesNotFoundException;
-use Remorhaz\JSON\Path\Query\Exception\QueryCallbackNotFoundException;
+use Remorhaz\JSON\Path\Query\Exception\QueryCallbackCodeNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
 use Remorhaz\JSON\Path\Query\CallbackBuilder;
-use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
-use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
-use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\UniLex\AST\Node;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
@@ -23,19 +18,12 @@ use Remorhaz\UniLex\Stack\PushInterface;
 class CallbackBuilderTest extends TestCase
 {
 
-    public function testGetCallback_CallbackIsNotSet_ThrowsException(): void
+    public function testGetCallbackCode_CallbackIsNotSet_ThrowsException(): void
     {
         $callbackBuilder = new CallbackBuilder;
 
-        $this->expectException(QueryCallbackNotFoundException::class);
-        $callbackBuilder->getCallback();
-    }
-
-    public function testGetCallback_OnFinishCalled_ReturnsClosureInstance(): void
-    {
-        $callbackBuilder = new CallbackBuilder;
-        $callbackBuilder->onFinish();
-        self::assertInstanceOf(Closure::class, $callbackBuilder->getCallback());
+        $this->expectException(QueryCallbackCodeNotFoundException::class);
+        $callbackBuilder->getCallbackCode();
     }
 
     public function testGetCapabilities_QueryCapabilitiesNotSet_ThrowsException(): void

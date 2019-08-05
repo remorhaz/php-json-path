@@ -5,8 +5,8 @@ namespace Remorhaz\JSON\Path\Test\Query;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
 use Remorhaz\JSON\Path\Query\Query;
-use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
@@ -62,12 +62,12 @@ class QueryTest extends TestCase
 
             return $this->createMock(ValueListInterface::class);
         };
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $callbackBuilder
+            ->method('getCallback')
+            ->willReturn($callback);
 
-        $query = new Query(
-            'a',
-            $callback,
-            $this->createMock(CapabilitiesInterface::class)
-        );
+        $query = new Query('a', $callbackBuilder);
 
         $query($rootValue, $runtime);
         self::assertTrue($isCallbackCalledWithMatchingArgs);
@@ -79,11 +79,11 @@ class QueryTest extends TestCase
         $callback = function () use ($values): ValueListInterface {
             return $values;
         };
-        $query = new Query(
-            'a',
-            $callback,
-            $this->createMock(CapabilitiesInterface::class)
-        );
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $callbackBuilder
+            ->method('getCallback')
+            ->willReturn($callback);
+        $query = new Query('a', $callbackBuilder);
 
         $actualValue = $query(
             $this->createMock(NodeValueInterface::class),
@@ -92,13 +92,16 @@ class QueryTest extends TestCase
         self::assertSame($values, $actualValue);
     }
 
-    public function testGetProperties_ConstructedWithGivenProperties_ReturnsSameInstance(): void
+    public function testGetCapabilities_CallbackBuilderProvedesGivenCapabilities_ReturnsSameInstance(): void
     {
-        $properties = $this->createMock(CapabilitiesInterface::class);
-        $callback = $this->createMock(QueryInterface::class);
-        $query = new Query('a', $callback, $properties);
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $capabilities = $this->createMock(CapabilitiesInterface::class);
+        $callbackBuilder
+            ->method('getCapabilities')
+            ->willReturn($capabilities);
+        $query = new Query('a', $callbackBuilder);
 
-        self::assertSame($properties, $query->getCapabilities());
+        self::assertSame($capabilities, $query->getCapabilities());
     }
 
     public function providerIsDefinite(): array
@@ -113,8 +116,7 @@ class QueryTest extends TestCase
     {
         $query = new Query(
             'a',
-            $this->createMock(QueryInterface::class),
-            $this->createMock(CapabilitiesInterface::class)
+            $this->createMock(CallbackBuilderInterface::class),
         );
         self::assertSame('a', $query->getSource());
     }
