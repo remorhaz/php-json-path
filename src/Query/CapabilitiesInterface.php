@@ -8,5 +8,5 @@ interface CapabilitiesInterface
 
     public function isDefinite(): bool;
 
-    public function isPath(): bool;
+    public function isAddressable(): bool;
 }

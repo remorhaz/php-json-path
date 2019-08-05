@@ -17,16 +17,18 @@ class TranslationSchemeTest extends TestCase
     /**
      * @param string $path
      * @param bool $expectedValue
-     * @dataProvider providerIsPath
+     * @dataProvider providerIsAddressableCapability
      */
-    public function testIsPathProperty_GivenQueryParsed_ContainsMatchingValue(string $path, bool $expectedValue): void
-    {
+    public function testIsAddressableCapability_GivenQueryParsed_ContainsMatchingValue(
+        string $path,
+        bool $expectedValue
+    ): void {
         $query = QueryFactory::create()->createQuery($path);
 
-        self::assertSame($expectedValue, $query->getCapabilities()->isPath());
+        self::assertSame($expectedValue, $query->getCapabilities()->isAddressable());
     }
 
-    public function providerIsPath(): array
+    public function providerIsAddressableCapability(): array
     {
         return [
             'Dot-notation star' => ['$.*', true],
@@ -49,7 +51,7 @@ class TranslationSchemeTest extends TestCase
      * @param bool $isDefinite
      * @dataProvider providerParser
      */
-    public function testAllMethods_AssembledWithParser_QueryWorksAsExpected(
+    public function testTranslationListenerMethods_AssembledWithParser_QueryWorksAsExpected(
         $json,
         string $path,
         array $expectedValue,

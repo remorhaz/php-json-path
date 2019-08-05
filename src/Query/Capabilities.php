@@ -27,7 +27,7 @@ final class Capabilities implements CapabilitiesInterface
     /**
      * @return bool
      */
-    public function isPath(): bool
+    public function isAddressable(): bool
     {
         return $this->isPath;
     }

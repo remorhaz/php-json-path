@@ -19,7 +19,7 @@ final class QueryValidator implements QueryValidatorInterface
 
     public function getPathQuery(QueryInterface $query): QueryInterface
     {
-        if (!$query->getCapabilities()->isPath()) {
+        if (!$query->getCapabilities()->isAddressable()) {
             throw new Exception\PathNotSelectableException($query);
         }
 

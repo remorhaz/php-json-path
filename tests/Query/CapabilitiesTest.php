@@ -36,17 +36,17 @@ class CapabilitiesTest extends TestCase
     /**
      * @param bool $isPath
      * @param bool $expectedValue
-     * @dataProvider providerIsPath
+     * @dataProvider providerIsAddressable
      */
-    public function testIsPath_ConstructedWithIsPathFlag_ReturnsSameValue(
+    public function testIsAddressable_ConstructedWithIsPathFlag_ReturnsSameValue(
         bool $isPath,
         bool $expectedValue
     ): void {
         $properties = new Capabilities(false, $isPath);
-        self::assertSame($expectedValue, $properties->isPath());
+        self::assertSame($expectedValue, $properties->isAddressable());
     }
 
-    public function providerIsPath(): array
+    public function providerIsAddressable(): array
     {
         return [
             'TRUE' => [true, true],
