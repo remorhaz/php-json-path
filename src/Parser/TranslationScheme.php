@@ -57,7 +57,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->setOutput(
                         $symbols[0]['s.value_list_id'],
                         $symbols[0]['s.is_definite'],
-                        $symbols[0]['s.is_path']
+                        $symbols[0]['s.is_addressable']
                     );
                 break;
 
@@ -65,7 +65,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_PATH ]
                 $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
-                $header['s.is_path'] = $symbols[0]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[0]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_PATH . '.0':
@@ -74,7 +74,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
-                $header['s.is_path'] = $symbols[1]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . '.0':
@@ -86,14 +86,14 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id']
                     );
                 $header['s.is_definite'] = $header['i.is_definite'];
-                $header['s.is_path'] = false;
+                $header['s.is_addressable'] = false;
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . '.1':
                 // [ 0:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
-                $header['s.is_path'] = $symbols[0]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[0]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . '.0':
@@ -102,7 +102,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
-                $header['s.is_path'] = $symbols[1]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0':
@@ -111,21 +111,21 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
-                $header['s.is_path'] = $symbols[1]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.0':
                 // [ 0:T_DOT, 1:NT_DOT_FILTER ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
-                $header['s.is_path'] = $symbols[1]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.1':
                 // [ 0:T_DOUBLE_DOT, 1:NT_DOUBLE_DOT_FILTER ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = false;
-                $header['s.is_path'] = $symbols[1]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.2':
@@ -138,14 +138,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 // ]
                 $header['s.value_list_id'] = $symbols[4]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[4]['s.is_definite'];
-                $header['s.is_path'] = $symbols[4]['s.is_path'];
+                $header['s.is_addressable'] = $symbols[4]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.3':
                 // [ ]
                 $header['s.value_list_id'] = $header['i.value_list_id'];
                 $header['s.is_definite'] = $header['i.is_definite'];
-                $header['s.is_path'] = $header['i.is_path'];
+                $header['s.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.0':
@@ -212,10 +212,9 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_INT_NEXT . '.0':
                 // [ 0:NT_WS_OPT, 1:NT_INT_NEXT_LIST ]
-                $indexes = $symbols[1]['s.int_list']; // TODO: PHP bug #78356 workaround
                 $header['s.matcher_id'] = $this
                     ->queryAstBuilder
-                    ->matchElementStrictly(...$indexes);
+                    ->matchElementStrictly(...$symbols[1]['s.int_list']);
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 break;
 
@@ -340,14 +339,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
             case SymbolType::NT_BRACKET_FILTER . '.1':
                 // [ 0:NT_STRING_LIST ]
-                $names = $symbols[0]['s.text_list']; // TODO: PHP bug #78356 workaround
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(...$names)
+                            ->matchPropertyStrictly(...$symbols[0]['s.text_list'])
                     );
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
@@ -572,14 +570,14 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->getInput();
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
-                $symbols[1]['i.is_path'] = true;
+                $symbols[1]['i.is_addressable'] = true;
                 break;
 
             case SymbolType::NT_PATH . '.1.1':
                 // [ 0:T_ROOT_RELATIVE, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
-                $symbols[1]['i.is_path'] = true;
+                $symbols[1]['i.is_addressable'] = true;
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.1.0':
@@ -857,13 +855,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_DOT, 1:NT_DOT_FILTER ]
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.1.1':
                 // [ 0:T_DOUBLE_DOT, 1:NT_DOUBLE_DOT_FILTER ]
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.2.2':
@@ -888,7 +886,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 // ]
                 $symbols[4]['i.value_list_id'] = $symbols[2]['s.value_list_id'];
                 $symbols[4]['i.is_definite'] = $symbols[2]['s.is_definite'];
-                $symbols[4]['i.is_path'] = $header['i.is_path'];
+                $symbols[4]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . '.0.1':
@@ -896,7 +894,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[1]['i.filter_name'] = $symbols[0]['s.text'];
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . '.1.1':
@@ -908,7 +906,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $this->queryAstBuilder->matchAnyChild()
                     );
                 $symbols[1]['i.is_definite'] = false;
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER_NEXT . '.1.0':
@@ -922,7 +920,7 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->matchPropertyStrictly($header['i.filter_name'])
                     );
                 $symbols[0]['i.is_definite'] = $header['i.is_definite'];
-                $symbols[0]['i.is_path'] = $header['i.is_path'];
+                $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0.1':
@@ -936,7 +934,7 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->matchPropertyStrictly($symbols[0]['s.text'])
                     );
                 $symbols[1]['i.is_definite'] = false;
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1.1':
@@ -948,7 +946,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $this->queryAstBuilder->matchAnyChild()
                     );
                 $symbols[1]['i.is_definite'] = false;
-                $symbols[1]['i.is_path'] = $header['i.is_path'];
+                $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_STRING . '.0.1':
