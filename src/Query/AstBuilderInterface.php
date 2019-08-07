@@ -8,7 +8,7 @@ interface AstBuilderInterface
 
     public function getInput(): int;
 
-    public function setOutput(int $id, bool $isDefinite, bool $isPath): void;
+    public function setOutput(int $id, bool $isDefinite, bool $isAddressable): void;
 
     public function fetchFilterContext(int $id): int;
 

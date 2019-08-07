@@ -18,16 +18,16 @@ final class Parser implements ParserInterface
 
     public function buildQueryAst(string $path): Tree
     {
-        $queryAst = new Tree;
         try {
+            $queryAst = new Tree;
             $this
                 ->ll1ParserFactory
                 ->createParser($path, $queryAst)
                 ->run();
+
+            return $queryAst;
         } catch (Throwable $e) {
             throw new Exception\QueryAstNotBuiltException($path, $e);
         }
-
-        return $queryAst;
     }
 }

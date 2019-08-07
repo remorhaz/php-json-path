@@ -53,7 +53,7 @@ class CallbackBuilderTest extends TestCase
         $setOutputNode = new Node(2, 'set_output');
         $setOutputNode
             ->setAttribute('is_definite', $isDefinite)
-            ->setAttribute('is_path', false)
+            ->setAttribute('is_addressable', false)
             ->addChild($inputNode);
 
         $callbackBuilder->onFinishProduction($setOutputNode);
@@ -99,7 +99,7 @@ class CallbackBuilderTest extends TestCase
         $setOutputNode = new Node(2, 'set_output');
         $setOutputNode
             ->setAttribute('is_definite', true)
-            ->setAttribute('is_path', false)
+            ->setAttribute('is_addressable', false)
             ->addChild($inputNode);
 
         $this->expectException(ReferenceNotFoundException::class);

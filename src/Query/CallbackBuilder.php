@@ -179,7 +179,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             case AstNodeType::SET_OUTPUT:
                 $this->capabilities = new Capabilities(
                     $node->getAttribute('is_definite'),
-                    $node->getAttribute('is_path'),
+                    $node->getAttribute('is_addressable'),
                 );
                 $this->stmts[] = new Return_($this->getReference($node->getChild(0)));
                 break;

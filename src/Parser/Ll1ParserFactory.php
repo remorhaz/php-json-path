@@ -22,13 +22,13 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
 
     private $grammar;
 
-    public function createParser(string $path, Tree $queryAst): Ll1Parser
+    public function createParser(string $source, Tree $queryAst): Ll1Parser
     {
         try {
             $scheme = new TranslationScheme(new AstBuilder($queryAst));
             $parser = new Ll1Parser(
                 $this->getGrammar(),
-                $this->createPathReader($path),
+                $this->createSourceReader($source),
                 new TranslationSchemeApplier($scheme)
             );
             $parser->loadLookupTable(__DIR__ . '/../../generated/LookupTable.php');
@@ -53,14 +53,14 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
     }
 
     /**
-     * @param string $path
+     * @param string $source
      * @return TokenReaderInterface
      * @throws UnilexException
      */
-    private function createPathReader(string $path): TokenReaderInterface
+    private function createSourceReader(string $source): TokenReaderInterface
     {
         return new TokenReader(
-            CharBufferFactory::createFromString($path),
+            CharBufferFactory::createFromString($source),
             new TokenMatcher,
             new TokenFactory($this->getGrammar())
         );

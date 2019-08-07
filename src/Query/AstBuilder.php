@@ -36,21 +36,20 @@ final class AstBuilder implements AstBuilderInterface
     /**
      * @param int $id
      * @param bool $isDefinite
-     * @param bool $isPath
+     * @param bool $isAddressable
      * @throws UniLexException
      */
-    public function setOutput(int $id, bool $isDefinite, bool $isPath): void
+    public function setOutput(int $id, bool $isDefinite, bool $isAddressable): void
     {
+        $setOutputNode = $this
+            ->tree
+            ->createNode(AstNodeType::SET_OUTPUT)
+            ->addChild($this->tree->getNode($id))
+            ->setAttribute('is_definite', $isDefinite)
+            ->setAttribute('is_addressable', $isAddressable);
         $this
             ->tree
-            ->setRootNode(
-                $this
-                    ->tree
-                    ->createNode(AstNodeType::SET_OUTPUT)
-                    ->addChild($this->tree->getNode($id))
-                    ->setAttribute('is_definite', $isDefinite)
-                    ->setAttribute('is_path', $isPath)
-            );
+            ->setRootNode($setOutputNode);
     }
 
     /**
