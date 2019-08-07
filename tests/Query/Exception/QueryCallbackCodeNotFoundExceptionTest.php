@@ -10,7 +10,7 @@ use Remorhaz\JSON\Path\Query\Exception\QueryCallbackCodeNotFoundException;
 /**
  * @covers \Remorhaz\JSON\Path\Query\Exception\QueryCallbackCodeNotFoundException
  */
-class QueryCallbackNotFoundExceptionTest extends TestCase
+class QueryCallbackCodeNotFoundExceptionTest extends TestCase
 {
 
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void

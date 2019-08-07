@@ -155,7 +155,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         $return = new Return_($closure);
 
         $this->callbackCode = (new Standard)->prettyPrint([$return]);
-        $this->callback = eval($this->callbackCode);
     }
 
     public function onBeginProduction(QueryAstNode $node, PushInterface $stack): void

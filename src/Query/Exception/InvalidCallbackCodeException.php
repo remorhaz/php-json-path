@@ -14,7 +14,12 @@ final class InvalidCallbackCodeException extends LogicException implements Excep
     public function __construct(string $callbackCode, Throwable $previous = null)
     {
         $this->callbackCode = $callbackCode;
-        parent::__construct("Invalid query callback code generated", 0, $previous);
+        parent::__construct($this->buildMessage(), 0, $previous);
+    }
+
+    private function buildMessage(): string
+    {
+        return "Invalid query callback code generated:\n\n{$this->callbackCode}";
     }
 
     public function getCallbackCode(): string
