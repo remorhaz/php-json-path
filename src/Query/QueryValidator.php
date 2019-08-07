@@ -17,17 +17,12 @@ final class QueryValidator implements QueryValidatorInterface
         return $query;
     }
 
-    public function getPathQuery(QueryInterface $query): QueryInterface
+    public function getAddressableQuery(QueryInterface $query): QueryInterface
     {
         if (!$query->getCapabilities()->isAddressable()) {
             throw new Exception\PathNotSelectableException($query);
         }
 
         return $query;
-    }
-
-    public function getDefinitePathQuery(QueryInterface $query): QueryInterface
-    {
-        return $this->getPathQuery($this->getDefiniteQuery($query));
     }
 }

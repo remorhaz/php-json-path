@@ -94,7 +94,7 @@ final class Processor implements ProcessorInterface
     {
         $values = $this
             ->queryValidator
-            ->getPathQuery($query)($rootNode, $this->runtime);
+            ->getAddressableQuery($query)($rootNode, $this->runtime);
 
         return $this
             ->resultFactory
@@ -103,9 +103,12 @@ final class Processor implements ProcessorInterface
 
     public function selectOnePath(QueryInterface $query, NodeValueInterface $rootNode): SelectOnePathResultInterface
     {
+        $query = $this
+            ->queryValidator
+            ->getDefiniteQuery($query);
         $values = $this
             ->queryValidator
-            ->getDefinitePathQuery($query)($rootNode, $this->runtime);
+            ->getAddressableQuery($query)($rootNode, $this->runtime);
 
         return $this
             ->resultFactory
