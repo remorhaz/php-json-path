@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
+use Remorhaz\JSON\Path\Query\Exception\QueryExecutionFailedException;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\CapabilitiesInterface;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
@@ -90,6 +92,24 @@ class QueryTest extends TestCase
             $this->createMock(RuntimeInterface::class),
         );
         self::assertSame($values, $actualValue);
+    }
+
+    public function testInvoke_CallbackThrowsException_ThrowsException(): void
+    {
+        $callback = function () {
+            throw new Exception;
+        };
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
+        $callbackBuilder
+            ->method('getCallback')
+            ->willReturn($callback);
+        $query = new Query('a', $callbackBuilder);
+
+        $this->expectException(QueryExecutionFailedException::class);
+        $query(
+            $this->createMock(NodeValueInterface::class),
+            $this->createMock(RuntimeInterface::class),
+        );
     }
 
     public function testGetCapabilities_CallbackBuilderProvedesGivenCapabilities_ReturnsSameInstance(): void

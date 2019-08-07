@@ -25,15 +25,16 @@ final class Query implements QueryInterface
 
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
     {
-        $input = (new NodeValueListBuilder)
-            ->addValue($rootNode, 0)
-            ->build();
-
         try {
+            $input = (new NodeValueListBuilder)
+                ->addValue($rootNode, 0)
+                ->build();
+            $callback = $this
+                ->callbackBuilder
+                ->getCallback();
+
             return call_user_func(
-                $this
-                    ->callbackBuilder
-                    ->getCallback(),
+                $callback,
                 $input,
                 $runtime->getValueListFetcher(),
                 $runtime->getEvaluator(),
@@ -59,12 +60,5 @@ final class Query implements QueryInterface
     public function getSource(): string
     {
         return $this->source;
-    }
-
-    public function getCallbackCode(): string
-    {
-        return $this
-            ->callbackBuilder
-            ->getCallbackCode();
     }
 }
