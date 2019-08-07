@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Test\Processor;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
-use Remorhaz\JSON\Path\Processor\Exception\PathNotSelectableException;
+use Remorhaz\JSON\Path\Processor\Exception\NotAddressableQueryException;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
@@ -133,7 +133,7 @@ class ProcessorTest extends TestCase
         $query = QueryFactory::create()->createQuery('$.a.length()');
         $rootValue = NodeValueFactory::create()->createValue('{"a":1}');
 
-        $this->expectException(PathNotSelectableException::class);
+        $this->expectException(NotAddressableQueryException::class);
         $processor->selectOnePath($query, $rootValue);
     }
 

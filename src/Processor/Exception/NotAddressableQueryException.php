@@ -7,7 +7,7 @@ use LogicException;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Throwable;
 
-final class PathNotSelectableException extends LogicException implements ExceptionInterface
+final class NotAddressableQueryException extends LogicException implements ExceptionInterface
 {
 
     private $query;
@@ -15,7 +15,7 @@ final class PathNotSelectableException extends LogicException implements Excepti
     public function __construct(QueryInterface $query, Throwable $previous = null)
     {
         $this->query = $query;
-        parent::__construct("Query is not selectable", 0, $previous);
+        parent::__construct("Query is not addressable", 0, $previous);
     }
 
     public function getQuery(): QueryInterface

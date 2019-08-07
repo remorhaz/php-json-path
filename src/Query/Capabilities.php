@@ -8,12 +8,12 @@ final class Capabilities implements CapabilitiesInterface
 
     private $isDefinite;
 
-    private $isPath;
+    private $isAddressable;
 
-    public function __construct(bool $isDefinite, bool $isPath)
+    public function __construct(bool $isDefinite, bool $isAddressable)
     {
         $this->isDefinite = $isDefinite;
-        $this->isPath = $isPath;
+        $this->isAddressable = $isAddressable;
     }
 
     /**
@@ -29,6 +29,6 @@ final class Capabilities implements CapabilitiesInterface
      */
     public function isAddressable(): bool
     {
-        return $this->isPath;
+        return $this->isAddressable;
     }
 }
