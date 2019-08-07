@@ -9,16 +9,16 @@ use Throwable;
 final class QueryAstNotBuiltException extends RuntimeException implements ExceptionInterface
 {
 
-    private $path;
+    private $source;
 
-    public function __construct(string $path, Throwable $previous = null)
+    public function __construct(string $source, Throwable $previous = null)
     {
-        $this->path = $path;
-        parent::__construct("Failed to build AST from query: {$path}", 0, $previous);
+        $this->source = $source;
+        parent::__construct("Failed to build AST from JSONPath query: {$source}", 0, $previous);
     }
 
-    public function getPath(): string
+    public function getSource(): string
     {
-        return $this->path;
+        return $this->source;
     }
 }
