@@ -83,11 +83,11 @@ class EvaluatedValueTest extends TestCase
         ];
     }
 
-    private function exportEvents(Iterator $iterator): array
+    private function exportEvents(Iterator $eventIterator): array
     {
         return array_map(
             [$this, 'exportEvent'],
-            iterator_to_array($iterator)
+            iterator_to_array($eventIterator)
         );
     }
 

@@ -9,7 +9,7 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 interface EncoderInterface extends ExporterInterface
 {
 
-    public function exportEvents(Iterator $iterator): string;
+    public function exportEvents(Iterator $eventIterator): string;
 
     public function exportValue(ValueInterface $value): string;
 }

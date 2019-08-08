@@ -20,9 +20,9 @@ final class Decoder implements DecoderInterface
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
-    public function exportEvents(Iterator $iterator)
+    public function exportEvents(Iterator $eventIterator)
     {
-        $value = $this->valueIteratorFactory->fetchValue($iterator);
+        $value = $this->valueIteratorFactory->fetchValue($eventIterator);
         if ($value instanceof ScalarValueInterface) {
             return $value->getData();
         }

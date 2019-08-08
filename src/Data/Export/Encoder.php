@@ -24,9 +24,9 @@ final class Encoder implements EncoderInterface
         $this->decoder = $decoder;
     }
 
-    public function exportEvents(Iterator $iterator): string
+    public function exportEvents(Iterator $eventIterator): string
     {
-        $decodedValue = $this->decoder->exportEvents($iterator);
+        $decodedValue = $this->decoder->exportEvents($eventIterator);
 
         try {
             return json_encode(

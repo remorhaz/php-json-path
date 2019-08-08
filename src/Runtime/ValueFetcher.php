@@ -65,8 +65,11 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private function fetchElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
+        $arrayIterator = $this
+            ->valueIteratorFactory
+            ->createArrayIterator($value->createEventIterator());
         $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($value->createEventIterator()) as $index => $element) {
+        foreach ($arrayIterator as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -77,8 +80,11 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private function fetchProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
+        $objectIterator = $this
+            ->valueIteratorFactory
+            ->createObjectIterator($value->createEventIterator());
         $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($value->createEventIterator()) as $name => $property) {
+        foreach ($objectIterator as $name => $property) {
             if ($matcher->match($name, $property, $value)) {
                 $results[] = $property;
             }
@@ -89,8 +95,11 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private function fetchDeepElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
+        $arrayIterator = $this
+            ->valueIteratorFactory
+            ->createArrayIterator($value->createEventIterator());
         $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($value->createEventIterator()) as $index => $element) {
+        foreach ($arrayIterator as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -105,8 +114,11 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private function fetchDeepProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
+        $objectIterator = $this
+            ->valueIteratorFactory
+            ->createObjectIterator($value->createEventIterator());
         $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($value->createEventIterator()) as $name => $property) {
+        foreach ($objectIterator as $name => $property) {
             if ($matcher->match($name, $property, $value)) {
                 $results[] = $property;
             }

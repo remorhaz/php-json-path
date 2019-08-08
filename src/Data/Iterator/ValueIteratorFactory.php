@@ -70,13 +70,13 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
         } while (true);
     }
 
-    private function fetchEvent(Iterator $iterator): DataEventInterface
+    private function fetchEvent(Iterator $eventIterator): DataEventInterface
     {
-        if (!$iterator->valid()) {
+        if (!$eventIterator->valid()) {
             throw new Exception\UnexpectedEndOfDataEventsException;
         }
-        $event = $iterator->current();
-        $iterator->next();
+        $event = $eventIterator->current();
+        $eventIterator->next();
 
         if (!$event instanceof DataEventInterface) {
             throw new Exception\InvalidDataEventException($event);
@@ -85,51 +85,51 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
         return $event;
     }
 
-    private function skipValue(Iterator $iterator): void
+    private function skipValue(Iterator $eventIterator): void
     {
-        $event = $this->fetchEvent($iterator);
+        $event = $this->fetchEvent($eventIterator);
         if ($event instanceof ScalarEventInterface) {
             return;
         }
 
         if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator);
+            $this->skipArrayValue($eventIterator);
             return;
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator);
+            $this->skipObjectValue($eventIterator);
             return;
         }
 
         throw new Exception\InvalidDataEventException($event);
     }
 
-    public function fetchValue(Iterator $iterator): ValueInterface
+    public function fetchValue(Iterator $eventIterator): ValueInterface
     {
-        $event = $this->fetchEvent($iterator);
+        $event = $this->fetchEvent($eventIterator);
         if ($event instanceof ScalarEventInterface) {
             return $event->getValue();
         }
         if ($event instanceof BeforeArrayEventInterface) {
-            $this->skipArrayValue($iterator);
+            $this->skipArrayValue($eventIterator);
             return $event->getValue();
         }
 
         if ($event instanceof BeforeObjectEventInterface) {
-            $this->skipObjectValue($iterator);
+            $this->skipObjectValue($eventIterator);
             return $event->getValue();
         }
 
         throw new Exception\InvalidDataEventException($event);
     }
 
-    private function skipArrayValue(Iterator $iterator): void
+    private function skipArrayValue(Iterator $eventIterator): void
     {
         do {
-            $event = $this->fetchEvent($iterator);
+            $event = $this->fetchEvent($eventIterator);
             if ($event instanceof ElementEventInterface) {
-                $this->skipValue($iterator);
+                $this->skipValue($eventIterator);
                 continue;
             }
             if ($event instanceof AfterArrayEventInterface) {
@@ -139,12 +139,12 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
         } while (true);
     }
 
-    private function skipObjectValue(Iterator $iterator): void
+    private function skipObjectValue(Iterator $eventIterator): void
     {
         do {
-            $event = $this->fetchEvent($iterator);
+            $event = $this->fetchEvent($eventIterator);
             if ($event instanceof PropertyEventInterface) {
-                $this->skipValue($iterator);
+                $this->skipValue($eventIterator);
                 continue;
             }
             if ($event instanceof AfterObjectEventInterface) {

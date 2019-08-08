@@ -14,9 +14,9 @@ interface ValueIteratorFactoryInterface
     public function createObjectIterator(Iterator $eventIterator): Generator;
 
     /**
-     * @param Iterator $iterator
+     * @param Iterator $eventIterator
      * @return ValueInterface
      * @todo Move this method to fetcher?
      */
-    public function fetchValue(Iterator $iterator): ValueInterface;
+    public function fetchValue(Iterator $eventIterator): ValueInterface;
 }
