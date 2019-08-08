@@ -20,9 +20,18 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
 
     /**
      * @param Iterator $eventIterator
+     * @return Iterator|ValueInterface[]
+     */
+    public function createArrayIterator(Iterator $eventIterator): Iterator
+    {
+        return $this->createArrayGenerator($eventIterator);
+    }
+
+    /**
+     * @param Iterator $eventIterator
      * @return Generator|ValueInterface[]
      */
-    public function createArrayIterator(Iterator $eventIterator): Generator
+    private function createArrayGenerator(Iterator $eventIterator): Generator
     {
         $event = $this->fetchEvent($eventIterator);
         if (!$event instanceof BeforeArrayEventInterface) {
@@ -46,9 +55,18 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
 
     /**
      * @param Iterator $eventIterator
+     * @return Iterator|ValueInterface[]
+     */
+    public function createObjectIterator(Iterator $eventIterator): Iterator
+    {
+        return $this->createObjectGenerator($eventIterator);
+    }
+
+    /**
+     * @param Iterator $eventIterator
      * @return Generator|ValueInterface[]
      */
-    public function createObjectIterator(Iterator $eventIterator): Generator
+    public function createObjectGenerator(Iterator $eventIterator): Generator
     {
         $event = $this->fetchEvent($eventIterator);
         if (!$event instanceof BeforeObjectEventInterface) {
