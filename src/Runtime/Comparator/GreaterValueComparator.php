@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function is_float;
 use function is_int;
 use function is_string;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class GreaterValueComparator implements ComparatorInterface
 {
@@ -18,7 +18,7 @@ final class GreaterValueComparator implements ComparatorInterface
 
     private $collator;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory, Collator $collator)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory, Collator $collator)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;

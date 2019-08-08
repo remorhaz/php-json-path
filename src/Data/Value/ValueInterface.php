@@ -8,5 +8,5 @@ use Iterator;
 interface ValueInterface
 {
 
-    public function createIterator(): Iterator;
+    public function createEventIterator(): Iterator;
 }

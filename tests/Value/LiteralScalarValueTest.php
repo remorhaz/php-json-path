@@ -61,7 +61,7 @@ class LiteralScalarValueTest extends TestCase
         array $expectedValue
     ): void {
         $value = new LiteralScalarValue($value);
-        self::assertSame($expectedValue, $this->exportEvents($value->createIterator()));
+        self::assertSame($expectedValue, $this->exportEvents($value->createEventIterator()));
     }
 
     public function providerCreateIterator(): array

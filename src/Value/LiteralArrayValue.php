@@ -23,7 +23,7 @@ final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterf
         $this->values = $values;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator();
     }
@@ -34,7 +34,7 @@ final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterf
 
         foreach ($this->values as $index => $value) {
             yield new Event\ElementEvent($index, new Path);
-            yield from $value->createIterator();
+            yield from $value->createEventIterator();
         }
         yield new Event\AfterArrayEvent($this);
     }

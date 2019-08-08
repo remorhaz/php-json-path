@@ -28,7 +28,7 @@ final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface
         $this->valueFactory = $valueFactory;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator($this->data, $this->path);
     }
@@ -51,7 +51,7 @@ final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface
             yield from $this
                 ->valueFactory
                 ->createValue($element, $path->copyWithElement($index))
-                ->createIterator();
+                ->createEventIterator();
         }
 
         yield new AfterArrayEvent($this);

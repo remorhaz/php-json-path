@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function is_string;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 final class EqualValueComparator implements ComparatorInterface
 {
@@ -18,7 +18,7 @@ final class EqualValueComparator implements ComparatorInterface
 
     private $collator;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory, Collator $collator)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory, Collator $collator)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;
@@ -55,8 +55,8 @@ final class EqualValueComparator implements ComparatorInterface
 
     private function isArrayEqual(ArrayValueInterface $leftValue, ArrayValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIteratorFactory->createArrayIterator($leftValue->createIterator());
-        $rightValueIterator = $this->valueIteratorFactory->createArrayIterator($rightValue->createIterator());
+        $leftValueIterator = $this->valueIteratorFactory->createArrayIterator($leftValue->createEventIterator());
+        $rightValueIterator = $this->valueIteratorFactory->createArrayIterator($rightValue->createEventIterator());
 
         while ($leftValueIterator->valid()) {
             if (!$rightValueIterator->valid()) {
@@ -73,8 +73,8 @@ final class EqualValueComparator implements ComparatorInterface
 
     private function isObjectEqual(ObjectValueInterface $leftValue, ObjectValueInterface $rightValue): bool
     {
-        $leftValueIterator = $this->valueIteratorFactory->createObjectIterator($leftValue->createIterator());
-        $rightValueIterator = $this->valueIteratorFactory->createObjectIterator($rightValue->createIterator());
+        $leftValueIterator = $this->valueIteratorFactory->createObjectIterator($leftValue->createEventIterator());
+        $rightValueIterator = $this->valueIteratorFactory->createObjectIterator($rightValue->createEventIterator());
 
         $valuesByProperty = [];
         while ($leftValueIterator->valid()) {

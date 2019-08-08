@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function array_map;
 use function is_float;
 use function is_int;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {
@@ -21,7 +21,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
         ScalarValueInterface ...$elements
     ): ?ValueInterface;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
@@ -62,7 +62,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
         }
         $arrayIterator = $this
             ->valueIteratorFactory
-            ->createArrayIterator($value->createIterator());
+            ->createArrayIterator($value->createEventIterator());
         foreach ($arrayIterator as $element) {
             $numericElement = $this->findNumericElement($element);
             if (isset($numericElement)) {

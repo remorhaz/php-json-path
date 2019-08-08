@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function iterator_count;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
@@ -15,7 +15,7 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private $valueIteratorFactory;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
@@ -66,7 +66,7 @@ final class ValueFetcher implements ValueFetcherInterface
     private function fetchElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($value->createIterator()) as $index => $element) {
+        foreach ($this->valueIteratorFactory->createArrayIterator($value->createEventIterator()) as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -78,7 +78,7 @@ final class ValueFetcher implements ValueFetcherInterface
     private function fetchProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($value->createIterator()) as $name => $property) {
+        foreach ($this->valueIteratorFactory->createObjectIterator($value->createEventIterator()) as $name => $property) {
             if ($matcher->match($name, $property, $value)) {
                 $results[] = $property;
             }
@@ -90,7 +90,7 @@ final class ValueFetcher implements ValueFetcherInterface
     private function fetchDeepElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIteratorFactory->createArrayIterator($value->createIterator()) as $index => $element) {
+        foreach ($this->valueIteratorFactory->createArrayIterator($value->createEventIterator()) as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -106,7 +106,7 @@ final class ValueFetcher implements ValueFetcherInterface
     private function fetchDeepProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
         $results = [];
-        foreach ($this->valueIteratorFactory->createObjectIterator($value->createIterator()) as $name => $property) {
+        foreach ($this->valueIteratorFactory->createObjectIterator($value->createEventIterator()) as $name => $property) {
             if ($matcher->match($name, $property, $value)) {
                 $results[] = $property;
             }
@@ -124,7 +124,7 @@ final class ValueFetcher implements ValueFetcherInterface
         if (!$value instanceof ArrayValueInterface) {
             return null;
         }
-        $elementIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
+        $elementIterator = $this->valueIteratorFactory->createArrayIterator($value->createEventIterator());
 
         return iterator_count($elementIterator);
     }

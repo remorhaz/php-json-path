@@ -178,7 +178,7 @@ class NodeValueFactoryTest extends TestCase
 
     private function exportValueEvents(ValueInterface $value): array
     {
-        return array_map([$this, 'exportValueEvent'], iterator_to_array($value->createIterator(), false));
+        return array_map([$this, 'exportValueEvent'], iterator_to_array($value->createEventIterator(), false));
     }
 
     private function exportValueEvent(DataEventInterface $event): string

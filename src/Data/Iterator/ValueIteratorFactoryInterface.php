@@ -9,9 +9,9 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ValueIteratorFactoryInterface
 {
-    public function createArrayIterator(Iterator $iterator): Generator;
+    public function createArrayIterator(Iterator $eventIterator): Generator;
 
-    public function createObjectIterator(Iterator $iterator): Generator;
+    public function createObjectIterator(Iterator $eventIterator): Generator;
 
     /**
      * @param Iterator $iterator

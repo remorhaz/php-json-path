@@ -27,7 +27,7 @@ final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInte
         return $this->data;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator();
     }

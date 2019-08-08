@@ -22,7 +22,7 @@ final class EvaluatedValue implements EvaluatedValueInterface
         return $this->value;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator();
     }

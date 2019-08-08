@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 
 final class AggregatorCollection
 {
@@ -16,7 +16,7 @@ final class AggregatorCollection
 
     private $valueIteratorFactory;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
     }

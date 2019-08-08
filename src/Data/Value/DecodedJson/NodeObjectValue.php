@@ -29,7 +29,7 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
         $this->valueFactory = $valueFactory;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator($this->data, $this->path);
     }
@@ -48,7 +48,7 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
             yield from $this
                 ->valueFactory
                 ->createValue($property, $path->copyWithProperty($name))
-                ->createIterator();
+                ->createEventIterator();
         }
 
         yield new AfterObjectEvent($this);

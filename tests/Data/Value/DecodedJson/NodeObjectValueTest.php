@@ -51,7 +51,7 @@ class NodeObjectValueTest extends TestCase
     ): void {
         $value = new NodeObjectValue($data, new Path, new NodeValueFactory);
 
-        $actualEvents = iterator_to_array($value->createIterator(), false);
+        $actualEvents = iterator_to_array($value->createEventIterator(), false);
         self::assertSame($expectedValue, $this->exportEvents(...$actualEvents));
     }
 

@@ -40,6 +40,6 @@ final class Encoder implements EncoderInterface
 
     public function exportValue(ValueInterface $value): string
     {
-        return $this->exportEvents($value->createIterator());
+        return $this->exportEvents($value->createEventIterator());
     }
 }

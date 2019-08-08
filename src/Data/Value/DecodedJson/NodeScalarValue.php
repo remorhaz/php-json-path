@@ -36,7 +36,7 @@ final class NodeScalarValue implements NodeValueInterface, ScalarValueInterface
         return $this->path;
     }
 
-    public function createIterator(): Iterator
+    public function createEventIterator(): Iterator
     {
         return $this->createGenerator();
     }

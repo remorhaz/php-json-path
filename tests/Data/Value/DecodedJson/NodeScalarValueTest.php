@@ -47,7 +47,7 @@ class NodeScalarValueTest extends TestCase
     ): void {
         $iteratorFactory = new NodeScalarValue($data, new Path);
 
-        $actualEvents = iterator_to_array($iteratorFactory->createIterator(), false);
+        $actualEvents = iterator_to_array($iteratorFactory->createEventIterator(), false);
         self::assertSame($expectedValue, $this->exportEvents(...$actualEvents));
     }
 

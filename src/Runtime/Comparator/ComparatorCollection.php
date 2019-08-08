@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 
 final class ComparatorCollection
 {
@@ -13,7 +13,7 @@ final class ComparatorCollection
 
     private $collator;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory, Collator $collator)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory, Collator $collator)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;

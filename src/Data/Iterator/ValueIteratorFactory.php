@@ -19,18 +19,18 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
 {
 
     /**
-     * @param Iterator $iterator
+     * @param Iterator $eventIterator
      * @return Generator|ValueInterface[]
      */
-    public function createArrayIterator(Iterator $iterator): Generator
+    public function createArrayIterator(Iterator $eventIterator): Generator
     {
-        $event = $this->fetchEvent($iterator);
+        $event = $this->fetchEvent($eventIterator);
         if (!$event instanceof BeforeArrayEventInterface) {
             throw new Exception\UnexpectedDataEventException($event, BeforeArrayEventInterface::class);
         }
 
         do {
-            $event = $this->fetchEvent($iterator);
+            $event = $this->fetchEvent($eventIterator);
             if ($event instanceof AfterArrayEventInterface) {
                 return;
             }
@@ -40,23 +40,23 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
             }
             $index = $event->getIndex();
 
-            yield $index => $this->fetchValue($iterator);
+            yield $index => $this->fetchValue($eventIterator);
         } while (true);
     }
 
     /**
-     * @param Iterator $iterator
+     * @param Iterator $eventIterator
      * @return Generator|ValueInterface[]
      */
-    public function createObjectIterator(Iterator $iterator): Generator
+    public function createObjectIterator(Iterator $eventIterator): Generator
     {
-        $event = $this->fetchEvent($iterator);
+        $event = $this->fetchEvent($eventIterator);
         if (!$event instanceof BeforeObjectEventInterface) {
             throw new Exception\UnexpectedDataEventException($event, BeforeObjectEventInterface::class);
         }
 
         do {
-            $event = $this->fetchEvent($iterator);
+            $event = $this->fetchEvent($eventIterator);
             if ($event instanceof AfterObjectEventInterface) {
                 return;
             }
@@ -66,7 +66,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
             }
             $property = $event->getName();
 
-            yield $property => $this->fetchValue($iterator);
+            yield $property => $this->fetchValue($eventIterator);
         } while (true);
     }
 

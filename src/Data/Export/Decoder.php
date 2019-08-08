@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Data\Export;
 
 use Iterator;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class Decoder implements DecoderInterface
@@ -15,7 +15,7 @@ final class Decoder implements DecoderInterface
 
     private $valueIteratorFactory;
 
-    public function __construct(ValueIteratorFactory $valueIteratorFactory)
+    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
     {
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
@@ -29,7 +29,7 @@ final class Decoder implements DecoderInterface
 
         if ($value instanceof ArrayValueInterface) {
             $result = [];
-            $arrayIterator = $this->valueIteratorFactory->createArrayIterator($value->createIterator());
+            $arrayIterator = $this->valueIteratorFactory->createArrayIterator($value->createEventIterator());
             foreach ($arrayIterator as $index => $element) {
                 $result[$index] = $this->exportValue($element);
             }
@@ -39,7 +39,7 @@ final class Decoder implements DecoderInterface
 
         if ($value instanceof ObjectValueInterface) {
             $result = (object) [];
-            $objectIterator = $this->valueIteratorFactory->createObjectIterator($value->createIterator());
+            $objectIterator = $this->valueIteratorFactory->createObjectIterator($value->createEventIterator());
             foreach ($objectIterator as $name => $property) {
                 $result->{$name} = $this->exportValue($property);
             }
@@ -52,6 +52,6 @@ final class Decoder implements DecoderInterface
 
     public function exportValue(ValueInterface $value)
     {
-        return $this->exportEvents($value->createIterator());
+        return $this->exportEvents($value->createEventIterator());
     }
 }

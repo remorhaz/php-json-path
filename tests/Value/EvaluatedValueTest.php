@@ -50,7 +50,7 @@ class EvaluatedValueTest extends TestCase
         array $expectedValue
     ): void {
         $value = new EvaluatedValue($value);
-        self::assertSame($expectedValue, $this->exportEvents($value->createIterator()));
+        self::assertSame($expectedValue, $this->exportEvents($value->createEventIterator()));
     }
 
     public function providerCreateIterator(): array
