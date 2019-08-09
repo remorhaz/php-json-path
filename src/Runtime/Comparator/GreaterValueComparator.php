@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function is_float;
 use function is_int;
 use function is_string;

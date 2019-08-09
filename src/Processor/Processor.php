@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Processor;
 use Collator;
 use Remorhaz\JSON\Data\Export\Decoder;
 use Remorhaz\JSON\Data\Export\Encoder;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Processor\Result\ResultFactory;
 use Remorhaz\JSON\Path\Processor\Result\ResultFactoryInterface;
@@ -38,19 +37,18 @@ final class Processor implements ProcessorInterface
 
     public static function create(): ProcessorInterface
     {
-        $valueIteratorFactory = new ValueIteratorFactory;
         $evaluator = new Evaluator(
             new ComparatorCollection(new Collator('UTF-8')),
             new AggregatorCollection,
         );
-        $valueFetcher = new ValueFetcher($valueIteratorFactory);
+        $valueFetcher = new ValueFetcher;
         $runtime = new Runtime(
             new ValueListFetcher($valueFetcher),
             $evaluator,
             new LiteralFactory,
             new MatcherFactory($valueFetcher),
         );
-        $jsonDecoder = new Decoder($valueIteratorFactory);
+        $jsonDecoder = new Decoder;
         $jsonEncoder = new Encoder($jsonDecoder);
 
         return new self(

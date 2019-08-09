@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\StructValueInterface;
 use function iterator_count;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
@@ -12,13 +11,6 @@ use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 
 final class ValueFetcher implements ValueFetcherInterface
 {
-
-    private $valueIteratorFactory;
-
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
-    {
-        $this->valueIteratorFactory = $valueIteratorFactory;
-    }
 
     /**
      * @param Matcher\ChildMatcherInterface $matcher
