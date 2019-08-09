@@ -3,16 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
-use function array_map;
-use function get_class;
-use Iterator;
-use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\Event\DataEventInterface;
-use Remorhaz\JSON\Data\Event\ScalarEvent;
-use Remorhaz\JSON\Data\Event\ScalarEventInterface;
-use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\InvalidScalarDataException;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 
@@ -49,68 +40,5 @@ class LiteralScalarValueTest extends TestCase
             'Float' => [1.5, 1.5],
             'String' => ['a', 'a'],
         ];
-    }
-
-    /**
-     * @param mixed $value
-     * @param array $expectedValue
-     * @dataProvider providerCreateIterator
-     */
-    public function testCreateIterator_ConstructedWithGivenValue_GeneratesMatchingEvents(
-        $value,
-        array $expectedValue
-    ): void {
-        $value = new LiteralScalarValue($value);
-        self::assertSame($expectedValue, $this->exportEvents($value->createEventIterator()));
-    }
-
-    public function providerCreateIterator(): array
-    {
-        return [
-            'Integer' => [
-                1,
-                [
-                    [
-                        'class' => ScalarEvent::class,
-                        'value' => [
-                            'class' => LiteralScalarValue::class,
-                            'data' => 1,
-                        ],
-                    ],
-                ],
-            ],
-        ];
-    }
-
-    private function exportEvents(Iterator $eventIterator): array
-    {
-        return array_map(
-            [$this, 'exportEvent'],
-            iterator_to_array($eventIterator)
-        );
-    }
-
-    private function exportEvent(DataEventInterface $event): array
-    {
-        $data = [];
-        if ($event instanceof ScalarEventInterface) {
-            $data['value'] = $this->exportValue($event->getValue());
-        }
-
-        return [
-            'class' => get_class($event),
-        ] + $data;
-    }
-
-    private function exportValue(ValueInterface $value): array
-    {
-        $data = [];
-        if ($value instanceof ScalarValueInterface) {
-            $data['data'] = $value->getData();
-        }
-
-        return [
-            'class' => get_class($value),
-        ] + $data;
     }
 }

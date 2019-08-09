@@ -3,26 +3,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Test\Value\DecodedJson;
 
-use function array_map;
-use function get_class;
-use function iterator_to_array;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\Exception\InvalidNodeDataException;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeArrayValue;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeObjectValue;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeScalarValue;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
-use Remorhaz\JSON\Data\Event\AfterArrayEvent;
-use Remorhaz\JSON\Data\Event\AfterObjectEvent;
-use Remorhaz\JSON\Data\Event\BeforeArrayEvent;
-use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
-use Remorhaz\JSON\Data\Event\DataEventInterface;
-use Remorhaz\JSON\Data\Event\ElementEvent;
-use Remorhaz\JSON\Data\Event\PropertyEvent;
-use Remorhaz\JSON\Data\Event\ScalarEvent;
 use Remorhaz\JSON\Data\Path\Path;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Data\Value\ValueInterface;
 use const STDOUT;
 
 /**
@@ -136,53 +124,5 @@ class NodeValueFactoryTest extends TestCase
         $factory = NodeValueFactory::create();
         $this->expectException(InvalidNodeDataException::class);
         $factory->createValue(new Path, new Path);
-    }
-
-    /**
-     * @param $data
-     * @param array $expectedValue
-     * @dataProvider providerValueEvents
-     */
-    public function testCreateValue_GivenValue_ResultGeneratesMathingEventsOnIteration(
-        $data,
-        array $expectedValue
-    ): void {
-        $actualValue = NodeValueFactory::create()->createValue($data, new Path);
-        self::assertSame($expectedValue, $this->exportValueEvents($actualValue));
-    }
-
-    public function providerValueEvents(): array
-    {
-        return [
-            'Scalar' => [1, [ScalarEvent::class]],
-            'Array' => [
-                [1],
-                [
-                    BeforeArrayEvent::class,
-                    ElementEvent::class,
-                    ScalarEvent::class,
-                    AfterArrayEvent::class,
-                ]
-            ],
-            'Object' => [
-                (object) ['a' => 1],
-                [
-                    BeforeObjectEvent::class,
-                    PropertyEvent::class,
-                    ScalarEvent::class,
-                    AfterObjectEvent::class,
-                ]
-            ],
-        ];
-    }
-
-    private function exportValueEvents(ValueInterface $value): array
-    {
-        return array_map([$this, 'exportValueEvent'], iterator_to_array($value->createEventIterator(), false));
-    }
-
-    private function exportValueEvent(DataEventInterface $event): string
-    {
-        return get_class($event);
     }
 }

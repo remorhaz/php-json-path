@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use Generator;
 use function is_scalar;
-use Iterator;
-use Remorhaz\JSON\Data\Event;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 
 final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInterface
@@ -25,15 +22,5 @@ final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInte
     public function getData()
     {
         return $this->data;
-    }
-
-    public function createEventIterator(): Iterator
-    {
-        return $this->createGenerator();
-    }
-
-    private function createGenerator(): Generator
-    {
-        yield new Event\ScalarEvent($this);
     }
 }

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Structure values incapsulate child iterators now.
 ### Removed
 - Value iterator factory removed.
+- Data events totally removed.
 
 ## [0.3.0] - 2019-07-31
 ### Added
