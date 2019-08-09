@@ -3,18 +3,19 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Iterator;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 interface ValueFetcherInterface
 {
 
-    public function fetchValueChildren(
+    public function createChildrenIterator(
         Matcher\ChildMatcherInterface $matcher,
         NodeValueInterface $value
-    ): array;
+    ): Iterator;
 
-    public function fetchValueDeepChildren(
+    public function createDeepChildrenIterator(
         Matcher\ChildMatcherInterface $matcher,
         NodeValueInterface $value
-    ): array;
+    ): Iterator;
 }

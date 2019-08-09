@@ -35,7 +35,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this
                 ->valueFetcher
-                ->fetchValueChildren($matcher, $sourceValue);
+                ->createChildrenIterator($matcher, $sourceValue);
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -53,7 +53,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this
                 ->valueFetcher
-                ->fetchValueDeepChildren($matcher, $sourceValue);
+                ->createDeepChildrenIterator($matcher, $sourceValue);
             $outerIndex = $source->getIndexMap()->getOuterIndex($sourceIndex);
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -74,7 +74,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
             $children = $sourceValue instanceof ArrayValueInterface
                 ? $this
                     ->valueFetcher
-                    ->fetchValueChildren(new Matcher\AnyChildMatcher, $sourceValue)
+                    ->createChildrenIterator(new Matcher\AnyChildMatcher, $sourceValue)
                 : [$sourceValue];
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);

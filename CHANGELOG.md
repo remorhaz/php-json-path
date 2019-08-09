@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query capability `isPath` renamed to `isAddressable`. 
 - Query constructor accepts callback builder instead of it's parts.
 - Query rethrows convenient exception on failure. It contains original query source and source code of generated callback.
-- `ValueInterface::createIterator()` method renamed to `createEventIterator`.
 - Structure values incapsulate child iterators now.
+- Value fetcher methods renamed from `fetchValue*` to `create*Iterator`.
 ### Removed
 - Value iterator factory removed.
 - Data events totally removed.
