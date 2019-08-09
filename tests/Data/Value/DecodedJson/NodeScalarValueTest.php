@@ -18,7 +18,6 @@ use Remorhaz\JSON\Data\Event\PropertyEventInterface;
 use Remorhaz\JSON\Data\Path\Path;
 use Remorhaz\JSON\Data\Path\PathAwareInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 
 /**
  * @covers \Remorhaz\JSON\Data\Value\DecodedJson\NodeScalarValue
@@ -33,7 +32,7 @@ class NodeScalarValueTest extends TestCase
 
     public function setUp(): void
     {
-        $this->exporter = new Decoder(new ValueIteratorFactory);
+        $this->exporter = new Decoder;
     }
 
     /**

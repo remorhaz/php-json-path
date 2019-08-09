@@ -21,7 +21,6 @@ use Remorhaz\JSON\Data\Event\PropertyEventInterface;
 use Remorhaz\JSON\Data\Path\Path;
 use Remorhaz\JSON\Data\Path\PathAwareInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
 use stdClass;
 
 /**
@@ -37,7 +36,7 @@ class NodeObjectValueTest extends TestCase
 
     public function setUp(): void
     {
-        $this->exporter = new Decoder(new ValueIteratorFactory);
+        $this->exporter = new Decoder;
     }
 
     /**
@@ -49,12 +48,10 @@ class NodeObjectValueTest extends TestCase
         $data,
         array $expectedValue
     ): void {
-        $valueIteratorFactory = new ValueIteratorFactory;
         $value = new NodeObjectValue(
             $data,
             new Path,
-            new NodeValueFactory($valueIteratorFactory),
-            $valueIteratorFactory,
+            new NodeValueFactory,
         );
 
         $actualEvents = iterator_to_array($value->createEventIterator(), false);

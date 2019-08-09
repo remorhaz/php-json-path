@@ -5,7 +5,6 @@ namespace Remorhaz\JSON\Data\Value\DecodedJson;
 
 use Generator;
 use Iterator;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Event\AfterArrayEvent;
 use Remorhaz\JSON\Data\Event\BeforeArrayEvent;
@@ -22,25 +21,32 @@ final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface
 
     private $valueFactory;
 
-    private $valueIteratorFactory;
-
     public function __construct(
         array $data,
         PathInterface $path,
-        NodeValueFactoryInterface $valueFactory,
-        ValueIteratorFactoryInterface $valueIteratorFactory
+        NodeValueFactoryInterface $valueFactory
     ) {
         $this->data = $data;
         $this->path = $path;
         $this->valueFactory = $valueFactory;
-        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     public function createChildIterator(): Iterator
     {
-        return $this
-            ->valueIteratorFactory
-            ->createArrayIterator($this->createEventIterator());
+        return $this->createChildGenerator();
+    }
+
+    private function createChildGenerator(): Generator
+    {
+        $validIndex = 0;
+        foreach ($this->data as $index => $element) {
+            if ($index !== $validIndex++) {
+                throw new Exception\InvalidElementKeyException($index, $this->path);
+            }
+            yield $this
+                ->valueFactory
+                ->createValue($element, $this->path->copyWithElement($index));
+        }
     }
 
     public function createEventIterator(): Iterator

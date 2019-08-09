@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Value\DecodedJson;
 
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactory;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use function is_array;
 use function is_scalar;
 use Remorhaz\JSON\Data\Path\Path;
@@ -15,16 +13,9 @@ use stdClass;
 final class NodeValueFactory implements NodeValueFactoryInterface
 {
 
-    private $valueIteratorFactory;
-
     public static function create(): NodeValueFactoryInterface
     {
-        return new self(new ValueIteratorFactory);
-    }
-
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
-    {
-        $this->valueIteratorFactory = $valueIteratorFactory;
+        return new self;
     }
 
     /**
@@ -44,11 +35,11 @@ final class NodeValueFactory implements NodeValueFactoryInterface
         }
 
         if (is_array($data)) {
-            return new NodeArrayValue($data, $path, $this, $this->valueIteratorFactory);
+            return new NodeArrayValue($data, $path, $this);
         }
 
         if ($data instanceof stdClass) {
-            return new NodeObjectValue($data, $path, $this, $this->valueIteratorFactory);
+            return new NodeObjectValue($data, $path, $this);
         }
 
         throw new Exception\InvalidNodeDataException($data, $path);

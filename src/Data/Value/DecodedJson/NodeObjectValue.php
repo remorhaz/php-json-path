@@ -8,7 +8,6 @@ use Iterator;
 use Remorhaz\JSON\Data\Event\AfterObjectEvent;
 use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
 use Remorhaz\JSON\Data\Event\PropertyEvent;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
@@ -23,25 +22,28 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
 
     private $valueFactory;
 
-    private $valueIteratorFactory;
-
     public function __construct(
         stdClass $data,
         PathInterface $path,
-        NodeValueFactoryInterface $valueFactory,
-        ValueIteratorFactoryInterface $valueIteratorFactory
+        NodeValueFactoryInterface $valueFactory
     ) {
         $this->data = $data;
         $this->path = $path;
         $this->valueFactory = $valueFactory;
-        $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
     public function createChildIterator(): Iterator
     {
-        return $this
-            ->valueIteratorFactory
-            ->createObjectIterator($this->createEventIterator());
+        return $this->createChildGenerator();
+    }
+
+    private function createChildGenerator(): Generator
+    {
+        foreach (get_object_vars($this->data) as $name => $property) {
+            yield $name => $this
+                ->valueFactory
+                ->createValue($property, $this->path->copyWithProperty($name));
+        }
     }
 
     public function createEventIterator(): Iterator
