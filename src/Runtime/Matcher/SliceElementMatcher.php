@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
+use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use function is_int;
+use function iterator_count;
 use function max;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Path\Runtime\ValueFetcherInterface;
 
 final class SliceElementMatcher implements ChildMatcherInterface
 {
-
-    private $valueFetcher;
 
     private $start;
 
@@ -21,9 +20,8 @@ final class SliceElementMatcher implements ChildMatcherInterface
 
     private $isReverse;
 
-    public function __construct(ValueFetcherInterface $valueFetcher, ?int $start, ?int $end, ?int $step)
+    public function __construct(?int $start, ?int $end, ?int $step)
     {
-        $this->valueFetcher = $valueFetcher;
         $this->step = $step ?? 1;
         $this->isReverse = $step < 0;
 
@@ -50,9 +48,9 @@ final class SliceElementMatcher implements ChildMatcherInterface
 
     private function findArrayLength(NodeValueInterface $value): ?int
     {
-        $count = $this
-            ->valueFetcher
-            ->fetchArrayLength($value);
+        $count = $value instanceof ArrayValueInterface
+            ? iterator_count($value->createChildIterator())
+            : null;
 
         return isset($count) && $count > 0
             ? $count

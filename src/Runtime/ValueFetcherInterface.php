@@ -17,6 +17,4 @@ interface ValueFetcherInterface
         Matcher\ChildMatcherInterface $matcher,
         NodeValueInterface $value
     ): array;
-
-    public function fetchArrayLength(NodeValueInterface $value): ?int;
 }

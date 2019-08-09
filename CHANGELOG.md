@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Value iterator factory removed.
 - Data events totally removed.
+- Value fetcher `fetchArrayLength` method removed.
 
 ## [0.3.0] - 2019-07-31
 ### Added

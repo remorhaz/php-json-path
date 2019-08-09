@@ -37,16 +37,14 @@ final class Processor implements ProcessorInterface
 
     public static function create(): ProcessorInterface
     {
-        $evaluator = new Evaluator(
-            new ComparatorCollection(new Collator('UTF-8')),
-            new AggregatorCollection,
-        );
-        $valueFetcher = new ValueFetcher;
         $runtime = new Runtime(
-            new ValueListFetcher($valueFetcher),
-            $evaluator,
+            new ValueListFetcher(new ValueFetcher),
+            new Evaluator(
+                new ComparatorCollection(new Collator('UTF-8')),
+                new AggregatorCollection,
+            ),
             new LiteralFactory,
-            new MatcherFactory($valueFetcher),
+            new MatcherFactory,
         );
         $jsonDecoder = new Decoder;
         $jsonEncoder = new Encoder($jsonDecoder);
