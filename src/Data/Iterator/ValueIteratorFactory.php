@@ -123,7 +123,7 @@ final class ValueIteratorFactory implements ValueIteratorFactoryInterface
         throw new Exception\InvalidDataEventException($event);
     }
 
-    public function fetchValue(Iterator $eventIterator): ValueInterface
+    private function fetchValue(Iterator $eventIterator): ValueInterface
     {
         $event = $this->fetchEvent($eventIterator);
         if ($event instanceof ScalarEventInterface) {

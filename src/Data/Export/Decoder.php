@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Export;
 
-use Iterator;
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
@@ -20,17 +19,15 @@ final class Decoder implements DecoderInterface
         $this->valueIteratorFactory = $valueIteratorFactory;
     }
 
-    public function exportEvents(Iterator $eventIterator)
+    public function exportValue(ValueInterface $value)
     {
-        $value = $this->valueIteratorFactory->fetchValue($eventIterator);
         if ($value instanceof ScalarValueInterface) {
             return $value->getData();
         }
 
         if ($value instanceof ArrayValueInterface) {
             $result = [];
-            $arrayIterator = $this->valueIteratorFactory->createArrayIterator($value->createEventIterator());
-            foreach ($arrayIterator as $index => $element) {
+            foreach ($value->createChildIterator() as $index => $element) {
                 $result[$index] = $this->exportValue($element);
             }
 
@@ -39,8 +36,7 @@ final class Decoder implements DecoderInterface
 
         if ($value instanceof ObjectValueInterface) {
             $result = (object) [];
-            $objectIterator = $this->valueIteratorFactory->createObjectIterator($value->createEventIterator());
-            foreach ($objectIterator as $name => $property) {
+            foreach ($value->createChildIterator() as $name => $property) {
                 $result->{$name} = $this->exportValue($property);
             }
 
@@ -48,10 +44,5 @@ final class Decoder implements DecoderInterface
         }
 
         throw new Exception\UnexpectedValueException($value);
-    }
-
-    public function exportValue(ValueInterface $value)
-    {
-        return $this->exportEvents($value->createEventIterator());
     }
 }

@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Value;
 
-interface ObjectValueInterface extends ValueInterface
+interface ObjectValueInterface extends StructValueInterface
 {
 }

@@ -4,28 +4,24 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 
 final class ComparatorCollection
 {
 
-    private $valueIteratorFactory;
-
     private $collator;
 
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory, Collator $collator)
+    public function __construct(Collator $collator)
     {
-        $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;
     }
 
     public function equal(): ComparatorInterface
     {
-        return new EqualValueComparator($this->valueIteratorFactory, $this->collator);
+        return new EqualValueComparator($this->collator);
     }
 
     public function greater(): ComparatorInterface
     {
-        return new GreaterValueComparator($this->valueIteratorFactory, $this->collator);
+        return new GreaterValueComparator($this->collator);
     }
 }

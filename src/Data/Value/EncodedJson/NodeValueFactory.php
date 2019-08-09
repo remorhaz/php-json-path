@@ -18,7 +18,7 @@ final class NodeValueFactory implements NodeValueFactoryInterface
 
     public static function create(): NodeValueFactoryInterface
     {
-        return new self(new DecodedJsonNodeValueFactory);
+        return new self(DecodedJsonNodeValueFactory::create());
     }
 
     public function __construct(DecodedJsonNodeValueFactoryInterface $decodedJsonNodeValueFactory)

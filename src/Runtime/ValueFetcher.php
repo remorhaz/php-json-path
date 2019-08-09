@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
+use Remorhaz\JSON\Data\Value\StructValueInterface;
 use function iterator_count;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
-use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 
 final class ValueFetcher implements ValueFetcherInterface
@@ -33,12 +33,8 @@ final class ValueFetcher implements ValueFetcherInterface
             return [];
         }
 
-        if ($value instanceof ArrayValueInterface) {
-            return $this->fetchElements($value, $matcher);
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            return $this->fetchProperties($value, $matcher);
+        if ($value instanceof StructValueInterface) {
+            return $this->fetchChildren($value, $matcher);
         }
 
         throw new Exception\UnexpectedNodeValueFetchedException($value);
@@ -52,24 +48,21 @@ final class ValueFetcher implements ValueFetcherInterface
             return [];
         }
 
-        if ($value instanceof ArrayValueInterface) {
-            return $this->fetchDeepElements($value, $matcher);
-        }
-
-        if ($value instanceof ObjectValueInterface) {
-            return $this->fetchDeepProperties($value, $matcher);
+        if ($value instanceof StructValueInterface) {
+            return $this->fetchDeepChildren($value, $matcher);
         }
 
         throw new Exception\UnexpectedNodeValueFetchedException($value);
     }
 
-    private function fetchElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
+    private function fetchChildren(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
-        $arrayIterator = $this
-            ->valueIteratorFactory
-            ->createArrayIterator($value->createEventIterator());
+        if (!$value instanceof StructValueInterface) {
+            // TODO: extract correct argument type?
+            throw new Exception\UnexpectedNodeValueFetchedException($value);
+        }
         $results = [];
-        foreach ($arrayIterator as $index => $element) {
+        foreach ($value->createChildIterator() as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -78,28 +71,15 @@ final class ValueFetcher implements ValueFetcherInterface
         return $results;
     }
 
-    private function fetchProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
+    private function fetchDeepChildren(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
     {
-        $objectIterator = $this
-            ->valueIteratorFactory
-            ->createObjectIterator($value->createEventIterator());
-        $results = [];
-        foreach ($objectIterator as $name => $property) {
-            if ($matcher->match($name, $property, $value)) {
-                $results[] = $property;
-            }
+        if (!$value instanceof StructValueInterface) {
+            // TODO: extract correct argument type?
+            throw new Exception\UnexpectedNodeValueFetchedException($value);
         }
 
-        return $results;
-    }
-
-    private function fetchDeepElements(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $arrayIterator = $this
-            ->valueIteratorFactory
-            ->createArrayIterator($value->createEventIterator());
         $results = [];
-        foreach ($arrayIterator as $index => $element) {
+        foreach ($value->createChildIterator() as $index => $element) {
             if ($matcher->match($index, $element, $value)) {
                 $results[] = $element;
             }
@@ -112,32 +92,10 @@ final class ValueFetcher implements ValueFetcherInterface
         return $results;
     }
 
-    private function fetchDeepProperties(NodeValueInterface $value, Matcher\ChildMatcherInterface $matcher): array
-    {
-        $objectIterator = $this
-            ->valueIteratorFactory
-            ->createObjectIterator($value->createEventIterator());
-        $results = [];
-        foreach ($objectIterator as $name => $property) {
-            if ($matcher->match($name, $property, $value)) {
-                $results[] = $property;
-            }
-            array_push(
-                $results,
-                ...$this->fetchValueDeepChildren($matcher, $property)
-            );
-        }
-
-        return $results;
-    }
-
     public function fetchArrayLength(NodeValueInterface $value): ?int
     {
-        if (!$value instanceof ArrayValueInterface) {
-            return null;
-        }
-        $elementIterator = $this->valueIteratorFactory->createArrayIterator($value->createEventIterator());
-
-        return iterator_count($elementIterator);
+        return $value instanceof ArrayValueInterface
+            ? iterator_count($value->createChildIterator())
+            : null;
     }
 }

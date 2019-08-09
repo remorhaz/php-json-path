@@ -14,13 +14,10 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 final class GreaterValueComparator implements ComparatorInterface
 {
 
-    private $valueIteratorFactory;
-
     private $collator;
 
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory, Collator $collator)
+    public function __construct(Collator $collator)
     {
-        $this->valueIteratorFactory = $valueIteratorFactory;
         $this->collator = $collator;
     }
 

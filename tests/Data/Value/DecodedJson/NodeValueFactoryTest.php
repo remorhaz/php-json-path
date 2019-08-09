@@ -37,7 +37,7 @@ class NodeValueFactoryTest extends TestCase
      */
     public function testCreateValue_ScalarDataOrNull_ReturnsNodeScalarValue($data): void
     {
-        $actualValue = (new NodeValueFactory)->createValue($data, new Path);
+        $actualValue = NodeValueFactory::create()->createValue($data, new Path);
         self::assertInstanceOf(NodeScalarValue::class, $actualValue);
     }
 
@@ -59,7 +59,7 @@ class NodeValueFactoryTest extends TestCase
     public function testCreateValue_ScalarValueAndGivenPath_ResultHasSamePathInstance($data): void
     {
         $path = new Path;
-        $actualValue = (new NodeValueFactory)->createValue($data, $path);
+        $actualValue = NodeValueFactory::create()->createValue($data, $path);
         self::assertSame($path, $actualValue->getPath());
     }
 
@@ -69,7 +69,7 @@ class NodeValueFactoryTest extends TestCase
      */
     public function testCreateValue_ScalarValueAndNoPath_ResultHasEmptyPath($data): void
     {
-        $actualValue = (new NodeValueFactory)->createValue($data);
+        $actualValue = NodeValueFactory::create()->createValue($data);
         self::assertEmpty($actualValue->getPath()->getElements());
     }
 
@@ -82,58 +82,58 @@ class NodeValueFactoryTest extends TestCase
     {
         $path = new Path;
         /** @var ScalarValueInterface $actualValue */
-        $actualValue = (new NodeValueFactory)->createValue($data, $path);
+        $actualValue = NodeValueFactory::create()->createValue($data, $path);
         self::assertSame($expectedValue, $actualValue->getData());
     }
 
     public function testCreateValue_ArrayValue_ReturnsNodeArrayValue(): void
     {
-        $actualValue = (new NodeValueFactory)->createValue([], new Path);
+        $actualValue = NodeValueFactory::create()->createValue([], new Path);
         self::assertInstanceOf(NodeArrayValue::class, $actualValue);
     }
 
     public function testCreateValue_ArrayValueAndGivenPath_ResultHasSamePathInstance(): void
     {
         $path = new Path;
-        $actualValue = (new NodeValueFactory)->createValue([], $path);
+        $actualValue = NodeValueFactory::create()->createValue([], $path);
         self::assertSame($path, $actualValue->getPath());
     }
 
     public function testCreateValue_ArrayValueAndNoPath_ResultHasEmptyPath(): void
     {
-        $actualValue = (new NodeValueFactory)->createValue([]);
+        $actualValue = NodeValueFactory::create()->createValue([]);
         self::assertEmpty($actualValue->getPath()->getElements());
     }
 
     public function testCreateValue_ObjectValue_ReturnsNodeObjectValue(): void
     {
-        $actualValue = (new NodeValueFactory)->createValue((object) [], new Path);
+        $actualValue = NodeValueFactory::create()->createValue((object) [], new Path);
         self::assertInstanceOf(NodeObjectValue::class, $actualValue);
     }
 
     public function testCreateValue_ObjectValueAndGivenPath_ResultHasSamePathInstance(): void
     {
         $path = new Path;
-        $actualValue = (new NodeValueFactory)->createValue((object) [], $path);
+        $actualValue = NodeValueFactory::create()->createValue((object) [], $path);
         self::assertSame($path, $actualValue->getPath());
     }
 
     public function testCreateValue_ObjectValueAndNoPath_ResultHasSamePathInstance(): void
     {
-        $actualValue = (new NodeValueFactory)->createValue((object) []);
+        $actualValue = NodeValueFactory::create()->createValue((object) []);
         self::assertEmpty($actualValue->getPath()->getElements());
     }
 
     public function testCreateValue_NonScalarValue_ThrowsException(): void
     {
-        $factory = new NodeValueFactory;
+        $factory = NodeValueFactory::create();
         $this->expectException(InvalidNodeDataException::class);
         $factory->createValue(STDOUT, new Path);
     }
 
     public function testCreateValue_NonMatchingObject_ThrowsException(): void
     {
-        $factory = new NodeValueFactory;
+        $factory = NodeValueFactory::create();
         $this->expectException(InvalidNodeDataException::class);
         $factory->createValue(new Path, new Path);
     }
@@ -147,7 +147,7 @@ class NodeValueFactoryTest extends TestCase
         $data,
         array $expectedValue
     ): void {
-        $actualValue = (new NodeValueFactory)->createValue($data, new Path);
+        $actualValue = NodeValueFactory::create()->createValue($data, new Path);
         self::assertSame($expectedValue, $this->exportValueEvents($actualValue));
     }
 

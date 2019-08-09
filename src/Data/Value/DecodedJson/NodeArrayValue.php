@@ -5,6 +5,7 @@ namespace Remorhaz\JSON\Data\Value\DecodedJson;
 
 use Generator;
 use Iterator;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Event\AfterArrayEvent;
 use Remorhaz\JSON\Data\Event\BeforeArrayEvent;
@@ -21,24 +22,33 @@ final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface
 
     private $valueFactory;
 
-    public function __construct(array $data, PathInterface $path, NodeValueFactory $valueFactory)
-    {
+    private $valueIteratorFactory;
+
+    public function __construct(
+        array $data,
+        PathInterface $path,
+        NodeValueFactoryInterface $valueFactory,
+        ValueIteratorFactoryInterface $valueIteratorFactory
+    ) {
         $this->data = $data;
         $this->path = $path;
         $this->valueFactory = $valueFactory;
+        $this->valueIteratorFactory = $valueIteratorFactory;
+    }
+
+    public function createChildIterator(): Iterator
+    {
+        return $this
+            ->valueIteratorFactory
+            ->createArrayIterator($this->createEventIterator());
     }
 
     public function createEventIterator(): Iterator
     {
-        return $this->createGenerator($this->data, $this->path);
+        return $this->createEventGenerator($this->data, $this->path);
     }
 
-    public function getPath(): PathInterface
-    {
-        return $this->path;
-    }
-
-    private function createGenerator(array $data, PathInterface $path): Generator
+    private function createEventGenerator(array $data, PathInterface $path): Generator
     {
         yield new BeforeArrayEvent($this);
 
@@ -55,5 +65,10 @@ final class NodeArrayValue implements NodeValueInterface, ArrayValueInterface
         }
 
         yield new AfterArrayEvent($this);
+    }
+
+    public function getPath(): PathInterface
+    {
+        return $this->path;
     }
 }

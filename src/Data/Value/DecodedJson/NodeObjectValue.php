@@ -8,6 +8,7 @@ use Iterator;
 use Remorhaz\JSON\Data\Event\AfterObjectEvent;
 use Remorhaz\JSON\Data\Event\BeforeObjectEvent;
 use Remorhaz\JSON\Data\Event\PropertyEvent;
+use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
 use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
@@ -22,24 +23,33 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
 
     private $valueFactory;
 
-    public function __construct(stdClass $data, PathInterface $path, NodeValueFactory $valueFactory)
-    {
+    private $valueIteratorFactory;
+
+    public function __construct(
+        stdClass $data,
+        PathInterface $path,
+        NodeValueFactoryInterface $valueFactory,
+        ValueIteratorFactoryInterface $valueIteratorFactory
+    ) {
         $this->data = $data;
         $this->path = $path;
         $this->valueFactory = $valueFactory;
+        $this->valueIteratorFactory = $valueIteratorFactory;
+    }
+
+    public function createChildIterator(): Iterator
+    {
+        return $this
+            ->valueIteratorFactory
+            ->createObjectIterator($this->createEventIterator());
     }
 
     public function createEventIterator(): Iterator
     {
-        return $this->createGenerator($this->data, $this->path);
+        return $this->createEventGenerator($this->data, $this->path);
     }
 
-    public function getPath(): PathInterface
-    {
-        return $this->path;
-    }
-
-    private function createGenerator(stdClass $data, PathInterface $path): Generator
+    private function createEventGenerator(stdClass $data, PathInterface $path): Generator
     {
         yield new BeforeObjectEvent($this);
 
@@ -52,5 +62,10 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
         }
 
         yield new AfterObjectEvent($this);
+    }
+
+    public function getPath(): PathInterface
+    {
+        return $this->path;
     }
 }

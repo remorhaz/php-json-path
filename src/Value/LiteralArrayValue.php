@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
+use ArrayIterator;
 use Generator;
 use Iterator;
 use Remorhaz\JSON\Data\Event;
@@ -23,12 +24,17 @@ final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterf
         $this->values = $values;
     }
 
-    public function createEventIterator(): Iterator
+    public function createChildIterator(): Iterator
     {
-        return $this->createGenerator();
+        return new ArrayIterator($this->values);
     }
 
-    private function createGenerator(): Generator
+    public function createEventIterator(): Iterator
+    {
+        return $this->createEventGenerator();
+    }
+
+    private function createEventGenerator(): Generator
     {
         yield new Event\BeforeArrayEvent($this);
 

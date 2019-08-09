@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use Remorhaz\JSON\Data\Iterator\ValueIteratorFactoryInterface;
-
 final class AggregatorCollection
 {
 
@@ -14,30 +12,23 @@ final class AggregatorCollection
     private const AVG = 'avg';
     private const STDDEV = 'stddev';
 
-    private $valueIteratorFactory;
-
-    public function __construct(ValueIteratorFactoryInterface $valueIteratorFactory)
-    {
-        $this->valueIteratorFactory = $valueIteratorFactory;
-    }
-
     public function byName(string $name): ValueAggregatorInterface
     {
         switch ($name) {
             case self::MIN:
-                return new MinAggregator($this->valueIteratorFactory);
+                return new MinAggregator;
 
             case self::MAX:
-                return new MaxAggregator($this->valueIteratorFactory);
+                return new MaxAggregator;
 
             case self::LENGTH:
-                return new LengthAggregator($this->valueIteratorFactory);
+                return new LengthAggregator;
 
             case self::AVG:
-                return new AvgAggregator($this->valueIteratorFactory);
+                return new AvgAggregator;
 
             case self::STDDEV:
-                return new StdDevAggregator($this->valueIteratorFactory);
+                return new StdDevAggregator;
         }
 
         throw new Exception\AggregateFunctionNotFoundException($name);

@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query rethrows convenient exception on failure. It contains original query source and source code of generated callback.
 - `ValueInterface::createIterator()` method renamed to `createEventIterator`.
 - Value iterator factory returns iterators instead of generators now.
+- Structure values incapsulate child iterators now.
+### Removed
+- Value iterator factory doesn't expose `fetchValue()` method anymore.
 
 ## [0.3.0] - 2019-07-31
 ### Added

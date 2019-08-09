@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Export;
 
-use Iterator;
 use function json_encode;
 use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
@@ -24,10 +23,11 @@ final class Encoder implements EncoderInterface
         $this->decoder = $decoder;
     }
 
-    public function exportEvents(Iterator $eventIterator): string
+    public function exportValue(ValueInterface $value): string
     {
-        $decodedValue = $this->decoder->exportEvents($eventIterator);
-
+        $decodedValue = $this
+            ->decoder
+            ->exportValue($value);
         try {
             return json_encode(
                 $decodedValue,
@@ -36,10 +36,5 @@ final class Encoder implements EncoderInterface
         } catch (Throwable $e) {
             throw new Exception\EncodingFailedException($decodedValue, $e);
         }
-    }
-
-    public function exportValue(ValueInterface $value): string
-    {
-        return $this->exportEvents($value->createEventIterator());
     }
 }

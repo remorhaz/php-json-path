@@ -40,8 +40,8 @@ final class Processor implements ProcessorInterface
     {
         $valueIteratorFactory = new ValueIteratorFactory;
         $evaluator = new Evaluator(
-            new ComparatorCollection($valueIteratorFactory, new Collator('UTF-8')),
-            new AggregatorCollection($valueIteratorFactory),
+            new ComparatorCollection(new Collator('UTF-8')),
+            new AggregatorCollection,
         );
         $valueFetcher = new ValueFetcher($valueIteratorFactory);
         $runtime = new Runtime(
