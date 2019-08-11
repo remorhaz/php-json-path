@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
 use Remorhaz\JSON\Path\Processor\Exception\QueryNotAddressableException;
+use Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
@@ -175,5 +176,29 @@ class ProcessorTest extends TestCase
 
         $result = $processor->delete($query, $rootValue);
         self::assertFalse($result->exists());
+    }
+
+    public function testReplace_AddressableQueryWithoutNestedPaths_ResultContainsMatchingData(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$..a');
+        $valueFactory = NodeValueFactory::create();
+        $rootValue = $valueFactory->createValue('{"a":1,"b":{"a":2,"c":3}}');
+        $newValue = $valueFactory->createValue('{"b":4}');
+
+        $result = $processor->replace($query, $rootValue, $newValue);
+        self::assertSame('{"a":{"b":4},"b":{"a":{"b":4},"c":3}}', $result->encode());
+    }
+
+    public function testReplace_AddressableQueryWithNestedPaths_ThrowsException(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$..a');
+        $valueFactory = NodeValueFactory::create();
+        $rootValue = $valueFactory->createValue('{"a":{"a":2,"c":3}}');
+        $newValue = $valueFactory->createValue('{"b":4}');
+
+        $this->expectException(ReplaceAtNestedPathsException::class);
+        $processor->replace($query, $rootValue, $newValue);
     }
 }

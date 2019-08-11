@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Processor is now able to delete parts of JSON document by query.
+- Processor is now able to delete and replace parts of JSON document by query.
 - Events redesigned.
 ### Changed
 - Query capability `isPath` renamed to `isAddressable`. 

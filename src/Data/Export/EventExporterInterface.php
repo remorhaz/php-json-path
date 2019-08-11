@@ -15,4 +15,6 @@ interface EventExporterInterface
      * @return NodeValueInterface|null
      */
     public function exportEvents(Iterator $events): ?NodeValueInterface;
+
+    public function exportExistingEvents(Iterator $events): NodeValueInterface;
 }

@@ -133,4 +133,21 @@ final class Processor implements ProcessorInterface
             ->resultFactory
             ->createValueResult($value);
     }
+
+    public function replace(
+        QueryInterface $query,
+        NodeValueInterface $rootNode,
+        NodeValueInterface $newNode
+    ): ValueResultInterface {
+        $paths = $this
+            ->selectPaths($query, $rootNode)
+            ->get();
+        $value = $this
+            ->mutator
+            ->replacePaths($rootNode, $newNode, ...$paths);
+
+        return $this
+            ->resultFactory
+            ->createValueResult($value);
+    }
 }

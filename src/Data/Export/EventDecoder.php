@@ -74,4 +74,14 @@ final class EventDecoder implements EventDecoderInterface
 
         return (new NodeValueFactory)->createValue($data);
     }
+
+    public function exportExistingEvents(Iterator $events): NodeValueInterface
+    {
+        $value = $this->exportEvents($events);
+        if (isset($value)) {
+            return $value;
+        }
+
+        throw new Exception\NoValueToExportException;
+    }
 }

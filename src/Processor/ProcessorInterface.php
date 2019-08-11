@@ -22,4 +22,10 @@ interface ProcessorInterface
     public function selectOnePath(QueryInterface $query, NodeValueInterface $rootNode): SelectOnePathResultInterface;
 
     public function delete(QueryInterface $query, NodeValueInterface $rootNode): ValueResultInterface;
+
+    public function replace(
+        QueryInterface $query,
+        NodeValueInterface $rootNode,
+        NodeValueInterface $newNode
+    ): ValueResultInterface;
 }
