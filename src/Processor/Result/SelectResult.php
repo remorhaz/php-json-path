@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor\Result;
 
 use function array_map;
-use Remorhaz\JSON\Data\Export\DecoderInterface;
-use Remorhaz\JSON\Data\Export\EncoderInterface;
+use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
+use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class SelectResult implements SelectResultInterface
@@ -17,8 +17,11 @@ final class SelectResult implements SelectResultInterface
 
     private $values;
 
-    public function __construct(EncoderInterface $encoder, DecoderInterface $decoder, ValueInterface ...$values)
-    {
+    public function __construct(
+        ValueEncoderInterface $encoder,
+        ValueDecoderInterface $decoder,
+        ValueInterface ...$values
+    ) {
         $this->encoder = $encoder;
         $this->decoder = $decoder;
         $this->values = $values;

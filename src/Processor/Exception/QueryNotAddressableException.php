@@ -7,7 +7,7 @@ use LogicException;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Throwable;
 
-final class NotAddressableQueryException extends LogicException implements ExceptionInterface
+final class QueryNotAddressableException extends LogicException implements ExceptionInterface
 {
 
     private $query;

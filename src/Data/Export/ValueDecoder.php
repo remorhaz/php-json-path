@@ -8,7 +8,7 @@ use Remorhaz\JSON\Data\Value\ObjectValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
-final class Decoder implements DecoderInterface
+final class ValueDecoder implements ValueDecoderInterface
 {
 
     public function exportValue(ValueInterface $value)

@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
-use Remorhaz\JSON\Data\Export\DecoderInterface;
-use Remorhaz\JSON\Data\Export\EncoderInterface;
+use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
+use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
-final class ExistingSelectOneResult implements SelectOneResultInterface
+final class ExistingValueResult implements ValueResultInterface
 {
 
     private $jsonEncoder;
@@ -16,8 +16,11 @@ final class ExistingSelectOneResult implements SelectOneResultInterface
 
     private $value;
 
-    public function __construct(EncoderInterface $jsonEncoder, DecoderInterface $jsonDecoder, ValueInterface $value)
-    {
+    public function __construct(
+        ValueEncoderInterface $jsonEncoder,
+        ValueDecoderInterface $jsonDecoder,
+        ValueInterface $value
+    ) {
         $this->jsonEncoder = $jsonEncoder;
         $this->jsonDecoder = $jsonDecoder;
         $this->value = $value;

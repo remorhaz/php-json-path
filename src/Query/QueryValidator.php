@@ -20,7 +20,7 @@ final class QueryValidator implements QueryValidatorInterface
     public function getAddressableQuery(QueryInterface $query): QueryInterface
     {
         if (!$query->getCapabilities()->isAddressable()) {
-            throw new Exception\NotAddressableQueryException($query);
+            throw new Exception\QueryNotAddressableException($query);
         }
 
         return $query;

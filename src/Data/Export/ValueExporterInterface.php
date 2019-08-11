@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Data\Export;
 
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
-interface ExporterInterface
+interface ValueExporterInterface
 {
 
     public function exportValue(ValueInterface $value);

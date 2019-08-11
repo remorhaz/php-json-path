@@ -13,12 +13,12 @@ use Throwable;
 /**
  * @todo Don't use decoder
  */
-final class Encoder implements EncoderInterface
+final class ValueEncoder implements ValueEncoderInterface
 {
 
     private $decoder;
 
-    public function __construct(DecoderInterface $decoder)
+    public function __construct(ValueDecoderInterface $decoder)
     {
         $this->decoder = $decoder;
     }

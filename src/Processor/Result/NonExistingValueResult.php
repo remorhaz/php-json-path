@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
-final class NonExistingSelectOneResult implements SelectOneResultInterface
+final class NonExistingValueResult implements ValueResultInterface
 {
 
     public function exists(): bool

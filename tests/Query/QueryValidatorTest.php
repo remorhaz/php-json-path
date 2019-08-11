@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Test\Query;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
-use Remorhaz\JSON\Path\Processor\Exception\NotAddressableQueryException;
+use Remorhaz\JSON\Path\Processor\Exception\QueryNotAddressableException;
 use Remorhaz\JSON\Path\Query\Capabilities;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\QueryValidator;
@@ -62,7 +62,7 @@ class QueryValidatorTest extends TestCase
             ->willReturn($capabilities);
         $validator = new QueryValidator;
 
-        $this->expectException(NotAddressableQueryException::class);
+        $this->expectException(QueryNotAddressableException::class);
         $validator->getAddressableQuery($query);
     }
 }

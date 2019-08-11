@@ -4,13 +4,17 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor;
 
 use Collator;
-use Remorhaz\JSON\Data\Export\Decoder;
-use Remorhaz\JSON\Data\Export\Encoder;
+use Remorhaz\JSON\Data\Event\ValueWalker;
+use Remorhaz\JSON\Data\Export\EventDecoder;
+use Remorhaz\JSON\Data\Export\ValueDecoder;
+use Remorhaz\JSON\Data\Export\ValueEncoder;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Processor\Mutator\Mutator;
+use Remorhaz\JSON\Path\Processor\Mutator\MutatorInterface;
+use Remorhaz\JSON\Path\Processor\Result\ValueResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\ResultFactory;
 use Remorhaz\JSON\Path\Processor\Result\ResultFactoryInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectOnePathResultInterface;
-use Remorhaz\JSON\Path\Processor\Result\SelectOneResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectPathsResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectResultInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
@@ -35,6 +39,8 @@ final class Processor implements ProcessorInterface
 
     private $queryValidator;
 
+    private $mutator;
+
     public static function create(): ProcessorInterface
     {
         $runtime = new Runtime(
@@ -46,24 +52,27 @@ final class Processor implements ProcessorInterface
             new LiteralFactory,
             new MatcherFactory,
         );
-        $jsonDecoder = new Decoder;
-        $jsonEncoder = new Encoder($jsonDecoder);
+        $jsonDecoder = new ValueDecoder;
+        $jsonEncoder = new ValueEncoder($jsonDecoder);
 
         return new self(
             $runtime,
             new ResultFactory($jsonEncoder, $jsonDecoder, new PathEncoder),
             new QueryValidator,
+            new Mutator(new ValueWalker, new EventDecoder),
         );
     }
 
     public function __construct(
         RuntimeInterface $runtime,
         ResultFactoryInterface $resultFactory,
-        QueryValidatorInterface $queryValidator
+        QueryValidatorInterface $queryValidator,
+        MutatorInterface $mutator
     ) {
         $this->runtime = $runtime;
         $this->resultFactory = $resultFactory;
         $this->queryValidator = $queryValidator;
+        $this->mutator = $mutator;
     }
 
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
@@ -75,7 +84,7 @@ final class Processor implements ProcessorInterface
             ->createSelectResult($values);
     }
 
-    public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): SelectOneResultInterface
+    public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): ValueResultInterface
     {
         $values = $this
             ->queryValidator
@@ -109,5 +118,19 @@ final class Processor implements ProcessorInterface
         return $this
             ->resultFactory
             ->createSelectOnePathResult($values);
+    }
+
+    public function delete(QueryInterface $query, NodeValueInterface $rootNode): ValueResultInterface
+    {
+        $paths = $this
+            ->selectPaths($query, $rootNode)
+            ->get();
+        $value = $this
+            ->mutator
+            ->deletePaths($rootNode, ...$paths);
+
+        return $this
+            ->resultFactory
+            ->createValueResult($value);
     }
 }

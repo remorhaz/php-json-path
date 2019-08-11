@@ -5,8 +5,8 @@ namespace Remorhaz\JSON\Path\Processor\Result;
 
 use function array_map;
 use function count;
-use Remorhaz\JSON\Data\Export\DecoderInterface;
-use Remorhaz\JSON\Data\Export\EncoderInterface;
+use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
+use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
@@ -22,8 +22,11 @@ final class ResultFactory implements ResultFactoryInterface
 
     private $pathsEncoder;
 
-    public function __construct(EncoderInterface $jsonEncoder, DecoderInterface $jsonDecoder, PathEncoder $pathEncoder)
-    {
+    public function __construct(
+        ValueEncoderInterface $jsonEncoder,
+        ValueDecoderInterface $jsonDecoder,
+        PathEncoder $pathEncoder
+    ) {
         $this->jsonEncoder = $jsonEncoder;
         $this->jsonDecoder = $jsonDecoder;
         $this->pathsEncoder = $pathEncoder;
@@ -34,17 +37,9 @@ final class ResultFactory implements ResultFactoryInterface
         return new SelectResult($this->jsonEncoder, $this->jsonDecoder, ...$values->getValues());
     }
 
-    public function createSelectOneResult(ValueListInterface $values): SelectOneResultInterface
+    public function createSelectOneResult(ValueListInterface $values): ValueResultInterface
     {
-        $value = $this->findSingleValue($values);
-
-        return isset($value)
-            ? new ExistingSelectOneResult(
-                $this->jsonEncoder,
-                $this->jsonDecoder,
-                $values->getValue(0)
-            )
-            : new NonExistingSelectOneResult;
+        return $this->createValueResult($this->findSingleValue($values));
     }
 
     public function createSelectPathsResult(ValueListInterface $values): SelectPathsResultInterface
@@ -87,5 +82,12 @@ final class ResultFactory implements ResultFactoryInterface
         }
 
         throw new Exception\MoreThanOneValueInListException($values);
+    }
+
+    public function createValueResult(?ValueInterface $value): ValueResultInterface
+    {
+        return isset($value)
+            ? new ExistingValueResult($this->jsonEncoder, $this->jsonDecoder, $value)
+            : new NonExistingValueResult;
     }
 }

@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Data\Export;
 
-use Iterator;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
-interface EncoderInterface extends ExporterInterface
+interface ValueEncoderInterface extends ValueExporterInterface
 {
 
     public function exportValue(ValueInterface $value): string;

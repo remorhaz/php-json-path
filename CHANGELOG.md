@@ -5,12 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Processor is now able to delete parts of JSON document by query.
+- Events redesigned.
 ### Changed
 - Query capability `isPath` renamed to `isAddressable`. 
 - Query constructor accepts callback builder instead of it's parts.
 - Query rethrows convenient exception on failure. It contains original query source and source code of generated callback.
 - Structure values incapsulate child iterators now.
 - Value fetcher methods renamed from `fetchValue*` to `create*Iterator`.
+- Path supports checking if it contains another path.
 ### Removed
 - Value iterator factory removed.
 - Data events totally removed.

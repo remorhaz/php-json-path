@@ -6,7 +6,7 @@ namespace Remorhaz\JSON\Path\Test\Processor;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
-use Remorhaz\JSON\Path\Processor\Exception\NotAddressableQueryException;
+use Remorhaz\JSON\Path\Processor\Exception\QueryNotAddressableException;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
@@ -53,7 +53,7 @@ class ProcessorTest extends TestCase
      * @param array $expectedValue
      * @dataProvider providerSelectPaths
      */
-    public function testSelectPaths_GivenQueryAndData_ReturnsMatchingPaths(
+    public function testSelectPaths_GivenQueryAndData_ResultContainsMatchingPaths(
         string $json,
         string $path,
         array $expectedValue
@@ -81,7 +81,7 @@ class ProcessorTest extends TestCase
         ];
     }
 
-    public function testSelectOne_DefiniteQueryMatchesData_ReturnsMatchingData(): void
+    public function testSelectOne_DefiniteQueryMatchesData_ResultContainsMatchingData(): void
     {
         $actualData = Processor::create()->selectOne(
             QueryFactory::create()->createQuery('$.a'),
@@ -109,7 +109,7 @@ class ProcessorTest extends TestCase
         $processor->selectOne($query, $rootValue);
     }
 
-    public function testSelectOnePath_DefinitePathQueryMatchesData_ReturnsMatchingData(): void
+    public function testSelectOnePath_DefinitePathQueryMatchesData_ResultContainsMatchingData(): void
     {
         $actualData = Processor::create()->selectOnePath(
             QueryFactory::create()->createQuery('$.a'),
@@ -133,7 +133,7 @@ class ProcessorTest extends TestCase
         $query = QueryFactory::create()->createQuery('$.a.length()');
         $rootValue = NodeValueFactory::create()->createValue('{"a":1}');
 
-        $this->expectException(NotAddressableQueryException::class);
+        $this->expectException(QueryNotAddressableException::class);
         $processor->selectOnePath($query, $rootValue);
     }
 
@@ -145,5 +145,35 @@ class ProcessorTest extends TestCase
 
         $this->expectException(IndefiniteQueryException::class);
         $processor->selectOnePath($query, $rootValue);
+    }
+
+    public function testDelete_NonAddressableQuery_ThrowsException(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$.length()');
+        $rootValue = NodeValueFactory::create()->createValue('[]');
+
+        $this->expectException(QueryNotAddressableException::class);
+        $processor->delete($query, $rootValue);
+    }
+
+    public function testDelete_NonRootAddressableQuery_ResultContainsMatchingData(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$..a');
+        $rootValue = NodeValueFactory::create()->createValue('{"a":1,"b":{"a":2,"c":3}}');
+
+        $result = $processor->delete($query, $rootValue);
+        self::assertSame('{"b":{"c":3}}', $result->encode());
+    }
+
+    public function testDelete_RootQuery_ResultNotExists(): void
+    {
+        $processor = Processor::create();
+        $query = QueryFactory::create()->createQuery('$');
+        $rootValue = NodeValueFactory::create()->createValue('{}');
+
+        $result = $processor->delete($query, $rootValue);
+        self::assertFalse($result->exists());
     }
 }

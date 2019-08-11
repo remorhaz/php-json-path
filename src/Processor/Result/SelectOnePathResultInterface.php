@@ -5,10 +5,8 @@ namespace Remorhaz\JSON\Path\Processor\Result;
 
 use Remorhaz\JSON\Data\Path\PathInterface;
 
-interface SelectOnePathResultInterface
+interface SelectOnePathResultInterface extends OneResultInterface
 {
-
-    public function exists(): bool;
 
     public function get(): PathInterface;
 
