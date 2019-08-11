@@ -12,6 +12,7 @@ use Remorhaz\JSON\Data\Event\BeforeArrayEventInterface;
 use Remorhaz\JSON\Data\Event\BeforeElementEventInterface;
 use Remorhaz\JSON\Data\Event\BeforeObjectEventInterface;
 use Remorhaz\JSON\Data\Event\BeforePropertyEventInterface;
+use Remorhaz\JSON\Data\Event\EventInterface;
 use Remorhaz\JSON\Data\Event\ScalarEventInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
@@ -19,6 +20,10 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 final class EventDecoder implements EventDecoderInterface
 {
 
+    /**
+     * @param Iterator|EventInterface[] $events
+     * @return NodeValueInterface|null
+     */
     public function exportEvents(Iterator $events): ?NodeValueInterface
     {
         $buffer = [];
@@ -66,9 +71,7 @@ final class EventDecoder implements EventDecoderInterface
             return null;
         }
         $data = array_pop($buffer);
-        if (empty($buffer)) {
-            return (new NodeValueFactory)->createValue($data);
-        }
-        throw new Exception\InvalidDataBufferException($buffer);
+
+        return (new NodeValueFactory)->createValue($data);
     }
 }
