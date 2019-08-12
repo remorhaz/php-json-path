@@ -10,8 +10,9 @@ JSONPath is a simple query language for JSON documents, inspired by XPath for XM
 
 ## Features
 - Accepts encoded JSON strings as well as decoded PHP data as input, supports both representations in output.
+- Selects, deletes or replaces parts of JSON document using JSONPath queries.
 - Recognizes definite/indefinite JSONPath queries without executing them.
-- Can select, delete or replace parts of JSON document using JSONPath query.
+- Transforms indefinite JSONPath query to set of definite queries for given JSON document.
 
 ## Requirements
 - PHP 7.3+
