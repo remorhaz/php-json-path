@@ -72,7 +72,7 @@ class TranslationSchemeTest extends TestCase
     public function providerParser(): array
     {
         return [
-            'Dot-notation property' => [
+            'Dot-notation alpha property' => [
                 (object) ['a' => true],
                 '$.a',
                 ['true'],
@@ -96,9 +96,15 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
-            'Bracket-notation property' => [
+            'Bracket-notation alpha property' => [
                 (object) ['a' => true],
                 '$["a"]',
+                ['true'],
+                true,
+            ],
+            'Bracket-notation numeric property' => [
+                (object) ['1' => true],
+                '$["1"]',
                 ['true'],
                 true,
             ],
