@@ -37,6 +37,7 @@ final class NodeObjectValue implements NodeValueInterface, ObjectValueInterface
     private function createChildGenerator(): Generator
     {
         foreach (get_object_vars($this->data) as $name => $property) {
+            $name = (string) $name;
             yield $name => $this
                 ->valueFactory
                 ->createValue($property, $this->path->copyWithProperty($name));
