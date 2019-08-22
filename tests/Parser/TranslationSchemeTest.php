@@ -72,7 +72,7 @@ class TranslationSchemeTest extends TestCase
     public function providerParser(): array
     {
         return [
-            'Dot-notation property' => [
+            'Dot-notation alpha property' => [
                 (object) ['a' => true],
                 '$.a',
                 ['true'],
@@ -96,9 +96,15 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
-            'Bracket-notation property' => [
+            'Bracket-notation alpha property' => [
                 (object) ['a' => true],
                 '$["a"]',
+                ['true'],
+                true,
+            ],
+            'Bracket-notation numeric property' => [
+                (object) ['1' => true],
+                '$["1"]',
                 ['true'],
                 true,
             ],
@@ -381,6 +387,18 @@ class TranslationSchemeTest extends TestCase
                 ],
                 '$[?(@.a == @.c)]',
                 ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
+                false,
+            ],
+            'Child filter with equality check of non-existing property with literal (issue #6)' => [
+                (object) ['a' => (object) []],
+                '$.a[?(@.b==1)]',
+                [],
+                false,
+            ],
+            'Filter with equality check of two non-existing properties (issue #6)' => [
+                (object) ['a' => (object) []],
+                '$.a[?(@.b==@.c)]',
+                [],
                 false,
             ],
             'Filter with OR' => [

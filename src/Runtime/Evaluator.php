@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Remorhaz\JSON\Path\Value\IndexMap;
 use function array_fill;
 use function count;
 use function is_bool;
@@ -97,6 +98,12 @@ final class Evaluator implements EvaluatorInterface
         ValueListInterface $rightValues,
         Comparator\ComparatorInterface $comparator
     ): EvaluatedValueListInterface {
+        if (count($leftValues->getIndexMap()) == 0) {
+            return new EvaluatedValueList(new IndexMap);
+        }
+        if (count($rightValues->getIndexMap()) == 0) {
+            return new EvaluatedValueList(new IndexMap);
+        }
         $results = [];
 
         foreach ($leftValues->getValues() as $index => $leftValue) {
