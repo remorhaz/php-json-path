@@ -25,50 +25,141 @@ You can use Composer to install this package:
 composer require remorhaz/php-json-path
 ```
 
-## Example
+## Usage
+### Accessing JSON document
+You can create accessible JSON document either from encoded JSON string or from decoded JSON data using corresponding _node value factory_:
 ```php
+use Remorhaz\JSON\Data\Value\EncodedJson;
 use Remorhaz\JSON\Data\Value\DecodedJson;
+
+// Creating document from JSON-encoded string:
+$encodedValueFactory = EncodedJson\NodeValueFactory::create();
+$encodedJson = '{"a":1}';
+$document1 = $encodedValueFactory->createValue($encodedJson);
+
+// Creating document from decoded JSON data:
+$decodedValueFactory = DecodedJson\NodeValueFactory::create();
+$decodedJson = (object) ['a' => 1];
+$document2 = $decodedValueFactory->createValue($decodedJson);
+```
+
+### Creating query
+You should use _query factory_ to create query from JSONPath expression:
+```php
+use Remorhaz\JSON\Path\Query\QueryFactory;
+
+$queryFactory = QueryFactory::create();
+
+// Creating query that selects all 'a' properties from any document:
+$query = $queryFactory->createQuery('$..a');
+```
+_Definite_ query is the query that defines exactly one path in document. If query includes any filters, wildcards or deep children scan, it is considered _indefinite_.
+
+_Addressable_ query is the query that returns unprocessed part(s) of the document. If query returns an aggregate function result, it is considered _non-addressable_.
+### Processing query
+You should use an instance of _query processor_ to execute queries on given JSON documents:
+```php
+use Remorhaz\JSON\Path\Processor\Processor;
+
+$processor = Processor::create();
+```
+
+#### Selecting part of a JSON document
+There are two ways to select part of JSON document using JSONPath query:
+
+1. You can get all matching parts in array, using `::select()` method. This works with both _definite_ and _indefinite_ queries. You will get empty array if none of document parts matches your query.
+2. You can get exactly one matching part, using `::selectOne()` method. Note that this works only with _definite_ queries. You will get an exception if your query is indefinite.
+
+```php
 use Remorhaz\JSON\Data\Value\EncodedJson;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
-// Creating processor and query factory:
-$processor = Processor::create();
+$processor = Processor::create()
 $queryFactory = QueryFactory::create();
+$encodedValueFactory = EncodedJson\NodeValueFactory::create();
 
-// Creating query that finds all 'a' properties:
+$document = $encodedValueFactory->createValue('{"a":{"a":1,"b":2}');
+
+// Selecting all 'a' properties (indefinite query, values exist):
 $query1 = $queryFactory->createQuery('$..a');
+$result1 = $processor->select($query1, $document);
+var_dump($result1->select()); // array: ['{"a":1,"b":2}', '1']
 
-// Creating JSON document from JSON string:
-$json1 = '{"a":1,"b":{"a":2}}';
-$jsonDocument1 = EncodedJson\NodeValueFactory::create()->createValue($json1);
+// Selecting single 'b' property nested in 'a' property (definite query, value exists):
+$query2 = $queryFactory->createQuery('$.a.b');
+$result2 = $processor->selectOne($query2, $document);
+var_dump($result2->exists()); // boolean: true
+var_dump($result2->decode()); // integer: 2
 
-// Applying query to document and getting result as decoded JSON.
-$result1 = $processor
-    ->select($query1, $jsonDocument1)
-    ->decode(); 
-// $result1 now contains array of integers: [1, 2]
+// Selecting single 'b' property (definite query, value doesn't exist):
+$query3 = $queryFactory->createQuery('$.b');
+$result3 = $processor->selectOne($query3, $document);
+var_dump($result3->exists()); // boolean: false
+var_dump($result3->decode()); // throws exception
+```
+Note that you can either encode result(s) of a selection to JSON string(s) or decode them to raw PHP data. Before accessing a result of `::selectOne()` you can check it's existence with `::exists()` method to avoid exception.
 
-// Creating JSON document from decoded JSON data:
-$json2 = (object) ['a' => (object) ['a' => 1, 'b' => 2]];
-$jsonDocument2 = DecodedJson\NodeValueFactory::create()->createValue($json2);
+#### Deleting part of a JSON document
+To delete part(s) of a JSON document use `::delete()` method. It works only with _addressable_ queries. You will get an exception if your query is non-addressable. If none of document parts match the query you will get the document unchanged. Special case is deleting root of a document - in this case you will get non-existing result.
+```php
+use Remorhaz\JSON\Data\Value\EncodedJson;
+use Remorhaz\JSON\Path\Processor\Processor;
+use Remorhaz\JSON\Path\Query\QueryFactory;
 
-// Applying same query to new document and getting result as encoded JSON:
-$result2 = $processor
-    ->select($query1, $jsonDocument2)
-    ->encode();
-// $result2 now contains array of JSON strings:
-//     ['{"a":1,"b":2}', '1']
+$processor = Processor::create()
+$queryFactory = QueryFactory::create();
+$encodedValueFactory = EncodedJson\NodeValueFactory::create();
 
-// Creating another query:
-$query2 = $queryFactory->createQuery('$..a[?(@.b=2)]');
+$document = $encodedValueFactory->createValue('{"a":{"a":1,"b":2}');
 
-// Applying new query to same data and getting result as encoded JSON
-$result3 = $processor
-    ->select($query2, $jsonDocument2)
-    ->encode();
-// $result3 now contains array of JSON strings:
-//     ['{"a":1,"b":2}']
+// Deleting all 'b' properties (value exists):
+$query1 = $queryFactory->createQuery('$..b');
+$result1 = $processor->delete($query1, $document);
+var_dump($result1->exists()); // boolean: true
+var_dump($result1->encode()); // '{"a":{"a":1}}'
+
+// Deleting all 'c' properties (value doesn't exist):
+$query2 = $queryFactory->createQuery('$..c');
+$result2 = $processor->delete($query2, $document);
+var_dump($result1->exists()); // boolean: true
+var_dump($result1->encode()); // '{"a":{"a":1,"b":2}}'
+
+// Deleting root of the document:
+$query3 = $queryFactory->createValue('$');
+$result3 = $processor->delete($query3, $document);
+var_dump($result3->exists()); // boolean: false
+var_dump($result3->encode()); // throws exception
+```
+
+#### Replacing the part of a JSON document with another JSON document
+To replace part(s) of a JSON document with another JSON document use `::replace()` method. It works only with _addressable_ queries. You will get an exception if your query is non-addressable. If none of document parts match the query you will get the document unchanged. If the query matches nested parts of a document, you will also get an exception.
+
+```php
+use Remorhaz\JSON\Data\Value\EncodedJson;
+use Remorhaz\JSON\Path\Processor\Processor;
+use Remorhaz\JSON\Path\Query\QueryFactory;
+
+$processor = Processor::create()
+$queryFactory = QueryFactory::create();
+$encodedValueFactory = EncodedJson\NodeValueFactory::create();
+
+$document1 = $encodedValueFactory->createValue('{"a":{"a":1,"b":2}');
+$document2 = $encodedValueFactory->createValue();'{"c":3}'
+
+// Replacing 'a' property (value exists):
+$query1 = $queryFactory->createQuery('$.a');
+$result1 = $processor->replace($query1, $document1, $document2);
+var_dump($result1->encode()); // string: '{"a":{"c":3}}'
+
+// Replacing all 'c' properties (value doesn't exist)
+$query2 = $queryFactory->createQuery('$..c');
+$result2 = $processor->replace($query2, $document1, $document2);
+var_dump($result2->encode()); // string: '{"a":{"a":1,"b":2}'
+
+// Replacing all 'a' properties (values are nested):
+$query3 = $queryFactory->createQuery('$..a');
+$result3 = $processor->replace($query3, $document1, $document2); // throws exception
 ```
 
 ## Grammar
