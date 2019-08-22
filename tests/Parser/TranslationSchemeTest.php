@@ -764,6 +764,12 @@ class TranslationSchemeTest extends TestCase
                 ['3', '0', '1', '2'],
                 false,
             ],
+            'Aggregate function of non-existing array' => [
+                (object) ['a' => 1],
+                '$.a.b.length()',
+                [],
+                true,
+            ],
             'Aggregate function AVG' => [
                 [
                     (object) ['a' => [1, 2, 3]],
