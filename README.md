@@ -145,7 +145,7 @@ $queryFactory = QueryFactory::create();
 $encodedValueFactory = EncodedJson\NodeValueFactory::create();
 
 $document1 = $encodedValueFactory->createValue('{"a":{"a":1,"b":2}');
-$document2 = $encodedValueFactory->createValue();'{"c":3}'
+$document2 = $encodedValueFactory->createValue('{"c":3}');
 
 // Replacing 'a' property (value exists):
 $query1 = $queryFactory->createQuery('$.a');
