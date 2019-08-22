@@ -175,7 +175,7 @@ class JsonPathTest extends TestCase
                     '"red"',
                     '19.95',
                     '10',
-                ]
+                ],
             ],
         ];
     }

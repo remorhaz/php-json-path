@@ -389,6 +389,18 @@ class TranslationSchemeTest extends TestCase
                 ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
                 false,
             ],
+            'Child filter with equality check of non-existing property with literal (issue #6)' => [
+                (object) ['a' => (object) []],
+                '$.a[?(@.b==1)]',
+                [],
+                false,
+            ],
+            'Filter with equality check of two non-existing properties (issue #6)' => [
+                (object) ['a' => (object) []],
+                '$.a[?(@.b==@.c)]',
+                [],
+                false,
+            ],
             'Filter with OR' => [
                 [
                     (object) ['a' => 1, 'b' => 2],
