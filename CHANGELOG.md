@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2019-08-23
 ### Added
-- Method for checking index map compatibility.
+- Method for checking compatibility of index maps.
 ### Fixed
 - Documentation improved.
 - Issue #6: filtering by partially-existing property comparison throws exception.
