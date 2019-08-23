@@ -210,7 +210,7 @@ Aggregate functions can be appended to any path in query and it will return calc
 |`.max()`|Returns maximal number from current array.|
 |`.length()`|Returns amount of elements in current array.|
 |`.avg()`|Returns average value from numbers in current array.|
-|`.stddev()`|Retuns standard deviation from numbers in current array.|
+|`.stddev()`|Returns standard deviation from numbers in current array.|
 
 The set of aggregate functions and idea itself is taken from [Java implementation](https://github.com/json-path/JsonPath).
 
