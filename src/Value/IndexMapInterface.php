@@ -21,4 +21,6 @@ interface IndexMapInterface extends Countable
     public function join(IndexMapInterface $indexMap): IndexMapInterface;
 
     public function equals(IndexMapInterface $indexMap): bool;
+
+    public function isCompatible(IndexMapInterface $indexMap): bool;
 }

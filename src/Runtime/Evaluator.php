@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
-use Remorhaz\JSON\Path\Value\IndexMap;
+use Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder;
 use function array_fill;
 use function count;
 use function is_bool;
@@ -98,22 +98,27 @@ final class Evaluator implements EvaluatorInterface
         ValueListInterface $rightValues,
         Comparator\ComparatorInterface $comparator
     ): EvaluatedValueListInterface {
-        if (count($leftValues->getIndexMap()) == 0) {
-            return new EvaluatedValueList(new IndexMap);
-        }
-        if (count($rightValues->getIndexMap()) == 0) {
-            return new EvaluatedValueList(new IndexMap);
-        }
-        $results = [];
+        $valueListBuilder = new EvaluatedValueListBuilder;
+        foreach ($leftValues->getIndexMap()->toArray() as $leftInnerIndex => $leftOuterIndex) {
+            foreach ($rightValues->getIndexMap()->toArray() as $rightInnerIndex => $rightOuterIndex) {
+                if (!isset($leftOuterIndex, $rightInnerIndex)) {
+                    continue;
+                }
+                if ($leftOuterIndex != $rightOuterIndex) {
+                    continue;
+                }
 
-        foreach ($leftValues->getValues() as $index => $leftValue) {
-            $results[] = $comparator
-                ->compare($leftValue, $rightValues->getValue($index));
+                $valueListBuilder->addResult(
+                    $comparator->compare(
+                        $leftValues->getValue($leftInnerIndex),
+                        $rightValues->getValue($rightInnerIndex),
+                    ),
+                    $leftOuterIndex,
+                );
+            }
         }
-        return new EvaluatedValueList(
-            $this->getEqualIndexMap($leftValues, $rightValues),
-            ...$results
-        );
+
+        return $valueListBuilder->build();
     }
 
     public function isRegExp(string $regExp, ValueListInterface $values): EvaluatedValueListInterface
@@ -154,7 +159,9 @@ final class Evaluator implements EvaluatorInterface
 
         $results = [];
         foreach ($sourceValues->getIndexMap()->toArray() as $outerIndex) {
-            $results[] = $resultValues->getIndexMap()->outerIndexExists($outerIndex);
+            $results[] = isset($outerIndex)
+                ? $resultValues->getIndexMap()->outerIndexExists($outerIndex)
+                : false;
         }
 
         return new EvaluatedValueList($sourceValues->getIndexMap(), ...$results);

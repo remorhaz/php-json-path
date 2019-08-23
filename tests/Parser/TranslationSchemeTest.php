@@ -389,10 +389,47 @@ class TranslationSchemeTest extends TestCase
                 ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
                 false,
             ],
-            'Child filter with equality check of non-existing property with literal (issue #6)' => [
+            'Filter with equality check of non-existing property with literal (issue #6)' => [
                 (object) ['a' => (object) []],
                 '$.a[?(@.b==1)]',
                 [],
+                false,
+            ],
+            'Filter with equality check of partial-existing property with literal (issue #6)' => [
+                (object) [
+                    'a' => [
+                        (object) [
+                            'b' => 1,
+                        ],
+                        (object) [
+                            'b' => 2,
+                            'c' => 3,
+                        ],
+                    ]
+                ],
+                '$.a[?(@.c==3)]',
+                ['{"b":2,"c":3}'],
+                false,
+            ],
+            'Filter with equality check of two partial-existing properties (issue #6)' => [
+                (object) [
+                    'a' => [
+                        (object) [
+                            'b' => 1,
+                            'c' => 2,
+                        ],
+                        (object) [
+                            'd' => 3,
+                            'b' => 2,
+                        ],
+                        (object) [
+                            'c' => 3,
+                            'd' => 3,
+                        ],
+                    ]
+                ],
+                '$.a[?(@.c==@.d)]',
+                ['{"c":3,"d":3}'],
                 false,
             ],
             'Filter with equality check of two non-existing properties (issue #6)' => [

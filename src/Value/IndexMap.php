@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
+use function array_key_exists;
 use function array_keys;
 use function count;
 
@@ -11,7 +12,7 @@ final class IndexMap implements IndexMapInterface
 
     private $map;
 
-    public function __construct(int ...$map)
+    public function __construct(?int ...$map)
     {
         $this->map = $map;
     }
@@ -53,8 +54,10 @@ final class IndexMap implements IndexMapInterface
     public function join(IndexMapInterface $indexMap): IndexMapInterface
     {
         $map = [];
-        foreach (array_keys($this->map) as $index) {
-            $map[] = $indexMap->getOuterIndex($index);
+        foreach ($indexMap->toArray() as $innerIndex => $outerIndex) {
+            $map[] = \in_array($innerIndex, $this->map)
+                ? $outerIndex
+                : null;
         }
 
         return new self(...$map);
@@ -62,6 +65,30 @@ final class IndexMap implements IndexMapInterface
 
     public function equals(IndexMapInterface $indexMap): bool
     {
-        return $this->toArray() === $indexMap->toArray();
+        return $this->map === $indexMap->toArray();
+    }
+
+    public function isCompatible(IndexMapInterface $indexMap): bool
+    {
+        if (count($indexMap) != count($this)) {
+            return false;
+        }
+
+        $anotherMap = $indexMap->toArray();
+        foreach ($this->map as $innerIndex => $outerIndex) {
+            if (!array_key_exists($innerIndex, $anotherMap)) {
+                return false;
+            }
+
+            if (!isset($outerIndex, $anotherMap[$innerIndex])) {
+                continue;
+            }
+
+            if ($outerIndex !== $anotherMap[$innerIndex]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

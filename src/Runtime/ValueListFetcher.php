@@ -11,7 +11,6 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
-use function count;
 
 final class ValueListFetcher implements ValueListFetcherInterface
 {
@@ -89,15 +88,22 @@ final class ValueListFetcher implements ValueListFetcherInterface
         NodeValueListInterface $values,
         EvaluatedValueListInterface $results
     ): NodeValueListInterface {
-        $nodesBuilder = new NodeValueListBuilder;
-        if (count($results->getIndexMap()) == 0) {
-            return $nodesBuilder->build();
-        }
-        if (!$values->getIndexMap()->equals($results->getIndexMap())) {
+        if (!$values->getIndexMap()->isCompatible($results->getIndexMap())) {
             throw new Exception\IndexMapMatchFailedException($values, $results);
         }
+        $valueIndex = 0;
+        $valueMap = [];
+        foreach ($results->getIndexMap()->toArray() as $innerIndex => $outerIndex) {
+            if (isset($outerIndex)) {
+                $valueMap[$innerIndex] = $valueIndex++;
+            }
+        }
+        $nodesBuilder = new NodeValueListBuilder;
         foreach ($values->getValues() as $index => $value) {
-            $evaluatedValue = $results->getValue($index);
+            if (!isset($valueMap[$index])) {
+                continue;
+            }
+            $evaluatedValue = $results->getValue($valueMap[$index]);
             if (!$evaluatedValue instanceof EvaluatedValueInterface) {
                 throw new Exception\InvalidFilterValueException($evaluatedValue);
             }

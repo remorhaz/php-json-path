@@ -5,7 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Method for checking index map compatibility.
+### Fixed
 - Documentation improved.
+- Issue #6: filtering by partially-existing property comparison throws exception.
+### Changed
+- Maps can store NULL outer indexes for missing values.
 
 ## [0.4.2] - 2019-08-22
 ### Fixed
