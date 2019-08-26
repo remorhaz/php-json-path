@@ -77,6 +77,8 @@ abstract class SymbolType
     public const NT_REGEXP              = 0xA0;
     public const NT_REGEXP_STRING       = 0xA1;
     public const NT_REGEXP_ESCAPED      = 0xA2;
+    public const NT_DOT_NAME            = 0xA3;
+    public const NT_DOT_NAME_TAIL       = 0xA4;
 
     public const T_EOI                  = 0xFF;
 }

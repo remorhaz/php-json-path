@@ -70,27 +70,35 @@ return [
                 SymbolType::NT_WS_OPT,
                 SymbolType::NT_BRACKET_FILTER,
                 SymbolType::T_RIGHT_SQUARE_BRACKET,
-                SymbolType::NT_FILTER_LIST
+                SymbolType::NT_FILTER_LIST,
             ],
             3 => [],
         ],
         SymbolType::NT_DOT_FILTER => [
-            0 => [SymbolType::NT_NAME, SymbolType::NT_DOT_FILTER_NEXT],
+            0 => [SymbolType::NT_DOT_NAME, SymbolType::NT_DOT_FILTER_NEXT],
             1 => [SymbolType::T_STAR, SymbolType::NT_FILTER_LIST],
         ],
         SymbolType::NT_DOUBLE_DOT_FILTER => [
-            0 => [SymbolType::NT_NAME, SymbolType::NT_FILTER_LIST],
+            0 => [SymbolType::NT_DOT_NAME, SymbolType::NT_FILTER_LIST],
             1 => [SymbolType::T_STAR, SymbolType::NT_FILTER_LIST],
         ],
         SymbolType::NT_DOT_FILTER_NEXT => [
             0 => [SymbolType::T_LEFT_BRACKET, SymbolType::T_RIGHT_BRACKET],
             1 => [SymbolType::NT_FILTER_LIST],
         ],
+        SymbolType::NT_DOT_NAME => [
+            0 => [SymbolType::NT_NAME],
+            1 => [SymbolType::T_INT, SymbolType::NT_DOT_NAME_TAIL],
+        ],
         SymbolType::NT_NAME => [
             0 => [SymbolType::T_NAME],
             1 => [SymbolType::T_NULL],
             2 => [SymbolType::T_TRUE],
             3 => [SymbolType::T_FALSE],
+        ],
+        SymbolType::NT_DOT_NAME_TAIL => [
+            0 => [SymbolType::NT_NAME],
+            1 => [],
         ],
         SymbolType::NT_BRACKET_FILTER => [
             0 => [SymbolType::T_STAR, SymbolType::NT_WS_OPT],
@@ -220,13 +228,7 @@ return [
                 SymbolType::NT_EXPR_ARG_COMP_TAIL,
             ],
             6 => [SymbolType::T_OP_REGEX, SymbolType::NT_WS_OPT, SymbolType::NT_REGEXP],
-            7 => [
-                SymbolType::NT_NAME,
-                SymbolType::NT_WS_OPT,
-                SymbolType::NT_EXPR_ARG_COMP,
-                SymbolType::NT_EXPR_ARG_COMP_TAIL,
-            ],
-            8 => [],
+            7 => [],
         ],
         SymbolType::NT_EXPR_ARG_SCALAR => [
             0 => [SymbolType::NT_EXPR_GROUP, SymbolType::NT_WS_OPT],

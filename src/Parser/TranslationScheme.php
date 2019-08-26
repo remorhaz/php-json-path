@@ -36,6 +36,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::T_INT:
+                $s['s.text'] = $t['text'];
                 $s['s.int'] = intval($t['text']);
                 break;
         }
@@ -422,7 +423,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->calculateIsRegExp($symbols[2]['s.text'], $header['i.left_value_list_id']);
                 break;
 
-            case SymbolType::NT_EXPR_ARG_COMP_TAIL . '.8':
+            case SymbolType::NT_EXPR_ARG_COMP_TAIL . '.7':
                 // [ ]
                 $header['s.value_list_id'] = $header['i.left_value_list_id'];
                 break;
@@ -546,6 +547,26 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_FALSE ]
                 $header['s.text'] = 'false';
                 break;
+
+            case SymbolType::NT_DOT_NAME_TAIL . '.0':
+                // [ 0:NT_NAME ]
+                $header['s.text'] = $header['i.text'] . $symbols[0]['s.text'];
+                break;
+
+            case SymbolType::NT_DOT_NAME_TAIL . '.1':
+                // [ ]
+                $header['s.text'] = $header['i.text'];
+                break;
+
+            case SymbolType::NT_DOT_NAME . '.0':
+                // [ 0:NT_NAME ]
+                $header['s.text'] = $symbols[0]['s.text'];
+                break;
+
+            case SymbolType::NT_DOT_NAME . '.1':
+                // [ 0:NT_INT, 1:NT_DOT_NAME_TAIL ]
+                $header['s.text'] = $symbols[1]['s.text'];
+                break;
         }
     }
 
@@ -606,6 +627,11 @@ class TranslationScheme implements TranslationSchemeInterface
                 $symbols[3]['i.value_list_id'] = $this
                     ->queryAstBuilder
                     ->splitFilterContext($symbols[3]['i.context_value_list_id']);
+                break;
+
+            case SymbolType::NT_DOT_NAME . '.1.1':
+                // [ 0:T_INT, 1:NT_DOT_NAME_TAIL ]
+                $symbols[1]['i.text'] = $symbols[0]['s.text'];
                 break;
 
             case SymbolType::NT_EXPR . '.0.0':
