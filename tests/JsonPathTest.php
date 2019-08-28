@@ -22,6 +22,19 @@ class JsonPathTest extends TestCase
         $this->example = file_get_contents(__DIR__ . '/goessner.json');
     }
 
+    public function testSelect_SecondQuery_OverridesFirstQueryResult(): void
+    {
+        $processor = Processor::create();
+        $queryFactory = QueryFactory::create();
+        $document = NodeValueFactory::create()->createValue('{"a":1,"b":[2,3]}');
+
+        $firstQuery = $queryFactory->createQuery('$.a');
+        $processor->select($firstQuery, $document);
+
+        $secondQuery = $queryFactory->createQuery('$.b[*]');
+        self::assertSame(['2', '3'], $processor->select($secondQuery, $document)->encode());
+    }
+
     /**
      * @param string $path
      * @param array $expectedValue

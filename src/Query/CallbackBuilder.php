@@ -103,6 +103,10 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         $this->evaluator = $this->php->var(self::ARG_EVALUATOR);
         $this->literalFactory = $this->php->var(self::ARG_LITERAL_FACTORY);
         $this->matcherFactory = $this->php->var(self::ARG_MATCHER_FACTORY);
+
+        $this->stmts = [];
+        $this->references = [];
+        unset($this->callback, $this->callbackCode, $this->capabilities);
     }
 
     public function onFinish(): void
