@@ -225,6 +225,24 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.is_definite'] = false;
                 break;
 
+            case SymbolType::NT_INT_SLICE_OPT . '.0':
+                // [ 0:NT_INT_SLICE ]
+                $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $header['s.matcher_id'] = $symbols[0]['s.matcher_id'];
+                break;
+
+            case SymbolType::NT_INT_SLICE_OPT . '.1':
+                // [ ]
+                $header['s.value_list_id'] = $header['i.value_list_id'];
+                $header['s.matcher_id'] = $this
+                    ->queryAstBuilder
+                    ->matchElementSlice(
+                        $header['i.int_start'],
+                        null,
+                        null,
+                    );
+                break;
+
             case SymbolType::NT_INT_SLICE . '.0':
                 // [ 0:T_COLON, 1:NT_INT_OPT, 2:NT_INT_SLICE_STEP, 3:NT_WS_OPT ]
                 $header['s.value_list_id'] = $header['i.value_list_id'];
@@ -352,7 +370,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.2':
-                // [ 0:NT_INT, 1:NT_INT_NEXT ]
+                // [ 0:T_INT, 1:NT_INT_NEXT ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildren($header['i.value_list_id'], $symbols[1]['s.matcher_id']);
@@ -360,6 +378,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.3':
+                // [ 0:T_HYPHEN, 1:T_INT, 2:NT_INT_SLICE_OPT ]
+                $header['s.value_list_id'] = $this
+                    ->queryAstBuilder
+                    ->fetchChildren($symbols[2]['s.value_list_id'], $symbols[2]['s.matcher_id']);
+                $header['s.is_definite'] = false;
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . '.4':
                 // [ 0:NT_INT_SLICE ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
@@ -367,7 +393,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.is_definite'] = false;
                 break;
 
-            case SymbolType::NT_BRACKET_FILTER . '.4':
+            case SymbolType::NT_BRACKET_FILTER . '.5':
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $header['s.value_list_id'] = $this
                     ->queryAstBuilder
@@ -607,19 +633,25 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_BRACKET_FILTER . '.2.1':
-                // 0:NT_INT, 1:NT_INT_NEXT
+                // [ 0:NT_INT, 1:NT_INT_NEXT ]
                 $symbols[1]['i.int'] = $symbols[0]['s.int'];
                 $symbols[1]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
-            case SymbolType::NT_BRACKET_FILTER . '.3.0':
+            case SymbolType::NT_BRACKET_FILTER . '.3.2':
+                // [ 0:T_HYPHEN, 1:T_INT, 2:NT_INT_SLICE_OPT ]
+                $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[2]['i.int_start'] = -$symbols[1]['s.int'];
+                break;
+
+            case SymbolType::NT_BRACKET_FILTER . '.4.0':
                 // [ 0:NT_INT_SLICE ]
                 $symbols[0]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[0]['i.int_start'] = null;
                 break;
 
-            case SymbolType::NT_BRACKET_FILTER . '.4.3':
+            case SymbolType::NT_BRACKET_FILTER . '.5.3':
                 // [ 0:T_QUESTION, 1:T_LEFT_BRACKET, 2:NT_WS_OPT, 3:NT_EXPR, 4:T_RIGHT_BRACKET ]
                 $symbols[3]['i.context_value_list_id'] = $this
                     ->queryAstBuilder
@@ -875,6 +907,12 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_INT_SLICE ]
                 $symbols[0]['i.value_list_id'] = $header['i.value_list_id']; // TODO: probably useless
                 $symbols[0]['i.int_start'] = $header['i.int'];
+                break;
+
+            case SymbolType::NT_INT_SLICE_OPT . '.0.0':
+                // [ 0:NT_INT_SLICE ]
+                $symbols[0]['i.value_list_id'] = $header['i.value_list_id'];
+                $symbols[0]['i.int_start'] = $header['i.int_start'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.0.1':

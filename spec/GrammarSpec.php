@@ -103,9 +103,10 @@ return [
         SymbolType::NT_BRACKET_FILTER => [
             0 => [SymbolType::T_STAR, SymbolType::NT_WS_OPT],
             1 => [SymbolType::NT_STRING_LIST],
-            2 => [SymbolType::NT_INT, SymbolType::NT_INT_NEXT],
-            3 => [SymbolType::NT_INT_SLICE],
-            4 => [
+            2 => [SymbolType::T_INT, SymbolType::NT_INT_NEXT],
+            3 => [SymbolType::T_HYPHEN, SymbolType::T_INT, SymbolType::NT_INT_SLICE_OPT],
+            4 => [SymbolType::NT_INT_SLICE],
+            5 => [
                 SymbolType::T_QUESTION,
                 SymbolType::T_LEFT_BRACKET,
                 SymbolType::NT_WS_OPT,
@@ -138,6 +139,10 @@ return [
                 SymbolType::NT_WS_OPT,
                 SymbolType::NT_INT_NEXT_LIST,
             ],
+            1 => [],
+        ],
+        SymbolType::NT_INT_SLICE_OPT => [
+            0 => [SymbolType::NT_INT_SLICE],
             1 => [],
         ],
         SymbolType::NT_INT_SLICE => [

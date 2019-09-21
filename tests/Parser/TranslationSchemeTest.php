@@ -216,6 +216,12 @@ class TranslationSchemeTest extends TestCase
                 ['3'],
                 false,
             ],
+            'Slice defined with just negative index' => [
+                [1, 2, 3],
+                '$[-1]',
+                ['3'],
+                false,
+            ],
             'Slice defined with just negative end' => [
                 [1, 2, 3],
                 '$[:-1]',

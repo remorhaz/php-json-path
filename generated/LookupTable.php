@@ -117,10 +117,10 @@ return [
         TokenType::STAR => 0,
         TokenType::SINGLE_QUOTE => 1,
         TokenType::DOUBLE_QUOTE => 1,
-        TokenType::HYPHEN => 2,
         TokenType::INT => 2,
-        TokenType::COLON => 3,
-        TokenType::QUESTION => 4,
+        TokenType::HYPHEN => 3,
+        TokenType::COLON => 4,
+        TokenType::QUESTION => 5,
     ],
     SymbolType::NT_STRING_LIST => [
         TokenType::SINGLE_QUOTE => 0,
@@ -140,6 +140,10 @@ return [
         TokenType::COMMA => 0,
         TokenType::RIGHT_SQUARE_BRACKET => 1,
     ],
+    SymbolType::NT_INT_SLICE_OPT => [
+        TokenType::COLON => 0,
+        TokenType::RIGHT_SQUARE_BRACKET => 1,
+    ],
     SymbolType::NT_INT_SLICE => [
         TokenType::COLON => 0,
     ],
@@ -151,9 +155,9 @@ return [
     SymbolType::NT_WS_OPT => [
         TokenType::WS => 0,
         TokenType::STAR => 1,
-        TokenType::QUESTION => 1,
-        TokenType::HYPHEN => 1,
         TokenType::INT => 1,
+        TokenType::HYPHEN => 1,
+        TokenType::QUESTION => 1,
         TokenType::COLON => 1,
         TokenType::SINGLE_QUOTE => 1,
         TokenType::DOUBLE_QUOTE => 1,
