@@ -121,17 +121,21 @@ return [
             ],
         ],
         SymbolType::NT_STRING_LIST => [
-            0 => [SymbolType::NT_STRING, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
+            0 => [SymbolType::NT_PROPERTY, SymbolType::NT_WS_OPT, SymbolType::NT_STRING_NEXT],
         ],
         SymbolType::NT_STRING_NEXT => [
             0 => [
                 SymbolType::T_COMMA,
                 SymbolType::NT_WS_OPT,
-                SymbolType::NT_STRING,
+                SymbolType::NT_PROPERTY,
                 SymbolType::NT_WS_OPT,
                 SymbolType::NT_STRING_NEXT,
             ],
             1 => [],
+        ],
+        SymbolType::NT_PROPERTY => [
+            0 => [SymbolType::NT_STRING],
+            1 => [SymbolType::NT_NAME],
         ],
         SymbolType::NT_INT_NEXT => [
             0 => [SymbolType::NT_WS_OPT, SymbolType::NT_INT_NEXT_LIST],

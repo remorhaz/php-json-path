@@ -180,6 +180,18 @@ class TranslationSchemeTest extends TestCase
                 ['true', '1'],
                 false,
             ],
+            'Unquoted name in bracket-notation' => [
+                (object) ['a' => 1, 'b' => 2],
+                '$[a]',
+                ['1'],
+                true,
+            ],
+            'Mixed names in bracket-notation' => [
+                (object) ['a' => 1, 'b' => 2, '1' => 3, 'c' => 4],
+                '$[a, "1", c]',
+                ['1', '3', '4'],
+                false,
+            ],
             'Strict index list' => [
                 [true, false, 1],
                 '$[0, 2]',
@@ -276,9 +288,9 @@ class TranslationSchemeTest extends TestCase
                 [],
                 false,
             ],
-            'Simple filter with true on all indice' => [
+            'Simple filter with true on all indexes' => [
                 [[1, 2], [3]],
-                '$[*][?(true)]',
+                '$.*[?(true)]',
                 ['1', '2', '3'],
                 false,
             ],

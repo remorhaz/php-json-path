@@ -301,7 +301,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_STRING_NEXT . '.0':
-                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_PROPERTY, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
                 $header['s.text_list'] = $symbols[4]['s.text_list'];
                 $header['s.is_definite'] = false;
                 break;
@@ -313,9 +313,16 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_STRING_LIST . '.0':
-                // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
+                // [ 0:NT_PROPERTY, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
                 $header['s.text_list'] = $symbols[2]['s.text_list'];
                 $header['s.is_definite'] = $symbols[2]['s.is_definite'];
+                break;
+
+            case SymbolType::NT_PROPERTY . '.0':
+                // [ 0:NT_STRING ]
+            case SymbolType::NT_PROPERTY . '.1':
+                // [ 0:NT_NAME ]
+                $header['s.text'] = $symbols[0]['s.text'];
                 break;
 
             case SymbolType::NT_STRING . '.0':
@@ -894,13 +901,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_STRING_LIST . '.0.2':
-                // [ 0:NT_STRING, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
+                // [ 0:NT_PROPERTY, 1:NT_WS_OPT, 2:NT_STRING_NEXT ]
                 $symbols[2]['i.text_list'] = [$symbols[0]['s.text']];
                 $symbols[2]['i.is_definite'] = $header['i.is_definite'];
                 break;
 
             case SymbolType::NT_STRING_NEXT . '.0.4':
-                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_STRING, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
+                // [ 0:T_COMMA, 1:NT_WS_OPT, 2:NT_PROPERTY, 3:NT_WS_OPT, 4:NT_STRING_NEXT ]
                 $symbols[4]['i.text_list'] = array_merge($header['i.text_list'], [$symbols[2]['s.text']]);
                 $symbols[4]['i.is_definite'] = false;
                 break;
