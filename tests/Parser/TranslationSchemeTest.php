@@ -108,6 +108,18 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
+            'Dot-notation predicate' => [
+                [1, 2, [3]],
+                '$.[0]',
+                ['1'],
+                true,
+            ],
+            'Dot-notation star with predicate' => [
+                [1, 2, [3]],
+                '$.*[0]',
+                ['3'],
+                false,
+            ],
             'Bracket-notation alpha property' => [
                 (object) ['a' => true],
                 '$["a"]',
@@ -737,9 +749,15 @@ class TranslationSchemeTest extends TestCase
                 ['1', '2'],
                 false,
             ],
-            'Deep scan of all children with index 0 or 2' => [
+            'Deep scan of all children (double dot) with index 0 or 2' => [
                 [1, 2, [3, 4, 5], [6, 7], 8],
                 '$..[0, 2]',
+                ['3', '5', '6'],
+                false,
+            ],
+            'Deep scan of all children with (double dot with star) index 0 or 2' => [
+                [1, 2, [3, 4, 5], [6, 7], 8],
+                '$..*[0, 2]',
                 ['3', '5', '6'],
                 false,
             ],
