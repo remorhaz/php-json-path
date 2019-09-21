@@ -693,6 +693,16 @@ class TranslationSchemeTest extends TestCase
                 ['1', '{"b":{"a":2}}', '2'],
                 false,
             ],
+            'Deep scan of a property as string' => [
+                [
+                    ['a', (object) ['a' => 1]],
+                    (object) ['a' => (object) ['b' => (object) ['a' => 2]]],
+                    (object) ['b' => (object) ['c' => 3]],
+                ],
+                '$.."a"',
+                ['1', '{"b":{"a":2}}', '2'],
+                false,
+            ],
             'Deep scan of true property' => [
                 [
                     ['a', (object) ['a' => 1]],

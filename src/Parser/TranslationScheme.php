@@ -114,13 +114,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:T_NAME, 1:NT_FILTER_LIST ]
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.1':
                 // [ 0:T_STAR, 1:NT_FILTER_LIST ]
-                $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
-                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
-                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
-                break;
-
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.2':
                 // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3':
+                // [ 0:NT_STRING, 1:NT_FILTER_LIST ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
                 $header['s.is_definite'] = $symbols[1]['s.is_definite'];
                 $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
@@ -1034,6 +1031,8 @@ class TranslationScheme implements TranslationSchemeInterface
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.0.1':
                 // [ 0:T_NAME, 1:NT_FILTER_LIST ]
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.3.1':
+                // [ 0:NT_STRING, 1:NT_FILTER_LIST ]
                 $symbols[1]['i.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildrenDeep(
