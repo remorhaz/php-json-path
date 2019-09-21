@@ -116,10 +116,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.2':
-                // [ 0:NT_PREDICATE ]
-                $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
-                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
-                $header['s.is_addressable'] = $symbols[0]['s.is_addressable'];
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
+                $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.0':
@@ -137,10 +137,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.2':
-                // [ 0:NT_PREDICATE ]
-                $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
-                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
-                $header['s.is_addressable'] = $symbols[0]['s.is_addressable'];
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
+                $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[1]['s.is_definite'];
+                $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.3':
@@ -156,11 +156,10 @@ class TranslationScheme implements TranslationSchemeInterface
                 //   1:NT_WS_OPT,
                 //   2:NT_BRACKET_FILTER,
                 //   3:T_RIGHT_SQUARE_BRACKET,
-                //   4:NT_FILTER_LIST
                 // ]
-                $header['s.value_list_id'] = $symbols[4]['s.value_list_id'];
-                $header['s.is_definite'] = $symbols[4]['s.is_definite'];
-                $header['s.is_addressable'] = $symbols[4]['s.is_addressable'];
+                $header['s.value_list_id'] = $symbols[2]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[2]['s.is_definite'];
+                $header['s.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_EXPR_ARG_SCALAR . '.0':
@@ -943,10 +942,17 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_FILTER_LIST . '.2.0':
-                // [ 0:NT_PREDICATE ]
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
                 $symbols[0]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[0]['i.is_definite'] = $header['i.is_definite'];
                 $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
+                break;
+
+            case SymbolType::NT_FILTER_LIST . '.2.1':
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $symbols[1]['i.is_definite'] = $symbols[0]['s.is_definite'];
+                $symbols[1]['i.is_addressable'] = $symbols[0]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_PREDICATE . '.0.2':
@@ -955,24 +961,9 @@ class TranslationScheme implements TranslationSchemeInterface
                 //   1:NT_WS_OPT,
                 //   2:NT_BRACKET_FILTER,
                 //   3:T_RIGHT_SQUARE_BRACKET,
-                //   4:NT_FILTER_LIST
                 // ]
                 $symbols[2]['i.value_list_id'] = $header['i.value_list_id'];
                 $symbols[2]['i.is_definite'] = $header['i.is_definite'];
-                // TODO: should we pass i.is_addressable here to NT_BRACKET_FILTER here?
-                break;
-
-            case SymbolType::NT_PREDICATE . '.0.4':
-                // [
-                //   0:T_LEFT_SQUARE_BRACKET,
-                //   1:NT_WS_OPT,
-                //   2:NT_BRACKET_FILTER,
-                //   3:T_RIGHT_SQUARE_BRACKET,
-                //   4:NT_FILTER_LIST
-                // ]
-                $symbols[4]['i.value_list_id'] = $symbols[2]['s.value_list_id'];
-                $symbols[4]['i.is_definite'] = $symbols[2]['s.is_definite'];
-                $symbols[4]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_DOT_FILTER . '.0.1':
@@ -1036,7 +1027,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_DOUBLE_DOT_FILTER . '.2.0':
-                // [ 0:NT_PREDICATE ]
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
                 $symbols[0]['i.value_list_id'] = $this
                     ->queryAstBuilder
                     ->fetchChildrenDeep(
@@ -1045,6 +1036,13 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[0]['i.is_definite'] = false;
                 $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2.1':
+                // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
+                $symbols[1]['i.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $symbols[1]['i.is_definite'] = $symbols[0]['s.is_definite'];
+                $symbols[1]['i.is_addressable'] = $symbols[0]['s.is_addressable'];
                 break;
 
             case SymbolType::NT_STRING . '.0.1':
