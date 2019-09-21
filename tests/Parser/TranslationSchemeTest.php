@@ -90,6 +90,12 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
+            'Dot-notation property as string' => [
+                (object) ['a' => 1],
+                '$."a"',
+                ['1'],
+                true,
+            ],
             'Dot-notation null' => [
                 (object) ['null' => true],
                 '$.null',

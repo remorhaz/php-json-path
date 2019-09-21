@@ -51,6 +51,8 @@ return [
         TokenType::FALSE => 0,
         TokenType::STAR => 1,
         TokenType::LEFT_SQUARE_BRACKET => 2,
+        TokenType::SINGLE_QUOTE => 3,
+        TokenType::DOUBLE_QUOTE => 3,
     ],
     SymbolType::NT_DOUBLE_DOT_FILTER => [
         TokenType::INT => 0,

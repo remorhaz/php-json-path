@@ -80,6 +80,7 @@ return [
             0 => [SymbolType::NT_DOT_NAME, SymbolType::NT_DOT_FILTER_NEXT],
             1 => [SymbolType::T_STAR, SymbolType::NT_FILTER_LIST],
             2 => [SymbolType::NT_PREDICATE, SymbolType::NT_FILTER_LIST],
+            3 => [SymbolType::NT_STRING, SymbolType::NT_FILTER_LIST],
         ],
         SymbolType::NT_DOUBLE_DOT_FILTER => [
             0 => [SymbolType::NT_DOT_NAME, SymbolType::NT_FILTER_LIST],
