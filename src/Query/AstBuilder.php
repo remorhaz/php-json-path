@@ -255,6 +255,23 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
+     * @param int ...$idList
+     * @return int
+     * @throws UniLexException
+     */
+    public function merge(int ...$idList): int
+    {
+        $node = $this
+            ->tree
+            ->createNode(AstNodeType::MERGE);
+        foreach ($idList as $id) {
+            $node->addChild($this->tree->getNode($id));
+        }
+
+        return $node->getId();
+    }
+
+    /**
      * @return int
      */
     public function matchAnyChild(): int

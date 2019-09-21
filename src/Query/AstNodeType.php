@@ -30,4 +30,5 @@ abstract class AstNodeType
     public const CREATE_LITERAL_ARRAY = 'create_literal_array';
     public const CREATE_ARRAY = 'create_array';
     public const APPEND_TO_ARRAY = 'append_to_array';
+    public const MERGE = 'merge';
 }

@@ -58,6 +58,7 @@ return [
         TokenType::TRUE => 0,
         TokenType::FALSE => 0,
         TokenType::STAR => 1,
+        TokenType::LEFT_SQUARE_BRACKET => 2,
     ],
     SymbolType::NT_DOT_FILTER_NEXT => [
         TokenType::LEFT_BRACKET => 0,

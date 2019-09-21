@@ -24,6 +24,8 @@ interface ValueListFetcherInterface
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface;
 
+    public function merge(NodeValueListInterface ...$sources): NodeValueListInterface;
+
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface;
 
     public function fetchFilteredValues(

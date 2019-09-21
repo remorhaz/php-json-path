@@ -115,6 +115,13 @@ class TranslationScheme implements TranslationSchemeInterface
                 $header['s.is_addressable'] = $symbols[1]['s.is_addressable'];
                 break;
 
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2':
+                // [ 0:NT_PREDICATE ]
+                $header['s.value_list_id'] = $symbols[0]['s.value_list_id'];
+                $header['s.is_definite'] = $symbols[0]['s.is_definite'];
+                $header['s.is_addressable'] = $symbols[0]['s.is_addressable'];
+                break;
+
             case SymbolType::NT_FILTER_LIST . '.0':
                 // [ 0:T_DOT, 1:NT_DOT_FILTER ]
                 $header['s.value_list_id'] = $symbols[1]['s.value_list_id'];
@@ -1026,6 +1033,18 @@ class TranslationScheme implements TranslationSchemeInterface
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
+                break;
+
+            case SymbolType::NT_DOUBLE_DOT_FILTER . '.2.0':
+                // [ 0:NT_PREDICATE ]
+                $symbols[0]['i.value_list_id'] = $this
+                    ->queryAstBuilder
+                    ->fetchChildrenDeep(
+                        $header['i.value_list_id'],
+                        $this->queryAstBuilder->matchAnyChild()
+                    );
+                $symbols[0]['i.is_definite'] = false;
+                $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
                 break;
 
             case SymbolType::NT_STRING . '.0.1':

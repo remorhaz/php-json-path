@@ -737,7 +737,13 @@ class TranslationSchemeTest extends TestCase
                 ['1', '2'],
                 false,
             ],
-            'Filter with regular expression without modofier' => [
+            'Deep scan of all children with index 0 or 2' => [
+                [1, 2, [3, 4, 5], [6, 7], 8],
+                '$..[0, 2]',
+                ['3', '5', '6'],
+                false,
+            ],
+            'Filter with regular expression without modifier' => [
                 [
                     (object) ['a' => 'abc'],
                     (object) ['a' => 'Bc'],
@@ -747,7 +753,7 @@ class TranslationSchemeTest extends TestCase
                 ['{"a":"abc"}'],
                 false,
             ],
-            'Filter with regular expression with modofier' => [
+            'Filter with regular expression with modifier' => [
                 [
                     (object) ['a' => 'abc'],
                     (object) ['a' => 'Bc'],

@@ -63,6 +63,21 @@ final class ValueListFetcher implements ValueListFetcherInterface
         return $nodesBuilder->build();
     }
 
+    public function merge(NodeValueListInterface ...$sources): NodeValueListInterface
+    {
+        $nodesBuilder = new NodeValueListBuilder;
+        foreach ($sources as $source) {
+            foreach ($source->getValues() as $innerIndex => $value) {
+                $nodesBuilder->addValue(
+                    $value,
+                    $source->getIndexMap()->getOuterIndex($innerIndex),
+                );
+            }
+        }
+
+        return $nodesBuilder->build();
+    }
+
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
     {
         $nodesBuilder = new NodeValueListBuilder;

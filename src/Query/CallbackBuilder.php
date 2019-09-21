@@ -210,6 +210,16 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                 );
                 break;
 
+            case AstNodeType::MERGE:
+                /** @see ValueListFetcherInterface::merge() */
+                $this->addMethodCall(
+                    $node,
+                    $this->valueListFetcher,
+                    'merge',
+                    ...$this->getReferences(...$node->getChildList()),
+                );
+                break;
+
             case AstNodeType::FETCH_FILTER_CONTEXT:
                 /** @see ValueListFetcherInterface::fetchFilterContext() */
                 $this->addMethodCall(
@@ -476,6 +486,15 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         }
 
         return $this->references[$node->getId()];
+    }
+
+    /**
+     * @param QueryAstNode ...$nodes
+     * @return Expr[]
+     */
+    private function getReferences(QueryAstNode ...$nodes): array
+    {
+        return array_map([$this, 'getReference'], $nodes);
     }
 
     private function addMethodCall(QueryAstNode $node, Expr $object, string $method, PhpAstNode ...$args): void

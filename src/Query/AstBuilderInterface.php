@@ -36,6 +36,8 @@ interface AstBuilderInterface
 
     public function fetchChildrenDeep(int $id, int $matcherId): int;
 
+    public function merge(int ...$idList): int;
+
     public function matchAnyChild(): int;
 
     public function matchPropertyStrictly(string ...$names): int;
