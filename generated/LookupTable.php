@@ -40,6 +40,9 @@ return [
         TokenType::COMMA => 3,
         TokenType::RIGHT_SQUARE_BRACKET => 3,
     ],
+    SymbolType::NT_PREDICATE => [
+        TokenType::LEFT_SQUARE_BRACKET => 0,
+    ],
     SymbolType::NT_DOT_FILTER => [
         TokenType::INT => 0,
         TokenType::NAME => 0,

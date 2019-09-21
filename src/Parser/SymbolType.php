@@ -80,6 +80,7 @@ abstract class SymbolType
     public const NT_DOT_NAME            = 0xA3;
     public const NT_DOT_NAME_TAIL       = 0xA4;
     public const NT_INT_SLICE_OPT       = 0xA5;
+    public const NT_PREDICATE           = 0xA6;
 
     public const T_EOI                  = 0xFF;
 }

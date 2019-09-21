@@ -65,14 +65,17 @@ return [
         SymbolType::NT_FILTER_LIST => [
             0 => [SymbolType::T_DOT, SymbolType::NT_DOT_FILTER],
             1 => [SymbolType::T_DOUBLE_DOT, SymbolType::NT_DOUBLE_DOT_FILTER],
-            2 => [
+            2 => [SymbolType::NT_PREDICATE],
+            3 => [],
+        ],
+        SymbolType::NT_PREDICATE => [
+            0 => [
                 SymbolType::T_LEFT_SQUARE_BRACKET,
                 SymbolType::NT_WS_OPT,
                 SymbolType::NT_BRACKET_FILTER,
                 SymbolType::T_RIGHT_SQUARE_BRACKET,
                 SymbolType::NT_FILTER_LIST,
             ],
-            3 => [],
         ],
         SymbolType::NT_DOT_FILTER => [
             0 => [SymbolType::NT_DOT_NAME, SymbolType::NT_DOT_FILTER_NEXT],

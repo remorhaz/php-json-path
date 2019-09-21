@@ -37,6 +37,9 @@
     }
   },
   "scripts": {
+    "build": [
+      "vendor/bin/phing"
+    ],
     "test": [
       "vendor/bin/phpunit --coverage-xml=build/log/coverage-xml --log-junit=build/log/phpunit.junit.xml"
     ],
