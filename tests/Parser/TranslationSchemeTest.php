@@ -752,7 +752,7 @@ class TranslationSchemeTest extends TestCase
             'Deep scan of all children (double dot) with index 0 or 2' => [
                 [1, 2, [3, 4, 5], [6, 7], 8],
                 '$..[0, 2]',
-                ['3', '5', '6'],
+                ['1', '[3,4,5]', '3', '5', '6'],
                 false,
             ],
             'Deep scan of all children with (double dot with star) index 0 or 2' => [

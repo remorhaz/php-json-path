@@ -1046,9 +1046,14 @@ class TranslationScheme implements TranslationSchemeInterface
                 // [ 0:NT_PREDICATE, 1:NT_FILTER_LIST ]
                 $symbols[0]['i.value_list_id'] = $this
                     ->queryAstBuilder
-                    ->fetchChildrenDeep(
+                    ->merge(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild()
+                        $this
+                            ->queryAstBuilder
+                            ->fetchChildrenDeep(
+                                $header['i.value_list_id'],
+                                $this->queryAstBuilder->matchAnyChild()
+                            ),
                     );
                 $symbols[0]['i.is_definite'] = false;
                 $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
