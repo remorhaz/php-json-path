@@ -22,7 +22,7 @@
     "phpunit/phpunit": "^8.2",
     "phing/phing": "^2.16",
     "squizlabs/php_codesniffer": "^3.2.0",
-    "infection/infection": "^0.13.4"
+    "infection/infection": "^0.14"
   },
   "autoload": {
     "psr-4": {
@@ -35,5 +35,15 @@
       "Remorhaz\\JSON\\Path\\Test\\": "tests/",
       "Remorhaz\\JSON\\Data\\Test\\": "tests/Data/"
     }
+  },
+  "scripts": {
+    "test": [
+      "vendor/bin/phpunit --coverage-xml=build/log/coverage-xml --log-junit=build/log/phpunit.junit.xml"
+    ],
+    "infection": [
+      "@test",
+      "mkdir -p build/log/infection",
+      "vendor/bin/infection --threads=4 --coverage=build/log --no-progress"
+    ]
   }
 }
