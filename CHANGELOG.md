@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Issue #12: allowed quoted names in dot-notation.
+- Issue #12: quoted names allowed in dot-notation.
+- Issue #11: unquoted names allowed in bracket-notation.
 ### Fixed
 - Incorrect deep scan before predicate.
 
