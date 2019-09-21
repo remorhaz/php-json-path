@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Issue #8: single negative index in predicate is considered as start of a slice.
 - Issue #9: deep scan of predicates (like `$..[0, 2]`) is supported.
 - Fetcher is now able to merge value lists.
+- Issue #10: dot is allowed before predicate.
 
 ## [0.5.2] - 2019-08-28
 ### Fixed
