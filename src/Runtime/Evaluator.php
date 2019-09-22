@@ -99,8 +99,8 @@ final class Evaluator implements EvaluatorInterface
         Comparator\ComparatorInterface $comparator
     ): EvaluatedValueListInterface {
         $valueListBuilder = new EvaluatedValueListBuilder;
-        foreach ($leftValues->getIndexMap()->toArray() as $leftInnerIndex => $leftOuterIndex) {
-            foreach ($rightValues->getIndexMap()->toArray() as $rightInnerIndex => $rightOuterIndex) {
+        foreach ($leftValues->getIndexMap()->getOuterIndexes() as $leftInnerIndex => $leftOuterIndex) {
+            foreach ($rightValues->getIndexMap()->getOuterIndexes() as $rightInnerIndex => $rightOuterIndex) {
                 if (!isset($leftOuterIndex, $rightInnerIndex)) {
                     continue;
                 }
@@ -158,7 +158,7 @@ final class Evaluator implements EvaluatorInterface
         }
 
         $results = [];
-        foreach ($sourceValues->getIndexMap()->toArray() as $outerIndex) {
+        foreach ($sourceValues->getIndexMap()->getOuterIndexes() as $outerIndex) {
             $results[] = isset($outerIndex)
                 ? $resultValues->getIndexMap()->outerIndexExists($outerIndex)
                 : false;

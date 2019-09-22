@@ -108,7 +108,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
         }
         $valueIndex = 0;
         $valueMap = [];
-        foreach ($results->getIndexMap()->toArray() as $innerIndex => $outerIndex) {
+        foreach ($results->getIndexMap()->getOuterIndexes() as $innerIndex => $outerIndex) {
             if (isset($outerIndex)) {
                 $valueMap[$innerIndex] = $valueIndex++;
             }

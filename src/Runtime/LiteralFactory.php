@@ -36,7 +36,7 @@ class LiteralFactory implements LiteralFactoryInterface
 
     private function buildArrayElementLists(NodeValueListInterface $source, ValueListInterface ...$valueLists): array
     {
-        $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndice(), []);
+        $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndexes(), []);
         foreach ($valueLists as $valueList) {
             if (!$source->getIndexMap()->equals($valueList->getIndexMap())) {
                 throw new Exception\IndexMapMatchFailedException($valueList, $source);

@@ -6,66 +6,67 @@ namespace Remorhaz\JSON\Path\Value;
 use function array_key_exists;
 use function array_keys;
 use function count;
+use function in_array;
 
 final class IndexMap implements IndexMapInterface
 {
 
-    private $map;
+    private $outerIndexes;
 
-    public function __construct(?int ...$map)
+    public function __construct(?int ...$outerIndexes)
     {
-        $this->map = $map;
+        $this->outerIndexes = $outerIndexes;
     }
 
     public function count()
     {
-        return count($this->map);
+        return count($this->outerIndexes);
     }
 
-    public function getInnerIndice(): array
+    public function getInnerIndexes(): array
     {
-        return array_keys($this->map);
+        return array_keys($this->outerIndexes);
     }
 
-    public function toArray(): array
+    public function getOuterIndexes(): array
     {
-        return $this->map;
+        return $this->outerIndexes;
     }
 
     public function getOuterIndex(int $innerIndex): int
     {
-        if (!isset($this->map[$innerIndex])) {
+        if (!isset($this->outerIndexes[$innerIndex])) {
             throw new Exception\OuterIndexNotFoundException($innerIndex, $this);
         }
 
-        return $this->map[$innerIndex];
+        return $this->outerIndexes[$innerIndex];
     }
 
     public function outerIndexExists(int $outerIndex): bool
     {
-        return in_array($outerIndex, $this->map, true);
+        return in_array($outerIndex, $this->outerIndexes, true);
     }
 
     public function split(): IndexMapInterface
     {
-        return new self(...array_keys($this->map));
+        return new self(...$this->getInnerIndexes());
     }
 
     public function join(IndexMapInterface $indexMap): IndexMapInterface
     {
-        $map = [];
-        foreach ($indexMap->toArray() as $innerIndex => $outerIndex) {
-            $map[] = \in_array($innerIndex, $this->map)
+        $outerIndexes = [];
+        foreach ($indexMap->getOuterIndexes() as $innerIndex => $outerIndex) {
+            $outerIndexes[] = $this->outerIndexExists($innerIndex)
                 ? $outerIndex
                 : null;
         }
 
-        return new self(...$map);
+        return new self(...$outerIndexes);
     }
 
     public function equals(IndexMapInterface $indexMap): bool
     {
-        return $this->map === $indexMap->toArray();
+        return $this->outerIndexes === $indexMap->getOuterIndexes();
     }
 
     public function isCompatible(IndexMapInterface $indexMap): bool
@@ -74,8 +75,8 @@ final class IndexMap implements IndexMapInterface
             return false;
         }
 
-        $anotherMap = $indexMap->toArray();
-        foreach ($this->map as $innerIndex => $outerIndex) {
+        $anotherMap = $indexMap->getOuterIndexes();
+        foreach ($this->outerIndexes as $innerIndex => $outerIndex) {
             if (!array_key_exists($innerIndex, $anotherMap)) {
                 return false;
             }

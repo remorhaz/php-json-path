@@ -26,7 +26,7 @@ final class LiteralValueList implements LiteralValueListInterface
 
     public function getValue(int $index): ValueInterface
     {
-        $innerIndexes = $this->indexMap->getInnerIndice();
+        $innerIndexes = $this->indexMap->getInnerIndexes();
         if (!isset($innerIndexes[$index])) {
             throw new Exception\ValueNotFoundException($index, $this);
         }
@@ -36,7 +36,7 @@ final class LiteralValueList implements LiteralValueListInterface
 
     public function getValues(): array
     {
-        return array_fill_keys($this->indexMap->getInnerIndice(), $this->value);
+        return array_fill_keys($this->indexMap->getInnerIndexes(), $this->value);
     }
 
     public function getIndexMap(): IndexMapInterface
