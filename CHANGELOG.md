@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Some methods of `MapIndexInterface` renamed.
+- Local data accessors/events replaced by `remorhaz/php-json-data`.
 
 ## [0.5.4] - 2019-09-21
 ### Added

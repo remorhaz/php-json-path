@@ -13,24 +13,22 @@ use Remorhaz\JSON\Data\Event\BeforeObjectEventInterface;
 use Remorhaz\JSON\Data\Event\BeforePropertyEventInterface;
 use Remorhaz\JSON\Data\Event\EventInterface;
 use Remorhaz\JSON\Data\Event\ScalarEventInterface;
-use Remorhaz\JSON\Data\Event\ValueWalkerInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Data\Walker\MutationInterface;
+use Remorhaz\JSON\Data\Walker\ValueWalkerInterface;
 use function array_reverse;
 use function count;
 
 final class ReplaceMutation implements MutationInterface
 {
 
-    private $valueWalker;
-
     private $newNode;
 
     private $paths;
 
-    public function __construct(ValueWalkerInterface $valueWalker, NodeValueInterface $newNode, PathInterface ...$paths)
+    public function __construct(NodeValueInterface $newNode, PathInterface ...$paths)
     {
-        $this->valueWalker = $valueWalker;
         $this->newNode = $newNode;
         $this->paths = $this->getNonNestedPaths(...$paths);
     }
@@ -63,16 +61,21 @@ final class ReplaceMutation implements MutationInterface
         }
     }
 
-    public function __invoke(EventInterface $event): Iterator
+    public function __invoke(EventInterface $event, ValueWalkerInterface $valueWalker): Iterator
     {
-        return $this->createEventGenerator($event);
+        return $this->createEventGenerator($event, $valueWalker);
     }
 
-    private function createEventGenerator(EventInterface $event): Generator
+    public function reset(): void
+    {
+    }
+
+    private function createEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Generator
     {
         foreach ($this->paths as $path) {
             if ($path->equals($event->getPath())) {
-                yield from $this->createReplaceEventGenerator($event);
+                yield from $this->createReplaceEventGenerator($event, $valueWalker);
+
                 return;
             }
             if ($path->contains($event->getPath())) {
@@ -82,7 +85,7 @@ final class ReplaceMutation implements MutationInterface
         yield $event;
     }
 
-    private function createReplaceEventGenerator(EventInterface $event): Generator
+    private function createReplaceEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Generator
     {
         switch (true) {
             case $event instanceof BeforeElementEventInterface:
@@ -95,8 +98,7 @@ final class ReplaceMutation implements MutationInterface
             case $event instanceof ScalarEventInterface:
             case $event instanceof BeforeArrayEventInterface:
             case $event instanceof BeforeObjectEventInterface:
-                yield from $this
-                    ->valueWalker
+                yield from $valueWalker
                     ->createEventIterator($this->newNode, $event->getPath());
                 break;
         }

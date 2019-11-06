@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor;
 
 use Collator;
-use Remorhaz\JSON\Data\Event\ValueWalker;
 use Remorhaz\JSON\Data\Export\EventDecoder;
 use Remorhaz\JSON\Data\Export\ValueDecoder;
 use Remorhaz\JSON\Data\Export\ValueEncoder;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Data\Walker\ValueWalker;
 use Remorhaz\JSON\Path\Processor\Mutator\Mutator;
 use Remorhaz\JSON\Path\Processor\Mutator\MutatorInterface;
 use Remorhaz\JSON\Path\Processor\Result\ValueResultInterface;
