@@ -16,7 +16,7 @@ JSONPath is a simple query language for JSON documents, inspired by XPath for XM
 
 ## Requirements
 - PHP 7.3+
-- [JSON extension](https://www.php.net/manual/en/book.json.php) (ext-json)
+- [JSON extension](https://www.php.net/manual/en/book.json.php) (ext-json) - required by [remorhaz/php-json-data](https://github.com/remorhaz/php-json-data) that is used to access JSON documents.
 - [Internationalization functions](https://www.php.net/manual/en/book.intl.php) (ext-intl)
 - [Tokenizer extension](https://www.php.net/manual/en/book.tokenizer.php) (ext-tokenizer) - required by [nikic/php-parser](https://github.com/nikic/PHP-Parser) that is used for code generation.
 
