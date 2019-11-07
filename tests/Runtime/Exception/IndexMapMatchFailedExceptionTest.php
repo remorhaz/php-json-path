@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Test\Value\Exception;
+namespace Remorhaz\JSON\Path\Test\Runtime\Exception;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Path\Value\Exception\IndexMapMatchFailedException;
+use Remorhaz\JSON\Path\Runtime\Exception\IndexMapMatchFailedException;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 /**
- * @covers \Remorhaz\JSON\Path\Value\Exception\IndexMapMatchFailedException
+ * @covers \Remorhaz\JSON\Path\Runtime\Exception\IndexMapMatchFailedException
  */
 class IndexMapMatchFailedExceptionTest extends TestCase
 {

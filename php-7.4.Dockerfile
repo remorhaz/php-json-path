@@ -4,6 +4,8 @@ RUN apt-get update &&  apt-get install -y \
     zip \
     git \
     libicu-dev && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
     docker-php-ext-configure intl --enable-intl && \
     docker-php-ext-install intl
 
