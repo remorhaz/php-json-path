@@ -36,7 +36,7 @@ class LiteralValueListTest extends TestCase
         self::assertSame($value, $valueList->getLiteral());
     }
 
-    public function testGetValues_IndexMapWithGivenIndicesAndGivenValue_ReturnsPopulatedValue(): void
+    public function testGetValues_IndexMapWithGivenIndexesAndGivenValue_ReturnsPopulatedValue(): void
     {
         $indexMap = new IndexMap(0, 0);
         $value = $this->createMock(LiteralValueInterface::class);

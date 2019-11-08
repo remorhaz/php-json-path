@@ -9,14 +9,14 @@ use Remorhaz\JSON\Path\Query\QueryFactory;
 
 /**
  * @covers       \Remorhaz\JSON\Path\Parser\TranslationScheme
- * @todo Maybe it's better to test in isolation, checking the resulting AST.
+ * @todo         Maybe it's better to test in isolation, checking the resulting AST.
  */
 class TranslationSchemeTest extends TestCase
 {
 
     /**
      * @param string $path
-     * @param bool $expectedValue
+     * @param bool   $expectedValue
      * @dataProvider providerIsAddressableCapability
      */
     public function testIsAddressableCapability_GivenQueryParsed_ContainsMatchingValue(
@@ -45,10 +45,10 @@ class TranslationSchemeTest extends TestCase
     /**
      * Because of the scheme complexity it's more convenient to test it in full integration.
      *
-     * @param $json
+     * @param        $json
      * @param string $path
-     * @param array $expectedValue
-     * @param bool $isDefinite
+     * @param array  $expectedValue
+     * @param bool   $isDefinite
      * @dataProvider providerParser
      */
     public function testTranslationListenerMethods_AssembledWithParser_QueryWorksAsExpected(
@@ -156,7 +156,7 @@ class TranslationSchemeTest extends TestCase
                 ['true', 'false'],
                 false,
             ],
-            'All indice dot-notation' => [
+            'All indexes dot-notation' => [
                 ['a', 1],
                 '$.*',
                 ['"a"', '1'],
@@ -168,7 +168,7 @@ class TranslationSchemeTest extends TestCase
                 ['true', 'false'],
                 false,
             ],
-            'All indice bracket-notation' => [
+            'All indexes bracket-notation' => [
                 ['a', 1],
                 '$[*]',
                 ['"a"', '1'],
@@ -418,9 +418,9 @@ class TranslationSchemeTest extends TestCase
             ],
             'Filter with equality check on existing array paths' => [
                 [
-                    (object) ['a' => ['b','d'], 'c' => ['b', 'd']],
-                    (object) ['a' => ['b','d'], 'c' => ['b', 'd', 'e']],
-                    (object) ['a' => ['b','d'], 'c' => ['d', 'b']],
+                    (object) ['a' => ['b', 'd'], 'c' => ['b', 'd']],
+                    (object) ['a' => ['b', 'd'], 'c' => ['b', 'd', 'e']],
+                    (object) ['a' => ['b', 'd'], 'c' => ['d', 'b']],
                 ],
                 '$[?(@.a == @.c)]',
                 ['{"a":["b","d"],"c":["b","d"]}'],
@@ -428,10 +428,10 @@ class TranslationSchemeTest extends TestCase
             ],
             'Filter with equality check on existing object paths' => [
                 [
-                    (object) ['a' => (object) ['b' => 1,'d' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
-                    (object) ['a' => (object) ['b' => 2,'d' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 1, 'd' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 2, 'd' => 2], 'c' => (object) ['d' => 2, 'b' => 1]],
                     (object) ['a' => (object) ['b' => 1], 'c' => (object) ['d' => 2, 'b' => 1]],
-                    (object) ['a' => (object) ['b' => 1,'d' => 2, 'e' => 3], 'c' => (object) ['d' => 2, 'b' => 1]],
+                    (object) ['a' => (object) ['b' => 1, 'd' => 2, 'e' => 3], 'c' => (object) ['d' => 2, 'b' => 1]],
                 ],
                 '$[?(@.a == @.c)]',
                 ['{"a":{"b":1,"d":2},"c":{"d":2,"b":1}}'],
@@ -453,7 +453,7 @@ class TranslationSchemeTest extends TestCase
                             'b' => 2,
                             'c' => 3,
                         ],
-                    ]
+                    ],
                 ],
                 '$.a[?(@.c==3)]',
                 ['{"b":2,"c":3}'],
@@ -474,7 +474,7 @@ class TranslationSchemeTest extends TestCase
                             'c' => 3,
                             'd' => 3,
                         ],
-                    ]
+                    ],
                 ],
                 '$.a[?(@.c==@.d)]',
                 ['{"c":3,"d":3}'],
@@ -672,7 +672,7 @@ class TranslationSchemeTest extends TestCase
                     (object) ['a' => 2],
                 ],
                 '$[?(@.a >= 1)]',
-                ['{"a":1}','{"a":2}'],
+                ['{"a":1}', '{"a":2}'],
                 false,
             ],
             'Filter with path comparison to array' => [

@@ -9,15 +9,15 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 final class StrictElementMatcher implements ChildMatcherInterface
 {
 
-    private $indice;
+    private $indexes;
 
-    public function __construct(int ...$indice)
+    public function __construct(int ...$indexes)
     {
-        $this->indice = $indice;
+        $this->indexes = $indexes;
     }
 
     public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
-        return in_array($address, $this->indice, true);
+        return in_array($address, $this->indexes, true);
     }
 }
