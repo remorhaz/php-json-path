@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
+use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 use function array_map;
 use function count;
 use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
@@ -10,7 +11,6 @@ use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
-use Remorhaz\JSON\Path\Processor\PathEncoder;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class ResultFactory implements ResultFactoryInterface
@@ -25,7 +25,7 @@ final class ResultFactory implements ResultFactoryInterface
     public function __construct(
         ValueEncoderInterface $jsonEncoder,
         ValueDecoderInterface $jsonDecoder,
-        PathEncoder $pathEncoder
+        PathEncoderInterface $pathEncoder
     ) {
         $this->jsonEncoder = $jsonEncoder;
         $this->jsonDecoder = $jsonDecoder;

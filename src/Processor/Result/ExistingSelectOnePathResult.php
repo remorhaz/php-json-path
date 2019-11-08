@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Processor\Result;
 
 use Remorhaz\JSON\Data\Path\PathInterface;
-use Remorhaz\JSON\Path\Processor\PathEncoder;
+use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 
 final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
 {
@@ -18,7 +18,7 @@ final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
         return true;
     }
 
-    public function __construct(PathEncoder $encoder, PathInterface $path)
+    public function __construct(PathEncoderInterface $encoder, PathInterface $path)
     {
         $this->encoder = $encoder;
         $this->path = $path;
