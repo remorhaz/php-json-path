@@ -23,7 +23,7 @@ final class SliceElementMatcher implements ChildMatcherInterface
     public function __construct(?int $start, ?int $end, ?int $step)
     {
         $this->step = $step ?? 1;
-        $this->isReverse = $step < 0;
+        $this->isReverse = $this->step < 0;
 
         $this->start = $start;
         $this->end = $end;
