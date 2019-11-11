@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-final class AggregatorCollection
+final class AggregatorCollection implements AggregatorCollectionInterface
 {
 
     private const MIN = 'min';

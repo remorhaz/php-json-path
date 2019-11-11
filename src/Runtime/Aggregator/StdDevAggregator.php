@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 use function array_map;
 use function array_sum;
 use function count;
-use function is_nan;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
@@ -31,8 +30,6 @@ final class StdDevAggregator extends NumericAggregator
         $variance = $squaredDifferencesSum / ($count - 1);
         $standardDeviation = sqrt($variance);
 
-        return is_nan($standardDeviation)
-            ? null
-            : new LiteralScalarValue($standardDeviation);
+        return new LiteralScalarValue($standardDeviation);
     }
 }

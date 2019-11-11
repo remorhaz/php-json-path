@@ -24,8 +24,8 @@ final class Evaluator implements EvaluatorInterface
     private $aggregators;
 
     public function __construct(
-        Comparator\ComparatorCollection $comparators,
-        Aggregator\AggregatorCollection $aggregators
+        Comparator\ComparatorCollectionInterface $comparators,
+        Aggregator\AggregatorCollectionInterface $aggregators
     ) {
         $this->comparators = $comparators;
         $this->aggregators = $aggregators;
@@ -101,7 +101,7 @@ final class Evaluator implements EvaluatorInterface
         $valueListBuilder = new EvaluatedValueListBuilder;
         foreach ($leftValues->getIndexMap()->getOuterIndexes() as $leftInnerIndex => $leftOuterIndex) {
             foreach ($rightValues->getIndexMap()->getOuterIndexes() as $rightInnerIndex => $rightOuterIndex) {
-                if (!isset($leftOuterIndex, $rightInnerIndex)) {
+                if (!isset($leftOuterIndex, $rightOuterIndex)) {
                     continue;
                 }
                 if ($leftOuterIndex != $rightOuterIndex) {
@@ -111,9 +111,9 @@ final class Evaluator implements EvaluatorInterface
                 $valueListBuilder->addResult(
                     $comparator->compare(
                         $leftValues->getValue($leftInnerIndex),
-                        $rightValues->getValue($rightInnerIndex),
+                        $rightValues->getValue($rightInnerIndex)
                     ),
-                    $leftOuterIndex,
+                    $leftOuterIndex
                 );
             }
         }
@@ -203,10 +203,10 @@ final class Evaluator implements EvaluatorInterface
         $aggregator = $this->aggregators->byName($functionName);
         $valuesBuilder = new ValueListBuilder;
         foreach ($values->getValues() as $innerIndex => $value) {
-            $minValue = $aggregator->tryAggregate($value);
-            if (isset($minValue)) {
+            $aggregatedValue = $aggregator->tryAggregate($value);
+            if (isset($aggregatedValue)) {
                 $valuesBuilder->addValue(
-                    $minValue,
+                    $aggregatedValue,
                     $values->getIndexMap()->getOuterIndex($innerIndex)
                 );
             }

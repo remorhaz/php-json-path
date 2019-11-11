@@ -5,7 +5,7 @@ namespace Remorhaz\JSON\Path\Runtime\Comparator;
 
 use Collator;
 
-final class ComparatorCollection
+final class ComparatorCollection implements ComparatorCollectionInterface
 {
 
     private $collator;

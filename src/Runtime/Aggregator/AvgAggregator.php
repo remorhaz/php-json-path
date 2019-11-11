@@ -15,7 +15,9 @@ final class AvgAggregator extends NumericAggregator
     protected function aggregateNumericData(array $dataList, ScalarValueInterface ...$elements): ?ValueInterface
     {
         return empty($dataList)
+            // @codeCoverageIgnoreStart
             ? null
+            // @codeCoverageIgnoreEnd
             : new LiteralScalarValue(array_sum($dataList) / count($dataList));
     }
 }
