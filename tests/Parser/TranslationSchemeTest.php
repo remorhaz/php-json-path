@@ -841,22 +841,24 @@ class TranslationSchemeTest extends TestCase
             ],
             'Aggregate function MIN' => [
                 [
+                    (object) ['a' => [2]],
                     (object) ['a' => [1, 2, 3]],
                     (object) ['a' => ['b', 2.1, 3]],
                     (object) ['a' => []],
                 ],
                 '$..a.min()',
-                ['1', '2.1'],
+                ['2', '1', '2.1'],
                 false,
             ],
             'Aggregate function MAX' => [
                 [
+                    (object) ['a' => [2]],
                     (object) ['a' => [1, 2, 3]],
                     (object) ['a' => [1, 2.1, 'b']],
                     (object) ['a' => []],
                 ],
                 '$..a.max()',
-                ['3', '2.1'],
+                ['2', '3', '2.1'],
                 false,
             ],
             'Aggregate function LENGTH' => [

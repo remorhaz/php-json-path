@@ -13,12 +13,11 @@ final class LengthAggregator implements ValueAggregatorInterface
 
     public function tryAggregate(ValueInterface $value): ?ValueInterface
     {
-        $length = $value instanceof ArrayValueInterface
-            ? iterator_count($value->createChildIterator())
-            : null;
+        if (!$value instanceof ArrayValueInterface) {
+            return null;
+        }
+        $length = iterator_count($value->createChildIterator());
 
-        return isset($length)
-            ? new LiteralScalarValue($length)
-            : null;
+        return new LiteralScalarValue($length);
     }
 }
