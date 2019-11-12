@@ -11,13 +11,10 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 final class LiteralArrayValue implements ArrayValueInterface, LiteralValueInterface
 {
 
-    private $indexMap;
-
     private $values;
 
-    public function __construct(IndexMapInterface $indexMap, ValueInterface ...$values)
+    public function __construct(ValueInterface ...$values)
     {
-        $this->indexMap = $indexMap;
         $this->values = $values;
     }
 

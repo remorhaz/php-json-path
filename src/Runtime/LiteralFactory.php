@@ -21,8 +21,8 @@ class LiteralFactory implements LiteralFactoryInterface
 
     public function createArray(NodeValueListInterface $source, ValueListInterface ...$valueLists): ValueListInterface
     {
-        $createArrayElement = function (array $elements) use ($source): ValueInterface {
-            return new LiteralArrayValue($source->getIndexMap(), ...$elements);
+        $createArrayElement = function (array $elements): ValueInterface {
+            return new LiteralArrayValue(...$elements);
         };
 
         return new ValueList(

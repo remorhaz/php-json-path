@@ -8,13 +8,13 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 final class ValueListBuilder
 {
 
-    private $indexMap = [];
+    private $outerIndexes = [];
 
     private $values = [];
 
     public function addValue(ValueInterface $value, int $outerIndex): self
     {
-        $this->indexMap[] = $outerIndex;
+        $this->outerIndexes[] = $outerIndex;
         $this->values[] = $value;
 
         return $this;
@@ -22,6 +22,6 @@ final class ValueListBuilder
 
     public function build(): ValueListInterface
     {
-        return new ValueList(new IndexMap(...$this->indexMap), ...$this->values);
+        return new ValueList(new IndexMap(...$this->outerIndexes), ...$this->values);
     }
 }

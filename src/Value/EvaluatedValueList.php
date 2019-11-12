@@ -16,8 +16,8 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
 
     public function __construct(IndexMapInterface $indexMap, bool ...$results)
     {
-        $this->results = $results;
         $this->indexMap = $indexMap;
+        $this->results = $results;
     }
 
     public function getValue(int $index): ValueInterface

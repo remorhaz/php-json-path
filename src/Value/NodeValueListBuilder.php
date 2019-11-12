@@ -8,13 +8,13 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 final class NodeValueListBuilder
 {
 
-    private $indexMap = [];
+    private $outerIndexes = [];
 
     private $values = [];
 
     public function addValue(NodeValueInterface $value, int $outerIndex): self
     {
-        $this->indexMap[] = $outerIndex;
+        $this->outerIndexes[] = $outerIndex;
         $this->values[] = $value;
 
         return $this;
@@ -22,6 +22,6 @@ final class NodeValueListBuilder
 
     public function build(): NodeValueListInterface
     {
-        return new NodeValueList(new IndexMap(...$this->indexMap), ...$this->values);
+        return new NodeValueList(new IndexMap(...$this->outerIndexes), ...$this->values);
     }
 }

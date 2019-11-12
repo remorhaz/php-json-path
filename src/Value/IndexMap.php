@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use function array_key_exists;
 use function array_keys;
 use function count;
 use function in_array;
@@ -77,10 +76,6 @@ final class IndexMap implements IndexMapInterface
 
         $anotherMap = $indexMap->getOuterIndexes();
         foreach ($this->outerIndexes as $innerIndex => $outerIndex) {
-            if (!array_key_exists($innerIndex, $anotherMap)) {
-                return false;
-            }
-
             if (!isset($outerIndex, $anotherMap[$innerIndex])) {
                 continue;
             }

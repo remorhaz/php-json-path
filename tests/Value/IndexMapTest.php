@@ -38,7 +38,7 @@ class IndexMapTest extends TestCase
 
     /**
      * @param array $outerIndexes
-     * @param int $expectedValue
+     * @param int   $expectedValue
      * @dataProvider providerCount
      */
     public function testCount_ConstructedWithOuterIndexes_ReturnsMatchingValue(
@@ -192,5 +192,52 @@ class IndexMapTest extends TestCase
         $map = new IndexMap(1);
         $actualValue = $map->equals(new IndexMap(2));
         self::assertFalse($actualValue);
+    }
+
+    /**
+     * @param array $firstOuterIndexes
+     * @param array $secondOuterIndexes
+     * @dataProvider providerIncompatibleMaps
+     */
+    public function testIsCompatible_IncompatibleMaps_ReturnsFalse(
+        array $firstOuterIndexes,
+        array $secondOuterIndexes
+    ): void {
+        $firstMap = new IndexMap(...$firstOuterIndexes);
+        $secondMap = new IndexMap(...$secondOuterIndexes);
+        self::assertFalse($firstMap->isCompatible($secondMap));
+    }
+
+    public function providerIncompatibleMaps(): array
+    {
+        return [
+            'Different map sizes' => [[1], [1, 2]],
+            'Different outer indexes' => [[1], [2]],
+        ];
+    }
+
+    /**
+     * @param array $firstOuterIndexes
+     * @param array $secondOuterIndexes
+     * @dataProvider providerCompatibleMaps
+     */
+    public function testIsCompatible_CompatibleMaps_ReturnsTrue(
+        array $firstOuterIndexes,
+        array $secondOuterIndexes
+    ): void {
+        $firstMap = new IndexMap(...$firstOuterIndexes);
+        $secondMap = new IndexMap(...$secondOuterIndexes);
+        self::assertTrue($firstMap->isCompatible($secondMap));
+    }
+
+    public function providerCompatibleMaps(): array
+    {
+        return [
+            'Empty maps' => [[], []],
+            'Both outer indexes are null' => [[null], [null]],
+            'Left outer index is null' => [[null], [1]],
+            'Right outer index is null' => [[1], [null]],
+            'Same outer indexes after null left outer index' => [[null, 2], [1, 2]],
+        ];
     }
 }
