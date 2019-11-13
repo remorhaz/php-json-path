@@ -10,6 +10,12 @@ use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 interface QueryInterface
 {
 
+    /**
+     * @param NodeValueInterface $rootNode
+     * @param RuntimeInterface   $runtime
+     * @return ValueListInterface
+     * @throws Exception\ExceptionInterface
+     */
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface;
 
     public function getCapabilities(): CapabilitiesInterface;

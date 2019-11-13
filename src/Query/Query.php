@@ -26,21 +26,21 @@ final class Query implements QueryInterface
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
     {
         try {
-            $input = (new NodeValueListBuilder)
-                ->addValue($rootNode, 0)
-                ->build();
             $callback = $this
                 ->callbackBuilder
                 ->getCallback();
 
-            return call_user_func(
-                $callback,
-                $input,
+            $args = [
+                (new NodeValueListBuilder)
+                    ->addValue($rootNode, 0)
+                    ->build(),
                 $runtime->getValueListFetcher(),
                 $runtime->getEvaluator(),
                 $runtime->getLiteralFactory(),
                 $runtime->getMatcherFactory(),
-            );
+            ];
+
+            return call_user_func($callback, ...$args);
         } catch (Throwable $e) {
             throw new Exception\QueryExecutionFailedException(
                 $this->source,
