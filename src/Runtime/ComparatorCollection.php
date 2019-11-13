@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Remorhaz\JSON\Path\Runtime\Comparator;
+namespace Remorhaz\JSON\Path\Runtime;
 
 use Collator;
+use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
+use Remorhaz\JSON\Data\Comparator\EqualValueComparator;
+use Remorhaz\JSON\Data\Comparator\GreaterValueComparator;
 
 final class ComparatorCollection implements ComparatorCollectionInterface
 {

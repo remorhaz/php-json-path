@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollectionInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\ValueAggregatorInterface;
-use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollectionInterface;
-use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorInterface;
+use Remorhaz\JSON\Path\Runtime\ComparatorCollectionInterface;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
 use Remorhaz\JSON\Path\Runtime\Exception\IndexMapMatchFailedException;
 use Remorhaz\JSON\Path\Runtime\Exception\InvalidRegExpException;

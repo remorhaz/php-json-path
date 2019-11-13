@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
+use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder;
 use function array_fill;
 use function count;
@@ -24,7 +25,7 @@ final class Evaluator implements EvaluatorInterface
     private $aggregators;
 
     public function __construct(
-        Comparator\ComparatorCollectionInterface $comparators,
+        ComparatorCollectionInterface $comparators,
         Aggregator\AggregatorCollectionInterface $aggregators
     ) {
         $this->comparators = $comparators;
@@ -96,7 +97,7 @@ final class Evaluator implements EvaluatorInterface
     private function compare(
         ValueListInterface $leftValues,
         ValueListInterface $rightValues,
-        Comparator\ComparatorInterface $comparator
+        ComparatorInterface $comparator
     ): EvaluatedValueListInterface {
         $valueListBuilder = new EvaluatedValueListBuilder;
         foreach ($leftValues->getIndexMap()->getOuterIndexes() as $leftInnerIndex => $leftOuterIndex) {

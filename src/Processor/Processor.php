@@ -21,7 +21,7 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\QueryValidator;
 use Remorhaz\JSON\Path\Query\QueryValidatorInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
-use Remorhaz\JSON\Path\Runtime\Comparator\ComparatorCollection;
+use Remorhaz\JSON\Path\Runtime\ComparatorCollection;
 use Remorhaz\JSON\Path\Runtime\Evaluator;
 use Remorhaz\JSON\Path\Runtime\LiteralFactory;
 use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactory;
