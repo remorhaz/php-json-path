@@ -46,4 +46,14 @@ final class SelectResult implements SelectResultInterface
     {
         return array_map([$this->encoder, 'exportValue'], $this->values);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return ValueInterface[]
+     */
+    public function get(): array
+    {
+        return $this->values;
+    }
 }

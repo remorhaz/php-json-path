@@ -15,6 +15,26 @@ use Remorhaz\JSON\Path\Processor\Result\SelectResult;
 class SelectResultTest extends TestCase
 {
 
+    public function testGet_ConstructedWithoutValues_ReturnsEmptyArray(): void
+    {
+        $result = new SelectResult(
+            $this->createMock(ValueEncoderInterface::class),
+            $this->createMock(ValueDecoderInterface::class)
+        );
+        self::assertSame([], $result->get());
+    }
+
+    public function testGet_ConstructedWithValue_ReturnsSameInstanceInArray(): void
+    {
+        $value = $this->createMock(ValueInterface::class);
+        $result = new SelectResult(
+            $this->createMock(ValueEncoderInterface::class),
+            $this->createMock(ValueDecoderInterface::class),
+            $value
+        );
+        self::assertSame([$value], $result->get());
+    }
+
     public function testEncode_ConstructedWithoutValues_ReturnsEmptyArray(): void
     {
         $result = new SelectResult(

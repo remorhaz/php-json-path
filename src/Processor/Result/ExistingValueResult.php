@@ -44,4 +44,9 @@ final class ExistingValueResult implements ValueResultInterface
             ->jsonDecoder
             ->exportValue($this->value);
     }
+
+    public function get(): ValueInterface
+    {
+        return $this->value;
+    }
 }

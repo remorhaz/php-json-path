@@ -25,6 +25,17 @@ class ExistingValueResultTest extends TestCase
         self::assertTrue($result->exists());
     }
 
+    public function testGet_ConstructedWithValue_ReturnsSameInstance(): void
+    {
+        $value = $this->createMock(ValueInterface::class);
+        $result = new ExistingValueResult(
+            $this->createMock(ValueEncoderInterface::class),
+            $this->createMock(ValueDecoderInterface::class),
+            $value
+        );
+        self::assertSame($value, $result->get());
+    }
+
     public function testEncode_Constructed_PassesValueToEncoder(): void
     {
         $encoder = $this->createMock(ValueEncoderInterface::class);

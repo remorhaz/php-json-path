@@ -19,6 +19,13 @@ class NonExistingValueResultTest extends TestCase
         self::assertFalse($result->exists());
     }
 
+    public function testGet_Constructed_ThrowsException(): void
+    {
+        $result = new NonExistingValueResult;
+        $this->expectException(SelectedValueNotFoundException::class);
+        $result->get();
+    }
+
     public function testEncode_Constructed_ThrowsException(): void
     {
         $result = new NonExistingValueResult;

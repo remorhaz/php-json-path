@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
+use Remorhaz\JSON\Data\Value\ValueInterface;
+
 final class NonExistingValueResult implements ValueResultInterface
 {
 
@@ -17,6 +19,11 @@ final class NonExistingValueResult implements ValueResultInterface
     }
 
     public function decode()
+    {
+        throw new Exception\SelectedValueNotFoundException;
+    }
+
+    public function get(): ValueInterface
     {
         throw new Exception\SelectedValueNotFoundException;
     }
