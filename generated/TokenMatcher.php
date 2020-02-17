@@ -6,7 +6,7 @@
  * Run following command to update this file:
  *     vendor/bin/phing json-path-matcher
  *
- * Phing version: 2.16.1
+ * Phing version: 2.16.3
  */
 
 namespace Remorhaz\JSON\Path;

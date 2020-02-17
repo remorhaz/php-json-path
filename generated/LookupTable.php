@@ -6,7 +6,7 @@
  * Run following command to update this file:
  *     vendor/bin/phing json-path-lookup
  *
- * Phing version: 2.16.1
+ * Phing version: 2.16.3
  */
 
 use Remorhaz\JSON\Path\Parser\SymbolType;

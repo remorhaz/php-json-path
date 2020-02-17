@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Issue #18: processor results provide access to raw value objects. 
+- Issue #18: processor results provide access to raw value objects.
+- Upgraded `remorhaz/php-unilex` to version 0.1.0. 
 
 ## [0.7.0] - 2019-11-13
 ### Removed
