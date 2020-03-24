@@ -180,6 +180,12 @@ class TranslationSchemeTest extends TestCase
                 ['true', '1'],
                 false,
             ],
+            'Reverse strict property list' => [
+                (object) ['a' => true, 'b' => false, 'c' => 1],
+                '$["c", "a"]',
+                ['1', 'true'],
+                false,
+            ],
             'Unquoted name in bracket-notation' => [
                 (object) ['a' => 1, 'b' => 2],
                 '$[a]',
@@ -196,6 +202,18 @@ class TranslationSchemeTest extends TestCase
                 [true, false, 1],
                 '$[0, 2]',
                 ['true', '1'],
+                false,
+            ],
+            'Reverse index list' => [
+                [true, false, 1],
+                '$[2, 0]',
+                ['1', 'true'],
+                false,
+            ],
+            'Repeated index list' => [
+                [true, false, 1],
+                '$[1, 1]',
+                ['false'],
                 false,
             ],
             'Fully defined slice' => [
@@ -261,19 +279,19 @@ class TranslationSchemeTest extends TestCase
             'Slice defined with just negative step' => [
                 [1, 2, 3],
                 '$[::-1]',
-                ['1', '2', '3'],
+                ['3', '2', '1'],
                 false,
             ],
             'Slice defined with start and negative step' => [
                 [1, 2, 3],
                 '$[1::-1]',
-                ['1', '2'],
+                ['2', '1'],
                 false,
             ],
             'Slice fully defined with and negative end and step' => [
                 [1, 2, 3],
                 '$[1:-4:-1]',
-                ['1', '2'],
+                ['2', '1'],
                 false,
             ],
             'Simple filter with true' => [
@@ -783,10 +801,22 @@ class TranslationSchemeTest extends TestCase
                 ['1', '[3,4,5]', '3', '5', '6'],
                 false,
             ],
+            'Reverse deep scan of all children (double dot) with index 0 or 2' => [
+                [1, 2, [3, 4, 5], [6, 7], 8],
+                '$..[2, 0]',
+                ['[3,4,5]', '1', '5', '3', '6'],
+                false,
+            ],
             'Deep scan of all children with (double dot with star) index 0 or 2' => [
                 [1, 2, [3, 4, 5], [6, 7], 8],
                 '$..*[0, 2]',
                 ['3', '5', '6'],
+                false,
+            ],
+            'Reverse deep scan of all children with (double dot with star) index 0 or 2' => [
+                [1, 2, [3, 4, 5], [6, 7], 8],
+                '$..*[2, 0]',
+                ['5', '3', '6'],
                 false,
             ],
             'Filter with regular expression without modifier' => [

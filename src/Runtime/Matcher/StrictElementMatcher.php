@@ -1,12 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
-use function in_array;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
-final class StrictElementMatcher implements ChildMatcherInterface
+use function array_search;
+use function in_array;
+use function is_int;
+
+final class StrictElementMatcher implements SortedChildMatcherInterface
 {
 
     private $indexes;
@@ -19,5 +23,16 @@ final class StrictElementMatcher implements ChildMatcherInterface
     public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
         return in_array($address, $this->indexes, true);
+    }
+
+    public function getSortIndex($address, NodeValueInterface $value, NodeValueInterface $container): int
+    {
+        $index = array_search($address, $this->indexes);
+
+        if (is_int($index)) {
+            return $index;
+        }
+
+        throw new Exception\AddressNotSortableException($address);
     }
 }

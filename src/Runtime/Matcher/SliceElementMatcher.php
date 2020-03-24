@@ -9,7 +9,7 @@ use function iterator_count;
 use function max;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
-final class SliceElementMatcher implements ChildMatcherInterface
+final class SliceElementMatcher implements SortedChildMatcherInterface
 {
 
     private $start;
@@ -94,6 +94,21 @@ final class SliceElementMatcher implements ChildMatcherInterface
 
     private function isOnStep(int $address, int $start): bool
     {
-        return 0 == ($this->isReverse ? $start - $address : $address - $start) % $this->step;
+        return 0 == $this->getIndex($address, $start) % $this->step;
+    }
+
+    private function getIndex(int $address, int $start): int
+    {
+        return $this->isReverse ? $start - $address : $address - $start;
+    }
+
+    public function getSortIndex($address, NodeValueInterface $value, NodeValueInterface $container): int
+    {
+        $count = $this->findArrayLength($container);
+        if (!isset($count)) {
+            throw new Exception\AddressNotSortableException($address);
+        }
+
+        return $this->getIndex($address, $this->detectStart($count));
     }
 }
