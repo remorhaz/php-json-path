@@ -198,6 +198,22 @@ class TranslationSchemeTest extends TestCase
                 ['1'],
                 true,
             ],
+            'Property of strict property list filter' => [
+                (object) [
+                    'a' => (object) [
+                        'a' => 1,
+                        'b' => 2,
+                        'c' => 3,
+                    ],
+                    'b' => 4,
+                    'c' => (object) [
+                        'a' => 5,
+                    ],
+                ],
+                '$["a", "c"].a',
+                ['1', '5'],
+                false,
+            ],
             'Mixed names in bracket-notation' => [
                 (object) ['a' => 1, 'b' => 2, '1' => 3, 'c' => 4],
                 '$[a, "1", c]',
@@ -508,6 +524,38 @@ class TranslationSchemeTest extends TestCase
                 (object) ['a' => (object) []],
                 '$.a[?(@.b==@.c)]',
                 [],
+                false,
+            ],
+            'Filter matches array element' => [
+                (object) ['a' => [(object) ['b' => 1]]],
+                '$.a[?(@.b==1)]',
+                ['{"b":1}'],
+                false,
+            ],
+            'Filter matches property' => [
+                (object) ['a' => (object) ['b' => 1]],
+                '$.a[?(@.b==1)]',
+                ['{"b":1}'],
+                false,
+            ],
+            'Filter expression after recursive descent' => [
+                (object) [
+                    "id" => 2,
+                    "more" => [
+                        (object) ["id" => 2],
+                        (object) ["more" => (object) ["id" => 2]],
+                        (object) ["id" => (object) ["id" => 2]],
+                        [(object) ["id" => 2]],
+                    ],
+                ],
+                '$..[?(@.id==2)]',
+                [
+                    '{"id":2,"more":[{"id":2},{"more":{"id":2}},{"id":{"id":2}},[{"id":2}]]}',
+                    '{"id":2}',
+                    '{"id":2}',
+                    '{"id":2}',
+                    '{"id":2}',
+                ],
                 false,
             ],
             'Filter with OR' => [

@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Order of array elements in result corresponds to order of indexes in filter.
 - Order of object properties in result corresponds to order of properties in filter.
 - Slices with negative steps are returned in reversed order.
-- Names now allow hyphen symbol (`U+002D`) as non-starting symbol.
+- Names in dot-notation now allow hyphen symbol (`U+002D`) as non-starting symbol.
+- Fixed duplicated results in some filtered queries.
 
 ## [0.7.1] - 2019-02-17
 ### Added

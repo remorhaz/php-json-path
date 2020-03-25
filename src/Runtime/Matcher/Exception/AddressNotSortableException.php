@@ -18,7 +18,7 @@ final class AddressNotSortableException extends DomainException implements Excep
     public function __construct($address, Throwable $previous = null)
     {
         $this->address = $address;
-        parent::__construct("Index/property is not sortable: {$this->address}", $previous);
+        parent::__construct("Index/property is not sortable: {$this->address}", 0, $previous);
     }
 
     /**

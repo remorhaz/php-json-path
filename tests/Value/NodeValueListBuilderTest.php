@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Value;
 
 use PHPUnit\Framework\TestCase;
+use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Value\Exception\ValueInListWithAnotherOuterIndexException;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 
 /**
@@ -45,6 +47,49 @@ class NodeValueListBuilderTest extends TestCase
         $builder->addValue($secondValue, 1);
         $values = $builder->build();
         self::assertSame([$firstValue, $secondValue], $values->getValues());
+    }
+
+    public function testBuild_ValueWithSamePathAddedTwiceWithSameOuterIndex_ReturnsListWithFirstInstance(): void
+    {
+        $builder = new NodeValueListBuilder;
+        $path = $this->createMock(PathInterface::class);
+        $path
+            ->method('equals')
+            ->willReturn(true);
+        $firstValue = $this->createMock(NodeValueInterface::class);
+        $firstValue
+            ->method('getPath')
+            ->willReturn($path);
+        $secondValue = $this->createMock(NodeValueInterface::class);
+        $secondValue
+            ->method('getPath')
+            ->willReturn($path);
+        $builder->addValue($firstValue, 1);
+        $builder->addValue($secondValue, 1);
+        $values = $builder->build();
+        self::assertSame([$firstValue], $values->getValues());
+    }
+
+    public function testBuild_ValueWithSamePathAddedTwiceWithAnotherOuterIndex_ThrowsException(): void
+    {
+        $builder = new NodeValueListBuilder;
+        $path = $this->createMock(PathInterface::class);
+        $path
+            ->method('equals')
+            ->willReturn(true);
+        $firstValue = $this->createMock(NodeValueInterface::class);
+        $firstValue
+            ->method('getPath')
+            ->willReturn($path);
+        $secondValue = $this->createMock(NodeValueInterface::class);
+        $secondValue
+            ->method('getPath')
+            ->willReturn($path);
+        $builder->addValue($firstValue, 1);
+
+        $this->expectException(ValueInListWithAnotherOuterIndexException::class);
+        $this->expectExceptionMessage('Value is already in list with outer index 1, not 2');
+        $builder->addValue($secondValue, 2);
     }
 
     public function testBuild_ValueAddedWithGivenOuterIndex_ReturnsListWithSameOuterIndexInMap(): void
