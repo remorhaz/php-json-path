@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.7.2] - 2020-03-26
 ### Fixed
 - Order of array elements in result corresponds to order of indexes in filter.
 - Order of object properties in result corresponds to order of properties in filter.
@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Names in dot-notation now allow hyphen symbol (`U+002D`) as non-starting symbol.
 - Fixed duplicated results in some filtered queries.
 
-## [0.7.1] - 2019-02-17
+## [0.7.1] - 2020-02-17
 ### Added
 - Issue #18: processor results provide access to raw value objects.
 - Upgraded `remorhaz/php-unilex` to version 0.1.0. 
