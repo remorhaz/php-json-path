@@ -114,6 +114,12 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
+            'Dot-notation property with dash' => [
+                (object) ['a-b' => true],
+                '$.a-b',
+                ['true'],
+                true,
+            ],
             'Dot-notation predicate' => [
                 [1, 2, [3]],
                 '$.[0]',

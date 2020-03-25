@@ -86,7 +86,7 @@ $context->setNewToken(TokenType::TRUE);
 $context->setNewToken(TokenType::FALSE);
 
 /**
- * @lexToken /[a-zA-Z_][a-zA-Z_\$@0-9]*()/
+ * @lexToken /[a-zA-Z_][a-zA-Z_\$\-@0-9]*()/
  */
 $context
     ->setNewToken(TokenType::NAME)

@@ -262,6 +262,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -333,6 +337,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -410,6 +418,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -481,6 +493,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -667,6 +683,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -738,6 +758,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -815,6 +839,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -886,6 +914,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -963,6 +995,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -1032,6 +1068,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -1109,6 +1149,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -1183,6 +1227,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -1252,6 +1300,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
@@ -1329,6 +1381,10 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
+        if (0x2D == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
         if (0x6E == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
@@ -1400,6 +1456,10 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         if (0x31 <= $char && $char <= 0x39) {
+            $context->getBuffer()->nextSymbol();
+            goto state38;
+        }
+        if (0x2D == $char) {
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
