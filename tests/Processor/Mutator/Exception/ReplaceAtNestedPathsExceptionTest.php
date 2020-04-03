@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Mutator\Exception;
@@ -63,7 +64,7 @@ class ReplaceAtNestedPathsExceptionTest extends TestCase
 
     public function testGetPrevious_ConstructedWithPrevious_ReturnsSameInstance(): void
     {
-        $previous = new Exception;
+        $previous = new Exception();
         $exception = new ReplaceAtNestedPathsException(
             $this->createMock(PathInterface::class),
             $this->createMock(PathInterface::class),

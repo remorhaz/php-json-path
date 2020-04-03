@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -34,7 +35,7 @@ class AstTranslatorTest extends TestCase
     {
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
         self::assertInstanceOf(Query::class, $translator->buildQuery('return;', $tree));
     }
@@ -46,12 +47,12 @@ class AstTranslatorTest extends TestCase
     {
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
         $callbackBuilder
             ->method('onStart')
-            ->willThrowException(new Exception);
+            ->willThrowException(new Exception());
         $this->expectException(QueryAstNotTranslatedException::class);
         $translator->buildQuery('b', $tree);
     }
@@ -63,7 +64,7 @@ class AstTranslatorTest extends TestCase
     {
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $rootNode = $tree->createNode('a');
         $tree->setRootNode($rootNode);
 
@@ -81,7 +82,7 @@ class AstTranslatorTest extends TestCase
     {
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
         $callbackBuilder
@@ -98,7 +99,7 @@ class AstTranslatorTest extends TestCase
     {
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
         $rootValue = $this->createMock(NodeValueInterface::class);
@@ -158,7 +159,7 @@ class AstTranslatorTest extends TestCase
             ->method('getCapabilities')
             ->willReturn($properties);
         $translator = new AstTranslator($callbackBuilder);
-        $tree = new Tree;
+        $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
         $query = $translator->buildQuery('b', $tree);

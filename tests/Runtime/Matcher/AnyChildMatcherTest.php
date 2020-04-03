@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
@@ -15,7 +16,7 @@ class AnyChildMatcherTest extends TestCase
 
     public function testMatch_Always_ReturnsTrue(): void
     {
-        $matcher = new AnyChildMatcher;
+        $matcher = new AnyChildMatcher();
         $actualValue = $matcher->match(
             '',
             $this->createMock(NodeValueInterface::class),

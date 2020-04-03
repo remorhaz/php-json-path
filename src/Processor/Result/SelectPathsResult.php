@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
-use function array_map;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
+
+use function array_map;
 
 final class SelectPathsResult implements SelectPathsResultInterface
 {

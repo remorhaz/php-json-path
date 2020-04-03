@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
@@ -15,16 +16,16 @@ final class NonExistingValueResult implements ValueResultInterface
 
     public function encode(): string
     {
-        throw new Exception\SelectedValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException();
     }
 
     public function decode()
     {
-        throw new Exception\SelectedValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException();
     }
 
     public function get(): ValueInterface
     {
-        throw new Exception\SelectedValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException();
     }
 }

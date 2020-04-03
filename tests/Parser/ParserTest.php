@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Parser;
@@ -56,7 +57,7 @@ class ParserTest extends TestCase
             ->willReturn($ll1Parser);
         $ll1Parser
             ->method('run')
-            ->willThrowException(new Exception);
+            ->willThrowException(new Exception());
         $parser = new Parser($ll1ParserFactory);
 
         $this->expectException(QueryAstNotBuiltException::class);

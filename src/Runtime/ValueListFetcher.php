@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
@@ -31,7 +32,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
         NodeValueListInterface $source,
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
-        $nodesBuilder = new NodeValueListBuilder;
+        $nodesBuilder = new NodeValueListBuilder();
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this
                 ->valueFetcher
@@ -49,7 +50,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
         NodeValueListInterface $source,
         Matcher\ChildMatcherInterface $matcher
     ): NodeValueListInterface {
-        $nodesBuilder = new NodeValueListBuilder;
+        $nodesBuilder = new NodeValueListBuilder();
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             $children = $this
                 ->valueFetcher
@@ -65,7 +66,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
 
     public function merge(NodeValueListInterface ...$sources): NodeValueListInterface
     {
-        $nodesBuilder = new NodeValueListBuilder;
+        $nodesBuilder = new NodeValueListBuilder();
         foreach ($sources as $source) {
             foreach ($source->getValues() as $innerIndex => $value) {
                 $nodesBuilder->addValue(
@@ -80,7 +81,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
 
     public function fetchFilterContext(NodeValueListInterface $source): NodeValueListInterface
     {
-        $nodesBuilder = new NodeValueListBuilder;
+        $nodesBuilder = new NodeValueListBuilder();
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
             if (!$sourceValue instanceof NodeValueInterface) {
                 throw new Exception\InvalidContextValueException($sourceValue);
@@ -89,7 +90,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
             $children = $sourceValue instanceof ArrayValueInterface
                 ? $this
                     ->valueFetcher
-                    ->createChildrenIterator(new Matcher\AnyChildMatcher, $sourceValue)
+                    ->createChildrenIterator(new Matcher\AnyChildMatcher(), $sourceValue)
                 : [$sourceValue];
             foreach ($children as $child) {
                 $nodesBuilder->addValue($child, $outerIndex);
@@ -113,7 +114,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
                 $valueMap[$innerIndex] = $valueIndex++;
             }
         }
-        $nodesBuilder = new NodeValueListBuilder;
+        $nodesBuilder = new NodeValueListBuilder();
         foreach ($values->getValues() as $index => $value) {
             if (!isset($valueMap[$index])) {
                 continue;

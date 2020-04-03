@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Parser;
@@ -19,7 +20,7 @@ final class Parser implements ParserInterface
     public function buildQueryAst(string $path): Tree
     {
         try {
-            $queryAst = new Tree;
+            $queryAst = new Tree();
             $this
                 ->ll1ParserFactory
                 ->createParser($path, $queryAst)

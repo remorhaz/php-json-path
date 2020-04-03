@@ -1,11 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Exception;
 
 use DomainException;
-use function gettype;
 use Throwable;
+
+use function gettype;
 
 final class InvalidPathElementException extends DomainException implements ExceptionInterface
 {

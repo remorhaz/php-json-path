@@ -1,13 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test;
 
-use function file_get_contents;
 use PHPUnit\Framework\TestCase;
-use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
+use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
+
+use function file_get_contents;
 
 /**
  * @coversNothing

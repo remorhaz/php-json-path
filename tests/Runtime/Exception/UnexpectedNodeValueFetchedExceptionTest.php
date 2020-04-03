@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Exception;
@@ -47,7 +48,7 @@ class UnexpectedNodeValueFetchedExceptionTest extends TestCase
 
     public function testGetPrevious_ConstructedWithPrevious_ReturnsSameInstance(): void
     {
-        $previous = new Exception;
+        $previous = new Exception();
         $exception = new UnexpectedNodeValueFetchedException(
             $this->createMock(NodeValueInterface::class),
             $previous

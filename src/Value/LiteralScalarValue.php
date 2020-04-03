@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use function is_scalar;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+
+use function is_scalar;
 
 final class LiteralScalarValue implements LiteralValueInterface, ScalarValueInterface
 {

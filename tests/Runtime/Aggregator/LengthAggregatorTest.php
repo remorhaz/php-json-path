@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
@@ -9,6 +10,7 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\LengthAggregator;
+
 use function array_fill;
 
 /**
@@ -19,7 +21,7 @@ class LengthAggregatorTest extends TestCase
 
     public function testTryAggregate_NonArrayValue_ReturnsNull(): void
     {
-        $aggregator = new LengthAggregator;
+        $aggregator = new LengthAggregator();
         $value = $this->createMock(ValueInterface::class);
         self::assertNull($aggregator->tryAggregate($value));
     }
@@ -31,7 +33,7 @@ class LengthAggregatorTest extends TestCase
      */
     public function testTryAggregate_ArrayValue_ReturnsValueWithArrayLength(int $count, array $expectedValue): void
     {
-        $aggregator = new LengthAggregator;
+        $aggregator = new LengthAggregator();
         $elements = array_fill(0, $count, $this->createMock(ValueInterface::class));
         $value = $this->createMock(ArrayValueInterface::class);
         $value

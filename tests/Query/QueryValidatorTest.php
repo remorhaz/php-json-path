@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -24,7 +25,7 @@ class QueryValidatorTest extends TestCase
             ->method('getCapabilities')
             ->willReturn($capabilities);
 
-        $actualValue = (new QueryValidator)->getDefiniteQuery($query);
+        $actualValue = (new QueryValidator())->getDefiniteQuery($query);
         self::assertSame($query, $actualValue);
     }
 
@@ -35,7 +36,7 @@ class QueryValidatorTest extends TestCase
         $query
             ->method('getCapabilities')
             ->willReturn($capabilities);
-        $validator = new QueryValidator;
+        $validator = new QueryValidator();
 
         $this->expectException(IndefiniteQueryException::class);
         $validator->getDefiniteQuery($query);
@@ -49,7 +50,7 @@ class QueryValidatorTest extends TestCase
             ->method('getCapabilities')
             ->willReturn($capabilities);
 
-        $actualValue = (new QueryValidator)->getAddressableQuery($query);
+        $actualValue = (new QueryValidator())->getAddressableQuery($query);
         self::assertSame($query, $actualValue);
     }
 
@@ -60,7 +61,7 @@ class QueryValidatorTest extends TestCase
         $query
             ->method('getCapabilities')
             ->willReturn($capabilities);
-        $validator = new QueryValidator;
+        $validator = new QueryValidator();
 
         $this->expectException(QueryNotAddressableException::class);
         $validator->getAddressableQuery($query);

@@ -1,13 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor;
+
+use Remorhaz\JSON\Data\Path\PathInterface;
 
 use function array_map;
 use function implode;
 use function is_int;
 use function is_string;
-use Remorhaz\JSON\Data\Path\PathInterface;
 use function str_replace;
 
 final class PathEncoder implements PathEncoderInterface

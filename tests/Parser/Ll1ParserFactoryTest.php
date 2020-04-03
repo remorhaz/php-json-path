@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Parser;
@@ -26,8 +27,8 @@ class Ll1ParserFactoryTest extends TestCase
         string $source,
         bool $isDefinite
     ): void {
-        $queryAst = new Tree;
-        $ll1Parser = (new Ll1ParserFactory)->createParser($source, $queryAst);
+        $queryAst = new Tree();
+        $ll1Parser = (new Ll1ParserFactory())->createParser($source, $queryAst);
         $ll1Parser->run();
 
         $astRootNode = $queryAst->getRootNode();
@@ -53,8 +54,8 @@ class Ll1ParserFactoryTest extends TestCase
         string $source,
         bool $isAddressable
     ): void {
-        $queryAst = new Tree;
-        $ll1Parser = (new Ll1ParserFactory)->createParser($source, $queryAst);
+        $queryAst = new Tree();
+        $ll1Parser = (new Ll1ParserFactory())->createParser($source, $queryAst);
         $ll1Parser->run();
 
         $astRootNode = $queryAst->getRootNode();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime;
@@ -36,8 +37,8 @@ class EvaluatorTest extends TestCase
             $this->createMock(AggregatorCollectionInterface::class)
         );
         $result = $evaluator->logicalOr(
-            new EvaluatedValueList(new IndexMap),
-            new EvaluatedValueList(new IndexMap)
+            new EvaluatedValueList(new IndexMap()),
+            new EvaluatedValueList(new IndexMap())
         );
         self::assertSame([], $result->getResults());
     }
@@ -58,8 +59,8 @@ class EvaluatorTest extends TestCase
             $this->createMock(AggregatorCollectionInterface::class)
         );
         $result = $evaluator->logicalOr(
-            new EvaluatedValueList(new IndexMap, $leftResult),
-            new EvaluatedValueList(new IndexMap, $rightResult)
+            new EvaluatedValueList(new IndexMap(), $leftResult),
+            new EvaluatedValueList(new IndexMap(), $rightResult)
         );
         self::assertSame($expectedValues, $result->getResults());
     }
@@ -93,8 +94,8 @@ class EvaluatorTest extends TestCase
             $this->createMock(AggregatorCollectionInterface::class)
         );
         $result = $evaluator->logicalAnd(
-            new EvaluatedValueList(new IndexMap),
-            new EvaluatedValueList(new IndexMap)
+            new EvaluatedValueList(new IndexMap()),
+            new EvaluatedValueList(new IndexMap())
         );
         self::assertSame([], $result->getResults());
     }
@@ -115,8 +116,8 @@ class EvaluatorTest extends TestCase
             $this->createMock(AggregatorCollectionInterface::class)
         );
         $result = $evaluator->logicalAnd(
-            new EvaluatedValueList(new IndexMap, $leftResult),
-            new EvaluatedValueList(new IndexMap, $rightResult)
+            new EvaluatedValueList(new IndexMap(), $leftResult),
+            new EvaluatedValueList(new IndexMap(), $rightResult)
         );
         self::assertSame($expectedValues, $result->getResults());
     }
@@ -149,7 +150,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $values = new EvaluatedValueList(new IndexMap);
+        $values = new EvaluatedValueList(new IndexMap());
         $result = $evaluator->logicalNot($values);
         self::assertSame([], $result->getResults());
     }
@@ -160,7 +161,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $indexMap = new IndexMap;
+        $indexMap = new IndexMap();
         $values = new EvaluatedValueList($indexMap);
         $result = $evaluator->logicalNot($values);
         self::assertSame($indexMap, $result->getIndexMap());
@@ -177,7 +178,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $values = new EvaluatedValueList(new IndexMap, $value);
+        $values = new EvaluatedValueList(new IndexMap(), $value);
         $result = $evaluator->logicalNot($values);
         self::assertSame($expectedValues, $result->getResults());
     }
@@ -197,8 +198,8 @@ class EvaluatorTest extends TestCase
             $this->createMock(AggregatorCollectionInterface::class)
         );
         $result = $evaluator->isEqual(
-            new ValueList(new IndexMap),
-            new ValueList(new IndexMap)
+            new ValueList(new IndexMap()),
+            new ValueList(new IndexMap())
         );
         self::assertSame([], $result->getResults());
     }
@@ -416,7 +417,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $values = new ValueList(new IndexMap);
+        $values = new ValueList(new IndexMap());
         $result = $evaluator->isRegExp('//', $values);
         self::assertSame([], $result->getResults());
     }
@@ -498,7 +499,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $indexMap = new IndexMap;
+        $indexMap = new IndexMap();
         $values = new ValueList($indexMap);
         $result = $evaluator->isRegExp('//', $values);
         self::assertSame($indexMap, $result->getIndexMap());
@@ -524,7 +525,7 @@ class EvaluatorTest extends TestCase
             $this->createMock(ComparatorCollectionInterface::class),
             $this->createMock(AggregatorCollectionInterface::class)
         );
-        $source = new ValueList(new IndexMap);
+        $source = new ValueList(new IndexMap());
         $result = $evaluator->evaluate(
             $source,
             $this->createMock(ValueListInterface::class)
@@ -583,11 +584,11 @@ class EvaluatorTest extends TestCase
         $values = $this->createMock(LiteralValueListInterface::class);
         $values
             ->method('getIndexMap')
-            ->willReturn(new IndexMap);
+            ->willReturn(new IndexMap());
         $values
             ->method('getLiteral')
             ->willReturn($this->createMock(LiteralValueInterface::class));
-        $source = new ValueList(new IndexMap);
+        $source = new ValueList(new IndexMap());
         $this->expectException(LiteralEvaluationFailedException::class);
         $evaluator->evaluate($source, $values);
     }
@@ -601,11 +602,11 @@ class EvaluatorTest extends TestCase
         $values = $this->createMock(LiteralValueListInterface::class);
         $values
             ->method('getIndexMap')
-            ->willReturn(new IndexMap);
+            ->willReturn(new IndexMap());
         $values
             ->method('getLiteral')
             ->willReturn(new LiteralScalarValue(1));
-        $source = new ValueList(new IndexMap);
+        $source = new ValueList(new IndexMap());
         $this->expectException(LiteralEvaluationFailedException::class);
         $evaluator->evaluate($source, $values);
     }

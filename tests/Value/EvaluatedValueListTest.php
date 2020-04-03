@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
@@ -11,6 +12,7 @@ use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\Exception\ResultNotFoundException;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMap;
+
 use function array_map;
 use function get_class;
 
@@ -22,14 +24,14 @@ class EvaluatedValueListTest extends TestCase
 
     public function testGetIndexMap_ConstructedWithIndexMap_ReturnsSameInstance(): void
     {
-        $indexMap = new IndexMap;
+        $indexMap = new IndexMap();
         $values = new EvaluatedValueList($indexMap);
         self::assertSame($indexMap, $values->getIndexMap());
     }
 
     public function testGetResults_ConstructedWithoutResults_ReturnsEmptyArray(): void
     {
-        $values = new EvaluatedValueList(new IndexMap);
+        $values = new EvaluatedValueList(new IndexMap());
         self::assertSame([], $values->getResults());
     }
 
@@ -42,7 +44,7 @@ class EvaluatedValueListTest extends TestCase
         array $results,
         array $expectedValues
     ): void {
-        $values = new EvaluatedValueList(new IndexMap, ...$results);
+        $values = new EvaluatedValueList(new IndexMap(), ...$results);
         self::assertSame($expectedValues, $values->getResults());
     }
 
@@ -57,7 +59,7 @@ class EvaluatedValueListTest extends TestCase
 
     public function testGetResult_NonExistingIndex_ThrowsException(): void
     {
-        $values = new EvaluatedValueList(new IndexMap);
+        $values = new EvaluatedValueList(new IndexMap());
         $this->expectException(ResultNotFoundException::class);
         $values->getResult(0);
     }
@@ -73,7 +75,7 @@ class EvaluatedValueListTest extends TestCase
         int $index,
         bool $expectedValue
     ): void {
-        $values = new EvaluatedValueList(new IndexMap, ...$results);
+        $values = new EvaluatedValueList(new IndexMap(), ...$results);
         self::assertSame($expectedValue, $values->getResult($index));
     }
 
@@ -87,7 +89,7 @@ class EvaluatedValueListTest extends TestCase
 
     public function testGetValue_NonExistingIndex_ThrowsException(): void
     {
-        $values = new EvaluatedValueList(new IndexMap);
+        $values = new EvaluatedValueList(new IndexMap());
         $this->expectException(ValueNotFoundException::class);
         $values->getValue(0);
     }
@@ -103,7 +105,7 @@ class EvaluatedValueListTest extends TestCase
         int $index,
         array $expectedValue
     ): void {
-        $values = new EvaluatedValueList(new IndexMap, ...$results);
+        $values = new EvaluatedValueList(new IndexMap(), ...$results);
         self::assertSame($expectedValue, $this->exportValue($values->getValue($index)));
     }
 
@@ -131,14 +133,14 @@ class EvaluatedValueListTest extends TestCase
 
     public function testGetValue_CalledTwice_ReturnsSameInstance(): void
     {
-        $values = new EvaluatedValueList(new IndexMap, true);
+        $values = new EvaluatedValueList(new IndexMap(), true);
         $value = $values->getValue(0);
         self::assertSame($value, $values->getValue(0));
     }
 
     public function testGetValues_ConstructedWithoutResults_ReturnsEmptyArray(): void
     {
-        $values = new EvaluatedValueList(new IndexMap);
+        $values = new EvaluatedValueList(new IndexMap());
         self::assertSame([], $values->getValues());
     }
 
@@ -151,7 +153,7 @@ class EvaluatedValueListTest extends TestCase
         array $results,
         array $expectedValues
     ): void {
-        $values = new EvaluatedValueList(new IndexMap, ...$results);
+        $values = new EvaluatedValueList(new IndexMap(), ...$results);
         self::assertSame($expectedValues, $this->exportValues(...$values->getValues()));
     }
 

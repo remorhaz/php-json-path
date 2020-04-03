@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
@@ -16,19 +17,19 @@ final class AggregatorCollection implements AggregatorCollectionInterface
     {
         switch ($name) {
             case self::MIN:
-                return new MinAggregator;
+                return new MinAggregator();
 
             case self::MAX:
-                return new MaxAggregator;
+                return new MaxAggregator();
 
             case self::LENGTH:
-                return new LengthAggregator;
+                return new LengthAggregator();
 
             case self::AVG:
-                return new AvgAggregator;
+                return new AvgAggregator();
 
             case self::STDDEV:
-                return new StdDevAggregator;
+                return new StdDevAggregator();
         }
 
         throw new Exception\AggregateFunctionNotFoundException($name);

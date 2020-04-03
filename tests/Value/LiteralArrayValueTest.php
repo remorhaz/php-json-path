@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
@@ -6,6 +7,7 @@ namespace Remorhaz\JSON\Path\Test\Value;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralArrayValue;
+
 use function iterator_to_array;
 
 /**
@@ -16,7 +18,7 @@ class LiteralArrayValueTest extends TestCase
 
     public function testCreateChildIterator_ConstructedWithoutValues_ReturnsEmptyIterator(): void
     {
-        $array = new LiteralArrayValue;
+        $array = new LiteralArrayValue();
         self::assertCount(0, $array->createChildIterator());
     }
 

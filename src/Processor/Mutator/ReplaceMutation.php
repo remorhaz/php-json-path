@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Mutator;
@@ -17,6 +18,7 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Walker\MutationInterface;
 use Remorhaz\JSON\Data\Walker\ValueWalkerInterface;
+
 use function array_reverse;
 use function count;
 

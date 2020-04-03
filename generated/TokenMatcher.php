@@ -134,7 +134,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -296,7 +297,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -378,7 +380,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -452,7 +455,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -530,7 +534,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -721,7 +726,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -795,7 +801,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -873,7 +880,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -951,7 +959,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1033,7 +1042,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1105,7 +1115,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1183,7 +1194,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1265,7 +1277,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1337,7 +1350,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1415,7 +1429,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1497,7 +1512,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state38;
         }
-        if (0x41 <= $char && $char <= 0x5A ||
+        if (
+            0x41 <= $char && $char <= 0x5A ||
             0x5F == $char ||
             0x62 <= $char && $char <= 0x64 ||
             0x67 <= $char && $char <= 0x6B ||
@@ -1704,7 +1720,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto stateReString3;
         }
-        if (0x00 <= $char && $char <= 0x2E ||
+        if (
+            0x00 <= $char && $char <= 0x2E ||
             0x30 <= $char && $char <= 0x40 ||
             0x5B == $char ||
             0x5D <= $char && $char <= 0x60 ||
@@ -1747,7 +1764,8 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto stateReString3;
         }
-        if (0x00 <= $char && $char <= 0x2E ||
+        if (
+            0x00 <= $char && $char <= 0x2E ||
             0x30 <= $char && $char <= 0x40 ||
             0x5B == $char ||
             0x5D <= $char && $char <= 0x60 ||

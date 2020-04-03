@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value\Exception;
@@ -59,7 +60,7 @@ class OuterIndexNotFoundExceptionTest extends TestCase
 
     public function testGetPrevious_ConstructedWithGivenPrevious_ReturnsSameInstance(): void
     {
-        $previous = new Exception;
+        $previous = new Exception();
         $exception = new OuterIndexNotFoundException(
             1,
             $this->createMock(IndexMapInterface::class),

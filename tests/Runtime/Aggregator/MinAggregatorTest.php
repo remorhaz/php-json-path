@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
@@ -17,7 +18,7 @@ class MinAggregatorTest extends TestCase
 
     public function testTryAggregate_ArrayWithZeroElement_ReturnsNull(): void
     {
-        $aggregator = new MinAggregator;
+        $aggregator = new MinAggregator();
         $value = $this->createMock(ArrayValueInterface::class);
         $value
             ->method('createChildIterator')
@@ -27,7 +28,7 @@ class MinAggregatorTest extends TestCase
 
     public function testTryAggregate_ArrayWithSingleElement_ReturnsSameElement(): void
     {
-        $aggregator = new MinAggregator;
+        $aggregator = new MinAggregator();
         $element = $this->createMock(ScalarValueInterface::class);
         $element
             ->method('getData')
@@ -41,7 +42,7 @@ class MinAggregatorTest extends TestCase
 
     public function testTryAggregate_ArrayWithTwoElements_ReturnsGreaterElement(): void
     {
-        $aggregator = new MinAggregator;
+        $aggregator = new MinAggregator();
         $lesserElement = $this->createMock(ScalarValueInterface::class);
         $lesserElement
             ->method('getData')

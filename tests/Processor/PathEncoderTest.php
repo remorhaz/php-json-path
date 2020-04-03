@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor;
@@ -25,7 +26,7 @@ class PathEncoderTest extends TestCase
         string $expectedValue
     ): void {
         $path = new Path(...$pathElements);
-        $actualValue = (new PathEncoder)->encodePath($path);
+        $actualValue = (new PathEncoder())->encodePath($path);
         self::assertSame($expectedValue, $actualValue);
     }
 

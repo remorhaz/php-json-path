@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
@@ -10,6 +11,7 @@ use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Runtime\Matcher\SortedChildMatcherInterface;
 
 use function ksort;
+
 use const SORT_ASC;
 use const SORT_NUMERIC;
 

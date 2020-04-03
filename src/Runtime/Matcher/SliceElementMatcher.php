@@ -1,13 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
+use Remorhaz\JSON\Data\Value\NodeValueInterface;
+
 use function is_int;
 use function iterator_count;
 use function max;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 final class SliceElementMatcher implements SortedChildMatcherInterface
 {

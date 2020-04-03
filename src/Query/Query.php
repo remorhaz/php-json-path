@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
-use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
-use Throwable;
-use function call_user_func;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
+use Throwable;
+
+use function call_user_func;
 
 final class Query implements QueryInterface
 {
@@ -31,7 +33,7 @@ final class Query implements QueryInterface
                 ->getCallback();
 
             $args = [
-                (new NodeValueListBuilder)
+                (new NodeValueListBuilder())
                     ->addValue($rootNode, 0)
                     ->build(),
                 $runtime->getValueListFetcher(),

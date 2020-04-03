@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
@@ -14,14 +15,14 @@ class EvaluatedValueListBuilderTest extends TestCase
 
     public function testBuild_NoResultsAdded_ReturnsListWithEmptyIndexMap(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $values = $builder->build();
         self::assertSame([], $values->getIndexMap()->getOuterIndexes());
     }
 
     public function testBuild_NoResultsAdded_ReturnsEmptyList(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $values = $builder->build();
         self::assertSame([], $values->getValues());
     }
@@ -33,7 +34,7 @@ class EvaluatedValueListBuilderTest extends TestCase
      */
     public function testBuild_ResultAdded_ReturnsListWithSameResult(bool $result, array $expectedValues): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $builder->addResult($result, 1);
         $values = $builder->build();
         self::assertSame($expectedValues, $values->getResults());
@@ -49,7 +50,7 @@ class EvaluatedValueListBuilderTest extends TestCase
 
     public function testBuild_ValuesAdded_ReturnsListWithSameValueInstances(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $builder->addResult(true, 1);
         $builder->addResult(false, 1);
         $values = $builder->build();
@@ -58,7 +59,7 @@ class EvaluatedValueListBuilderTest extends TestCase
 
     public function testBuild_ValueAddedWithGivenOuterIndex_ReturnsListWithSameOuterIndexInMap(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $builder->addResult(true, 1);
         $values = $builder->build();
         self::assertSame([1], $values->getIndexMap()->getOuterIndexes());
@@ -66,7 +67,7 @@ class EvaluatedValueListBuilderTest extends TestCase
 
     public function testBuild_ValuesAddedWithGivenOuterIndex_ReturnsListWithSameOuterIndexesInMap(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         $builder->addResult(true, 1);
         $builder->addResult(false, 2);
         $values = $builder->build();
@@ -75,7 +76,7 @@ class EvaluatedValueListBuilderTest extends TestCase
 
     public function testAddResult_Constructed_ReturnsSelf(): void
     {
-        $builder = new EvaluatedValueListBuilder;
+        $builder = new EvaluatedValueListBuilder();
         self::assertSame($builder, $builder->addResult(true, 1));
     }
 }

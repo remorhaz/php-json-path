@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
@@ -17,8 +18,8 @@ final class QueryFactory implements QueryFactoryInterface
     public static function create(): QueryFactoryInterface
     {
         return new QueryFactory(
-            new Parser(new Ll1ParserFactory),
-            new AstTranslator(new CallbackBuilder)
+            new Parser(new Ll1ParserFactory()),
+            new AstTranslator(new CallbackBuilder())
         );
     }
 

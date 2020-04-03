@@ -1,21 +1,23 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime;
 
 use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
+use Remorhaz\JSON\Path\Value\EvaluatedValueList;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder;
+use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
+use Remorhaz\JSON\Path\Value\IndexMapInterface;
+use Remorhaz\JSON\Path\Value\LiteralValueListInterface;
+use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Path\Value\ValueListBuilder;
+use Remorhaz\JSON\Path\Value\ValueListInterface;
+
 use function array_fill;
 use function count;
 use function is_bool;
 use function preg_match;
-use Remorhaz\JSON\Path\Value\EvaluatedValueList;
-use Remorhaz\JSON\Path\Value\EvaluatedValueListInterface;
-use Remorhaz\JSON\Path\Value\IndexMapInterface;
-use Remorhaz\JSON\Path\Value\ValueListBuilder;
-use Remorhaz\JSON\Path\Value\LiteralValueListInterface;
-use Remorhaz\JSON\Data\Value\ScalarValueInterface;
-use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 final class Evaluator implements EvaluatorInterface
 {
@@ -99,7 +101,7 @@ final class Evaluator implements EvaluatorInterface
         ValueListInterface $rightValues,
         ComparatorInterface $comparator
     ): EvaluatedValueListInterface {
-        $valueListBuilder = new EvaluatedValueListBuilder;
+        $valueListBuilder = new EvaluatedValueListBuilder();
         foreach ($leftValues->getIndexMap()->getOuterIndexes() as $leftInnerIndex => $leftOuterIndex) {
             foreach ($rightValues->getIndexMap()->getOuterIndexes() as $rightInnerIndex => $rightOuterIndex) {
                 if (!isset($leftOuterIndex, $rightOuterIndex)) {
@@ -202,7 +204,7 @@ final class Evaluator implements EvaluatorInterface
     public function aggregate(string $functionName, ValueListInterface $values): ValueListInterface
     {
         $aggregator = $this->aggregators->byName($functionName);
-        $valuesBuilder = new ValueListBuilder;
+        $valuesBuilder = new ValueListBuilder();
         foreach ($values->getValues() as $innerIndex => $value) {
             $aggregatedValue = $aggregator->tryAggregate($value);
             if (isset($aggregatedValue)) {

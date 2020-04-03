@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -20,7 +21,7 @@ class CallbackBuilderTest extends TestCase
 
     public function testGetCallbackCode_CallbackIsNotSet_ThrowsException(): void
     {
-        $callbackBuilder = new CallbackBuilder;
+        $callbackBuilder = new CallbackBuilder();
 
         $this->expectException(QueryCallbackCodeNotFoundException::class);
         $callbackBuilder->getCallbackCode();
@@ -28,7 +29,7 @@ class CallbackBuilderTest extends TestCase
 
     public function testGetCapabilities_QueryCapabilitiesNotSet_ThrowsException(): void
     {
-        $callbackBuilder = new CallbackBuilder;
+        $callbackBuilder = new CallbackBuilder();
 
         $this->expectException(CapabilitiesNotFoundException::class);
         $callbackBuilder->getCapabilities();
@@ -44,7 +45,7 @@ class CallbackBuilderTest extends TestCase
         bool $isDefinite,
         bool $expectedValue
     ): void {
-        $callbackBuilder = new CallbackBuilder;
+        $callbackBuilder = new CallbackBuilder();
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');
@@ -71,7 +72,7 @@ class CallbackBuilderTest extends TestCase
 
     public function testOnBeginProduction_QueryAstNodeWithChildren_PushesReversedChildrenInStack(): void
     {
-        $callbackBuilder = new CallbackBuilder;
+        $callbackBuilder = new CallbackBuilder();
 
         $node = new Node(1, 'a');
         $firstChild = new Node(2, 'b');
@@ -92,7 +93,7 @@ class CallbackBuilderTest extends TestCase
      */
     public function testOnFinishProduction_SetOutputWithChildWithoutReference_ThrowsException(): void
     {
-        $callbackBuilder = new CallbackBuilder;
+        $callbackBuilder = new CallbackBuilder();
         $callbackBuilder->onStart($this->createMock(Node::class));
 
         $inputNode = new Node(1, 'get_input');

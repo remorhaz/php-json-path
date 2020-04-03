@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
@@ -9,6 +10,7 @@ use Remorhaz\JSON\Data\Value\DecodedJson\NodeArrayValue;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactoryInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Runtime\Matcher\SliceElementMatcher;
+
 use function array_fill;
 
 /**

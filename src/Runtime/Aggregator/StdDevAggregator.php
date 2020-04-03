@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
-use function array_map;
-use function array_sum;
-use function count;
 use Remorhaz\JSON\Path\Value\LiteralScalarValue;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
+
+use function array_map;
+use function array_sum;
+use function count;
 use function sqrt;
 
 final class StdDevAggregator extends NumericAggregator

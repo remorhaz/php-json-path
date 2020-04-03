@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
-use function in_array;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+
+use function in_array;
 
 final class StrictPropertyMatcher implements SortedChildMatcherInterface
 {

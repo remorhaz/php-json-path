@@ -1,17 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
 
-use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
-use function array_map;
-use function count;
 use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
 use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;
+use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
+
+use function array_map;
+use function count;
 
 final class ResultFactory implements ResultFactoryInterface
 {
@@ -68,7 +70,7 @@ final class ResultFactory implements ResultFactoryInterface
 
         return isset($path)
             ? new ExistingSelectOnePathResult($this->pathsEncoder, $path)
-            : new NonExistingSelectOnePathResult;
+            : new NonExistingSelectOnePathResult();
     }
 
     private function findSingleValue(ValueListInterface $values): ?ValueInterface
@@ -88,6 +90,6 @@ final class ResultFactory implements ResultFactoryInterface
     {
         return isset($value)
             ? new ExistingValueResult($this->jsonEncoder, $this->jsonDecoder, $value)
-            : new NonExistingValueResult;
+            : new NonExistingValueResult();
     }
 }

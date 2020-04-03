@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result\Exception;
@@ -48,7 +49,7 @@ class MoreThanOneValueInListExceptionTest extends TestCase
 
     public function testGetPrevious_ConstructedWithPrevious_ReturnsSameInstance(): void
     {
-        $previous = new Exception;
+        $previous = new Exception();
         $exception = new MoreThanOneValueInListException(
             $this->createMock(ValueListInterface::class),
             $previous

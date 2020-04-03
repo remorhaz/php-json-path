@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query\Exception;
@@ -45,7 +46,7 @@ class QueryExecutionFailedExceptionTest extends TestCase
 
     public function testGetPrevious_ConstructedWithPrevious_ReturnsSameInstance(): void
     {
-        $previous = new Exception;
+        $previous = new Exception();
         $exception = new QueryExecutionFailedException('a', 'b', $previous);
         self::assertSame($previous, $exception->getPrevious());
     }

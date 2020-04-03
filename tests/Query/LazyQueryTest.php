@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -63,7 +64,7 @@ class LazyQueryTest extends TestCase
 
     public function testInvoke_ParserReturnsAst_PassesSameAstToTranslator(): void
     {
-        $tree = new Tree;
+        $tree = new Tree();
         $parser = $this->createMock(ParserInterface::class);
         $parser
             ->method('buildQueryAst')
@@ -100,7 +101,7 @@ class LazyQueryTest extends TestCase
 
     public function testGetCapabilities_ParserReturnsAst_PassesSameAstToTranslator(): void
     {
-        $tree = new Tree;
+        $tree = new Tree();
         $parser = $this->createMock(ParserInterface::class);
         $parser
             ->method('buildQueryAst')

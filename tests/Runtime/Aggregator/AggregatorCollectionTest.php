@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
@@ -25,7 +26,7 @@ class AggregatorCollectionTest extends TestCase
      */
     public function testByName_KnownName_ReturnsMatchingInstance(string $name, string $expectedClass): void
     {
-        $aggregators = new AggregatorCollection;
+        $aggregators = new AggregatorCollection();
         self::assertInstanceOf($expectedClass, $aggregators->byName($name));
     }
 
@@ -42,7 +43,7 @@ class AggregatorCollectionTest extends TestCase
 
     public function testByName_UnknownName_ThrowsException(): void
     {
-        $aggregators = new AggregatorCollection;
+        $aggregators = new AggregatorCollection();
         $this->expectException(AggregateFunctionNotFoundException::class);
         $aggregators->byName('a');
     }

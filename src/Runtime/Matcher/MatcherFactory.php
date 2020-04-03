@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Runtime\Matcher;
@@ -8,7 +9,7 @@ final class MatcherFactory implements MatcherFactoryInterface
 
     public function matchAnyChild(): ChildMatcherInterface
     {
-        return new AnyChildMatcher;
+        return new AnyChildMatcher();
     }
 
     public function matchPropertyStrictly(string ...$nameList): ChildMatcherInterface

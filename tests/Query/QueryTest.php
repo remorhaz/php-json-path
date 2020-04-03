@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -17,6 +18,7 @@ use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
 use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
+
 use function array_shift;
 
 /**
@@ -97,7 +99,7 @@ class QueryTest extends TestCase
     public function testInvoke_CallbackThrowsException_ThrowsException(): void
     {
         $callback = function () {
-            throw new Exception;
+            throw new Exception();
         };
         $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
@@ -19,13 +20,13 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchAnyChild_Constructed_ReturnsAnyChildMatcherInstance(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         self::assertInstanceOf(AnyChildMatcher::class, $factory->matchAnyChild());
     }
 
     public function testMatchPropertyStrictly_PropertyList_NonExistingPropertyNotMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchPropertyStrictly('a')
             ->match(
@@ -38,7 +39,7 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchPropertyStrictly_PropertyList_ExistingPropertyMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchPropertyStrictly('a')
             ->match(
@@ -51,7 +52,7 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchElementStrictly_IndexList_NonExistingIndexNotMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchElementStrictly(1)
             ->match(
@@ -64,7 +65,7 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchElementStrictly_IndexList_ExistingIndexMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchElementStrictly(1)
             ->match(
@@ -77,7 +78,7 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchElementSlice_Slice_NonMatchingIndexNotMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchElementSlice(0, 2, 2)
             ->match(
@@ -94,7 +95,7 @@ class MatcherFactoryTest extends TestCase
 
     public function testMatchElementSlice_Slice_MatchingIndexMatches(): void
     {
-        $factory = new MatcherFactory;
+        $factory = new MatcherFactory();
         $actualValue = $factory
             ->matchElementSlice(0, 2, 2)
             ->match(

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
@@ -79,7 +80,7 @@ class QueryFactoryTest extends TestCase
 
     public function testCreateQuery_ConstructedWithParser_OnResultInvocationParserPassesAstToTranslator(): void
     {
-        $ast = new Tree;
+        $ast = new Tree();
         $parser = $this->createMock(ParserInterface::class);
         $parser
             ->method('buildQueryAst')

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Result;
@@ -15,11 +16,11 @@ final class NonExistingSelectOnePathResult implements SelectOnePathResultInterfa
 
     public function get(): PathInterface
     {
-        throw new Exception\SelectedValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException();
     }
 
     public function encode(): string
     {
-        throw new Exception\SelectedValueNotFoundException;
+        throw new Exception\SelectedValueNotFoundException();
     }
 }

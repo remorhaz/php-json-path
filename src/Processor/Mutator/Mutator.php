@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Mutator;
@@ -27,7 +28,7 @@ final class Mutator implements MutatorInterface
         $modifier = new DeleteMutation(...$paths);
         $events =  $this
             ->valueWalker
-            ->createMutableEventIterator($rootNode, new Path, $modifier);
+            ->createMutableEventIterator($rootNode, new Path(), $modifier);
 
         return $this
             ->eventDecoder
@@ -42,7 +43,7 @@ final class Mutator implements MutatorInterface
         $modifier = new ReplaceMutation($newNode, ...$paths);
         $events =  $this
             ->valueWalker
-            ->createMutableEventIterator($rootNode, new Path, $modifier);
+            ->createMutableEventIterator($rootNode, new Path(), $modifier);
 
         return $this
             ->eventDecoder

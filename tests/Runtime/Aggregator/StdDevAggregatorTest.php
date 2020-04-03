@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
@@ -18,7 +19,7 @@ class StdDevAggregatorTest extends TestCase
 
     public function testTryAggregate_EmptyArray_ReturnsNull(): void
     {
-        $aggregator = new StdDevAggregator;
+        $aggregator = new StdDevAggregator();
         $value = $this->createMock(ArrayValueInterface::class);
         $value
             ->method('createChildIterator')
@@ -28,7 +29,7 @@ class StdDevAggregatorTest extends TestCase
 
     public function testTryAggregate_ArrayWithSingleElement_ReturnsNull(): void
     {
-        $aggregator = new StdDevAggregator;
+        $aggregator = new StdDevAggregator();
         $element = $this->createMock(ScalarValueInterface::class);
         $element
             ->method('getData')
@@ -42,7 +43,7 @@ class StdDevAggregatorTest extends TestCase
 
     public function testTryAggregate_ArrayWithThreeElements_ReturnsMatchingValue(): void
     {
-        $aggregator = new StdDevAggregator;
+        $aggregator = new StdDevAggregator();
         $firstElement = $this->createMock(ScalarValueInterface::class);
         $firstElement
             ->method('getData')

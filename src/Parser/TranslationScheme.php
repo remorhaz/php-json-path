@@ -1,14 +1,18 @@
-<?php /** @noinspection PhpDuplicateSwitchCaseBodyInspection */
+<?php
+
+/** @noinspection PhpDuplicateSwitchCaseBodyInspection */
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Parser;
 
-use function array_merge;
 use Remorhaz\JSON\Path\Query\AstBuilderInterface;
 use Remorhaz\UniLex\Grammar\SDD\TranslationSchemeInterface;
 use Remorhaz\UniLex\Lexer\Token;
 use Remorhaz\UniLex\Parser\Production;
 use Remorhaz\UniLex\Parser\Symbol;
+
+use function array_merge;
 
 class TranslationScheme implements TranslationSchemeInterface
 {

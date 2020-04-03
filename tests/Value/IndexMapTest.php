@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
@@ -97,7 +98,7 @@ class IndexMapTest extends TestCase
 
     public function testGetOuterIndex_InnerIndexNotExists_ThrowsException(): void
     {
-        $map = new IndexMap;
+        $map = new IndexMap();
         $this->expectException(OuterIndexNotFoundException::class);
         $map->getOuterIndex(0);
     }
@@ -110,7 +111,7 @@ class IndexMapTest extends TestCase
 
     public function testOuterIndexExists_OuterIndexNotExists_ReturnsTrue(): void
     {
-        $map = new IndexMap;
+        $map = new IndexMap();
         self::assertFalse($map->outerIndexExists(1));
     }
 

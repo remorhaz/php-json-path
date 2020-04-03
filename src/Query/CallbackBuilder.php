@@ -1,14 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
-use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
-use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactoryInterface;
-use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
-use Remorhaz\JSON\Path\Value\NodeValueListInterface;
-use function array_map;
-use function array_reverse;
 use PhpParser\BuilderFactory;
 use PhpParser\Node as PhpAstNode;
 use PhpParser\Node\Arg;
@@ -18,11 +13,18 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\PrettyPrinter\Standard;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
+use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
+use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactoryInterface;
+use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
+use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\UniLex\AST\AbstractTranslatorListener;
 use Remorhaz\UniLex\AST\Node as QueryAstNode;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
+
+use function array_map;
+use function array_reverse;
 use function is_callable;
 
 final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
@@ -62,7 +64,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     public function __construct()
     {
-        $this->php = new BuilderFactory;
+        $this->php = new BuilderFactory();
     }
 
     public function getCallback(): callable
@@ -84,7 +86,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             return $this->callbackCode;
         }
 
-        throw new Exception\QueryCallbackCodeNotFoundException;
+        throw new Exception\QueryCallbackCodeNotFoundException();
     }
 
     public function getCapabilities(): CapabilitiesInterface
@@ -93,7 +95,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             return $this->capabilities;
         }
 
-        throw new Exception\CapabilitiesNotFoundException;
+        throw new Exception\CapabilitiesNotFoundException();
     }
 
     public function onStart(QueryAstNode $node): void
@@ -138,7 +140,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             ->getNode();
         $stmts = array_map(
             function (PhpAstNode $stmt): PhpAstNode {
-                return $stmt instanceof Expr ? new Expression($stmt): $stmt;
+                return $stmt instanceof Expr ? new Expression($stmt) : $stmt;
             },
             $this->stmts
         );
@@ -158,7 +160,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         );
         $return = new Return_($closure);
 
-        $this->callbackCode = (new Standard)->prettyPrint([$return]);
+        $this->callbackCode = (new Standard())->prettyPrint([$return]);
     }
 
     public function onBeginProduction(QueryAstNode $node, PushInterface $stack): void
