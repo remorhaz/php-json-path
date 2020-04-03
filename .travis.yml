@@ -16,7 +16,7 @@ install:
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
   - if [ "$XDEBUG" == "YES" ]; then vendor/bin/phpunit --coverage-clover=build/logs/clover.xml --coverage-xml=build/logs/coverage-xml --log-junit=build/logs/junit.xml; else vendor/bin/phpunit; fi
-  - if [ "$XDEBUG" == "YES" ]; then vendor/bin/infection --coverage=build/logs --threads=4  --no-progress; fi
+  - if [ "$XDEBUG" == "YES" ]; then vendor/bin/infection --coverage=build/logs --threads=4  --no-progress --skip-initial-tests; fi
 
 after_success:
   - if [ "$XDEBUG" == "YES" ]; then bash <(curl -s https://codecov.io/bash -s "build/logs"); fi
