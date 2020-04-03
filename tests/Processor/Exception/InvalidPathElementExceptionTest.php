@@ -16,7 +16,7 @@ class InvalidPathElementExceptionTest extends TestCase
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidPathElementException(1);
-        self::assertRegExp('/^Invalid path element type: /', $exception->getMessage());
+        self::assertMatchesRegularExpression('/^Invalid path element type: /', $exception->getMessage());
     }
 
     public function testGetPathElement_ConstructedWithPathElement_ReturnsSameValue(): void

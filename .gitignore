@@ -1,4 +1,6 @@
 /build/
 /vendor
 /composer.lock
+/phpunit.xml
+/infection.json
 .phpunit.result.cache
