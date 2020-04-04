@@ -45,7 +45,7 @@
     "build": [
       "vendor/bin/unilex build-token-matcher --desc=\"JSONPath token matcher.\" spec/LexerSpec.php generated/TokenMatcher.php",
       "vendor/bin/unilex build-lookup-table --type=LL_1 --symbol=Remorhaz\\\\JSON\\\\Path\\\\Parser\\\\SymbolType --token=Remorhaz\\\\JSON\\\\Path\\\\Parser\\\\TokenType --desc=\"JSONPath parser LL(1) lookup table.\" spec/GrammarSpec.php generated/LookupTable.php",
-      "vendor/bin/phpcbf -p generated/; if [ ?$ -eq 1 ]; then exit 0; fi"
+      "vendor/bin/phpcbf -p generated/; if [ $? -eq 1 ]; then exit 0; fi"
     ],
     "test-cs": [
       "vendor/bin/phpcs -sp"
