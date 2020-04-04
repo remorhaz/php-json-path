@@ -11,7 +11,7 @@ install:
   - mkdir -p ./build/logs
   - composer self-update
   - composer install --prefer-source --no-interaction
-  - vendor/bin/phing
+  - composer build
 
 script:
   - vendor/bin/phpcs -sp --report-junit=build/logs/phpcs.xml
