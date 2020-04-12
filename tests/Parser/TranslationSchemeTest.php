@@ -90,9 +90,21 @@ class TranslationSchemeTest extends TestCase
                 ['true'],
                 true,
             ],
+            'Dot-notation non-ASCII property' => [
+                (object) ['日本' => true],
+                '$.日本',
+                ['true'],
+                true,
+            ],
             'Dot-notation property as string' => [
                 (object) ['a' => 1],
                 '$."a"',
+                ['1'],
+                true,
+            ],
+            'Dot-notation non-ASCII property as string' => [
+                (object) ['日本' => 1],
+                '$."日本"',
                 ['1'],
                 true,
             ],
@@ -141,6 +153,12 @@ class TranslationSchemeTest extends TestCase
             'Bracket-notation numeric property' => [
                 (object) ['1' => true],
                 '$["1"]',
+                ['true'],
+                true,
+            ],
+            'Bracket-notation non-ASCII property' => [
+                (object) ['日本' => true],
+                '$["日本"]',
                 ['true'],
                 true,
             ],

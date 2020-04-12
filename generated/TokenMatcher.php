@@ -156,15 +156,7 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -176,17 +168,17 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state17;
         }
-        if (0x40 == $char) {
-            $context->getBuffer()->nextSymbol();
-            // @
-            $context->setNewToken(TokenType::ROOT_RELATIVE);
-
-            return true;
-        }
         if (0x24 == $char) {
             $context->getBuffer()->nextSymbol();
             // \$
             $context->setNewToken(TokenType::ROOT_ABSOLUTE);
+
+            return true;
+        }
+        if (0x40 == $char) {
+            $context->getBuffer()->nextSymbol();
+            // @
+            $context->setNewToken(TokenType::ROOT_RELATIVE);
 
             return true;
         }
@@ -335,23 +327,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -360,7 +348,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state44;
         }
         finish14:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -420,19 +408,11 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -440,8 +420,12 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
+        if (0x40 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
         finish15:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -497,23 +481,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -522,7 +502,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state41;
         }
         finish16:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -578,23 +558,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -603,7 +579,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state37;
         }
         finish17:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -777,23 +753,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -802,7 +774,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state38;
         }
         finish37:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -858,23 +830,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -883,7 +851,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state39;
         }
         finish38:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -939,23 +907,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -964,7 +928,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state40;
         }
         finish39:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -1024,23 +988,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1099,23 +1059,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1124,7 +1080,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state42;
         }
         finish41:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -1180,23 +1136,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1205,7 +1157,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state43;
         }
         finish42:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -1265,23 +1217,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1340,23 +1288,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1365,7 +1309,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state45;
         }
         finish44:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -1421,23 +1365,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1446,7 +1386,7 @@ class TokenMatcher extends TokenMatcherTemplate
             goto state46;
         }
         finish45:
-        // [a-zA-Z_][a-zA-Z_\$\-@0-9]*()
+        // [\p{ID_Start}_][\p{ID_Continue}\$\-@]*()
         $context
             ->setNewToken(TokenType::NAME)
             ->setTokenAttribute('text', $context->getSymbolString());
@@ -1506,23 +1446,19 @@ class TokenMatcher extends TokenMatcherTemplate
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (
-            0x41 <= $char && $char <= 0x5A ||
-            0x5F == $char ||
-            0x62 <= $char && $char <= 0x64 ||
-            0x67 <= $char && $char <= 0x6B ||
-            0x6D == $char ||
-            0x6F <= $char && $char <= 0x71 ||
-            0x76 <= $char && $char <= 0x7A
-        ) {
+        if ($this->isModeDefaultSymbol21($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
-        if (0x40 == $char) {
+        if ($this->isModeDefaultSymbol22($char)) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
         if (0x24 == $char) {
+            $context->getBuffer()->nextSymbol();
+            goto state15;
+        }
+        if (0x40 == $char) {
             $context->getBuffer()->nextSymbol();
             goto state15;
         }
@@ -1790,5 +1726,1095 @@ class TokenMatcher extends TokenMatcherTemplate
 
         error:
         return false;
+    }
+
+    private function isModeDefaultSymbol21(int $char): bool
+    {
+        return
+            0x41 <= $char && $char <= 0x5A ||
+            0x5F == $char ||
+            0x62 <= $char && $char <= 0x64 ||
+            0x67 <= $char && $char <= 0x6B ||
+            0x6D == $char ||
+            0x6F <= $char && $char <= 0x71 ||
+            0x76 <= $char && $char <= 0x7A ||
+            0xAA == $char ||
+            0xB5 == $char ||
+            0xBA == $char ||
+            0xC0 <= $char && $char <= 0xD6 ||
+            0xD8 <= $char && $char <= 0xF6 ||
+            0xF8 <= $char && $char <= 0x02C1 ||
+            0x02C6 <= $char && $char <= 0x02D1 ||
+            0x02E0 <= $char && $char <= 0x02E4 ||
+            0x02EC == $char ||
+            0x02EE == $char ||
+            0x0370 <= $char && $char <= 0x0374 ||
+            0x0376 == $char ||
+            0x0377 == $char ||
+            0x037A <= $char && $char <= 0x037D ||
+            0x037F == $char ||
+            0x0386 == $char ||
+            0x0388 <= $char && $char <= 0x038A ||
+            0x038C == $char ||
+            0x038E <= $char && $char <= 0x03A1 ||
+            0x03A3 <= $char && $char <= 0x03F5 ||
+            0x03F7 <= $char && $char <= 0x0481 ||
+            0x048A <= $char && $char <= 0x052F ||
+            0x0531 <= $char && $char <= 0x0556 ||
+            0x0559 == $char ||
+            0x0560 <= $char && $char <= 0x0588 ||
+            0x05D0 <= $char && $char <= 0x05EA ||
+            0x05EF <= $char && $char <= 0x05F2 ||
+            0x0620 <= $char && $char <= 0x064A ||
+            0x066E == $char ||
+            0x066F == $char ||
+            0x0671 <= $char && $char <= 0x06D3 ||
+            0x06D5 == $char ||
+            0x06E5 == $char ||
+            0x06E6 == $char ||
+            0x06EE == $char ||
+            0x06EF == $char ||
+            0x06FA <= $char && $char <= 0x06FC ||
+            0x06FF == $char ||
+            0x0710 == $char ||
+            0x0712 <= $char && $char <= 0x072F ||
+            0x074D <= $char && $char <= 0x07A5 ||
+            0x07B1 == $char ||
+            0x07CA <= $char && $char <= 0x07EA ||
+            0x07F4 == $char ||
+            0x07F5 == $char ||
+            0x07FA == $char ||
+            0x0800 <= $char && $char <= 0x0815 ||
+            0x081A == $char ||
+            0x0824 == $char ||
+            0x0828 == $char ||
+            0x0840 <= $char && $char <= 0x0858 ||
+            0x0860 <= $char && $char <= 0x086A ||
+            0x08A0 <= $char && $char <= 0x08B4 ||
+            0x08B6 <= $char && $char <= 0x08C7 ||
+            0x0904 <= $char && $char <= 0x0939 ||
+            0x093D == $char ||
+            0x0950 == $char ||
+            0x0958 <= $char && $char <= 0x0961 ||
+            0x0971 <= $char && $char <= 0x0980 ||
+            0x0985 <= $char && $char <= 0x098C ||
+            0x098F == $char ||
+            0x0990 == $char ||
+            0x0993 <= $char && $char <= 0x09A8 ||
+            0x09AA <= $char && $char <= 0x09B0 ||
+            0x09B2 == $char ||
+            0x09B6 <= $char && $char <= 0x09B9 ||
+            0x09BD == $char ||
+            0x09CE == $char ||
+            0x09DC == $char ||
+            0x09DD == $char ||
+            0x09DF <= $char && $char <= 0x09E1 ||
+            0x09F0 == $char ||
+            0x09F1 == $char ||
+            0x09FC == $char ||
+            0x0A05 <= $char && $char <= 0x0A0A ||
+            0x0A0F == $char ||
+            0x0A10 == $char ||
+            0x0A13 <= $char && $char <= 0x0A28 ||
+            0x0A2A <= $char && $char <= 0x0A30 ||
+            0x0A32 == $char ||
+            0x0A33 == $char ||
+            0x0A35 == $char ||
+            0x0A36 == $char ||
+            0x0A38 == $char ||
+            0x0A39 == $char ||
+            0x0A59 <= $char && $char <= 0x0A5C ||
+            0x0A5E == $char ||
+            0x0A72 <= $char && $char <= 0x0A74 ||
+            0x0A85 <= $char && $char <= 0x0A8D ||
+            0x0A8F <= $char && $char <= 0x0A91 ||
+            0x0A93 <= $char && $char <= 0x0AA8 ||
+            0x0AAA <= $char && $char <= 0x0AB0 ||
+            0x0AB2 == $char ||
+            0x0AB3 == $char ||
+            0x0AB5 <= $char && $char <= 0x0AB9 ||
+            0x0ABD == $char ||
+            0x0AD0 == $char ||
+            0x0AE0 == $char ||
+            0x0AE1 == $char ||
+            0x0AF9 == $char ||
+            0x0B05 <= $char && $char <= 0x0B0C ||
+            0x0B0F == $char ||
+            0x0B10 == $char ||
+            0x0B13 <= $char && $char <= 0x0B28 ||
+            0x0B2A <= $char && $char <= 0x0B30 ||
+            0x0B32 == $char ||
+            0x0B33 == $char ||
+            0x0B35 <= $char && $char <= 0x0B39 ||
+            0x0B3D == $char ||
+            0x0B5C == $char ||
+            0x0B5D == $char ||
+            0x0B5F <= $char && $char <= 0x0B61 ||
+            0x0B71 == $char ||
+            0x0B83 == $char ||
+            0x0B85 <= $char && $char <= 0x0B8A ||
+            0x0B8E <= $char && $char <= 0x0B90 ||
+            0x0B92 <= $char && $char <= 0x0B95 ||
+            0x0B99 == $char ||
+            0x0B9A == $char ||
+            0x0B9C == $char ||
+            0x0B9E == $char ||
+            0x0B9F == $char ||
+            0x0BA3 == $char ||
+            0x0BA4 == $char ||
+            0x0BA8 <= $char && $char <= 0x0BAA ||
+            0x0BAE <= $char && $char <= 0x0BB9 ||
+            0x0BD0 == $char ||
+            0x0C05 <= $char && $char <= 0x0C0C ||
+            0x0C0E <= $char && $char <= 0x0C10 ||
+            0x0C12 <= $char && $char <= 0x0C28 ||
+            0x0C2A <= $char && $char <= 0x0C39 ||
+            0x0C3D == $char ||
+            0x0C58 <= $char && $char <= 0x0C5A ||
+            0x0C60 == $char ||
+            0x0C61 == $char ||
+            0x0C80 == $char ||
+            0x0C85 <= $char && $char <= 0x0C8C ||
+            0x0C8E <= $char && $char <= 0x0C90 ||
+            0x0C92 <= $char && $char <= 0x0CA8 ||
+            0x0CAA <= $char && $char <= 0x0CB3 ||
+            0x0CB5 <= $char && $char <= 0x0CB9 ||
+            0x0CBD == $char ||
+            0x0CDE == $char ||
+            0x0CE0 == $char ||
+            0x0CE1 == $char ||
+            0x0CF1 == $char ||
+            0x0CF2 == $char ||
+            0x0D04 <= $char && $char <= 0x0D0C ||
+            0x0D0E <= $char && $char <= 0x0D10 ||
+            0x0D12 <= $char && $char <= 0x0D3A ||
+            0x0D3D == $char ||
+            0x0D4E == $char ||
+            0x0D54 <= $char && $char <= 0x0D56 ||
+            0x0D5F <= $char && $char <= 0x0D61 ||
+            0x0D7A <= $char && $char <= 0x0D7F ||
+            0x0D85 <= $char && $char <= 0x0D96 ||
+            0x0D9A <= $char && $char <= 0x0DB1 ||
+            0x0DB3 <= $char && $char <= 0x0DBB ||
+            0x0DBD == $char ||
+            0x0DC0 <= $char && $char <= 0x0DC6 ||
+            0x0E01 <= $char && $char <= 0x0E30 ||
+            0x0E32 == $char ||
+            0x0E33 == $char ||
+            0x0E40 <= $char && $char <= 0x0E46 ||
+            0x0E81 == $char ||
+            0x0E82 == $char ||
+            0x0E84 == $char ||
+            0x0E86 <= $char && $char <= 0x0E8A ||
+            0x0E8C <= $char && $char <= 0x0EA3 ||
+            0x0EA5 == $char ||
+            0x0EA7 <= $char && $char <= 0x0EB0 ||
+            0x0EB2 == $char ||
+            0x0EB3 == $char ||
+            0x0EBD == $char ||
+            0x0EC0 <= $char && $char <= 0x0EC4 ||
+            0x0EC6 == $char ||
+            0x0EDC <= $char && $char <= 0x0EDF ||
+            0x0F00 == $char ||
+            0x0F40 <= $char && $char <= 0x0F47 ||
+            0x0F49 <= $char && $char <= 0x0F6C ||
+            0x0F88 <= $char && $char <= 0x0F8C ||
+            0x1000 <= $char && $char <= 0x102A ||
+            0x103F == $char ||
+            0x1050 <= $char && $char <= 0x1055 ||
+            0x105A <= $char && $char <= 0x105D ||
+            0x1061 == $char ||
+            0x1065 == $char ||
+            0x1066 == $char ||
+            0x106E <= $char && $char <= 0x1070 ||
+            0x1075 <= $char && $char <= 0x1081 ||
+            0x108E == $char ||
+            0x10A0 <= $char && $char <= 0x10C5 ||
+            0x10C7 == $char ||
+            0x10CD == $char ||
+            0x10D0 <= $char && $char <= 0x10FA ||
+            0x10FC <= $char && $char <= 0x1248 ||
+            0x124A <= $char && $char <= 0x124D ||
+            0x1250 <= $char && $char <= 0x1256 ||
+            0x1258 == $char ||
+            0x125A <= $char && $char <= 0x125D ||
+            0x1260 <= $char && $char <= 0x1288 ||
+            0x128A <= $char && $char <= 0x128D ||
+            0x1290 <= $char && $char <= 0x12B0 ||
+            0x12B2 <= $char && $char <= 0x12B5 ||
+            0x12B8 <= $char && $char <= 0x12BE ||
+            0x12C0 == $char ||
+            0x12C2 <= $char && $char <= 0x12C5 ||
+            0x12C8 <= $char && $char <= 0x12D6 ||
+            0x12D8 <= $char && $char <= 0x1310 ||
+            0x1312 <= $char && $char <= 0x1315 ||
+            0x1318 <= $char && $char <= 0x135A ||
+            0x1380 <= $char && $char <= 0x138F ||
+            0x13A0 <= $char && $char <= 0x13F5 ||
+            0x13F8 <= $char && $char <= 0x13FD ||
+            0x1401 <= $char && $char <= 0x166C ||
+            0x166F <= $char && $char <= 0x167F ||
+            0x1681 <= $char && $char <= 0x169A ||
+            0x16A0 <= $char && $char <= 0x16EA ||
+            0x16EE <= $char && $char <= 0x16F8 ||
+            0x1700 <= $char && $char <= 0x170C ||
+            0x170E <= $char && $char <= 0x1711 ||
+            0x1720 <= $char && $char <= 0x1731 ||
+            0x1740 <= $char && $char <= 0x1751 ||
+            0x1760 <= $char && $char <= 0x176C ||
+            0x176E <= $char && $char <= 0x1770 ||
+            0x1780 <= $char && $char <= 0x17B3 ||
+            0x17D7 == $char ||
+            0x17DC == $char ||
+            0x1820 <= $char && $char <= 0x1878 ||
+            0x1880 <= $char && $char <= 0x18A8 ||
+            0x18AA == $char ||
+            0x18B0 <= $char && $char <= 0x18F5 ||
+            0x1900 <= $char && $char <= 0x191E ||
+            0x1950 <= $char && $char <= 0x196D ||
+            0x1970 <= $char && $char <= 0x1974 ||
+            0x1980 <= $char && $char <= 0x19AB ||
+            0x19B0 <= $char && $char <= 0x19C9 ||
+            0x1A00 <= $char && $char <= 0x1A16 ||
+            0x1A20 <= $char && $char <= 0x1A54 ||
+            0x1AA7 == $char ||
+            0x1B05 <= $char && $char <= 0x1B33 ||
+            0x1B45 <= $char && $char <= 0x1B4B ||
+            0x1B83 <= $char && $char <= 0x1BA0 ||
+            0x1BAE == $char ||
+            0x1BAF == $char ||
+            0x1BBA <= $char && $char <= 0x1BE5 ||
+            0x1C00 <= $char && $char <= 0x1C23 ||
+            0x1C4D <= $char && $char <= 0x1C4F ||
+            0x1C5A <= $char && $char <= 0x1C7D ||
+            0x1C80 <= $char && $char <= 0x1C88 ||
+            0x1C90 <= $char && $char <= 0x1CBA ||
+            0x1CBD <= $char && $char <= 0x1CBF ||
+            0x1CE9 <= $char && $char <= 0x1CEC ||
+            0x1CEE <= $char && $char <= 0x1CF3 ||
+            0x1CF5 == $char ||
+            0x1CF6 == $char ||
+            0x1CFA == $char ||
+            0x1D00 <= $char && $char <= 0x1DBF ||
+            0x1E00 <= $char && $char <= 0x1F15 ||
+            0x1F18 <= $char && $char <= 0x1F1D ||
+            0x1F20 <= $char && $char <= 0x1F45 ||
+            0x1F48 <= $char && $char <= 0x1F4D ||
+            0x1F50 <= $char && $char <= 0x1F57 ||
+            0x1F59 == $char ||
+            0x1F5B == $char ||
+            0x1F5D == $char ||
+            0x1F5F <= $char && $char <= 0x1F7D ||
+            0x1F80 <= $char && $char <= 0x1FB4 ||
+            0x1FB6 <= $char && $char <= 0x1FBC ||
+            0x1FBE == $char ||
+            0x1FC2 <= $char && $char <= 0x1FC4 ||
+            0x1FC6 <= $char && $char <= 0x1FCC ||
+            0x1FD0 <= $char && $char <= 0x1FD3 ||
+            0x1FD6 <= $char && $char <= 0x1FDB ||
+            0x1FE0 <= $char && $char <= 0x1FEC ||
+            0x1FF2 <= $char && $char <= 0x1FF4 ||
+            0x1FF6 <= $char && $char <= 0x1FFC ||
+            0x2071 == $char ||
+            0x207F == $char ||
+            0x2090 <= $char && $char <= 0x209C ||
+            0x2102 == $char ||
+            0x2107 == $char ||
+            0x210A <= $char && $char <= 0x2113 ||
+            0x2115 == $char ||
+            0x2118 <= $char && $char <= 0x211D ||
+            0x2124 == $char ||
+            0x2126 == $char ||
+            0x2128 == $char ||
+            0x212A <= $char && $char <= 0x2139 ||
+            0x213C <= $char && $char <= 0x213F ||
+            0x2145 <= $char && $char <= 0x2149 ||
+            0x214E == $char ||
+            0x2160 <= $char && $char <= 0x2188 ||
+            0x2C00 <= $char && $char <= 0x2C2E ||
+            0x2C30 <= $char && $char <= 0x2C5E ||
+            0x2C60 <= $char && $char <= 0x2CE4 ||
+            0x2CEB <= $char && $char <= 0x2CEE ||
+            0x2CF2 == $char ||
+            0x2CF3 == $char ||
+            0x2D00 <= $char && $char <= 0x2D25 ||
+            0x2D27 == $char ||
+            0x2D2D == $char ||
+            0x2D30 <= $char && $char <= 0x2D67 ||
+            0x2D6F == $char ||
+            0x2D80 <= $char && $char <= 0x2D96 ||
+            0x2DA0 <= $char && $char <= 0x2DA6 ||
+            0x2DA8 <= $char && $char <= 0x2DAE ||
+            0x2DB0 <= $char && $char <= 0x2DB6 ||
+            0x2DB8 <= $char && $char <= 0x2DBE ||
+            0x2DC0 <= $char && $char <= 0x2DC6 ||
+            0x2DC8 <= $char && $char <= 0x2DCE ||
+            0x2DD0 <= $char && $char <= 0x2DD6 ||
+            0x2DD8 <= $char && $char <= 0x2DDE ||
+            0x3005 <= $char && $char <= 0x3007 ||
+            0x3021 <= $char && $char <= 0x3029 ||
+            0x3031 <= $char && $char <= 0x3035 ||
+            0x3038 <= $char && $char <= 0x303C ||
+            0x3041 <= $char && $char <= 0x3096 ||
+            0x309B <= $char && $char <= 0x309F ||
+            0x30A1 <= $char && $char <= 0x30FA ||
+            0x30FC <= $char && $char <= 0x30FF ||
+            0x3105 <= $char && $char <= 0x312F ||
+            0x3131 <= $char && $char <= 0x318E ||
+            0x31A0 <= $char && $char <= 0x31BF ||
+            0x31F0 <= $char && $char <= 0x31FF ||
+            0x3400 <= $char && $char <= 0x4DBF ||
+            0x4E00 <= $char && $char <= 0x9FFC ||
+            0xA000 <= $char && $char <= 0xA48C ||
+            0xA4D0 <= $char && $char <= 0xA4FD ||
+            0xA500 <= $char && $char <= 0xA60C ||
+            0xA610 <= $char && $char <= 0xA61F ||
+            0xA62A == $char ||
+            0xA62B == $char ||
+            0xA640 <= $char && $char <= 0xA66E ||
+            0xA67F <= $char && $char <= 0xA69D ||
+            0xA6A0 <= $char && $char <= 0xA6EF ||
+            0xA717 <= $char && $char <= 0xA71F ||
+            0xA722 <= $char && $char <= 0xA788 ||
+            0xA78B <= $char && $char <= 0xA7BF ||
+            0xA7C2 <= $char && $char <= 0xA7CA ||
+            0xA7F5 <= $char && $char <= 0xA801 ||
+            0xA803 <= $char && $char <= 0xA805 ||
+            0xA807 <= $char && $char <= 0xA80A ||
+            0xA80C <= $char && $char <= 0xA822 ||
+            0xA840 <= $char && $char <= 0xA873 ||
+            0xA882 <= $char && $char <= 0xA8B3 ||
+            0xA8F2 <= $char && $char <= 0xA8F7 ||
+            0xA8FB == $char ||
+            0xA8FD == $char ||
+            0xA8FE == $char ||
+            0xA90A <= $char && $char <= 0xA925 ||
+            0xA930 <= $char && $char <= 0xA946 ||
+            0xA960 <= $char && $char <= 0xA97C ||
+            0xA984 <= $char && $char <= 0xA9B2 ||
+            0xA9CF == $char ||
+            0xA9E0 <= $char && $char <= 0xA9E4 ||
+            0xA9E6 <= $char && $char <= 0xA9EF ||
+            0xA9FA <= $char && $char <= 0xA9FE ||
+            0xAA00 <= $char && $char <= 0xAA28 ||
+            0xAA40 <= $char && $char <= 0xAA42 ||
+            0xAA44 <= $char && $char <= 0xAA4B ||
+            0xAA60 <= $char && $char <= 0xAA76 ||
+            0xAA7A == $char ||
+            0xAA7E <= $char && $char <= 0xAAAF ||
+            0xAAB1 == $char ||
+            0xAAB5 == $char ||
+            0xAAB6 == $char ||
+            0xAAB9 <= $char && $char <= 0xAABD ||
+            0xAAC0 == $char ||
+            0xAAC2 == $char ||
+            0xAADB <= $char && $char <= 0xAADD ||
+            0xAAE0 <= $char && $char <= 0xAAEA ||
+            0xAAF2 <= $char && $char <= 0xAAF4 ||
+            0xAB01 <= $char && $char <= 0xAB06 ||
+            0xAB09 <= $char && $char <= 0xAB0E ||
+            0xAB11 <= $char && $char <= 0xAB16 ||
+            0xAB20 <= $char && $char <= 0xAB26 ||
+            0xAB28 <= $char && $char <= 0xAB2E ||
+            0xAB30 <= $char && $char <= 0xAB5A ||
+            0xAB5C <= $char && $char <= 0xAB69 ||
+            0xAB70 <= $char && $char <= 0xABE2 ||
+            0xAC00 <= $char && $char <= 0xD7A3 ||
+            0xD7B0 <= $char && $char <= 0xD7C6 ||
+            0xD7CB <= $char && $char <= 0xD7FB ||
+            0xF900 <= $char && $char <= 0xFA6D ||
+            0xFA70 <= $char && $char <= 0xFAD9 ||
+            0xFB00 <= $char && $char <= 0xFB06 ||
+            0xFB13 <= $char && $char <= 0xFB17 ||
+            0xFB1D == $char ||
+            0xFB1F <= $char && $char <= 0xFB28 ||
+            0xFB2A <= $char && $char <= 0xFB36 ||
+            0xFB38 <= $char && $char <= 0xFB3C ||
+            0xFB3E == $char ||
+            0xFB40 == $char ||
+            0xFB41 == $char ||
+            0xFB43 == $char ||
+            0xFB44 == $char ||
+            0xFB46 <= $char && $char <= 0xFBB1 ||
+            0xFBD3 <= $char && $char <= 0xFD3D ||
+            0xFD50 <= $char && $char <= 0xFD8F ||
+            0xFD92 <= $char && $char <= 0xFDC7 ||
+            0xFDF0 <= $char && $char <= 0xFDFB ||
+            0xFE70 <= $char && $char <= 0xFE74 ||
+            0xFE76 <= $char && $char <= 0xFEFC ||
+            0xFF21 <= $char && $char <= 0xFF3A ||
+            0xFF41 <= $char && $char <= 0xFF5A ||
+            0xFF66 <= $char && $char <= 0xFFBE ||
+            0xFFC2 <= $char && $char <= 0xFFC7 ||
+            0xFFCA <= $char && $char <= 0xFFCF ||
+            0xFFD2 <= $char && $char <= 0xFFD7 ||
+            0xFFDA <= $char && $char <= 0xFFDC ||
+            0x010000 <= $char && $char <= 0x01000B ||
+            0x01000D <= $char && $char <= 0x010026 ||
+            0x010028 <= $char && $char <= 0x01003A ||
+            0x01003C == $char ||
+            0x01003D == $char ||
+            0x01003F <= $char && $char <= 0x01004D ||
+            0x010050 <= $char && $char <= 0x01005D ||
+            0x010080 <= $char && $char <= 0x0100FA ||
+            0x010140 <= $char && $char <= 0x010174 ||
+            0x010280 <= $char && $char <= 0x01029C ||
+            0x0102A0 <= $char && $char <= 0x0102D0 ||
+            0x010300 <= $char && $char <= 0x01031F ||
+            0x01032D <= $char && $char <= 0x01034A ||
+            0x010350 <= $char && $char <= 0x010375 ||
+            0x010380 <= $char && $char <= 0x01039D ||
+            0x0103A0 <= $char && $char <= 0x0103C3 ||
+            0x0103C8 <= $char && $char <= 0x0103CF ||
+            0x0103D1 <= $char && $char <= 0x0103D5 ||
+            0x010400 <= $char && $char <= 0x01049D ||
+            0x0104B0 <= $char && $char <= 0x0104D3 ||
+            0x0104D8 <= $char && $char <= 0x0104FB ||
+            0x010500 <= $char && $char <= 0x010527 ||
+            0x010530 <= $char && $char <= 0x010563 ||
+            0x010600 <= $char && $char <= 0x010736 ||
+            0x010740 <= $char && $char <= 0x010755 ||
+            0x010760 <= $char && $char <= 0x010767 ||
+            0x010800 <= $char && $char <= 0x010805 ||
+            0x010808 == $char ||
+            0x01080A <= $char && $char <= 0x010835 ||
+            0x010837 == $char ||
+            0x010838 == $char ||
+            0x01083C == $char ||
+            0x01083F <= $char && $char <= 0x010855 ||
+            0x010860 <= $char && $char <= 0x010876 ||
+            0x010880 <= $char && $char <= 0x01089E ||
+            0x0108E0 <= $char && $char <= 0x0108F2 ||
+            0x0108F4 == $char ||
+            0x0108F5 == $char ||
+            0x010900 <= $char && $char <= 0x010915 ||
+            0x010920 <= $char && $char <= 0x010939 ||
+            0x010980 <= $char && $char <= 0x0109B7 ||
+            0x0109BE == $char ||
+            0x0109BF == $char ||
+            0x010A00 == $char ||
+            0x010A10 <= $char && $char <= 0x010A13 ||
+            0x010A15 <= $char && $char <= 0x010A17 ||
+            0x010A19 <= $char && $char <= 0x010A35 ||
+            0x010A60 <= $char && $char <= 0x010A7C ||
+            0x010A80 <= $char && $char <= 0x010A9C ||
+            0x010AC0 <= $char && $char <= 0x010AC7 ||
+            0x010AC9 <= $char && $char <= 0x010AE4 ||
+            0x010B00 <= $char && $char <= 0x010B35 ||
+            0x010B40 <= $char && $char <= 0x010B55 ||
+            0x010B60 <= $char && $char <= 0x010B72 ||
+            0x010B80 <= $char && $char <= 0x010B91 ||
+            0x010C00 <= $char && $char <= 0x010C48 ||
+            0x010C80 <= $char && $char <= 0x010CB2 ||
+            0x010CC0 <= $char && $char <= 0x010CF2 ||
+            0x010D00 <= $char && $char <= 0x010D23 ||
+            0x010E80 <= $char && $char <= 0x010EA9 ||
+            0x010EB0 == $char ||
+            0x010EB1 == $char ||
+            0x010F00 <= $char && $char <= 0x010F1C ||
+            0x010F27 == $char ||
+            0x010F30 <= $char && $char <= 0x010F45 ||
+            0x010FB0 <= $char && $char <= 0x010FC4 ||
+            0x010FE0 <= $char && $char <= 0x010FF6 ||
+            0x011003 <= $char && $char <= 0x011037 ||
+            0x011083 <= $char && $char <= 0x0110AF ||
+            0x0110D0 <= $char && $char <= 0x0110E8 ||
+            0x011103 <= $char && $char <= 0x011126 ||
+            0x011144 == $char ||
+            0x011147 == $char ||
+            0x011150 <= $char && $char <= 0x011172 ||
+            0x011176 == $char ||
+            0x011183 <= $char && $char <= 0x0111B2 ||
+            0x0111C1 <= $char && $char <= 0x0111C4 ||
+            0x0111DA == $char ||
+            0x0111DC == $char ||
+            0x011200 <= $char && $char <= 0x011211 ||
+            0x011213 <= $char && $char <= 0x01122B ||
+            0x011280 <= $char && $char <= 0x011286 ||
+            0x011288 == $char ||
+            0x01128A <= $char && $char <= 0x01128D ||
+            0x01128F <= $char && $char <= 0x01129D ||
+            0x01129F <= $char && $char <= 0x0112A8 ||
+            0x0112B0 <= $char && $char <= 0x0112DE ||
+            0x011305 <= $char && $char <= 0x01130C ||
+            0x01130F == $char ||
+            0x011310 == $char ||
+            0x011313 <= $char && $char <= 0x011328 ||
+            0x01132A <= $char && $char <= 0x011330 ||
+            0x011332 == $char ||
+            0x011333 == $char ||
+            0x011335 <= $char && $char <= 0x011339 ||
+            0x01133D == $char ||
+            0x011350 == $char ||
+            0x01135D <= $char && $char <= 0x011361 ||
+            0x011400 <= $char && $char <= 0x011434 ||
+            0x011447 <= $char && $char <= 0x01144A ||
+            0x01145F <= $char && $char <= 0x011461 ||
+            0x011480 <= $char && $char <= 0x0114AF ||
+            0x0114C4 == $char ||
+            0x0114C5 == $char ||
+            0x0114C7 == $char ||
+            0x011580 <= $char && $char <= 0x0115AE ||
+            0x0115D8 <= $char && $char <= 0x0115DB ||
+            0x011600 <= $char && $char <= 0x01162F ||
+            0x011644 == $char ||
+            0x011680 <= $char && $char <= 0x0116AA ||
+            0x0116B8 == $char ||
+            0x011700 <= $char && $char <= 0x01171A ||
+            0x011800 <= $char && $char <= 0x01182B ||
+            0x0118A0 <= $char && $char <= 0x0118DF ||
+            0x0118FF <= $char && $char <= 0x011906 ||
+            0x011909 == $char ||
+            0x01190C <= $char && $char <= 0x011913 ||
+            0x011915 == $char ||
+            0x011916 == $char ||
+            0x011918 <= $char && $char <= 0x01192F ||
+            0x01193F == $char ||
+            0x011941 == $char ||
+            0x0119A0 <= $char && $char <= 0x0119A7 ||
+            0x0119AA <= $char && $char <= 0x0119D0 ||
+            0x0119E1 == $char ||
+            0x0119E3 == $char ||
+            0x011A00 == $char ||
+            0x011A0B <= $char && $char <= 0x011A32 ||
+            0x011A3A == $char ||
+            0x011A50 == $char ||
+            0x011A5C <= $char && $char <= 0x011A89 ||
+            0x011A9D == $char ||
+            0x011AC0 <= $char && $char <= 0x011AF8 ||
+            0x011C00 <= $char && $char <= 0x011C08 ||
+            0x011C0A <= $char && $char <= 0x011C2E ||
+            0x011C40 == $char ||
+            0x011C72 <= $char && $char <= 0x011C8F ||
+            0x011D00 <= $char && $char <= 0x011D06 ||
+            0x011D08 == $char ||
+            0x011D09 == $char ||
+            0x011D0B <= $char && $char <= 0x011D30 ||
+            0x011D46 == $char ||
+            0x011D60 <= $char && $char <= 0x011D65 ||
+            0x011D67 == $char ||
+            0x011D68 == $char ||
+            0x011D6A <= $char && $char <= 0x011D89 ||
+            0x011D98 == $char ||
+            0x011EE0 <= $char && $char <= 0x011EF2 ||
+            0x011FB0 == $char ||
+            0x012000 <= $char && $char <= 0x012399 ||
+            0x012400 <= $char && $char <= 0x01246E ||
+            0x012480 <= $char && $char <= 0x012543 ||
+            0x013000 <= $char && $char <= 0x01342E ||
+            0x014400 <= $char && $char <= 0x014646 ||
+            0x016800 <= $char && $char <= 0x016A38 ||
+            0x016A40 <= $char && $char <= 0x016A5E ||
+            0x016AD0 <= $char && $char <= 0x016AED ||
+            0x016B00 <= $char && $char <= 0x016B2F ||
+            0x016B40 <= $char && $char <= 0x016B43 ||
+            0x016B63 <= $char && $char <= 0x016B77 ||
+            0x016B7D <= $char && $char <= 0x016B8F ||
+            0x016E40 <= $char && $char <= 0x016E7F ||
+            0x016F00 <= $char && $char <= 0x016F4A ||
+            0x016F50 == $char ||
+            0x016F93 <= $char && $char <= 0x016F9F ||
+            0x016FE0 == $char ||
+            0x016FE1 == $char ||
+            0x016FE3 == $char ||
+            0x017000 <= $char && $char <= 0x0187F7 ||
+            0x018800 <= $char && $char <= 0x018CD5 ||
+            0x018D00 <= $char && $char <= 0x018D08 ||
+            0x01B000 <= $char && $char <= 0x01B11E ||
+            0x01B150 <= $char && $char <= 0x01B152 ||
+            0x01B164 <= $char && $char <= 0x01B167 ||
+            0x01B170 <= $char && $char <= 0x01B2FB ||
+            0x01BC00 <= $char && $char <= 0x01BC6A ||
+            0x01BC70 <= $char && $char <= 0x01BC7C ||
+            0x01BC80 <= $char && $char <= 0x01BC88 ||
+            0x01BC90 <= $char && $char <= 0x01BC99 ||
+            0x01D400 <= $char && $char <= 0x01D454 ||
+            0x01D456 <= $char && $char <= 0x01D49C ||
+            0x01D49E == $char ||
+            0x01D49F == $char ||
+            0x01D4A2 == $char ||
+            0x01D4A5 == $char ||
+            0x01D4A6 == $char ||
+            0x01D4A9 <= $char && $char <= 0x01D4AC ||
+            0x01D4AE <= $char && $char <= 0x01D4B9 ||
+            0x01D4BB == $char ||
+            0x01D4BD <= $char && $char <= 0x01D4C3 ||
+            0x01D4C5 <= $char && $char <= 0x01D505 ||
+            0x01D507 <= $char && $char <= 0x01D50A ||
+            0x01D50D <= $char && $char <= 0x01D514 ||
+            0x01D516 <= $char && $char <= 0x01D51C ||
+            0x01D51E <= $char && $char <= 0x01D539 ||
+            0x01D53B <= $char && $char <= 0x01D53E ||
+            0x01D540 <= $char && $char <= 0x01D544 ||
+            0x01D546 == $char ||
+            0x01D54A <= $char && $char <= 0x01D550 ||
+            0x01D552 <= $char && $char <= 0x01D6A5 ||
+            0x01D6A8 <= $char && $char <= 0x01D6C0 ||
+            0x01D6C2 <= $char && $char <= 0x01D6DA ||
+            0x01D6DC <= $char && $char <= 0x01D6FA ||
+            0x01D6FC <= $char && $char <= 0x01D714 ||
+            0x01D716 <= $char && $char <= 0x01D734 ||
+            0x01D736 <= $char && $char <= 0x01D74E ||
+            0x01D750 <= $char && $char <= 0x01D76E ||
+            0x01D770 <= $char && $char <= 0x01D788 ||
+            0x01D78A <= $char && $char <= 0x01D7A8 ||
+            0x01D7AA <= $char && $char <= 0x01D7C2 ||
+            0x01D7C4 <= $char && $char <= 0x01D7CB ||
+            0x01E100 <= $char && $char <= 0x01E12C ||
+            0x01E137 <= $char && $char <= 0x01E13D ||
+            0x01E14E == $char ||
+            0x01E2C0 <= $char && $char <= 0x01E2EB ||
+            0x01E800 <= $char && $char <= 0x01E8C4 ||
+            0x01E900 <= $char && $char <= 0x01E943 ||
+            0x01E94B == $char ||
+            0x01EE00 <= $char && $char <= 0x01EE03 ||
+            0x01EE05 <= $char && $char <= 0x01EE1F ||
+            0x01EE21 == $char ||
+            0x01EE22 == $char ||
+            0x01EE24 == $char ||
+            0x01EE27 == $char ||
+            0x01EE29 <= $char && $char <= 0x01EE32 ||
+            0x01EE34 <= $char && $char <= 0x01EE37 ||
+            0x01EE39 == $char ||
+            0x01EE3B == $char ||
+            0x01EE42 == $char ||
+            0x01EE47 == $char ||
+            0x01EE49 == $char ||
+            0x01EE4B == $char ||
+            0x01EE4D <= $char && $char <= 0x01EE4F ||
+            0x01EE51 == $char ||
+            0x01EE52 == $char ||
+            0x01EE54 == $char ||
+            0x01EE57 == $char ||
+            0x01EE59 == $char ||
+            0x01EE5B == $char ||
+            0x01EE5D == $char ||
+            0x01EE5F == $char ||
+            0x01EE61 == $char ||
+            0x01EE62 == $char ||
+            0x01EE64 == $char ||
+            0x01EE67 <= $char && $char <= 0x01EE6A ||
+            0x01EE6C <= $char && $char <= 0x01EE72 ||
+            0x01EE74 <= $char && $char <= 0x01EE77 ||
+            0x01EE79 <= $char && $char <= 0x01EE7C ||
+            0x01EE7E == $char ||
+            0x01EE80 <= $char && $char <= 0x01EE89 ||
+            0x01EE8B <= $char && $char <= 0x01EE9B ||
+            0x01EEA1 <= $char && $char <= 0x01EEA3 ||
+            0x01EEA5 <= $char && $char <= 0x01EEA9 ||
+            0x01EEAB <= $char && $char <= 0x01EEBB ||
+            0x020000 <= $char && $char <= 0x02A6DD ||
+            0x02A700 <= $char && $char <= 0x02B734 ||
+            0x02B740 <= $char && $char <= 0x02B81D ||
+            0x02B820 <= $char && $char <= 0x02CEA1 ||
+            0x02CEB0 <= $char && $char <= 0x02EBE0 ||
+            0x02F800 <= $char && $char <= 0x02FA1D ||
+            0x030000 <= $char && $char <= 0x03134A;
+    }
+
+    private function isModeDefaultSymbol22(int $char): bool
+    {
+        return
+            0xB7 == $char ||
+            0x0300 <= $char && $char <= 0x036F ||
+            0x0387 == $char ||
+            0x0483 <= $char && $char <= 0x0487 ||
+            0x0591 <= $char && $char <= 0x05BD ||
+            0x05BF == $char ||
+            0x05C1 == $char ||
+            0x05C2 == $char ||
+            0x05C4 == $char ||
+            0x05C5 == $char ||
+            0x05C7 == $char ||
+            0x0610 <= $char && $char <= 0x061A ||
+            0x064B <= $char && $char <= 0x0669 ||
+            0x0670 == $char ||
+            0x06D6 <= $char && $char <= 0x06DC ||
+            0x06DF <= $char && $char <= 0x06E4 ||
+            0x06E7 == $char ||
+            0x06E8 == $char ||
+            0x06EA <= $char && $char <= 0x06ED ||
+            0x06F0 <= $char && $char <= 0x06F9 ||
+            0x0711 == $char ||
+            0x0730 <= $char && $char <= 0x074A ||
+            0x07A6 <= $char && $char <= 0x07B0 ||
+            0x07C0 <= $char && $char <= 0x07C9 ||
+            0x07EB <= $char && $char <= 0x07F3 ||
+            0x07FD == $char ||
+            0x0816 <= $char && $char <= 0x0819 ||
+            0x081B <= $char && $char <= 0x0823 ||
+            0x0825 <= $char && $char <= 0x0827 ||
+            0x0829 <= $char && $char <= 0x082D ||
+            0x0859 <= $char && $char <= 0x085B ||
+            0x08D3 <= $char && $char <= 0x08E1 ||
+            0x08E3 <= $char && $char <= 0x0903 ||
+            0x093A <= $char && $char <= 0x093C ||
+            0x093E <= $char && $char <= 0x094F ||
+            0x0951 <= $char && $char <= 0x0957 ||
+            0x0962 == $char ||
+            0x0963 == $char ||
+            0x0966 <= $char && $char <= 0x096F ||
+            0x0981 <= $char && $char <= 0x0983 ||
+            0x09BC == $char ||
+            0x09BE <= $char && $char <= 0x09C4 ||
+            0x09C7 == $char ||
+            0x09C8 == $char ||
+            0x09CB <= $char && $char <= 0x09CD ||
+            0x09D7 == $char ||
+            0x09E2 == $char ||
+            0x09E3 == $char ||
+            0x09E6 <= $char && $char <= 0x09EF ||
+            0x09FE == $char ||
+            0x0A01 <= $char && $char <= 0x0A03 ||
+            0x0A3C == $char ||
+            0x0A3E <= $char && $char <= 0x0A42 ||
+            0x0A47 == $char ||
+            0x0A48 == $char ||
+            0x0A4B <= $char && $char <= 0x0A4D ||
+            0x0A51 == $char ||
+            0x0A66 <= $char && $char <= 0x0A71 ||
+            0x0A75 == $char ||
+            0x0A81 <= $char && $char <= 0x0A83 ||
+            0x0ABC == $char ||
+            0x0ABE <= $char && $char <= 0x0AC5 ||
+            0x0AC7 <= $char && $char <= 0x0AC9 ||
+            0x0ACB <= $char && $char <= 0x0ACD ||
+            0x0AE2 == $char ||
+            0x0AE3 == $char ||
+            0x0AE6 <= $char && $char <= 0x0AEF ||
+            0x0AFA <= $char && $char <= 0x0AFF ||
+            0x0B01 <= $char && $char <= 0x0B03 ||
+            0x0B3C == $char ||
+            0x0B3E <= $char && $char <= 0x0B44 ||
+            0x0B47 == $char ||
+            0x0B48 == $char ||
+            0x0B4B <= $char && $char <= 0x0B4D ||
+            0x0B55 <= $char && $char <= 0x0B57 ||
+            0x0B62 == $char ||
+            0x0B63 == $char ||
+            0x0B66 <= $char && $char <= 0x0B6F ||
+            0x0B82 == $char ||
+            0x0BBE <= $char && $char <= 0x0BC2 ||
+            0x0BC6 <= $char && $char <= 0x0BC8 ||
+            0x0BCA <= $char && $char <= 0x0BCD ||
+            0x0BD7 == $char ||
+            0x0BE6 <= $char && $char <= 0x0BEF ||
+            0x0C00 <= $char && $char <= 0x0C04 ||
+            0x0C3E <= $char && $char <= 0x0C44 ||
+            0x0C46 <= $char && $char <= 0x0C48 ||
+            0x0C4A <= $char && $char <= 0x0C4D ||
+            0x0C55 == $char ||
+            0x0C56 == $char ||
+            0x0C62 == $char ||
+            0x0C63 == $char ||
+            0x0C66 <= $char && $char <= 0x0C6F ||
+            0x0C81 <= $char && $char <= 0x0C83 ||
+            0x0CBC == $char ||
+            0x0CBE <= $char && $char <= 0x0CC4 ||
+            0x0CC6 <= $char && $char <= 0x0CC8 ||
+            0x0CCA <= $char && $char <= 0x0CCD ||
+            0x0CD5 == $char ||
+            0x0CD6 == $char ||
+            0x0CE2 == $char ||
+            0x0CE3 == $char ||
+            0x0CE6 <= $char && $char <= 0x0CEF ||
+            0x0D00 <= $char && $char <= 0x0D03 ||
+            0x0D3B == $char ||
+            0x0D3C == $char ||
+            0x0D3E <= $char && $char <= 0x0D44 ||
+            0x0D46 <= $char && $char <= 0x0D48 ||
+            0x0D4A <= $char && $char <= 0x0D4D ||
+            0x0D57 == $char ||
+            0x0D62 == $char ||
+            0x0D63 == $char ||
+            0x0D66 <= $char && $char <= 0x0D6F ||
+            0x0D81 <= $char && $char <= 0x0D83 ||
+            0x0DCA == $char ||
+            0x0DCF <= $char && $char <= 0x0DD4 ||
+            0x0DD6 == $char ||
+            0x0DD8 <= $char && $char <= 0x0DDF ||
+            0x0DE6 <= $char && $char <= 0x0DEF ||
+            0x0DF2 == $char ||
+            0x0DF3 == $char ||
+            0x0E31 == $char ||
+            0x0E34 <= $char && $char <= 0x0E3A ||
+            0x0E47 <= $char && $char <= 0x0E4E ||
+            0x0E50 <= $char && $char <= 0x0E59 ||
+            0x0EB1 == $char ||
+            0x0EB4 <= $char && $char <= 0x0EBC ||
+            0x0EC8 <= $char && $char <= 0x0ECD ||
+            0x0ED0 <= $char && $char <= 0x0ED9 ||
+            0x0F18 == $char ||
+            0x0F19 == $char ||
+            0x0F20 <= $char && $char <= 0x0F29 ||
+            0x0F35 == $char ||
+            0x0F37 == $char ||
+            0x0F39 == $char ||
+            0x0F3E == $char ||
+            0x0F3F == $char ||
+            0x0F71 <= $char && $char <= 0x0F84 ||
+            0x0F86 == $char ||
+            0x0F87 == $char ||
+            0x0F8D <= $char && $char <= 0x0F97 ||
+            0x0F99 <= $char && $char <= 0x0FBC ||
+            0x0FC6 == $char ||
+            0x102B <= $char && $char <= 0x103E ||
+            0x1040 <= $char && $char <= 0x1049 ||
+            0x1056 <= $char && $char <= 0x1059 ||
+            0x105E <= $char && $char <= 0x1060 ||
+            0x1062 <= $char && $char <= 0x1064 ||
+            0x1067 <= $char && $char <= 0x106D ||
+            0x1071 <= $char && $char <= 0x1074 ||
+            0x1082 <= $char && $char <= 0x108D ||
+            0x108F <= $char && $char <= 0x109D ||
+            0x135D <= $char && $char <= 0x135F ||
+            0x1369 <= $char && $char <= 0x1371 ||
+            0x1712 <= $char && $char <= 0x1714 ||
+            0x1732 <= $char && $char <= 0x1734 ||
+            0x1752 == $char ||
+            0x1753 == $char ||
+            0x1772 == $char ||
+            0x1773 == $char ||
+            0x17B4 <= $char && $char <= 0x17D3 ||
+            0x17DD == $char ||
+            0x17E0 <= $char && $char <= 0x17E9 ||
+            0x180B <= $char && $char <= 0x180D ||
+            0x1810 <= $char && $char <= 0x1819 ||
+            0x18A9 == $char ||
+            0x1920 <= $char && $char <= 0x192B ||
+            0x1930 <= $char && $char <= 0x193B ||
+            0x1946 <= $char && $char <= 0x194F ||
+            0x19D0 <= $char && $char <= 0x19DA ||
+            0x1A17 <= $char && $char <= 0x1A1B ||
+            0x1A55 <= $char && $char <= 0x1A5E ||
+            0x1A60 <= $char && $char <= 0x1A7C ||
+            0x1A7F <= $char && $char <= 0x1A89 ||
+            0x1A90 <= $char && $char <= 0x1A99 ||
+            0x1AB0 <= $char && $char <= 0x1ABD ||
+            0x1ABF == $char ||
+            0x1AC0 == $char ||
+            0x1B00 <= $char && $char <= 0x1B04 ||
+            0x1B34 <= $char && $char <= 0x1B44 ||
+            0x1B50 <= $char && $char <= 0x1B59 ||
+            0x1B6B <= $char && $char <= 0x1B73 ||
+            0x1B80 <= $char && $char <= 0x1B82 ||
+            0x1BA1 <= $char && $char <= 0x1BAD ||
+            0x1BB0 <= $char && $char <= 0x1BB9 ||
+            0x1BE6 <= $char && $char <= 0x1BF3 ||
+            0x1C24 <= $char && $char <= 0x1C37 ||
+            0x1C40 <= $char && $char <= 0x1C49 ||
+            0x1C50 <= $char && $char <= 0x1C59 ||
+            0x1CD0 <= $char && $char <= 0x1CD2 ||
+            0x1CD4 <= $char && $char <= 0x1CE8 ||
+            0x1CED == $char ||
+            0x1CF4 == $char ||
+            0x1CF7 <= $char && $char <= 0x1CF9 ||
+            0x1DC0 <= $char && $char <= 0x1DF9 ||
+            0x1DFB <= $char && $char <= 0x1DFF ||
+            0x203F == $char ||
+            0x2040 == $char ||
+            0x2054 == $char ||
+            0x20D0 <= $char && $char <= 0x20DC ||
+            0x20E1 == $char ||
+            0x20E5 <= $char && $char <= 0x20F0 ||
+            0x2CEF <= $char && $char <= 0x2CF1 ||
+            0x2D7F == $char ||
+            0x2DE0 <= $char && $char <= 0x2DFF ||
+            0x302A <= $char && $char <= 0x302F ||
+            0x3099 == $char ||
+            0x309A == $char ||
+            0xA620 <= $char && $char <= 0xA629 ||
+            0xA66F == $char ||
+            0xA674 <= $char && $char <= 0xA67D ||
+            0xA69E == $char ||
+            0xA69F == $char ||
+            0xA6F0 == $char ||
+            0xA6F1 == $char ||
+            0xA802 == $char ||
+            0xA806 == $char ||
+            0xA80B == $char ||
+            0xA823 <= $char && $char <= 0xA827 ||
+            0xA82C == $char ||
+            0xA880 == $char ||
+            0xA881 == $char ||
+            0xA8B4 <= $char && $char <= 0xA8C5 ||
+            0xA8D0 <= $char && $char <= 0xA8D9 ||
+            0xA8E0 <= $char && $char <= 0xA8F1 ||
+            0xA8FF <= $char && $char <= 0xA909 ||
+            0xA926 <= $char && $char <= 0xA92D ||
+            0xA947 <= $char && $char <= 0xA953 ||
+            0xA980 <= $char && $char <= 0xA983 ||
+            0xA9B3 <= $char && $char <= 0xA9C0 ||
+            0xA9D0 <= $char && $char <= 0xA9D9 ||
+            0xA9E5 == $char ||
+            0xA9F0 <= $char && $char <= 0xA9F9 ||
+            0xAA29 <= $char && $char <= 0xAA36 ||
+            0xAA43 == $char ||
+            0xAA4C == $char ||
+            0xAA4D == $char ||
+            0xAA50 <= $char && $char <= 0xAA59 ||
+            0xAA7B <= $char && $char <= 0xAA7D ||
+            0xAAB0 == $char ||
+            0xAAB2 <= $char && $char <= 0xAAB4 ||
+            0xAAB7 == $char ||
+            0xAAB8 == $char ||
+            0xAABE == $char ||
+            0xAABF == $char ||
+            0xAAC1 == $char ||
+            0xAAEB <= $char && $char <= 0xAAEF ||
+            0xAAF5 == $char ||
+            0xAAF6 == $char ||
+            0xABE3 <= $char && $char <= 0xABEA ||
+            0xABEC == $char ||
+            0xABED == $char ||
+            0xABF0 <= $char && $char <= 0xABF9 ||
+            0xFB1E == $char ||
+            0xFE00 <= $char && $char <= 0xFE0F ||
+            0xFE20 <= $char && $char <= 0xFE2F ||
+            0xFE33 == $char ||
+            0xFE34 == $char ||
+            0xFE4D <= $char && $char <= 0xFE4F ||
+            0xFF10 <= $char && $char <= 0xFF19 ||
+            0xFF3F == $char ||
+            0x0101FD == $char ||
+            0x0102E0 == $char ||
+            0x010376 <= $char && $char <= 0x01037A ||
+            0x0104A0 <= $char && $char <= 0x0104A9 ||
+            0x010A01 <= $char && $char <= 0x010A03 ||
+            0x010A05 == $char ||
+            0x010A06 == $char ||
+            0x010A0C <= $char && $char <= 0x010A0F ||
+            0x010A38 <= $char && $char <= 0x010A3A ||
+            0x010A3F == $char ||
+            0x010AE5 == $char ||
+            0x010AE6 == $char ||
+            0x010D24 <= $char && $char <= 0x010D27 ||
+            0x010D30 <= $char && $char <= 0x010D39 ||
+            0x010EAB == $char ||
+            0x010EAC == $char ||
+            0x010F46 <= $char && $char <= 0x010F50 ||
+            0x011000 <= $char && $char <= 0x011002 ||
+            0x011038 <= $char && $char <= 0x011046 ||
+            0x011066 <= $char && $char <= 0x01106F ||
+            0x01107F <= $char && $char <= 0x011082 ||
+            0x0110B0 <= $char && $char <= 0x0110BA ||
+            0x0110F0 <= $char && $char <= 0x0110F9 ||
+            0x011100 <= $char && $char <= 0x011102 ||
+            0x011127 <= $char && $char <= 0x011134 ||
+            0x011136 <= $char && $char <= 0x01113F ||
+            0x011145 == $char ||
+            0x011146 == $char ||
+            0x011173 == $char ||
+            0x011180 <= $char && $char <= 0x011182 ||
+            0x0111B3 <= $char && $char <= 0x0111C0 ||
+            0x0111C9 <= $char && $char <= 0x0111CC ||
+            0x0111CE <= $char && $char <= 0x0111D9 ||
+            0x01122C <= $char && $char <= 0x011237 ||
+            0x01123E == $char ||
+            0x0112DF <= $char && $char <= 0x0112EA ||
+            0x0112F0 <= $char && $char <= 0x0112F9 ||
+            0x011300 <= $char && $char <= 0x011303 ||
+            0x01133B == $char ||
+            0x01133C == $char ||
+            0x01133E <= $char && $char <= 0x011344 ||
+            0x011347 == $char ||
+            0x011348 == $char ||
+            0x01134B <= $char && $char <= 0x01134D ||
+            0x011357 == $char ||
+            0x011362 == $char ||
+            0x011363 == $char ||
+            0x011366 <= $char && $char <= 0x01136C ||
+            0x011370 <= $char && $char <= 0x011374 ||
+            0x011435 <= $char && $char <= 0x011446 ||
+            0x011450 <= $char && $char <= 0x011459 ||
+            0x01145E == $char ||
+            0x0114B0 <= $char && $char <= 0x0114C3 ||
+            0x0114D0 <= $char && $char <= 0x0114D9 ||
+            0x0115AF <= $char && $char <= 0x0115B5 ||
+            0x0115B8 <= $char && $char <= 0x0115C0 ||
+            0x0115DC == $char ||
+            0x0115DD == $char ||
+            0x011630 <= $char && $char <= 0x011640 ||
+            0x011650 <= $char && $char <= 0x011659 ||
+            0x0116AB <= $char && $char <= 0x0116B7 ||
+            0x0116C0 <= $char && $char <= 0x0116C9 ||
+            0x01171D <= $char && $char <= 0x01172B ||
+            0x011730 <= $char && $char <= 0x011739 ||
+            0x01182C <= $char && $char <= 0x01183A ||
+            0x0118E0 <= $char && $char <= 0x0118E9 ||
+            0x011930 <= $char && $char <= 0x011935 ||
+            0x011937 == $char ||
+            0x011938 == $char ||
+            0x01193B <= $char && $char <= 0x01193E ||
+            0x011940 == $char ||
+            0x011942 == $char ||
+            0x011943 == $char ||
+            0x011950 <= $char && $char <= 0x011959 ||
+            0x0119D1 <= $char && $char <= 0x0119D7 ||
+            0x0119DA <= $char && $char <= 0x0119E0 ||
+            0x0119E4 == $char ||
+            0x011A01 <= $char && $char <= 0x011A0A ||
+            0x011A33 <= $char && $char <= 0x011A39 ||
+            0x011A3B <= $char && $char <= 0x011A3E ||
+            0x011A47 == $char ||
+            0x011A51 <= $char && $char <= 0x011A5B ||
+            0x011A8A <= $char && $char <= 0x011A99 ||
+            0x011C2F <= $char && $char <= 0x011C36 ||
+            0x011C38 <= $char && $char <= 0x011C3F ||
+            0x011C50 <= $char && $char <= 0x011C59 ||
+            0x011C92 <= $char && $char <= 0x011CA7 ||
+            0x011CA9 <= $char && $char <= 0x011CB6 ||
+            0x011D31 <= $char && $char <= 0x011D36 ||
+            0x011D3A == $char ||
+            0x011D3C == $char ||
+            0x011D3D == $char ||
+            0x011D3F <= $char && $char <= 0x011D45 ||
+            0x011D47 == $char ||
+            0x011D50 <= $char && $char <= 0x011D59 ||
+            0x011D8A <= $char && $char <= 0x011D8E ||
+            0x011D90 == $char ||
+            0x011D91 == $char ||
+            0x011D93 <= $char && $char <= 0x011D97 ||
+            0x011DA0 <= $char && $char <= 0x011DA9 ||
+            0x011EF3 <= $char && $char <= 0x011EF6 ||
+            0x016A60 <= $char && $char <= 0x016A69 ||
+            0x016AF0 <= $char && $char <= 0x016AF4 ||
+            0x016B30 <= $char && $char <= 0x016B36 ||
+            0x016B50 <= $char && $char <= 0x016B59 ||
+            0x016F4F == $char ||
+            0x016F51 <= $char && $char <= 0x016F87 ||
+            0x016F8F <= $char && $char <= 0x016F92 ||
+            0x016FE4 == $char ||
+            0x016FF0 == $char ||
+            0x016FF1 == $char ||
+            0x01BC9D == $char ||
+            0x01BC9E == $char ||
+            0x01D165 <= $char && $char <= 0x01D169 ||
+            0x01D16D <= $char && $char <= 0x01D172 ||
+            0x01D17B <= $char && $char <= 0x01D182 ||
+            0x01D185 <= $char && $char <= 0x01D18B ||
+            0x01D1AA <= $char && $char <= 0x01D1AD ||
+            0x01D242 <= $char && $char <= 0x01D244 ||
+            0x01D7CE <= $char && $char <= 0x01D7FF ||
+            0x01DA00 <= $char && $char <= 0x01DA36 ||
+            0x01DA3B <= $char && $char <= 0x01DA6C ||
+            0x01DA75 == $char ||
+            0x01DA84 == $char ||
+            0x01DA9B <= $char && $char <= 0x01DA9F ||
+            0x01DAA1 <= $char && $char <= 0x01DAAF ||
+            0x01E000 <= $char && $char <= 0x01E006 ||
+            0x01E008 <= $char && $char <= 0x01E018 ||
+            0x01E01B <= $char && $char <= 0x01E021 ||
+            0x01E023 == $char ||
+            0x01E024 == $char ||
+            0x01E026 <= $char && $char <= 0x01E02A ||
+            0x01E130 <= $char && $char <= 0x01E136 ||
+            0x01E140 <= $char && $char <= 0x01E149 ||
+            0x01E2EC <= $char && $char <= 0x01E2F9 ||
+            0x01E8D0 <= $char && $char <= 0x01E8D6 ||
+            0x01E944 <= $char && $char <= 0x01E94A ||
+            0x01E950 <= $char && $char <= 0x01E959 ||
+            0x01FBF0 <= $char && $char <= 0x01FBF9 ||
+            0x0E0100 <= $char && $char <= 0x0E01EF;
     }
 }
