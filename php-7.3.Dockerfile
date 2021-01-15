@@ -7,7 +7,9 @@ RUN apt-get update &&  apt-get install -y \
     pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     docker-php-ext-configure intl --enable-intl && \
-    docker-php-ext-install intl
+    docker-php-ext-install intl && \
+    echo "xdebug.mode = develop,coverage,debug" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" && \
+    echo "xdebug.max_nesting_level = 1024" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
 
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_PROCESS_TIMEOUT=1200
