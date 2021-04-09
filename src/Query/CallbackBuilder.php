@@ -25,7 +25,6 @@ use Remorhaz\UniLex\Stack\PushInterface;
 
 use function array_map;
 use function array_reverse;
-use function is_callable;
 
 final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
 {
@@ -67,14 +66,21 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         $this->php = new BuilderFactory();
     }
 
+    /**
+     * @noinspection PhpUnusedParameterInspection
+     */
     public function getCallback(): callable
     {
         if (!isset($this->callback)) {
-            $callback = eval($this->getCallbackCode());
-            if (!is_callable($callback)) {
-                throw new Exception\InvalidCallbackCodeException($this->getCallbackCode());
-            }
-            $this->callback = $callback;
+            $this->callback = function (
+                NodeValueListInterface $input,
+                ValueListFetcherInterface $valueListFetcher,
+                EvaluatorInterface $evaluator,
+                LiteralFactoryInterface $literalFactory,
+                MatcherFactoryInterface $matcherFactory
+            ): ValueListInterface {
+                return eval($this->getCallbackCode());
+            };
         }
 
         return $this->callback;
@@ -113,31 +119,6 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     public function onFinish(): void
     {
-        $inputParam = $this
-            ->php
-            ->param(self::ARG_INPUT)
-            ->setType(NodeValueListInterface::class)
-            ->getNode();
-        $valueListFetcherParam = $this
-            ->php
-            ->param(self::ARG_VALUE_LIST_FETCHER)
-            ->setType(ValueListFetcherInterface::class)
-            ->getNode();
-        $evaluatorParam = $this
-            ->php
-            ->param(self::ARG_EVALUATOR)
-            ->setType(EvaluatorInterface::class)
-            ->getNode();
-        $literalFactoryParam = $this
-            ->php
-            ->param(self::ARG_LITERAL_FACTORY)
-            ->setType(LiteralFactoryInterface::class)
-            ->getNode();
-        $matcherFactoryParam = $this
-            ->php
-            ->param(self::ARG_MATCHER_FACTORY)
-            ->setType(MatcherFactoryInterface::class)
-            ->getNode();
         $stmts = array_map(
             function (PhpAstNode $stmt): PhpAstNode {
                 return $stmt instanceof Expr ? new Expression($stmt) : $stmt;
@@ -145,22 +126,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             $this->stmts
         );
 
-        $closure = new Expr\Closure(
-            [
-                'stmts' => $stmts,
-                'returnType' => ValueListInterface::class,
-                'params' => [
-                    $inputParam,
-                    $valueListFetcherParam,
-                    $evaluatorParam,
-                    $literalFactoryParam,
-                    $matcherFactoryParam
-                ],
-            ]
-        );
-        $return = new Return_($closure);
-
-        $this->callbackCode = (new Standard())->prettyPrint([$return]);
+        $this->callbackCode = (new Standard())->prettyPrint($stmts);
     }
 
     public function onBeginProduction(QueryAstNode $node, PushInterface $stack): void
