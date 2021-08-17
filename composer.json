@@ -16,17 +16,17 @@
     }
   ],
   "require": {
-    "php": "^7.3 | ^8",
+    "php": "^7.3 || ^8",
     "ext-intl": "*",
     "ext-json": "*",
-    "remorhaz/php-unilex": "^0.4",
+    "remorhaz/php-unilex": "^0.4.1",
     "remorhaz/php-json-data": "^0.5.3",
-    "nikic/php-parser": "^4.10"
+    "nikic/php-parser": "^4.12"
   },
   "require-dev": {
+    "infection/infection": "^0.18 || ^0.19 || ^0.20 || ^0.21 || ^0.22 || ^0.23 || ^0.24",
     "phpunit/phpunit": "^9.5",
-    "squizlabs/php_codesniffer": "^3.5",
-    "infection/infection": "^0.18"
+    "squizlabs/php_codesniffer": "^3.6"
   },
   "autoload": {
     "psr-4": {

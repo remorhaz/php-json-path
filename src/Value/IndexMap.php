@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
+use ReturnTypeWillChange;
+
 use function array_keys;
 use function count;
 use function in_array;
@@ -18,6 +20,7 @@ final class IndexMap implements IndexMapInterface
         $this->outerIndexes = $outerIndexes;
     }
 
+    #[ReturnTypeWillChange]
     public function count()
     {
         return count($this->outerIndexes);

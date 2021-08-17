@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform-reqs:
+          - use-platform-reqs
+        php-version:
+          - "7.3"
+          - "7.4"
+          - "8.0"
+        dependencies:
+          - lowest
+          - highest
+        include:
+          - php-version: "8.1"
+            platform-reqs: ignore-platform-reqs
+            dependencies: highest
+          - php-version: "8.1"
+            platform-reqs: ignore-platform-reqs
+            dependencies: lowest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Install lowest dependencies
+        if: ${{ matrix.dependencies == 'lowest' && matrix.platform-reqs == 'use-platform-reqs' }}
+        run: composer update --no-interaction --prefer-lowest
+
+      - name: Install lowest dependencies (ignore platform reqs)
+        if: ${{ matrix.dependencies == 'lowest' && matrix.platform-reqs == 'ignore-platform-reqs' }}
+        run: composer update --no-interaction --prefer-lowest --ignore-platform-reqs
+
+      - name: Install highest dependencies
+        if: ${{ matrix.dependencies == 'highest' && matrix.platform-reqs == 'use-platform-reqs' }}
+        run: composer update --no-interaction
+
+      - name: Install highest dependencies (ignore platform reqs)
+        if: ${{ matrix.dependencies == 'highest' && matrix.platform-reqs == 'ignore-platform-reqs' }}
+        run: composer update --no-interaction --ignore-platform-reqs
+
+      - name: Run tests
+        run: composer test
