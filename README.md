@@ -1,6 +1,6 @@
 # PHP JSONPath
 [![Latest Stable Version](https://poser.pugx.org/remorhaz/php-json-path/version)](https://packagist.org/packages/remorhaz/php-json-path)
-[![Build Status](https://travis-ci.org/remorhaz/php-json-path.svg?branch=master)](https://travis-ci.org/remorhaz/php-json-path)
+[![Build](https://github.com/remorhaz/php-json-path/actions/workflows/build.yml/badge.svg)](https://github.com/remorhaz/php-json-path/actions/workflows/build.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/remorhaz/php-json-path/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/remorhaz/php-json-path/?branch=master)
 [![codecov](https://codecov.io/gh/remorhaz/php-json-path/branch/master/graph/badge.svg)](https://codecov.io/gh/remorhaz/php-json-path)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/remorhaz/php-json-path/master)](https://infection.github.io)

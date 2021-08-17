@@ -13,8 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        platform-reqs:
-          - use-platform-reqs
         php-version:
           - "7.3"
           - "7.4"
@@ -22,13 +20,15 @@ jobs:
         dependencies:
           - lowest
           - highest
+        platform-reqs:
+          - use-platform-reqs
         include:
           - php-version: "8.1"
-            platform-reqs: ignore-platform-reqs
             dependencies: highest
-          - php-version: "8.1"
             platform-reqs: ignore-platform-reqs
+          - php-version: "8.1"
             dependencies: lowest
+            platform-reqs: ignore-platform-reqs
 
     steps:
       - name: Checkout
@@ -55,5 +55,11 @@ jobs:
         if: ${{ matrix.dependencies == 'highest' && matrix.platform-reqs == 'ignore-platform-reqs' }}
         run: composer update --no-interaction --ignore-platform-reqs
 
+      - name: Build tables
+        run: composer build
+
       - name: Run tests
         run: composer test
+
+      - name: Run Infection
+        run: composer infection
