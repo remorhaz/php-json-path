@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.7.6] - 2021-08-17
 ### Fixed
-- PHP 8.1 compatibility issue ([#24](./issues/24)).
+- PHP 8.1 compatibility issue ([#24](https://github.com/remorhaz/php-json-path/issues/24)).
 
 ## [0.7.5] - 2021-04-10
 ### Fixed
