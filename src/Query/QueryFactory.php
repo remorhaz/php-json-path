@@ -19,7 +19,7 @@ final class QueryFactory implements QueryFactoryInterface
     {
         return new QueryFactory(
             new Parser(new Ll1ParserFactory()),
-            new AstTranslator(new CallbackBuilder())
+            new AstTranslator(),
         );
     }
 
@@ -31,6 +31,6 @@ final class QueryFactory implements QueryFactoryInterface
 
     public function createQuery(string $path): QueryInterface
     {
-        return new LazyQuery($path, $this->parser, $this->astTranslator);
+        return new LazyQuery($path, $this->parser, $this->astTranslator, new CallbackBuilder());
     }
 }

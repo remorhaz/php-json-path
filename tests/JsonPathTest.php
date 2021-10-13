@@ -24,7 +24,7 @@ class JsonPathTest extends TestCase
         $this->example = file_get_contents(__DIR__ . '/goessner.json');
     }
 
-    public function testSelect_SecondQuery_OverridesFirstQueryResult(): void
+    public function testSelect_SecondQueryAfterFirstQuery_ReturnsCorrectResult(): void
     {
         $processor = Processor::create();
         $queryFactory = QueryFactory::create();
@@ -35,6 +35,20 @@ class JsonPathTest extends TestCase
 
         $secondQuery = $queryFactory->createQuery('$.b[*]');
         self::assertSame(['2', '3'], $processor->select($secondQuery, $document)->encode());
+    }
+
+    public function testSelect_FirstQueryAgainAfterSecond_ReturnsCorrectResult(): void
+    {
+        $processor = Processor::create();
+        $queryFactory = QueryFactory::create();
+        $document = NodeValueFactory::create()->createValue('{"a":1,"b":2}');
+
+        $firstQuery = $queryFactory->createQuery('$.a');
+        $secondQuery = $queryFactory->createQuery('$.b');
+
+        $processor->select($firstQuery, $document);
+        $processor->select($secondQuery, $document);
+        self::assertSame([1], $processor->select($firstQuery, $document)->decode());
     }
 
     /**

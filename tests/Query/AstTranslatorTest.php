@@ -7,6 +7,7 @@ namespace Remorhaz\JSON\Path\Test\Query;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
+use Remorhaz\JSON\Path\Query\Exception\ExceptionInterface;
 use Remorhaz\JSON\Path\Query\Exception\QueryAstNotTranslatedException;
 use Remorhaz\JSON\Path\Query\Query;
 use Remorhaz\JSON\Path\Query\AstTranslator;
@@ -33,11 +34,14 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_ReturnsQueryInstance(): void
     {
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $translator = new AstTranslator($callbackBuilder);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
-        self::assertInstanceOf(Query::class, $translator->buildQuery('return;', $tree));
+        $callbackBuilder = $this->createStub(CallbackBuilderInterface::class);
+        self::assertInstanceOf(
+            Query::class,
+            $translator->buildQuery('return;', $tree, $callbackBuilder),
+        );
     }
 
     /**
@@ -45,16 +49,16 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_ThrowsExceptionOnTranslation_ThrowsException(): void
     {
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $translator = new AstTranslator($callbackBuilder);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
+        $callbackBuilder = $this->createStub(CallbackBuilderInterface::class);
         $callbackBuilder
             ->method('onStart')
             ->willThrowException(new Exception());
         $this->expectException(QueryAstNotTranslatedException::class);
-        $translator->buildQuery('b', $tree);
+        $translator->buildQuery('b', $tree, $callbackBuilder);
     }
 
     /**
@@ -62,17 +66,17 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_StartsTreeTranslation(): void
     {
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $translator = new AstTranslator($callbackBuilder);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $rootNode = $tree->createNode('a');
         $tree->setRootNode($rootNode);
 
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
             ->expects(self::once())
             ->method('onStart')
             ->with($rootNode);
-        $translator->buildQuery('b', $tree);
+        $translator->buildQuery('b', $tree, $callbackBuilder);
     }
 
     /**
@@ -80,34 +84,34 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_Constructed_FinishesTreeTranslation(): void
     {
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $translator = new AstTranslator($callbackBuilder);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
+        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
         $callbackBuilder
             ->expects(self::once())
             ->method('onFinish')
             ->with();
-        $translator->buildQuery('b', $tree);
+        $translator->buildQuery('b', $tree, $callbackBuilder);
     }
 
     /**
      * @throws UniLexException
+     * @throws ExceptionInterface
      */
     public function testBuildQuery_CallbackBuilderProvidesCallback_OnInvocationResultInvokesSameCallback(): void
     {
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $translator = new AstTranslator($callbackBuilder);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
-        $rootValue = $this->createMock(NodeValueInterface::class);
-        $runtime = $this->createMock(RuntimeInterface::class);
-        $valueListFetcher = $this->createMock(ValueListFetcherInterface::class);
-        $evaluator = $this->createMock(EvaluatorInterface::class);
-        $literalFactory = $this->createMock(LiteralFactoryInterface::class);
-        $matcherFactory = $this->createMock(MatcherFactoryInterface::class);
+        $rootValue = $this->createStub(NodeValueInterface::class);
+        $runtime = $this->createStub(RuntimeInterface::class);
+        $valueListFetcher = $this->createStub(ValueListFetcherInterface::class);
+        $evaluator = $this->createStub(EvaluatorInterface::class);
+        $literalFactory = $this->createStub(LiteralFactoryInterface::class);
+        $matcherFactory = $this->createStub(MatcherFactoryInterface::class);
         $runtime
             ->method('getValueListFetcher')
             ->willReturn($valueListFetcher);
@@ -137,12 +141,13 @@ class AstTranslatorTest extends TestCase
                 $input->getValues() === [$rootValue] &&
                 [$valueListFetcher, $evaluator, $literalFactory, $matcherFactory] === $args;
 
-            return $this->createMock(ValueListInterface::class);
+            return $this->createStub(ValueListInterface::class);
         };
+        $callbackBuilder = $this->createStub(CallbackBuilderInterface::class);
         $callbackBuilder
             ->method('getCallback')
             ->willReturn($callback);
-        $query = $translator->buildQuery('b', $tree);
+        $query = $translator->buildQuery('b', $tree, $callbackBuilder);
 
         $query($rootValue, $runtime);
         self::assertTrue($isCallbackCalledWithMatchingArgs);
@@ -153,16 +158,17 @@ class AstTranslatorTest extends TestCase
      */
     public function testBuildQuery_CallbackBuilderProvidesGivenQueryProperties_ResultHasSamePropertiesInstance(): void
     {
-        $properties = $this->createMock(CapabilitiesInterface::class);
-        $callbackBuilder = $this->createMock(CallbackBuilderInterface::class);
-        $callbackBuilder
-            ->method('getCapabilities')
-            ->willReturn($properties);
-        $translator = new AstTranslator($callbackBuilder);
+        $properties = $this->createStub(CapabilitiesInterface::class);
+        $translator = new AstTranslator();
         $tree = new Tree();
         $tree->setRootNode($tree->createNode('a'));
 
-        $query = $translator->buildQuery('b', $tree);
+        $callbackBuilder = $this->createStub(CallbackBuilderInterface::class);
+        $callbackBuilder
+            ->method('getCapabilities')
+            ->willReturn($properties);
+
+        $query = $translator->buildQuery('b', $tree, $callbackBuilder);
         self::assertSame($properties, $query->getCapabilities());
     }
 }

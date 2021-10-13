@@ -9,5 +9,9 @@ use Remorhaz\UniLex\AST\Tree;
 interface AstTranslatorInterface
 {
 
-    public function buildQuery(string $source, Tree $queryAst): QueryInterface;
+    public function buildQuery(
+        string $source,
+        Tree $queryAst,
+        CallbackBuilderInterface $callbackBuilder
+    ): QueryInterface;
 }

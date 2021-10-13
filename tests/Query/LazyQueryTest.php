@@ -7,6 +7,8 @@ namespace Remorhaz\JSON\Path\Test\Query;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
+use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
+use Remorhaz\JSON\Path\Query\Exception\ExceptionInterface;
 use Remorhaz\JSON\Path\Query\LazyQuery;
 use Remorhaz\JSON\Path\Query\AstTranslatorInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
@@ -20,65 +22,86 @@ use Remorhaz\UniLex\AST\Tree;
 class LazyQueryTest extends TestCase
 {
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testInvoke_AstTranslatorReturnsQuery_InvokesSameInstance(): void
     {
         $query = $this->createMock(QueryInterface::class);
-        $astTranslator = $this->createMock(AstTranslatorInterface::class);
+        $astTranslator = $this->createStub(AstTranslatorInterface::class);
         $astTranslator
             ->method('buildQuery')
             ->willReturn($query);
 
         $lazyQuery = new LazyQuery(
             'a',
-            $this->createMock(ParserInterface::class),
-            $astTranslator
+            $this->createStub(ParserInterface::class),
+            $astTranslator,
+            $this->createStub(CallbackBuilderInterface::class),
         );
 
-        $rootNode = $this->createMock(NodeValueInterface::class);
-        $runtime = $this->createMock(RuntimeInterface::class);
+        $rootNode = $this->createStub(NodeValueInterface::class);
+        $runtime = $this->createStub(RuntimeInterface::class);
         $query
             ->expects(self::once())
             ->method('__invoke')
-            ->with($rootNode, $runtime);
+            ->with(self::identicalTo($rootNode), self::identicalTo($runtime));
         $lazyQuery($rootNode, $runtime);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testInvoke_ConstructedWithPath_PassesSamePathToParser(): void
     {
         $parser = $this->createMock(ParserInterface::class);
         $lazyQuery = new LazyQuery(
             'a',
             $parser,
-            $this->createMock(AstTranslatorInterface::class)
+            $this->createStub(AstTranslatorInterface::class),
+            $this->createStub(CallbackBuilderInterface::class),
         );
 
         $parser
             ->expects(self::once())
             ->method('buildQueryAst')
-            ->with('a');
+            ->with(self::identicalTo('a'));
         $lazyQuery(
-            $this->createMock(NodeValueInterface::class),
-            $this->createMock(RuntimeInterface::class),
+            $this->createStub(NodeValueInterface::class),
+            $this->createStub(RuntimeInterface::class),
         );
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function testInvoke_ParserReturnsAst_PassesSameAstToTranslator(): void
     {
         $tree = new Tree();
-        $parser = $this->createMock(ParserInterface::class);
+        $parser = $this->createStub(ParserInterface::class);
         $parser
             ->method('buildQueryAst')
             ->willReturn($tree);
         $astTranslator = $this->createMock(AstTranslatorInterface::class);
-        $lazyQuery = new LazyQuery('a', $parser, $astTranslator);
+        $callbackBuilder = $this->createStub(CallbackBuilderInterface::class);
+        $lazyQuery = new LazyQuery(
+            'a',
+            $parser,
+            $astTranslator,
+            $callbackBuilder,
+        );
 
         $astTranslator
             ->expects(self::once())
             ->method('buildQuery')
-            ->with('a', $tree);
+            ->with(
+                self::identicalTo('a'),
+                self::identicalTo($tree),
+                self::identicalTo($callbackBuilder),
+            );
         $lazyQuery(
-            $this->createMock(NodeValueInterface::class),
-            $this->createMock(RuntimeInterface::class),
+            $this->createStub(NodeValueInterface::class),
+            $this->createStub(RuntimeInterface::class),
         );
     }
 
@@ -88,13 +111,14 @@ class LazyQueryTest extends TestCase
         $lazyQuery = new LazyQuery(
             'a',
             $parser,
-            $this->createMock(AstTranslatorInterface::class)
+            $this->createStub(AstTranslatorInterface::class),
+            $this->createStub(CallbackBuilderInterface::class),
         );
 
         $parser
             ->expects(self::once())
             ->method('buildQueryAst')
-            ->with('a');
+            ->with(self::identicalTo('a'));
         $lazyQuery->getCapabilities();
     }
 
@@ -102,12 +126,17 @@ class LazyQueryTest extends TestCase
     public function testGetCapabilities_ParserReturnsAst_PassesSameAstToTranslator(): void
     {
         $tree = new Tree();
-        $parser = $this->createMock(ParserInterface::class);
+        $parser = $this->createStub(ParserInterface::class);
         $parser
             ->method('buildQueryAst')
             ->willReturn($tree);
         $astTranslator = $this->createMock(AstTranslatorInterface::class);
-        $lazyQuery = new LazyQuery('a', $parser, $astTranslator);
+        $lazyQuery = new LazyQuery(
+            'a',
+            $parser,
+            $astTranslator,
+            $this->createStub(CallbackBuilderInterface::class),
+        );
 
         $astTranslator
             ->expects(self::once())
@@ -119,19 +148,20 @@ class LazyQueryTest extends TestCase
     public function testGetCapabilities_AstTranslatorReturnsQueryWithGivenProperties_ReturnsSameInstance(): void
     {
         $properties = new Capabilities(false, false);
-        $query = $this->createMock(QueryInterface::class);
+        $query = $this->createStub(QueryInterface::class);
         $query
             ->method('getCapabilities')
             ->willReturn($properties);
-        $astTranslator = $this->createMock(AstTranslatorInterface::class);
+        $astTranslator = $this->createStub(AstTranslatorInterface::class);
         $astTranslator
             ->method('buildQuery')
             ->willReturn($query);
 
         $lazyQuery = new LazyQuery(
             'a',
-            $this->createMock(ParserInterface::class),
-            $astTranslator
+            $this->createStub(ParserInterface::class),
+            $astTranslator,
+            $this->createStub(CallbackBuilderInterface::class)
         );
 
         self::assertSame($properties, $lazyQuery->getCapabilities());
@@ -141,8 +171,9 @@ class LazyQueryTest extends TestCase
     {
         $lazyQuery = new LazyQuery(
             'a',
-            $this->createMock(ParserInterface::class),
-            $this->createMock(AstTranslatorInterface::class)
+            $this->createStub(ParserInterface::class),
+            $this->createStub(AstTranslatorInterface::class),
+            $this->createStub(CallbackBuilderInterface::class),
         );
         self::assertSame('a', $lazyQuery->getSource());
     }

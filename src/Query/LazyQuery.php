@@ -20,11 +20,18 @@ final class LazyQuery implements QueryInterface
 
     private $astTranslator;
 
-    public function __construct(string $source, ParserInterface $parser, AstTranslatorInterface $astTranslator)
-    {
+    private $callbackBuilder;
+
+    public function __construct(
+        string $source,
+        ParserInterface $parser,
+        AstTranslatorInterface $astTranslator,
+        CallbackBuilderInterface $callbackBuilder
+    ) {
         $this->source = $source;
         $this->parser = $parser;
         $this->astTranslator = $astTranslator;
+        $this->callbackBuilder = $callbackBuilder;
     }
 
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
@@ -61,6 +68,6 @@ final class LazyQuery implements QueryInterface
 
         return $this
             ->astTranslator
-            ->buildQuery($this->source, $queryAst);
+            ->buildQuery($this->source, $queryAst, $this->callbackBuilder);
     }
 }

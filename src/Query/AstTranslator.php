@@ -11,22 +11,18 @@ use Throwable;
 final class AstTranslator implements AstTranslatorInterface
 {
 
-    private $queryCallbackBuilder;
-
-    public function __construct(CallbackBuilderInterface $callbackBuilder)
-    {
-        $this->queryCallbackBuilder = $callbackBuilder;
-    }
-
-    public function buildQuery(string $source, Tree $queryAst): QueryInterface
-    {
+    public function buildQuery(
+        string $source,
+        Tree $queryAst,
+        CallbackBuilderInterface $callbackBuilder
+    ): QueryInterface {
         try {
-            $translator = new Translator($queryAst, $this->queryCallbackBuilder);
+            $translator = new Translator($queryAst, $callbackBuilder);
             $translator->run();
         } catch (Throwable $e) {
             throw new Exception\QueryAstNotTranslatedException($queryAst, $e);
         }
 
-        return new Query($source, $this->queryCallbackBuilder);
+        return new Query($source, $callbackBuilder);
     }
 }
