@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Matcher\StrictElementMatcher;
  */
 class StrictElementMatcherTest extends TestCase
 {
-
     public function testMatch_ConstructedWithGivenAddressInIndexes_ReturnsTrue(): void
     {
         $matcher = new StrictElementMatcher(1);

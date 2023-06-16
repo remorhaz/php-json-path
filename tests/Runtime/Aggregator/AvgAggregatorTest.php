@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\AvgAggregator;
  */
 class AvgAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_EmptyArray_ReturnsNull(): void
     {
         $aggregator = new AvgAggregator();

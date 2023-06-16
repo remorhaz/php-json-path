@@ -21,22 +21,15 @@ use function preg_match;
 
 final class Evaluator implements EvaluatorInterface
 {
-
-    private $comparators;
-
-    private $aggregators;
-
     public function __construct(
-        ComparatorCollectionInterface $comparators,
-        Aggregator\AggregatorCollectionInterface $aggregators
+        private ComparatorCollectionInterface $comparators,
+        private Aggregator\AggregatorCollectionInterface $aggregators,
     ) {
-        $this->comparators = $comparators;
-        $this->aggregators = $aggregators;
     }
 
     public function logicalOr(
         EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
+        EvaluatedValueListInterface $rightValues,
     ): EvaluatedValueListInterface {
         $results = [];
         foreach ($leftValues->getResults() as $index => $leftResult) {
@@ -45,13 +38,13 @@ final class Evaluator implements EvaluatorInterface
 
         return new EvaluatedValueList(
             $this->getEqualIndexMap($leftValues, $rightValues),
-            ...$results
+            ...$results,
         );
     }
 
     public function logicalAnd(
         EvaluatedValueListInterface $leftValues,
-        EvaluatedValueListInterface $rightValues
+        EvaluatedValueListInterface $rightValues,
     ): EvaluatedValueListInterface {
         $results = [];
         foreach ($leftValues->getResults() as $index => $leftResult) {
@@ -60,7 +53,7 @@ final class Evaluator implements EvaluatorInterface
 
         return new EvaluatedValueList(
             $this->getEqualIndexMap($leftValues, $rightValues),
-            ...$results
+            ...$results,
         );
     }
 
@@ -76,23 +69,23 @@ final class Evaluator implements EvaluatorInterface
 
     public function isEqual(
         ValueListInterface $leftValues,
-        ValueListInterface $rightValues
+        ValueListInterface $rightValues,
     ): EvaluatedValueListInterface {
         return $this->compare(
             $leftValues,
             $rightValues,
-            $this->comparators->equal()
+            $this->comparators->equal(),
         );
     }
 
     public function isGreater(
         ValueListInterface $leftValues,
-        ValueListInterface $rightValues
+        ValueListInterface $rightValues,
     ): EvaluatedValueListInterface {
         return $this->compare(
             $leftValues,
             $rightValues,
-            $this->comparators->greater()
+            $this->comparators->greater(),
         );
     }
 
@@ -114,7 +107,7 @@ final class Evaluator implements EvaluatorInterface
                 $valueListBuilder->addResult(
                     $comparator->compare(
                         $leftValues->getValue($leftInnerIndex),
-                        $rightValues->getValue($rightInnerIndex)
+                        $rightValues->getValue($rightInnerIndex),
                     ),
                     $leftOuterIndex
                 );
@@ -150,7 +143,7 @@ final class Evaluator implements EvaluatorInterface
 
     public function evaluate(
         ValueListInterface $sourceValues,
-        ValueListInterface $resultValues
+        ValueListInterface $resultValues,
     ): EvaluatedValueListInterface {
         if ($resultValues instanceof EvaluatedValueListInterface) {
             return $resultValues;
@@ -162,9 +155,7 @@ final class Evaluator implements EvaluatorInterface
 
         $results = [];
         foreach ($sourceValues->getIndexMap()->getOuterIndexes() as $outerIndex) {
-            $results[] = isset($outerIndex)
-                ? $resultValues->getIndexMap()->outerIndexExists($outerIndex)
-                : false;
+            $results[] = isset($outerIndex) && $resultValues->getIndexMap()->outerIndexExists($outerIndex);
         }
 
         return new EvaluatedValueList($sourceValues->getIndexMap(), ...$results);
@@ -172,7 +163,7 @@ final class Evaluator implements EvaluatorInterface
 
     private function evaluateLiteralValues(
         ValueListInterface $sourceValues,
-        LiteralValueListInterface $resultValues
+        LiteralValueListInterface $resultValues,
     ): EvaluatedValueListInterface {
         $indexMap = $this->getEqualIndexMap($sourceValues, $resultValues);
         $literal = $resultValues->getLiteral();
@@ -181,7 +172,7 @@ final class Evaluator implements EvaluatorInterface
             if (is_bool($data)) {
                 return new EvaluatedValueList(
                     $indexMap,
-                    ...array_fill(0, count($indexMap), $data)
+                    ...array_fill(0, count($indexMap), $data),
                 );
             }
         }
@@ -191,14 +182,13 @@ final class Evaluator implements EvaluatorInterface
 
     private function getEqualIndexMap(
         ValueListInterface $leftValues,
-        ValueListInterface $rightValues
+        ValueListInterface $rightValues,
     ): IndexMapInterface {
         $indexMap = $leftValues->getIndexMap();
-        if ($indexMap->equals($rightValues->getIndexMap())) {
-            return $indexMap;
-        }
 
-        throw new Exception\IndexMapMatchFailedException($leftValues, $rightValues);
+        return $indexMap->equals($rightValues->getIndexMap())
+            ? $indexMap
+            : throw new Exception\IndexMapMatchFailedException($leftValues, $rightValues);
     }
 
     public function aggregate(string $functionName, ValueListInterface $values): ValueListInterface
@@ -210,7 +200,7 @@ final class Evaluator implements EvaluatorInterface
             if (isset($aggregatedValue)) {
                 $valuesBuilder->addValue(
                     $aggregatedValue,
-                    $values->getIndexMap()->getOuterIndex($innerIndex)
+                    $values->getIndexMap()->getOuterIndex($innerIndex),
                 );
             }
         }

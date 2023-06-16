@@ -9,6 +9,5 @@ use Remorhaz\UniLex\Parser\LL1\Parser as Ll1Parser;
 
 interface Ll1ParserFactoryInterface
 {
-
     public function createParser(string $path, Tree $queryAst): Ll1Parser;
 }

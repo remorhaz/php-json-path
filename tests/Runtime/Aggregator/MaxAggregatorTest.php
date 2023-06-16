@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\MaxAggregator;
  */
 class MaxAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_ArrayWithZeroElement_ReturnsNull(): void
     {
         $aggregator = new MaxAggregator();

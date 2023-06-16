@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
  */
 class NodeValueListBuilderTest extends TestCase
 {
-
     public function testBuild_NoValuesAdded_ReturnsListWithEmptyIndexMap(): void
     {
         $builder = new NodeValueListBuilder();

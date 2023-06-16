@@ -8,10 +8,15 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class ValueListBuilder
 {
+    /**
+     * @var list<int>
+     */
+    private array $outerIndexes = [];
 
-    private $outerIndexes = [];
-
-    private $values = [];
+    /**
+     * @var list<ValueInterface>
+     */
+    private array $values = [];
 
     public function addValue(ValueInterface $value, int $outerIndex): self
     {

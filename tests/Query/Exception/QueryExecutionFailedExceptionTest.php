@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\Exception\QueryExecutionFailedException;
  */
 class QueryExecutionFailedExceptionTest extends TestCase
 {
-
     public function testGetSource_ConstructedWithGivenSource_ReturnsSameValue(): void
     {
         $exception = new QueryExecutionFailedException('a', 'b');

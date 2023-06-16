@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Parser\Exception\QueryAstNotBuiltException;
  */
 class QueryAstNotBuiltExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new QueryAstNotBuiltException('a');

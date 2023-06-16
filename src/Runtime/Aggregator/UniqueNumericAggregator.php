@@ -9,10 +9,9 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 abstract class UniqueNumericAggregator extends NumericAggregator
 {
-
     /**
      * @param ValueInterface $value
-     * @return ScalarValueInterface[]
+     * @return list<ScalarValueInterface>
      */
     protected function findNumericElements(ValueInterface $value): array
     {

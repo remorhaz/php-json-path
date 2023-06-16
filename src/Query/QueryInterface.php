@@ -10,7 +10,6 @@ use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 
 interface QueryInterface
 {
-
     /**
      * @param NodeValueInterface $rootNode
      * @param RuntimeInterface   $runtime

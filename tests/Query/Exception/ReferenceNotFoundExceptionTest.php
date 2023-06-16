@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\Exception\ReferenceNotFoundException;
  */
 class ReferenceNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ReferenceNotFoundException(1);

@@ -8,6 +8,5 @@ use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 
 interface EvaluatedValueInterface extends ScalarValueInterface
 {
-
     public function getData(): bool;
 }

@@ -18,6 +18,7 @@ use Remorhaz\JSON\Path\Processor\Result\ResultFactoryInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectOnePathResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectPathsResultInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectResultInterface;
+use Remorhaz\JSON\Path\Query\Exception\ExceptionInterface;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\QueryValidator;
 use Remorhaz\JSON\Path\Query\QueryValidatorInterface;
@@ -33,15 +34,6 @@ use Remorhaz\JSON\Path\Runtime\ValueFetcher;
 
 final class Processor implements ProcessorInterface
 {
-
-    private $runtime;
-
-    private $resultFactory;
-
-    private $queryValidator;
-
-    private $mutator;
-
     public static function create(): ProcessorInterface
     {
         $runtime = new Runtime(
@@ -65,17 +57,16 @@ final class Processor implements ProcessorInterface
     }
 
     public function __construct(
-        RuntimeInterface $runtime,
-        ResultFactoryInterface $resultFactory,
-        QueryValidatorInterface $queryValidator,
-        MutatorInterface $mutator
+        private RuntimeInterface $runtime,
+        private ResultFactoryInterface $resultFactory,
+        private QueryValidatorInterface $queryValidator,
+        private MutatorInterface $mutator,
     ) {
-        $this->runtime = $runtime;
-        $this->resultFactory = $resultFactory;
-        $this->queryValidator = $queryValidator;
-        $this->mutator = $mutator;
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface
     {
         $values = $query($rootNode, $this->runtime);
@@ -85,6 +76,9 @@ final class Processor implements ProcessorInterface
             ->createSelectResult($values);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): ValueResultInterface
     {
         $values = $this
@@ -96,6 +90,9 @@ final class Processor implements ProcessorInterface
             ->createSelectOneResult($values);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function selectPaths(QueryInterface $query, NodeValueInterface $rootNode): SelectPathsResultInterface
     {
         $values = $this
@@ -107,6 +104,9 @@ final class Processor implements ProcessorInterface
             ->createSelectPathsResult($values);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function selectOnePath(QueryInterface $query, NodeValueInterface $rootNode): SelectOnePathResultInterface
     {
         $query = $this
@@ -135,10 +135,13 @@ final class Processor implements ProcessorInterface
             ->createValueResult($value);
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function replace(
         QueryInterface $query,
         NodeValueInterface $rootNode,
-        NodeValueInterface $newNode
+        NodeValueInterface $newNode,
     ): ValueResultInterface {
         $paths = $this
             ->selectPaths($query, $rootNode)

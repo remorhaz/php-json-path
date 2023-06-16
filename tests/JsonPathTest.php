@@ -16,7 +16,6 @@ use function file_get_contents;
  */
 class JsonPathTest extends TestCase
 {
-
     private $example;
 
     public function setUp(): void

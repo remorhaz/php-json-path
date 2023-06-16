@@ -4,7 +4,6 @@ namespace Remorhaz\JSON\Path\Parser;
 
 abstract class TokenType
 {
-
     public const WS                     = 0x01;
     public const DOT                    = 0x02;
     public const DOUBLE_DOT             = 0x03;

@@ -15,7 +15,6 @@ use Remorhaz\UniLex\Parser\LL1\UnexpectedTokenException;
  */
 class Ll1ParserFactoryTest extends TestCase
 {
-
     /**
      * @param string $source
      * @param bool $isDefinite

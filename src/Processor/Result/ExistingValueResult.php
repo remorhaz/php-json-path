@@ -10,21 +10,11 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class ExistingValueResult implements ValueResultInterface
 {
-
-    private $jsonEncoder;
-
-    private $jsonDecoder;
-
-    private $value;
-
     public function __construct(
-        ValueEncoderInterface $jsonEncoder,
-        ValueDecoderInterface $jsonDecoder,
-        ValueInterface $value
+        private ValueEncoderInterface $jsonEncoder,
+        private ValueDecoderInterface $jsonDecoder,
+        private ValueInterface $value
     ) {
-        $this->jsonEncoder = $jsonEncoder;
-        $this->jsonDecoder = $jsonDecoder;
-        $this->value = $value;
     }
 
     public function exists(): bool
@@ -39,7 +29,7 @@ final class ExistingValueResult implements ValueResultInterface
             ->exportValue($this->value);
     }
 
-    public function decode()
+    public function decode(): mixed
     {
         return $this
             ->jsonDecoder

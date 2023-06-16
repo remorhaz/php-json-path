@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Processor\Result\SelectPathsResult;
  */
 class SelectPathsResultTest extends TestCase
 {
-
     public function testGet_ConstructedWithoutPaths_ReturnsEmptyArray(): void
     {
         $result = new SelectPathsResult(

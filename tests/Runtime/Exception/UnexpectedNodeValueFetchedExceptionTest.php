@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Runtime\Exception\UnexpectedNodeValueFetchedException;
  */
 class UnexpectedNodeValueFetchedExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new UnexpectedNodeValueFetchedException(

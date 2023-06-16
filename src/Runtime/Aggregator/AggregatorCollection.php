@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Runtime\Aggregator;
 
 final class AggregatorCollection implements AggregatorCollectionInterface
 {
-
     private const MIN = 'min';
     private const MAX = 'max';
     private const LENGTH = 'length';
@@ -15,23 +14,13 @@ final class AggregatorCollection implements AggregatorCollectionInterface
 
     public function byName(string $name): ValueAggregatorInterface
     {
-        switch ($name) {
-            case self::MIN:
-                return new MinAggregator();
-
-            case self::MAX:
-                return new MaxAggregator();
-
-            case self::LENGTH:
-                return new LengthAggregator();
-
-            case self::AVG:
-                return new AvgAggregator();
-
-            case self::STDDEV:
-                return new StdDevAggregator();
-        }
-
-        throw new Exception\AggregateFunctionNotFoundException($name);
+        return match ($name) {
+            self::MIN => new MinAggregator(),
+            self::MAX => new MaxAggregator(),
+            self::LENGTH => new LengthAggregator(),
+            self::AVG => new AvgAggregator(),
+            self::STDDEV => new StdDevAggregator(),
+            default => throw new Exception\AggregateFunctionNotFoundException($name),
+        };
     }
 }

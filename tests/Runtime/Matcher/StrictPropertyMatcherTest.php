@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Matcher\StrictPropertyMatcher;
  */
 class StrictPropertyMatcherTest extends TestCase
 {
-
     public function testMatch_ConstructedWithGivenAddressInProperties_ReturnsTrue(): void
     {
         $matcher = new StrictPropertyMatcher('a');

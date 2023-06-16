@@ -8,25 +8,33 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 
 use function array_map;
+use function array_values;
 
 final class SelectPathsResult implements SelectPathsResultInterface
 {
+    /**
+     * @var list<PathInterface>
+     */
+    private array $paths;
 
-    private $paths;
-
-    private $encoder;
-
-    public function __construct(PathEncoderInterface $encoder, PathInterface ...$paths)
-    {
-        $this->encoder = $encoder;
-        $this->paths = $paths;
+    public function __construct(
+        private PathEncoderInterface $encoder,
+        PathInterface ...$paths,
+    ) {
+        $this->paths = array_values($paths);
     }
 
+    /**
+     * @return list<PathInterface>
+     */
     public function get(): array
     {
         return $this->paths;
     }
 
+    /**
+     * @return list<string>
+     */
     public function encode(): array
     {
         return array_map([$this->encoder, 'encodePath'], $this->paths);

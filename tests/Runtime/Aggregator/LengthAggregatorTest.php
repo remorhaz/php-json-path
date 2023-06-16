@@ -18,7 +18,6 @@ use function array_fill;
  */
 class LengthAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_NonArrayValue_ReturnsNull(): void
     {
         $aggregator = new LengthAggregator();

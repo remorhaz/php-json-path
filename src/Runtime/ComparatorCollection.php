@@ -11,12 +11,9 @@ use Remorhaz\JSON\Data\Comparator\GreaterValueComparator;
 
 final class ComparatorCollection implements ComparatorCollectionInterface
 {
-
-    private $collator;
-
-    public function __construct(Collator $collator)
-    {
-        $this->collator = $collator;
+    public function __construct(
+        private Collator $collator,
+    ) {
     }
 
     public function equal(): ComparatorInterface

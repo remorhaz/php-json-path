@@ -10,20 +10,16 @@ use Throwable;
 
 final class MinElementNotFoundException extends LogicException implements ExceptionInterface
 {
-
-    private $dataList;
-
-    private $elements;
-
     /**
      * @param array $dataList
-     * @param ScalarValueInterface[] $elements
+     * @param list<ScalarValueInterface> $elements
      * @param Throwable|null $previous
      */
-    public function __construct(array $dataList, array $elements, Throwable $previous = null)
-    {
-        $this->dataList = $dataList;
-        $this->elements = $elements;
+    public function __construct(
+        private array $dataList,
+        private array $elements,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct("Min element not found", 0, $previous);
     }
 
@@ -33,7 +29,7 @@ final class MinElementNotFoundException extends LogicException implements Except
     }
 
     /**
-     * @return ScalarValueInterface[]
+     * @return list<ScalarValueInterface>
      */
     public function getElements(): array
     {

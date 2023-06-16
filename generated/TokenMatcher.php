@@ -19,7 +19,6 @@ use Remorhaz\UniLex\Lexer\TokenMatcherTemplate;
 
 class TokenMatcher extends TokenMatcherTemplate
 {
-
     public function match(CharBufferInterface $buffer, TokenFactoryInterface $tokenFactory): bool
     {
         $context = $this->createContext($buffer, $tokenFactory);
@@ -1790,8 +1789,9 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0828 == $char ||
             0x0840 <= $char && $char <= 0x0858 ||
             0x0860 <= $char && $char <= 0x086A ||
-            0x08A0 <= $char && $char <= 0x08B4 ||
-            0x08B6 <= $char && $char <= 0x08C7 ||
+            0x0870 <= $char && $char <= 0x0887 ||
+            0x0889 <= $char && $char <= 0x088E ||
+            0x08A0 <= $char && $char <= 0x08C9 ||
             0x0904 <= $char && $char <= 0x0939 ||
             0x093D == $char ||
             0x0950 == $char ||
@@ -1871,6 +1871,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0C2A <= $char && $char <= 0x0C39 ||
             0x0C3D == $char ||
             0x0C58 <= $char && $char <= 0x0C5A ||
+            0x0C5D == $char ||
             0x0C60 == $char ||
             0x0C61 == $char ||
             0x0C80 == $char ||
@@ -1880,6 +1881,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0CAA <= $char && $char <= 0x0CB3 ||
             0x0CB5 <= $char && $char <= 0x0CB9 ||
             0x0CBD == $char ||
+            0x0CDD == $char ||
             0x0CDE == $char ||
             0x0CE0 == $char ||
             0x0CE1 == $char ||
@@ -1957,9 +1959,8 @@ class TokenMatcher extends TokenMatcherTemplate
             0x1681 <= $char && $char <= 0x169A ||
             0x16A0 <= $char && $char <= 0x16EA ||
             0x16EE <= $char && $char <= 0x16F8 ||
-            0x1700 <= $char && $char <= 0x170C ||
-            0x170E <= $char && $char <= 0x1711 ||
-            0x1720 <= $char && $char <= 0x1731 ||
+            0x1700 <= $char && $char <= 0x1711 ||
+            0x171F <= $char && $char <= 0x1731 ||
             0x1740 <= $char && $char <= 0x1751 ||
             0x1760 <= $char && $char <= 0x176C ||
             0x176E <= $char && $char <= 0x1770 ||
@@ -1979,7 +1980,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x1A20 <= $char && $char <= 0x1A54 ||
             0x1AA7 == $char ||
             0x1B05 <= $char && $char <= 0x1B33 ||
-            0x1B45 <= $char && $char <= 0x1B4B ||
+            0x1B45 <= $char && $char <= 0x1B4C ||
             0x1B83 <= $char && $char <= 0x1BA0 ||
             0x1BAE == $char ||
             0x1BAF == $char ||
@@ -2031,9 +2032,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x2145 <= $char && $char <= 0x2149 ||
             0x214E == $char ||
             0x2160 <= $char && $char <= 0x2188 ||
-            0x2C00 <= $char && $char <= 0x2C2E ||
-            0x2C30 <= $char && $char <= 0x2C5E ||
-            0x2C60 <= $char && $char <= 0x2CE4 ||
+            0x2C00 <= $char && $char <= 0x2CE4 ||
             0x2CEB <= $char && $char <= 0x2CEE ||
             0x2CF2 == $char ||
             0x2CF3 == $char ||
@@ -2064,8 +2063,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x31A0 <= $char && $char <= 0x31BF ||
             0x31F0 <= $char && $char <= 0x31FF ||
             0x3400 <= $char && $char <= 0x4DBF ||
-            0x4E00 <= $char && $char <= 0x9FFC ||
-            0xA000 <= $char && $char <= 0xA48C ||
+            0x4E00 <= $char && $char <= 0xA48C ||
             0xA4D0 <= $char && $char <= 0xA4FD ||
             0xA500 <= $char && $char <= 0xA60C ||
             0xA610 <= $char && $char <= 0xA61F ||
@@ -2076,9 +2074,12 @@ class TokenMatcher extends TokenMatcherTemplate
             0xA6A0 <= $char && $char <= 0xA6EF ||
             0xA717 <= $char && $char <= 0xA71F ||
             0xA722 <= $char && $char <= 0xA788 ||
-            0xA78B <= $char && $char <= 0xA7BF ||
-            0xA7C2 <= $char && $char <= 0xA7CA ||
-            0xA7F5 <= $char && $char <= 0xA801 ||
+            0xA78B <= $char && $char <= 0xA7CA ||
+            0xA7D0 == $char ||
+            0xA7D1 == $char ||
+            0xA7D3 == $char ||
+            0xA7D5 <= $char && $char <= 0xA7D9 ||
+            0xA7F2 <= $char && $char <= 0xA801 ||
             0xA803 <= $char && $char <= 0xA805 ||
             0xA807 <= $char && $char <= 0xA80A ||
             0xA80C <= $char && $char <= 0xA822 ||
@@ -2172,9 +2173,22 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0104D8 <= $char && $char <= 0x0104FB ||
             0x010500 <= $char && $char <= 0x010527 ||
             0x010530 <= $char && $char <= 0x010563 ||
+            0x010570 <= $char && $char <= 0x01057A ||
+            0x01057C <= $char && $char <= 0x01058A ||
+            0x01058C <= $char && $char <= 0x010592 ||
+            0x010594 == $char ||
+            0x010595 == $char ||
+            0x010597 <= $char && $char <= 0x0105A1 ||
+            0x0105A3 <= $char && $char <= 0x0105B1 ||
+            0x0105B3 <= $char && $char <= 0x0105B9 ||
+            0x0105BB == $char ||
+            0x0105BC == $char ||
             0x010600 <= $char && $char <= 0x010736 ||
             0x010740 <= $char && $char <= 0x010755 ||
             0x010760 <= $char && $char <= 0x010767 ||
+            0x010780 <= $char && $char <= 0x010785 ||
+            0x010787 <= $char && $char <= 0x0107B0 ||
+            0x0107B2 <= $char && $char <= 0x0107BA ||
             0x010800 <= $char && $char <= 0x010805 ||
             0x010808 == $char ||
             0x01080A <= $char && $char <= 0x010835 ||
@@ -2214,9 +2228,13 @@ class TokenMatcher extends TokenMatcherTemplate
             0x010F00 <= $char && $char <= 0x010F1C ||
             0x010F27 == $char ||
             0x010F30 <= $char && $char <= 0x010F45 ||
+            0x010F70 <= $char && $char <= 0x010F81 ||
             0x010FB0 <= $char && $char <= 0x010FC4 ||
             0x010FE0 <= $char && $char <= 0x010FF6 ||
             0x011003 <= $char && $char <= 0x011037 ||
+            0x011071 == $char ||
+            0x011072 == $char ||
+            0x011075 == $char ||
             0x011083 <= $char && $char <= 0x0110AF ||
             0x0110D0 <= $char && $char <= 0x0110E8 ||
             0x011103 <= $char && $char <= 0x011126 ||
@@ -2261,6 +2279,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x011680 <= $char && $char <= 0x0116AA ||
             0x0116B8 == $char ||
             0x011700 <= $char && $char <= 0x01171A ||
+            0x011740 <= $char && $char <= 0x011746 ||
             0x011800 <= $char && $char <= 0x01182B ||
             0x0118A0 <= $char && $char <= 0x0118DF ||
             0x0118FF <= $char && $char <= 0x011906 ||
@@ -2281,7 +2300,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x011A50 == $char ||
             0x011A5C <= $char && $char <= 0x011A89 ||
             0x011A9D == $char ||
-            0x011AC0 <= $char && $char <= 0x011AF8 ||
+            0x011AB0 <= $char && $char <= 0x011AF8 ||
             0x011C00 <= $char && $char <= 0x011C08 ||
             0x011C0A <= $char && $char <= 0x011C2E ||
             0x011C40 == $char ||
@@ -2301,10 +2320,12 @@ class TokenMatcher extends TokenMatcherTemplate
             0x012000 <= $char && $char <= 0x012399 ||
             0x012400 <= $char && $char <= 0x01246E ||
             0x012480 <= $char && $char <= 0x012543 ||
+            0x012F90 <= $char && $char <= 0x012FF0 ||
             0x013000 <= $char && $char <= 0x01342E ||
             0x014400 <= $char && $char <= 0x014646 ||
             0x016800 <= $char && $char <= 0x016A38 ||
             0x016A40 <= $char && $char <= 0x016A5E ||
+            0x016A70 <= $char && $char <= 0x016ABE ||
             0x016AD0 <= $char && $char <= 0x016AED ||
             0x016B00 <= $char && $char <= 0x016B2F ||
             0x016B40 <= $char && $char <= 0x016B43 ||
@@ -2320,7 +2341,11 @@ class TokenMatcher extends TokenMatcherTemplate
             0x017000 <= $char && $char <= 0x0187F7 ||
             0x018800 <= $char && $char <= 0x018CD5 ||
             0x018D00 <= $char && $char <= 0x018D08 ||
-            0x01B000 <= $char && $char <= 0x01B11E ||
+            0x01AFF0 <= $char && $char <= 0x01AFF3 ||
+            0x01AFF5 <= $char && $char <= 0x01AFFB ||
+            0x01AFFD == $char ||
+            0x01AFFE == $char ||
+            0x01B000 <= $char && $char <= 0x01B122 ||
             0x01B150 <= $char && $char <= 0x01B152 ||
             0x01B164 <= $char && $char <= 0x01B167 ||
             0x01B170 <= $char && $char <= 0x01B2FB ||
@@ -2360,10 +2385,17 @@ class TokenMatcher extends TokenMatcherTemplate
             0x01D78A <= $char && $char <= 0x01D7A8 ||
             0x01D7AA <= $char && $char <= 0x01D7C2 ||
             0x01D7C4 <= $char && $char <= 0x01D7CB ||
+            0x01DF00 <= $char && $char <= 0x01DF1E ||
             0x01E100 <= $char && $char <= 0x01E12C ||
             0x01E137 <= $char && $char <= 0x01E13D ||
             0x01E14E == $char ||
+            0x01E290 <= $char && $char <= 0x01E2AD ||
             0x01E2C0 <= $char && $char <= 0x01E2EB ||
+            0x01E7E0 <= $char && $char <= 0x01E7E6 ||
+            0x01E7E8 <= $char && $char <= 0x01E7EB ||
+            0x01E7ED == $char ||
+            0x01E7EE == $char ||
+            0x01E7F0 <= $char && $char <= 0x01E7FE ||
             0x01E800 <= $char && $char <= 0x01E8C4 ||
             0x01E900 <= $char && $char <= 0x01E943 ||
             0x01E94B == $char ||
@@ -2403,8 +2435,8 @@ class TokenMatcher extends TokenMatcherTemplate
             0x01EEA1 <= $char && $char <= 0x01EEA3 ||
             0x01EEA5 <= $char && $char <= 0x01EEA9 ||
             0x01EEAB <= $char && $char <= 0x01EEBB ||
-            0x020000 <= $char && $char <= 0x02A6DD ||
-            0x02A700 <= $char && $char <= 0x02B734 ||
+            0x020000 <= $char && $char <= 0x02A6DF ||
+            0x02A700 <= $char && $char <= 0x02B738 ||
             0x02B740 <= $char && $char <= 0x02B81D ||
             0x02B820 <= $char && $char <= 0x02CEA1 ||
             0x02CEB0 <= $char && $char <= 0x02EBE0 ||
@@ -2446,7 +2478,8 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0825 <= $char && $char <= 0x0827 ||
             0x0829 <= $char && $char <= 0x082D ||
             0x0859 <= $char && $char <= 0x085B ||
-            0x08D3 <= $char && $char <= 0x08E1 ||
+            0x0898 <= $char && $char <= 0x089F ||
+            0x08CA <= $char && $char <= 0x08E1 ||
             0x08E3 <= $char && $char <= 0x0903 ||
             0x093A <= $char && $char <= 0x093C ||
             0x093E <= $char && $char <= 0x094F ||
@@ -2500,6 +2533,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x0BD7 == $char ||
             0x0BE6 <= $char && $char <= 0x0BEF ||
             0x0C00 <= $char && $char <= 0x0C04 ||
+            0x0C3C == $char ||
             0x0C3E <= $char && $char <= 0x0C44 ||
             0x0C46 <= $char && $char <= 0x0C48 ||
             0x0C4A <= $char && $char <= 0x0C4D ||
@@ -2569,7 +2603,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x108F <= $char && $char <= 0x109D ||
             0x135D <= $char && $char <= 0x135F ||
             0x1369 <= $char && $char <= 0x1371 ||
-            0x1712 <= $char && $char <= 0x1714 ||
+            0x1712 <= $char && $char <= 0x1715 ||
             0x1732 <= $char && $char <= 0x1734 ||
             0x1752 == $char ||
             0x1753 == $char ||
@@ -2579,7 +2613,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x17DD == $char ||
             0x17E0 <= $char && $char <= 0x17E9 ||
             0x180B <= $char && $char <= 0x180D ||
-            0x1810 <= $char && $char <= 0x1819 ||
+            0x180F <= $char && $char <= 0x1819 ||
             0x18A9 == $char ||
             0x1920 <= $char && $char <= 0x192B ||
             0x1930 <= $char && $char <= 0x193B ||
@@ -2591,8 +2625,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x1A7F <= $char && $char <= 0x1A89 ||
             0x1A90 <= $char && $char <= 0x1A99 ||
             0x1AB0 <= $char && $char <= 0x1ABD ||
-            0x1ABF == $char ||
-            0x1AC0 == $char ||
+            0x1ABF <= $char && $char <= 0x1ACE ||
             0x1B00 <= $char && $char <= 0x1B04 ||
             0x1B34 <= $char && $char <= 0x1B44 ||
             0x1B50 <= $char && $char <= 0x1B59 ||
@@ -2609,8 +2642,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x1CED == $char ||
             0x1CF4 == $char ||
             0x1CF7 <= $char && $char <= 0x1CF9 ||
-            0x1DC0 <= $char && $char <= 0x1DF9 ||
-            0x1DFB <= $char && $char <= 0x1DFF ||
+            0x1DC0 <= $char && $char <= 0x1DFF ||
             0x203F == $char ||
             0x2040 == $char ||
             0x2054 == $char ||
@@ -2693,11 +2725,15 @@ class TokenMatcher extends TokenMatcherTemplate
             0x010EAB == $char ||
             0x010EAC == $char ||
             0x010F46 <= $char && $char <= 0x010F50 ||
+            0x010F82 <= $char && $char <= 0x010F85 ||
             0x011000 <= $char && $char <= 0x011002 ||
             0x011038 <= $char && $char <= 0x011046 ||
-            0x011066 <= $char && $char <= 0x01106F ||
+            0x011066 <= $char && $char <= 0x011070 ||
+            0x011073 == $char ||
+            0x011074 == $char ||
             0x01107F <= $char && $char <= 0x011082 ||
             0x0110B0 <= $char && $char <= 0x0110BA ||
+            0x0110C2 == $char ||
             0x0110F0 <= $char && $char <= 0x0110F9 ||
             0x011100 <= $char && $char <= 0x011102 ||
             0x011127 <= $char && $char <= 0x011134 ||
@@ -2778,6 +2814,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x011DA0 <= $char && $char <= 0x011DA9 ||
             0x011EF3 <= $char && $char <= 0x011EF6 ||
             0x016A60 <= $char && $char <= 0x016A69 ||
+            0x016AC0 <= $char && $char <= 0x016AC9 ||
             0x016AF0 <= $char && $char <= 0x016AF4 ||
             0x016B30 <= $char && $char <= 0x016B36 ||
             0x016B50 <= $char && $char <= 0x016B59 ||
@@ -2789,6 +2826,8 @@ class TokenMatcher extends TokenMatcherTemplate
             0x016FF1 == $char ||
             0x01BC9D == $char ||
             0x01BC9E == $char ||
+            0x01CF00 <= $char && $char <= 0x01CF2D ||
+            0x01CF30 <= $char && $char <= 0x01CF46 ||
             0x01D165 <= $char && $char <= 0x01D169 ||
             0x01D16D <= $char && $char <= 0x01D172 ||
             0x01D17B <= $char && $char <= 0x01D182 ||
@@ -2810,6 +2849,7 @@ class TokenMatcher extends TokenMatcherTemplate
             0x01E026 <= $char && $char <= 0x01E02A ||
             0x01E130 <= $char && $char <= 0x01E136 ||
             0x01E140 <= $char && $char <= 0x01E149 ||
+            0x01E2AE == $char ||
             0x01E2EC <= $char && $char <= 0x01E2F9 ||
             0x01E8D0 <= $char && $char <= 0x01E8D6 ||
             0x01E944 <= $char && $char <= 0x01E94A ||

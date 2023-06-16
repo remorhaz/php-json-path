@@ -8,10 +8,9 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ValueResultInterface extends OneResultInterface
 {
-
     public function encode(): string;
 
-    public function decode();
+    public function decode(): mixed;
 
     public function get(): ValueInterface;
 }

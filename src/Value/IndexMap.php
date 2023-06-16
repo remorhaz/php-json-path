@@ -4,33 +4,40 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use ReturnTypeWillChange;
-
 use function array_keys;
+use function array_values;
 use function count;
 use function in_array;
 
 final class IndexMap implements IndexMapInterface
 {
-
-    private $outerIndexes;
+    /**
+     * @var list<int|null>
+     */
+    private array $outerIndexes;
 
     public function __construct(?int ...$outerIndexes)
     {
-        $this->outerIndexes = $outerIndexes;
+        $this->outerIndexes = array_values($outerIndexes);
     }
 
-    #[ReturnTypeWillChange]
-    public function count()
+    #[\ReturnTypeWillChange]
+    public function count(): int
     {
         return count($this->outerIndexes);
     }
 
+    /**
+     * @return list<int>
+     */
     public function getInnerIndexes(): array
     {
         return array_keys($this->outerIndexes);
     }
 
+    /**
+     * @return list<int|null>
+     */
     public function getOuterIndexes(): array
     {
         return $this->outerIndexes;
@@ -38,11 +45,8 @@ final class IndexMap implements IndexMapInterface
 
     public function getOuterIndex(int $innerIndex): int
     {
-        if (!isset($this->outerIndexes[$innerIndex])) {
-            throw new Exception\OuterIndexNotFoundException($innerIndex, $this);
-        }
-
-        return $this->outerIndexes[$innerIndex];
+        return $this->outerIndexes[$innerIndex]
+            ?? throw new Exception\OuterIndexNotFoundException($innerIndex, $this);
     }
 
     public function outerIndexExists(int $outerIndex): bool

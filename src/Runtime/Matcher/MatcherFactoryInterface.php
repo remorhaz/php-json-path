@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 interface MatcherFactoryInterface
 {
-
     public function matchAnyChild(): ChildMatcherInterface;
 
     public function matchPropertyStrictly(string ...$nameList): ChildMatcherInterface;

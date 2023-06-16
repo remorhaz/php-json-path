@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Matcher\Exception\AddressNotSortableException;
  */
 class AddressNotSortableExceptionTest extends TestCase
 {
-
     public function testGetMessage_ConstructedWithAddress_ReturnsMatchingValue(): void
     {
         $exception = new AddressNotSortableException(1);

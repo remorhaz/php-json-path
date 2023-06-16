@@ -18,7 +18,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\StdDevAggregator;
  */
 class AggregatorCollectionTest extends TestCase
 {
-
     /**
      * @param string $name
      * @param string $expectedClass

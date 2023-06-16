@@ -12,7 +12,6 @@ use function iterator_count;
 
 final class LengthAggregator implements ValueAggregatorInterface
 {
-
     public function tryAggregate(ValueInterface $value): ?ValueInterface
     {
         if (!$value instanceof ArrayValueInterface) {

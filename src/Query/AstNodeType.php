@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Query;
 
 abstract class AstNodeType
 {
-
     public const GET_INPUT = 'get_input';
     public const SET_OUTPUT = 'set_output';
     public const FETCH_FILTER_CONTEXT = 'fetch_filter_context';

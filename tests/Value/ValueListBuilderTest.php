@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Value\ValueListBuilder;
  */
 class ValueListBuilderTest extends TestCase
 {
-
     public function testBuild_NoValuesAdded_ReturnsListWithEmptyIndexMap(): void
     {
         $builder = new ValueListBuilder();

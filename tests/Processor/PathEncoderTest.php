@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Processor\PathEncoder;
  */
 class PathEncoderTest extends TestCase
 {
-
     /**
      * @param array $pathElements
      * @param string $expectedValue

@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Value\IndexMap;
  */
 class IndexMapTest extends TestCase
 {
-
     /**
      * @param array $outerIndexes
      * @param array $expectedValue

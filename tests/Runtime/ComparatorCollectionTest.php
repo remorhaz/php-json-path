@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Runtime\ComparatorCollection;
  */
 class ComparatorCollectionTest extends TestCase
 {
-
     public function testEqual_Constructed_ReturnsEqualComparatorInstance(): void
     {
         $comparators = new ComparatorCollection(

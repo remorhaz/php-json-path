@@ -20,8 +20,7 @@ use Throwable;
 
 final class Ll1ParserFactory implements Ll1ParserFactoryInterface
 {
-
-    private $grammar;
+    private ?GrammarInterface $grammar = null;
 
     public function createParser(string $source, Tree $queryAst): Ll1Parser
     {
@@ -30,7 +29,7 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
             $parser = new Ll1Parser(
                 $this->getGrammar(),
                 $this->createSourceReader($source),
-                new TranslationSchemeApplier($scheme)
+                new TranslationSchemeApplier($scheme),
             );
             $parser->loadLookupTable(__DIR__ . '/../../generated/LookupTable.php');
         } catch (Throwable $e) {
@@ -46,11 +45,7 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
      */
     private function getGrammar(): GrammarInterface
     {
-        if (!isset($this->grammar)) {
-            $this->grammar = GrammarLoader::loadFile(__DIR__ . '/../../spec/GrammarSpec.php');
-        }
-
-        return $this->grammar;
+        return $this->grammar ??= GrammarLoader::loadFile(__DIR__ . '/../../spec/GrammarSpec.php');
     }
 
     /**

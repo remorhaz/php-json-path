@@ -15,12 +15,9 @@ use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 
 final class ValueListFetcher implements ValueListFetcherInterface
 {
-
-    private $valueFetcher;
-
-    public function __construct(ValueFetcherInterface $valueFetcher)
-    {
-        $this->valueFetcher = $valueFetcher;
+    public function __construct(
+        private ValueFetcherInterface $valueFetcher,
+    ) {
     }
 
     /**
@@ -30,7 +27,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
      */
     public function fetchChildren(
         NodeValueListInterface $source,
-        Matcher\ChildMatcherInterface $matcher
+        Matcher\ChildMatcherInterface $matcher,
     ): NodeValueListInterface {
         $nodesBuilder = new NodeValueListBuilder();
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
@@ -48,7 +45,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
 
     public function fetchChildrenDeep(
         NodeValueListInterface $source,
-        Matcher\ChildMatcherInterface $matcher
+        Matcher\ChildMatcherInterface $matcher,
     ): NodeValueListInterface {
         $nodesBuilder = new NodeValueListBuilder();
         foreach ($source->getValues() as $sourceIndex => $sourceValue) {
@@ -102,7 +99,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
 
     public function fetchFilteredValues(
         NodeValueListInterface $values,
-        EvaluatedValueListInterface $results
+        EvaluatedValueListInterface $results,
     ): NodeValueListInterface {
         if (!$values->getIndexMap()->isCompatible($results->getIndexMap())) {
             throw new Exception\IndexMapMatchFailedException($values, $results);
@@ -128,7 +125,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
             }
             $nodesBuilder->addValue(
                 $value,
-                $values->getIndexMap()->getOuterIndex($index)
+                $values->getIndexMap()->getOuterIndex($index),
             );
         }
 
@@ -149,7 +146,7 @@ final class ValueListFetcher implements ValueListFetcherInterface
     ): EvaluatedValueListInterface {
         return new EvaluatedValueList(
             $evaluatedValues->getIndexMap()->join($contextValues->getIndexMap()),
-            ...$evaluatedValues->getResults()
+            ...$evaluatedValues->getResults(),
         );
     }
 }

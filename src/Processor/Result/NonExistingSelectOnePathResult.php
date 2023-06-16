@@ -8,7 +8,6 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 
 final class NonExistingSelectOnePathResult implements SelectOnePathResultInterface
 {
-
     public function exists(): bool
     {
         return false;

@@ -17,21 +17,11 @@ use function count;
 
 final class ResultFactory implements ResultFactoryInterface
 {
-
-    private $jsonEncoder;
-
-    private $jsonDecoder;
-
-    private $pathsEncoder;
-
     public function __construct(
-        ValueEncoderInterface $jsonEncoder,
-        ValueDecoderInterface $jsonDecoder,
-        PathEncoderInterface $pathEncoder
+        private ValueEncoderInterface $jsonEncoder,
+        private ValueDecoderInterface $jsonDecoder,
+        private PathEncoderInterface $pathsEncoder,
     ) {
-        $this->jsonEncoder = $jsonEncoder;
-        $this->jsonDecoder = $jsonDecoder;
-        $this->pathsEncoder = $pathEncoder;
     }
 
     public function createSelectResult(ValueListInterface $values): SelectResultInterface
@@ -48,17 +38,15 @@ final class ResultFactory implements ResultFactoryInterface
     {
         return new SelectPathsResult(
             $this->pathsEncoder,
-            ...array_map([$this, 'getValuePath'], $values->getValues())
+            ...array_map([$this, 'getValuePath'], $values->getValues()),
         );
     }
 
     private function getValuePath(ValueInterface $value): PathInterface
     {
-        if (!$value instanceof NodeValueInterface) {
-            throw new Exception\PathNotFoundInValueException($value);
-        }
-
-        return $value->getPath();
+        return $value instanceof NodeValueInterface
+            ? $value->getPath()
+            : throw new Exception\PathNotFoundInValueException($value);
     }
 
     public function createSelectOnePathResult(ValueListInterface $values): SelectOnePathResultInterface
@@ -75,15 +63,11 @@ final class ResultFactory implements ResultFactoryInterface
 
     private function findSingleValue(ValueListInterface $values): ?ValueInterface
     {
-        switch (count($values->getValues())) {
-            case 0:
-                return null;
-
-            case 1:
-                return $values->getValue(0);
-        }
-
-        throw new Exception\MoreThanOneValueInListException($values);
+        return match (count($values->getValues())) {
+            0 => null,
+            1 => $values->getValue(0),
+            default => throw new Exception\MoreThanOneValueInListException($values),
+        };
     }
 
     public function createValueResult(?ValueInterface $value): ValueResultInterface

@@ -6,12 +6,9 @@ namespace Remorhaz\JSON\Path\Value;
 
 final class EvaluatedValue implements EvaluatedValueInterface
 {
-
-    private $value;
-
-    public function __construct(bool $value)
-    {
-        $this->value = $value;
+    public function __construct(
+        private bool $value,
+    ) {
     }
 
     public function getData(): bool

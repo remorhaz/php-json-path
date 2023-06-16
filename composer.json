@@ -16,17 +16,17 @@
     }
   ],
   "require": {
-    "php": "^7.3 || ^8",
+    "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
     "ext-intl": "*",
     "ext-json": "*",
-    "remorhaz/php-unilex": "^0.4.1",
-    "remorhaz/php-json-data": "^0.5.3",
+    "remorhaz/php-unilex": "^0.5.2",
+    "remorhaz/php-json-data": "^0.6",
     "nikic/php-parser": "^4.12"
   },
   "require-dev": {
-    "infection/infection": "^0.18 || ^0.24 || ^0.25",
-    "phpunit/phpunit": "^9.5.10",
-    "squizlabs/php_codesniffer": "^3.6.1"
+    "infection/infection": "^0.26 || ^0.27",
+    "phpunit/phpunit": "^9.6 || ^10",
+    "squizlabs/php_codesniffer": "^3.7.2"
   },
   "autoload": {
     "psr-4": {
@@ -51,16 +51,24 @@
       "vendor/bin/phpcs -sp"
     ],
     "test-unit": [
-      "vendor/bin/phpunit --coverage-xml=build/log/coverage-xml --log-junit=build/log/junit.xml"
+      "vendor/bin/phpunit --coverage-xml=build/log/coverage-xml --coverage-clover=build/log/clover.xml --log-junit=build/log/junit.xml"
     ],
     "test": [
       "@test-cs",
       "@test-unit"
     ],
     "infection": [
-      "@test-unit",
       "mkdir -p build/log/infection",
       "vendor/bin/infection --threads=4 --coverage=build/log --no-progress --skip-initial-tests"
+    ],
+    "test-infection": [
+      "@test-unit",
+      "@infection"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "infection/extension-installer": true
+    }
   }
 }

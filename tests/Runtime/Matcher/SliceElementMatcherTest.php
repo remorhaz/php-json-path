@@ -18,7 +18,6 @@ use function array_fill;
  */
 class SliceElementMatcherTest extends TestCase
 {
-
     public function testMatch_MatchingIndexNonArrayContainer_ReturnsFalse(): void
     {
         $matcher = new SliceElementMatcher(0, 2, 1);
@@ -82,7 +81,7 @@ class SliceElementMatcherTest extends TestCase
         return new NodeArrayValue(
             array_fill(0, $length, null),
             $this->createMock(PathInterface::class),
-            $this->createMock(NodeValueFactoryInterface::class)
+            $this->createMock(NodeValueFactoryInterface::class),
         );
     }
 

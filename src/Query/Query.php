@@ -14,15 +14,10 @@ use function call_user_func;
 
 final class Query implements QueryInterface
 {
-
-    private $source;
-
-    private $callbackBuilder;
-
-    public function __construct(string $source, CallbackBuilderInterface $callbackBuilder)
-    {
-        $this->source = $source;
-        $this->callbackBuilder = $callbackBuilder;
+    public function __construct(
+        private string $source,
+        private CallbackBuilderInterface $callbackBuilder,
+    ) {
     }
 
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
@@ -32,7 +27,7 @@ final class Query implements QueryInterface
                 ->callbackBuilder
                 ->getCallback();
 
-            $args = [
+            return $callback(
                 (new NodeValueListBuilder())
                     ->addValue($rootNode, 0)
                     ->build(),
@@ -40,9 +35,7 @@ final class Query implements QueryInterface
                 $runtime->getEvaluator(),
                 $runtime->getLiteralFactory(),
                 $runtime->getMatcherFactory(),
-            ];
-
-            return call_user_func($callback, ...$args);
+            );
         } catch (Throwable $e) {
             throw new Exception\QueryExecutionFailedException(
                 $this->source,

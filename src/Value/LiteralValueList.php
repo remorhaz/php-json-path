@@ -10,15 +10,10 @@ use function array_fill_keys;
 
 final class LiteralValueList implements LiteralValueListInterface
 {
-
-    private $indexMap;
-
-    private $value;
-
-    public function __construct(IndexMapInterface $indexMap, LiteralValueInterface $value)
-    {
-        $this->indexMap = $indexMap;
-        $this->value = $value;
+    public function __construct(
+        private IndexMapInterface $indexMap,
+        private LiteralValueInterface $value,
+    ) {
     }
 
     public function getLiteral(): LiteralValueInterface
@@ -29,13 +24,15 @@ final class LiteralValueList implements LiteralValueListInterface
     public function getValue(int $index): ValueInterface
     {
         $innerIndexes = $this->indexMap->getInnerIndexes();
-        if (!isset($innerIndexes[$index])) {
-            throw new Exception\ValueNotFoundException($index, $this);
-        }
 
-        return $this->value;
+        return isset($innerIndexes[$index])
+            ? $this->value
+            : throw new Exception\ValueNotFoundException($index, $this);
     }
 
+    /**
+     * @return list<LiteralValueInterface>
+     */
     public function getValues(): array
     {
         return array_fill_keys($this->indexMap->getInnerIndexes(), $this->value);

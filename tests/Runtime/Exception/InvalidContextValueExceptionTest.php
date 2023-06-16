@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Runtime\Exception\InvalidContextValueException;
  */
 class InvalidContextValueExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidContextValueException(

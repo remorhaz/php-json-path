@@ -6,10 +6,15 @@ namespace Remorhaz\JSON\Path\Value;
 
 final class EvaluatedValueListBuilder
 {
+    /**
+     * @var list<int>
+     */
+    private array $indexMap = [];
 
-    private $indexMap = [];
-
-    private $results = [];
+    /**
+     * @var list<bool>
+     */
+    private array $results = [];
 
     public function addResult(bool $result, int $outerIndex): self
     {

@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\MinAggregator;
  */
 class MinAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_ArrayWithZeroElement_ReturnsNull(): void
     {
         $aggregator = new MinAggregator();

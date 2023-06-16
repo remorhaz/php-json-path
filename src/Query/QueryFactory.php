@@ -10,11 +10,6 @@ use Remorhaz\JSON\Path\Parser\ParserInterface;
 
 final class QueryFactory implements QueryFactoryInterface
 {
-
-    private $parser;
-
-    private $astTranslator;
-
     public static function create(): QueryFactoryInterface
     {
         return new QueryFactory(
@@ -23,10 +18,10 @@ final class QueryFactory implements QueryFactoryInterface
         );
     }
 
-    public function __construct(ParserInterface $parser, AstTranslatorInterface $astTranslator)
-    {
-        $this->parser = $parser;
-        $this->astTranslator = $astTranslator;
+    public function __construct(
+        private ParserInterface $parser,
+        private AstTranslatorInterface $astTranslator,
+    ) {
     }
 
     public function createQuery(string $path): QueryInterface

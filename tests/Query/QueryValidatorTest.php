@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Query\QueryValidator;
  */
 class QueryValidatorTest extends TestCase
 {
-
     public function testGetDefiniteQuery_GivenDefiniteQuery_ReturnsSameInstance(): void
     {
         $capabilities = new Capabilities(true, false);

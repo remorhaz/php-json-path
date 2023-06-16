@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Query;
 
+use Closure;
 use PhpParser\BuilderFactory;
 use PhpParser\Node as PhpAstNode;
 use PhpParser\Node\Arg;
@@ -25,10 +26,10 @@ use Remorhaz\UniLex\Stack\PushInterface;
 
 use function array_map;
 use function array_reverse;
+use function array_values;
 
 final class CallbackBuilder extends AbstractTranslatorListener implements CallbackBuilderInterface
 {
-
     private const ARG_INPUT = 'input';
 
     private const ARG_VALUE_LIST_FETCHER = 'valueListFetcher';
@@ -41,25 +42,31 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     private $php;
 
-    private $references = [];
+    /**
+     * @var array<int, Expr>
+     */
+    private array $references = [];
 
-    private $input;
+    private ?Expr $input = null;
 
-    private $valueListFetcher;
+    private ?Expr $valueListFetcher = null;
 
-    private $evaluator;
+    private ?Expr $evaluator = null;
 
-    private $literalFactory;
+    private ?Expr $literalFactory = null;
 
-    private $matcherFactory;
+    private ?Expr $matcherFactory = null;
 
-    private $stmts = [];
+    /**
+     * @var list<Expr>
+     */
+    private array $stmts = [];
 
-    private $callback;
+    private ?Closure $callback = null;
 
-    private $callbackCode;
+    private ?string $callbackCode = null;
 
-    private $capabilities;
+    private ?CapabilitiesInterface $capabilities = null;
 
     public function __construct()
     {
@@ -67,41 +74,36 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
     }
 
     /**
+     * @return callable(
+     *          NodeValueListInterface,
+     *          ValueListFetcherInterface,
+     *          EvaluatorInterface,
+     *          LiteralFactoryInterface,
+     *          MatcherFactoryInterface,
+     *      ): ValueListInterface
      * @noinspection PhpUnusedParameterInspection
      */
     public function getCallback(): callable
     {
-        if (!isset($this->callback)) {
-            $this->callback = function (
-                NodeValueListInterface $input,
-                ValueListFetcherInterface $valueListFetcher,
-                EvaluatorInterface $evaluator,
-                LiteralFactoryInterface $literalFactory,
-                MatcherFactoryInterface $matcherFactory
-            ): ValueListInterface {
-                return eval($this->getCallbackCode());
-            };
-        }
-
-        return $this->callback;
+        return $this->callback ??= function (
+            NodeValueListInterface $input,
+            ValueListFetcherInterface $valueListFetcher,
+            EvaluatorInterface $evaluator,
+            LiteralFactoryInterface $literalFactory,
+            MatcherFactoryInterface $matcherFactory,
+        ): ValueListInterface {
+            return eval($this->getCallbackCode());
+        };
     }
 
     public function getCallbackCode(): string
     {
-        if (isset($this->callbackCode)) {
-            return $this->callbackCode;
-        }
-
-        throw new Exception\QueryCallbackCodeNotFoundException();
+        return $this->callbackCode ?? throw new Exception\QueryCallbackCodeNotFoundException();
     }
 
     public function getCapabilities(): CapabilitiesInterface
     {
-        if (isset($this->capabilities)) {
-            return $this->capabilities;
-        }
-
-        throw new Exception\CapabilitiesNotFoundException();
+        return $this->capabilities ?? throw new Exception\CapabilitiesNotFoundException();
     }
 
     public function onStart(QueryAstNode $node): void
@@ -143,6 +145,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
         if ($this->hasReference($node)) {
             return;
         }
+
         switch ($node->getName()) {
             case AstNodeType::GET_INPUT:
                 $this->setReference($node, $this->input);
@@ -435,11 +438,9 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     private function setReference(QueryAstNode $node, Expr $expr): void
     {
-        if (isset($this->references[$node->getId()])) {
-            throw new Exception\ReferenceAlreadyExistsException($node->getId());
-        }
-
-        $this->references[$node->getId()] = $expr;
+        $this->references[$node->getId()] = isset($this->references[$node->getId()])
+            ? throw new Exception\ReferenceAlreadyExistsException($node->getId())
+            : $expr;
     }
 
     private function hasReference(QueryAstNode $node): bool
@@ -449,20 +450,17 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     private function getReference(QueryAstNode $node): Expr
     {
-        if (!isset($this->references[$node->getId()])) {
-            throw new Exception\ReferenceNotFoundException($node->getId());
-        }
-
-        return $this->references[$node->getId()];
+        return $this->references[$node->getId()]
+            ?? throw new Exception\ReferenceNotFoundException($node->getId());
     }
 
     /**
      * @param QueryAstNode ...$nodes
-     * @return Expr[]
+     * @return list<Expr>
      */
     private function getReferences(QueryAstNode ...$nodes): array
     {
-        return array_map([$this, 'getReference'], $nodes);
+        return array_map([$this, 'getReference'], array_values($nodes));
     }
 
     private function addMethodCall(QueryAstNode $node, Expr $object, string $method, PhpAstNode ...$args): void

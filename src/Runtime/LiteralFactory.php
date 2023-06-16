@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 class LiteralFactory implements LiteralFactoryInterface
 {
-
     public function createScalar(NodeValueListInterface $source, $value): ValueListInterface
     {
         return new LiteralValueList($source->getIndexMap(), new LiteralScalarValue($value));
@@ -22,19 +21,20 @@ class LiteralFactory implements LiteralFactoryInterface
 
     public function createArray(NodeValueListInterface $source, ValueListInterface ...$valueLists): ValueListInterface
     {
-        $createArrayElement = function (array $elements): ValueInterface {
-            return new LiteralArrayValue(...$elements);
-        };
-
         return new ValueList(
             $source->getIndexMap(),
             ...array_map(
-                $createArrayElement,
-                $this->buildArrayElementLists($source, ...$valueLists)
+                fn (array $elements): ValueInterface => new LiteralArrayValue(...$elements),
+                $this->buildArrayElementLists($source, ...$valueLists),
             )
         );
     }
 
+    /**
+     * @param NodeValueListInterface $source
+     * @param ValueListInterface     ...$valueLists
+     * @return array<int, list<ValueInterface>>
+     */
     private function buildArrayElementLists(NodeValueListInterface $source, ValueListInterface ...$valueLists): array
     {
         $elementLists = array_fill_keys($source->getIndexMap()->getInnerIndexes(), []);

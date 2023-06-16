@@ -7,7 +7,7 @@ namespace Remorhaz\JSON\Path\Value;
 interface EvaluatedValueListInterface extends ValueListInterface
 {
     /**
-     * @return bool[]
+     * @return list<bool>
      */
     public function getResults(): array;
 

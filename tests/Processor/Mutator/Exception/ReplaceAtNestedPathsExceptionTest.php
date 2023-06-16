@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException
  */
 class ReplaceAtNestedPathsExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ReplaceAtNestedPathsException(

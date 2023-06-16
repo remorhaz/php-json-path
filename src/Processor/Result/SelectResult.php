@@ -9,30 +9,27 @@ use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 use function array_map;
+use function array_values;
 
 final class SelectResult implements SelectResultInterface
 {
-
-    private $encoder;
-
-    private $decoder;
-
-    private $values;
+    /**
+     * @var list<ValueInterface>
+     */
+    private array $values;
 
     public function __construct(
-        ValueEncoderInterface $encoder,
-        ValueDecoderInterface $decoder,
-        ValueInterface ...$values
+        private ValueEncoderInterface $encoder,
+        private ValueDecoderInterface $decoder,
+        ValueInterface ...$values,
     ) {
-        $this->encoder = $encoder;
-        $this->decoder = $decoder;
-        $this->values = $values;
+        $this->values = array_values($values);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @return array
+     * @return list<mixed>
      */
     public function decode(): array
     {
@@ -42,7 +39,7 @@ final class SelectResult implements SelectResultInterface
     /**
      * {@inheritDoc}
      *
-     * @return string[]
+     * @return list<string>
      */
     public function encode(): array
     {
@@ -52,7 +49,7 @@ final class SelectResult implements SelectResultInterface
     /**
      * {@inheritDoc}
      *
-     * @return ValueInterface[]
+     * @return list<ValueInterface>
      */
     public function get(): array
     {

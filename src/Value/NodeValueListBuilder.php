@@ -8,13 +8,15 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 final class NodeValueListBuilder
 {
-
-    private $outerIndexes = [];
+    /**
+     * @var list<int>
+     */
+    private array $outerIndexes = [];
 
     /**
-     * @var NodeValueInterface[]
+     * @var list<NodeValueInterface>
      */
-    private $values = [];
+    private array $values = [];
 
     public function addValue(NodeValueInterface $value, int $outerIndex): self
     {
@@ -40,11 +42,10 @@ final class NodeValueListBuilder
                 continue;
             }
             $addedOuterIndex = $this->outerIndexes[$innerIndex];
-            if ($outerIndex == $addedOuterIndex) {
-                return true;
-            }
 
-            throw new Exception\ValueInListWithAnotherOuterIndexException($value, $addedOuterIndex, $outerIndex);
+            return $outerIndex == $addedOuterIndex
+                ? true
+                : throw new Exception\ValueInListWithAnotherOuterIndexException($value, $addedOuterIndex, $outerIndex);
         }
 
         return false;

@@ -15,7 +15,6 @@ use Remorhaz\UniLex\Unicode\CharBufferFactory;
  */
 class TokenMatcherTest extends TestCase
 {
-
     /**
      * @param string $input
      * @param array $expectedValue

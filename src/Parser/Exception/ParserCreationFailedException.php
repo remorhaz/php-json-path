@@ -9,8 +9,7 @@ use Throwable;
 
 final class ParserCreationFailedException extends LogicException implements ExceptionInterface
 {
-
-    public function __construct(Throwable $previous = null)
+    public function __construct(?Throwable $previous = null)
     {
         parent::__construct("Failed to create JSONPath parser", 0, $previous);
     }

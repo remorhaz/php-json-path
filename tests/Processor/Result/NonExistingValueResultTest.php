@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Processor\Result\NonExistingValueResult;
  */
 class NonExistingValueResultTest extends TestCase
 {
-
     public function testExists_Always_ReturnsFalse(): void
     {
         $result = new NonExistingValueResult();

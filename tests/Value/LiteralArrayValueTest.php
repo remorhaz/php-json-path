@@ -15,7 +15,6 @@ use function iterator_to_array;
  */
 class LiteralArrayValueTest extends TestCase
 {
-
     public function testCreateChildIterator_ConstructedWithoutValues_ReturnsEmptyIterator(): void
     {
         $array = new LiteralArrayValue();

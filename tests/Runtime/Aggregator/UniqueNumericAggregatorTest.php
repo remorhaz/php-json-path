@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\UniqueNumericAggregator;
  */
 class UniqueNumericAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_ArrayWithDifferentValues_AggregatesBothValues(): void
     {
         $aggregator = $this->getMockForAbstractClass(UniqueNumericAggregator::class);

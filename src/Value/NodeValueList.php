@@ -7,30 +7,29 @@ namespace Remorhaz\JSON\Path\Value;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
+use function array_values;
+
 final class NodeValueList implements NodeValueListInterface
 {
+    /**
+     * @var list<NodeValueInterface>
+     */
+    private array $values;
 
-    private $values;
-
-    private $indexMap;
-
-    public function __construct(IndexMapInterface $indexMap, NodeValueInterface ...$values)
-    {
-        $this->values = $values;
-        $this->indexMap = $indexMap;
+    public function __construct(
+        private IndexMapInterface $indexMap,
+        NodeValueInterface ...$values,
+    ) {
+        $this->values = array_values($values);
     }
 
     public function getValue(int $index): ValueInterface
     {
-        if (!isset($this->values[$index])) {
-            throw new Exception\ValueNotFoundException($index, $this);
-        }
-
-        return $this->values[$index];
+        return $this->values[$index] ?? throw new Exception\ValueNotFoundException($index, $this);
     }
 
     /**
-     * @return ValueInterface[]
+     * @return list<NodeValueInterface>
      */
     public function getValues(): array
     {

@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\Exception\AggregateFunctionNotFoundExc
  */
 class AggregateFunctionNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new AggregateFunctionNotFoundException('a');

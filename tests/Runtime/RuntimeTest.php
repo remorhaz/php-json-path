@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
  */
 class RuntimeTest extends TestCase
 {
-
     public function testGetEvaluator_ConstructedWithGivenEvaluator_ReturnsSameInstance(): void
     {
         $evaluator = $this->createMock(EvaluatorInterface::class);

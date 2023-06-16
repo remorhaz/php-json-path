@@ -10,12 +10,10 @@ use Throwable;
 
 final class QueryNotAddressableException extends LogicException implements ExceptionInterface
 {
-
-    private $query;
-
-    public function __construct(QueryInterface $query, Throwable $previous = null)
-    {
-        $this->query = $query;
+    public function __construct(
+        private QueryInterface $query,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct("Query is not addressable", 0, $previous);
     }
 

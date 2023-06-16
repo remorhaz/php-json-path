@@ -8,13 +8,10 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 
 interface SelectOnePathResultInterface extends OneResultInterface
 {
-
     public function get(): PathInterface;
 
     /**
      * Returns definite JSONPath query.
-     *
-     * @return string
      */
     public function encode(): string;
 }

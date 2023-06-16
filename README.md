@@ -3,7 +3,7 @@
 [![Build](https://github.com/remorhaz/php-json-path/actions/workflows/build.yml/badge.svg)](https://github.com/remorhaz/php-json-path/actions/workflows/build.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/remorhaz/php-json-path/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/remorhaz/php-json-path/?branch=master)
 [![codecov](https://codecov.io/gh/remorhaz/php-json-path/branch/master/graph/badge.svg)](https://codecov.io/gh/remorhaz/php-json-path)
-[![Infection MSI](https://badge.stryker-mutator.io/github.com/remorhaz/php-json-path/master)](https://infection.github.io)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fremorhaz%2Fphp-json-path%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/remorhaz/php-json-path/master)
 [![Total Downloads](https://poser.pugx.org/remorhaz/php-json-path/downloads)](https://packagist.org/packages/remorhaz/php-json-path)
 [![License](https://poser.pugx.org/remorhaz/php-json-path/license)](https://packagist.org/packages/remorhaz/php-json-path)
 
@@ -16,7 +16,7 @@ JSONPath is a simple query language for JSON documents, inspired by XPath for XM
 - Transforms indefinite JSONPath query to set of definite queries for given JSON document.
 
 ## Requirements
-- PHP 7.3+
+- PHP 8
 - [JSON extension](https://www.php.net/manual/en/book.json.php) (ext-json) - required by [remorhaz/php-json-data](https://github.com/remorhaz/php-json-data) that is used to access JSON documents.
 - [Internationalization functions](https://www.php.net/manual/en/book.intl.php) (ext-intl)
 - [Tokenizer extension](https://www.php.net/manual/en/book.tokenizer.php) (ext-tokenizer) - required by [nikic/php-parser](https://github.com/nikic/PHP-Parser) that is used for code generation.

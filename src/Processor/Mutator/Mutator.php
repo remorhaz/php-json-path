@@ -12,15 +12,10 @@ use Remorhaz\JSON\Data\Walker\ValueWalkerInterface;
 
 final class Mutator implements MutatorInterface
 {
-
-    private $valueWalker;
-
-    private $eventDecoder;
-
-    public function __construct(ValueWalkerInterface $walker, EventDecoderInterface $eventDecoder)
-    {
-        $this->valueWalker = $walker;
-        $this->eventDecoder = $eventDecoder;
+    public function __construct(
+        private ValueWalkerInterface $valueWalker,
+        private EventDecoderInterface $eventDecoder,
+    ) {
     }
 
     public function deletePaths(NodeValueInterface $rootNode, PathInterface ...$paths): ?NodeValueInterface
@@ -38,7 +33,7 @@ final class Mutator implements MutatorInterface
     public function replacePaths(
         NodeValueInterface $rootNode,
         NodeValueInterface $newNode,
-        PathInterface ...$paths
+        PathInterface ...$paths,
     ): NodeValueInterface {
         $modifier = new ReplaceMutation($newNode, ...$paths);
         $events =  $this

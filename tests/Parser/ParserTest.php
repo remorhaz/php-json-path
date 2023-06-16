@@ -17,7 +17,6 @@ use Remorhaz\UniLex\Parser\LL1\Parser as Ll1Parser;
  */
 class ParserTest extends TestCase
 {
-
     public function testBuildQueryAst_Constructed_ReturnsTreeInstancePassedToLl1ParserFactory(): void
     {
         $ll1ParserFactory = $this->createMock(Ll1ParserFactoryInterface::class);

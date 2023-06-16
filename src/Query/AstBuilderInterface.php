@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Query;
 
 interface AstBuilderInterface
 {
-
     public function getInput(): int;
 
     public function setOutput(int $id, bool $isDefinite, bool $isAddressable): void;

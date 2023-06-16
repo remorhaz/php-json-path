@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\Exception\QueryCallbackCodeNotFoundException;
  */
 class QueryCallbackCodeNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new QueryCallbackCodeNotFoundException();

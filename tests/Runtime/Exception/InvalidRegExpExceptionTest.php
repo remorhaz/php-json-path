@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Exception\InvalidRegExpException;
  */
 class InvalidRegExpExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidRegExpException('a');

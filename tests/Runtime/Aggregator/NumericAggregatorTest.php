@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\NumericAggregator;
  */
 class NumericAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_NonArrayValue_ReturnsNull(): void
     {
         $aggregator = $this->getMockForAbstractClass(NumericAggregator::class);

@@ -8,6 +8,5 @@ use Remorhaz\UniLex\AST\Tree;
 
 interface ParserInterface
 {
-
     public function buildQueryAst(string $path): Tree;
 }

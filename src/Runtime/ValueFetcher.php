@@ -8,6 +8,7 @@ use Iterator;
 use Remorhaz\JSON\Data\Value\StructValueInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
+use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Matcher\SortedChildMatcherInterface;
 
 use function ksort;
@@ -17,11 +18,10 @@ use const SORT_NUMERIC;
 
 final class ValueFetcher implements ValueFetcherInterface
 {
-
     /**
      * @param Matcher\ChildMatcherInterface $matcher
      * @param NodeValueInterface            $value
-     * @return NodeValueInterface[]|Iterator
+     * @return Iterator<int, ValueInterface>
      */
     public function createChildrenIterator(
         Matcher\ChildMatcherInterface $matcher,
@@ -57,9 +57,14 @@ final class ValueFetcher implements ValueFetcherInterface
         }
     }
 
+    /**
+     * @param SortedChildMatcherInterface $matcher
+     * @param NodeValueInterface          $value
+     * @return Iterator<int, ValueInterface>
+     */
     private function createSortedChildStructIterator(
         Matcher\SortedChildMatcherInterface $matcher,
-        NodeValueInterface $value
+        NodeValueInterface $value,
     ): Iterator {
         if (!$value instanceof StructValueInterface) {
             return;
@@ -76,9 +81,14 @@ final class ValueFetcher implements ValueFetcherInterface
         yield from $sortableElements;
     }
 
+    /**
+     * @param Matcher\ChildMatcherInterface $matcher
+     * @param NodeValueInterface            $value
+     * @return Iterator<int, ValueInterface>
+     */
     public function createDeepChildrenIterator(
         Matcher\ChildMatcherInterface $matcher,
-        NodeValueInterface $value
+        NodeValueInterface $value,
     ): Iterator {
         if ($value instanceof ScalarValueInterface) {
             return;

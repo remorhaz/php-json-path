@@ -21,7 +21,6 @@ use Remorhaz\UniLex\AST\Tree;
  */
 class LazyQueryTest extends TestCase
 {
-
     /**
      * @throws ExceptionInterface
      */

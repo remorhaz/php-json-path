@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Parser\Exception\ParserCreationFailedException;
  */
 class ParserCreationFailedExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ParserCreationFailedException();

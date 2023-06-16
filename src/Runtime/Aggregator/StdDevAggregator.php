@@ -15,7 +15,11 @@ use function sqrt;
 
 final class StdDevAggregator extends NumericAggregator
 {
-
+    /**
+     * @param list<int|float|string|bool|null> $dataList
+     * @param ScalarValueInterface ...$elements
+     * @return ValueInterface|null
+     */
     protected function aggregateNumericData(array $dataList, ScalarValueInterface ...$elements): ?ValueInterface
     {
         $count = count($dataList);

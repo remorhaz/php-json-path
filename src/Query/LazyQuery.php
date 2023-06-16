@@ -11,27 +11,14 @@ use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 
 final class LazyQuery implements QueryInterface
 {
-
-    private $loadedQuery;
-
-    private $source;
-
-    private $parser;
-
-    private $astTranslator;
-
-    private $callbackBuilder;
+    private ?QueryInterface $loadedQuery = null;
 
     public function __construct(
-        string $source,
-        ParserInterface $parser,
-        AstTranslatorInterface $astTranslator,
-        CallbackBuilderInterface $callbackBuilder
+        private string $source,
+        private ParserInterface $parser,
+        private AstTranslatorInterface $astTranslator,
+        private CallbackBuilderInterface $callbackBuilder,
     ) {
-        $this->source = $source;
-        $this->parser = $parser;
-        $this->astTranslator = $astTranslator;
-        $this->callbackBuilder = $callbackBuilder;
     }
 
     public function __invoke(NodeValueInterface $rootNode, RuntimeInterface $runtime): ValueListInterface
@@ -53,11 +40,7 @@ final class LazyQuery implements QueryInterface
 
     private function getLoadedQuery(): QueryInterface
     {
-        if (!isset($this->loadedQuery)) {
-            $this->loadedQuery = $this->loadQuery();
-        }
-
-        return $this->loadedQuery;
+        return $this->loadedQuery ??= $this->loadQuery();
     }
 
     private function loadQuery(): QueryInterface

@@ -10,18 +10,11 @@ use Throwable;
 
 final class IndexMapMatchFailedException extends LogicException implements ExceptionInterface
 {
-
-    private $leftValues;
-
-    private $rightValues;
-
     public function __construct(
-        ValueListInterface $leftValues,
-        ValueListInterface $rightValues,
-        Throwable $previous = null
+        private ValueListInterface $leftValues,
+        private ValueListInterface $rightValues,
+        ?Throwable $previous = null,
     ) {
-        $this->leftValues = $leftValues;
-        $this->rightValues = $rightValues;
         parent::__construct("Index map match failed", 0, $previous);
     }
 

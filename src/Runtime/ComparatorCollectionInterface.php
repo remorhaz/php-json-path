@@ -8,7 +8,6 @@ use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
 
 interface ComparatorCollectionInterface
 {
-
     public function equal(): ComparatorInterface;
 
     public function greater(): ComparatorInterface;

@@ -21,7 +21,6 @@ use function get_class;
  */
 class EvaluatedValueListTest extends TestCase
 {
-
     public function testGetIndexMap_ConstructedWithIndexMap_ReturnsSameInstance(): void
     {
         $indexMap = new IndexMap();

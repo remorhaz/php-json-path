@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\QueryFactory;
  */
 class TranslationSchemeTest extends TestCase
 {
-
     /**
      * @param string $path
      * @param bool   $expectedValue

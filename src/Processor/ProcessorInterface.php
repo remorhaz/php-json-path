@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
 
 interface ProcessorInterface
 {
-
     public function select(QueryInterface $query, NodeValueInterface $rootNode): SelectResultInterface;
 
     public function selectOne(QueryInterface $query, NodeValueInterface $rootNode): ValueResultInterface;
@@ -27,6 +26,6 @@ interface ProcessorInterface
     public function replace(
         QueryInterface $query,
         NodeValueInterface $rootNode,
-        NodeValueInterface $newNode
+        NodeValueInterface $newNode,
     ): ValueResultInterface;
 }

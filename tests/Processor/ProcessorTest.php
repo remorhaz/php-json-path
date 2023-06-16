@@ -17,7 +17,6 @@ use Remorhaz\JSON\Path\Query\QueryFactory;
  */
 class ProcessorTest extends TestCase
 {
-
     /**
      * @param string $json
      * @param string $path

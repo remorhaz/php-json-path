@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Processor\Result\Exception\PathNotFoundInValueException;
  */
 class PathNotFoundInValueExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new PathNotFoundInValueException(

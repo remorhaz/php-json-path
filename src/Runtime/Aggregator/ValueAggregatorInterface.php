@@ -8,6 +8,5 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ValueAggregatorInterface
 {
-
     public function tryAggregate(ValueInterface $value): ?ValueInterface;
 }

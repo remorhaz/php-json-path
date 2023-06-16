@@ -28,7 +28,6 @@ use Remorhaz\UniLex\Exception as UniLexException;
  */
 class AstTranslatorTest extends TestCase
 {
-
     /**
      * @throws UniLexException
      */

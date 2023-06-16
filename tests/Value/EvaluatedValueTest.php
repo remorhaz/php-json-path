@@ -12,7 +12,6 @@ use Remorhaz\JSON\Path\Value\EvaluatedValue;
  */
 class EvaluatedValueTest extends TestCase
 {
-
     /**
      * @param bool $value
      * @param bool $expectedValue

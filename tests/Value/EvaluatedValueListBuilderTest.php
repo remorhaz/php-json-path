@@ -12,7 +12,6 @@ use Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder;
  */
 class EvaluatedValueListBuilderTest extends TestCase
 {
-
     public function testBuild_NoResultsAdded_ReturnsListWithEmptyIndexMap(): void
     {
         $builder = new EvaluatedValueListBuilder();

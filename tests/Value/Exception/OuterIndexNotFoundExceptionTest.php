@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\IndexMapInterface;
  */
 class OuterIndexNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new OuterIndexNotFoundException(

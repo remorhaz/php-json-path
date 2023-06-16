@@ -10,21 +10,17 @@ use Throwable;
 
 final class OuterIndexNotFoundException extends OutOfRangeException implements ExceptionInterface
 {
-
-    private $innerIndex;
-
-    private $indexMap;
-
-    public function __construct(int $innerIndex, IndexMapInterface $indexMap, Throwable $previous = null)
-    {
-        $this->innerIndex = $innerIndex;
-        $this->indexMap = $indexMap;
+    public function __construct(
+        private int $innerIndex,
+        private IndexMapInterface $indexMap,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
     private function buildMessage(): string
     {
-        return "Outer index not found in index map for inner index {$this->innerIndex}";
+        return "Outer index not found in index map for inner index $this->innerIndex";
     }
 
     public function getInnerIndex(): int

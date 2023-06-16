@@ -12,17 +12,18 @@ use function min;
 
 final class MinAggregator extends UniqueNumericAggregator
 {
-
+    /**
+     * @param list<int|float>      $dataList
+     * @param ScalarValueInterface ...$elements
+     * @return ValueInterface|null
+     */
     protected function aggregateNumericData(array $dataList, ScalarValueInterface ...$elements): ?ValueInterface
     {
         $elementIndex = $this->findElementIndex($dataList);
-        if (isset($elementIndex, $elements[$elementIndex])) {
-            return $elements[$elementIndex];
-        }
 
-        // @codeCoverageIgnoreStart
-        throw new Exception\MaxElementNotFoundException($dataList, $elements);
-        // @codeCoverageIgnoreEnd
+        return isset($elementIndex, $elements[$elementIndex])
+            ? $elements[$elementIndex]
+            : throw new Exception\MaxElementNotFoundException($dataList, $elements);
     }
 
     private function findElementIndex(array $dataList): ?int

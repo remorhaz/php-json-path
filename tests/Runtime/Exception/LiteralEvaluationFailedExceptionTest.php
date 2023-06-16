@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\LiteralValueInterface;
  */
 class LiteralEvaluationFailedExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new LiteralEvaluationFailedException(

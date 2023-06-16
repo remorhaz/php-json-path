@@ -9,12 +9,9 @@ use Throwable;
 
 final class Parser implements ParserInterface
 {
-
-    private $ll1ParserFactory;
-
-    public function __construct(Ll1ParserFactoryInterface $ll1ParserFactory)
-    {
-        $this->ll1ParserFactory = $ll1ParserFactory;
+    public function __construct(
+        private Ll1ParserFactoryInterface $ll1ParserFactory,
+    ) {
     }
 
     public function buildQueryAst(string $path): Tree

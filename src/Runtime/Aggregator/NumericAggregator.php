@@ -8,29 +8,34 @@ use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
+use function array_filter;
 use function array_map;
+use function array_values;
 use function is_float;
 use function is_int;
 
 abstract class NumericAggregator implements ValueAggregatorInterface
 {
-
+    /**
+     * @param list<int|float> $dataList
+     * @param ScalarValueInterface ...$elements
+     * @return ValueInterface|null
+     */
     abstract protected function aggregateNumericData(
         array $dataList,
-        ScalarValueInterface ...$elements
+        ScalarValueInterface ...$elements,
     ): ?ValueInterface;
 
     final public function tryAggregate(ValueInterface $value): ?ValueInterface
     {
         $numericElements = $this->findNumericElements($value);
-        if (empty($numericElements)) {
-            return null;
-        }
 
-        return $this->aggregateNumericData(
-            $this->getElementDataList(...$numericElements),
-            ...$numericElements
-        );
+        return empty($numericElements)
+            ? null
+            : $this->aggregateNumericData(
+                $this->getElementDataList(...$numericElements),
+                ...$numericElements,
+            );
     }
 
     protected function findNumericElement(ValueInterface $element): ?ScalarValueInterface
@@ -38,6 +43,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
         if (!$element instanceof ScalarValueInterface) {
             return null;
         }
+
         $elementData = $element->getData();
         return is_int($elementData) || is_float($elementData)
             ? $element
@@ -46,7 +52,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
 
     /**
      * @param ValueInterface $value
-     * @return ScalarValueInterface[]
+     * @return list<ScalarValueInterface>
      */
     protected function findNumericElements(ValueInterface $value): array
     {
@@ -54,22 +60,36 @@ abstract class NumericAggregator implements ValueAggregatorInterface
         if (!$value instanceof ArrayValueInterface) {
             return $numericElements;
         }
+
         foreach ($value->createChildIterator() as $element) {
             $numericElement = $this->findNumericElement($element);
             if (isset($numericElement)) {
                 $numericElements[] = $numericElement;
             }
         }
+
         return $numericElements;
     }
 
+    /**
+     * @param ScalarValueInterface ...$elements
+     * @return list<int|float>
+     */
     protected function getElementDataList(ScalarValueInterface ...$elements): array
     {
-        return array_map([$this, 'getElementData'], $elements);
+        return array_values(
+            array_filter(
+                array_map([$this, 'findElementData'], $elements),
+            ),
+        );
     }
 
-    private function getElementData(ScalarValueInterface $element)
+    private function findElementData(ScalarValueInterface $element): int|float|null
     {
-        return $element->getData();
+        $data = $element->getData();
+
+        return is_int($data) || is_float($data)
+            ? $data
+            : null;
     }
 }

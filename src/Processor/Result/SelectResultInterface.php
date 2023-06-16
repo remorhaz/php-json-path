@@ -8,19 +8,18 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface SelectResultInterface
 {
-
     /**
-     * @return mixed
+     * @return list<mixed>
      */
-    public function decode();
+    public function decode(): array;
 
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function encode(): array;
 
     /**
-     * @return ValueInterface[]
+     * @return list<ValueInterface>
      */
     public function get(): array;
 }

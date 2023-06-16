@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Value\LiteralScalarValue;
  */
 class LiteralScalarValueTest extends TestCase
 {
-
     public function testConstruct_InvalidValue_ThrowsException(): void
     {
         $this->expectException(InvalidScalarDataException::class);

@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Value\LiteralValueList;
  */
 class LiteralValueListTest extends TestCase
 {
-
     public function testGetIndexMap_ConstructedWithGivenIndexMap_ReturnsSameInstance(): void
     {
         $indexMap = $this->createMock(IndexMapInterface::class);

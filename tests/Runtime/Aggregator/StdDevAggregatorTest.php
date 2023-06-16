@@ -16,7 +16,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\StdDevAggregator;
  */
 class StdDevAggregatorTest extends TestCase
 {
-
     public function testTryAggregate_EmptyArray_ReturnsNull(): void
     {
         $aggregator = new StdDevAggregator();

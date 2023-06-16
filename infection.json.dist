@@ -9,8 +9,8 @@
     "text": "build/logs/infection/infection.log",
     "summary": "build/logs/infection/summary.log",
     "perMutator": "build/logs/infection/per-mutator.md",
-    "badge": {
-      "branch": "master"
+    "stryker": {
+      "badge": "/^master$/"
     }
   }
 }

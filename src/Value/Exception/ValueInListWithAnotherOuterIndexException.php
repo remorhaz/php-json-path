@@ -10,28 +10,18 @@ use Throwable;
 
 final class ValueInListWithAnotherOuterIndexException extends LogicException implements ExceptionInterface
 {
-
-    private $value;
-
-    private $expectedIndex;
-
-    private $actualIndex;
-
     public function __construct(
-        NodeValueInterface $value,
-        int $expectedIndex,
-        int $actualIndex,
-        Throwable $previous = null
+        private NodeValueInterface $value,
+        private int $expectedIndex,
+        private int $actualIndex,
+        ?Throwable $previous = null,
     ) {
-        $this->value = $value;
-        $this->expectedIndex = $expectedIndex;
-        $this->actualIndex = $actualIndex;
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
     private function buildMessage(): string
     {
-        return "Value is already in list with outer index {$this->expectedIndex}, not {$this->actualIndex}";
+        return "Value is already in list with outer index $this->expectedIndex, not $this->actualIndex";
     }
 
     public function getValue(): NodeValueInterface

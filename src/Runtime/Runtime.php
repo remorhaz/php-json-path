@@ -6,25 +6,12 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 final class Runtime implements RuntimeInterface
 {
-
-    private $valueListFetcher;
-
-    private $evaluator;
-
-    private $literalFactory;
-
-    private $matcherFactory;
-
     public function __construct(
-        ValueListFetcherInterface $valueListFetcher,
-        EvaluatorInterface $evaluator,
-        LiteralFactoryInterface $literalFactory,
-        Matcher\MatcherFactoryInterface $matcherFactory
+        private ValueListFetcherInterface $valueListFetcher,
+        private EvaluatorInterface $evaluator,
+        private LiteralFactoryInterface $literalFactory,
+        private Matcher\MatcherFactoryInterface $matcherFactory,
     ) {
-        $this->valueListFetcher = $valueListFetcher;
-        $this->evaluator = $evaluator;
-        $this->literalFactory = $literalFactory;
-        $this->matcherFactory = $matcherFactory;
     }
 
     public function getEvaluator(): EvaluatorInterface

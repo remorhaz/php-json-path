@@ -4,31 +4,30 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Value;
 
-use Remorhaz\JSON\Data\Value\ValueInterface;
+use function array_values;
 
 final class EvaluatedValueList implements EvaluatedValueListInterface
 {
+    /**
+     * @var list<bool>
+     */
+    private array $results;
 
-    private $results;
+    /**
+     * @var list<EvaluatedValueInterface>
+     */
+    private array $values;
 
-    private $indexMap;
-
-    private $values;
-
-    public function __construct(IndexMapInterface $indexMap, bool ...$results)
-    {
-        $this->indexMap = $indexMap;
-        $this->results = $results;
+    public function __construct(
+        private IndexMapInterface $indexMap,
+        bool ...$results,
+    ) {
+        $this->results = array_values($results);
     }
 
-    public function getValue(int $index): ValueInterface
+    public function getValue(int $index): EvaluatedValueInterface
     {
-        $values = $this->getValues();
-        if (!isset($values[$index])) {
-            throw new Exception\ValueNotFoundException($index, $this);
-        }
-
-        return $values[$index];
+        return $this->getValues()[$index] ?? throw new Exception\ValueNotFoundException($index, $this);
     }
 
     public function getIndexMap(): IndexMapInterface
@@ -36,6 +35,9 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
         return $this->indexMap;
     }
 
+    /**
+     * @return list<bool>
+     */
     public function getResults(): array
     {
         return $this->results;
@@ -43,20 +45,16 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
 
     public function getResult(int $index): bool
     {
-        if (!isset($this->results[$index])) {
-            throw new Exception\ResultNotFoundException($index, $this);
-        }
-
-        return $this->results[$index];
+        return $this->results[$index]
+            ?? throw new Exception\ResultNotFoundException($index, $this);
     }
 
+    /**
+     * @return list<EvaluatedValueInterface>
+     */
     public function getValues(): array
     {
-        if (!isset($this->values)) {
-            $this->values = array_map([$this, 'createResultValue'], $this->results);
-        }
-
-        return $this->values;
+        return $this->values ??= array_map([$this, 'createResultValue'], $this->results);
     }
 
     private function createResultValue(bool $result): EvaluatedValueInterface

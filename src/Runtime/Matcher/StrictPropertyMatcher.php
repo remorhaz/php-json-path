@@ -10,7 +10,6 @@ use function in_array;
 
 final class StrictPropertyMatcher implements SortedChildMatcherInterface
 {
-
     private $properties;
 
     public function __construct(string ...$properties)
@@ -18,7 +17,7 @@ final class StrictPropertyMatcher implements SortedChildMatcherInterface
         $this->properties = $properties;
     }
 
-    public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
+    public function match(int|string $address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
         return in_array($address, $this->properties, true);
     }
@@ -27,10 +26,8 @@ final class StrictPropertyMatcher implements SortedChildMatcherInterface
     {
         $index = array_search($address, $this->properties);
 
-        if (is_int($index)) {
-            return $index;
-        }
-
-        throw new Exception\AddressNotSortableException($address);
+        return is_int($index)
+            ? $index
+            : throw new Exception\AddressNotSortableException($address);
     }
 }

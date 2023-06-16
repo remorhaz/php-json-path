@@ -10,11 +10,10 @@ use Throwable;
 
 final class AstTranslator implements AstTranslatorInterface
 {
-
     public function buildQuery(
         string $source,
         Tree $queryAst,
-        CallbackBuilderInterface $callbackBuilder
+        CallbackBuilderInterface $callbackBuilder,
     ): QueryInterface {
         try {
             $translator = new Translator($queryAst, $callbackBuilder);

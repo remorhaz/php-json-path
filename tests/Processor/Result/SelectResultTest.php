@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Processor\Result\SelectResult;
  */
 class SelectResultTest extends TestCase
 {
-
     public function testGet_ConstructedWithoutValues_ReturnsEmptyArray(): void
     {
         $result = new SelectResult(

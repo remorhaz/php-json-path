@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Runtime\Matcher\AnyChildMatcher;
  */
 class AnyChildMatcherTest extends TestCase
 {
-
     public function testMatch_Always_ReturnsTrue(): void
     {
         $matcher = new AnyChildMatcher();

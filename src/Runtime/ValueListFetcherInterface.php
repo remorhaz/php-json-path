@@ -9,7 +9,6 @@ use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 
 interface ValueListFetcherInterface
 {
-
     /**
      * @param NodeValueListInterface $source
      * @param Matcher\ChildMatcherInterface $matcher

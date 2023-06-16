@@ -9,7 +9,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 interface LiteralFactoryInterface
 {
-
     public function createScalar(NodeValueListInterface $source, $value): ValueListInterface;
 
     public function createArray(NodeValueListInterface $source, ValueListInterface ...$values): ValueListInterface;

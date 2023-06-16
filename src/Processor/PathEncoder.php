@@ -14,7 +14,6 @@ use function str_replace;
 
 final class PathEncoder implements PathEncoderInterface
 {
-
     public function encodePath(PathInterface $path): string
     {
         return '$' . implode('', array_map([$this, 'encodePathElement'], $path->getElements()));
@@ -23,7 +22,7 @@ final class PathEncoder implements PathEncoderInterface
     private function encodePathElement($pathElement): string
     {
         if (is_int($pathElement)) {
-            return "[{$pathElement}]";
+            return "[$pathElement]";
         }
 
         if (is_string($pathElement)) {

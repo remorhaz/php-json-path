@@ -9,20 +9,15 @@ use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 
 final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
 {
-
-    private $path;
-
-    private $encoder;
-
     public function exists(): bool
     {
         return true;
     }
 
-    public function __construct(PathEncoderInterface $encoder, PathInterface $path)
-    {
-        $this->encoder = $encoder;
-        $this->path = $path;
+    public function __construct(
+        private PathEncoderInterface $encoder,
+        private PathInterface $path,
+    ) {
     }
 
     public function get(): PathInterface

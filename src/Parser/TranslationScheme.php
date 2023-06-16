@@ -16,12 +16,9 @@ use function array_merge;
 
 class TranslationScheme implements TranslationSchemeInterface
 {
-
-    private $queryAstBuilder;
-
-    public function __construct(AstBuilderInterface $queryAstBuilder)
-    {
-        $this->queryAstBuilder = $queryAstBuilder;
+    public function __construct(
+        private AstBuilderInterface $queryAstBuilder,
+    ) {
     }
 
     /**
@@ -279,6 +276,7 @@ class TranslationScheme implements TranslationSchemeInterface
                 break;
 
             case SymbolType::NT_INT_OPT . '.1':
+                // []
                 $header['s.int'] = null;
                 break;
 

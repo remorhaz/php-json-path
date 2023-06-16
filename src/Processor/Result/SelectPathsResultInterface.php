@@ -8,18 +8,17 @@ use Remorhaz\JSON\Data\Path\PathInterface;
 
 interface SelectPathsResultInterface
 {
-
     /**
      * Returns list of paths.
      *
-     * @return PathInterface[]
+     * @return list<PathInterface>
      */
     public function get(): array;
 
     /**
      * Returns list of definite JSONPath queries.
      *
-     * @return string[]
+     * @return list<string>
      */
     public function encode(): array;
 }

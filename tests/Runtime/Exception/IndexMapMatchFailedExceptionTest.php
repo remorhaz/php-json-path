@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
  */
 class IndexMapMatchFailedExceptionTest extends TestCase
 {
-
     public function testGetLeftValues_ConstructedWithGivenLeftValues_ReturnsSameInstance(): void
     {
         $leftValues = $this->createMock(ValueListInterface::class);

@@ -13,25 +13,20 @@ use function max;
 
 final class SliceElementMatcher implements SortedChildMatcherInterface
 {
+    private int $step;
 
-    private $start;
+    private bool $isReverse;
 
-    private $end;
-
-    private $step;
-
-    private $isReverse;
-
-    public function __construct(?int $start, ?int $end, ?int $step)
-    {
+    public function __construct(
+        private ?int $start,
+        private ?int $end,
+        ?int $step,
+    ) {
         $this->step = $step ?? 1;
         $this->isReverse = $this->step < 0;
-
-        $this->start = $start;
-        $this->end = $end;
     }
 
-    public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
+    public function match(int|string $address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
         if (0 == $this->step || !is_int($address)) {
             return false;
@@ -61,23 +56,16 @@ final class SliceElementMatcher implements SortedChildMatcherInterface
 
     private function detectStart(int $count): int
     {
-        $start = $this->start;
-        if (!isset($start)) {
-            $start = $this->isReverse ? -1 : 0;
-        }
-        if ($start < 0) {
-            $start = max($start + $count, 0);
-        }
+        $start = $this->start ?? ($this->isReverse ? -1 : 0);
 
-        return $start;
+        return $start < 0
+            ? max($start + $count, 0)
+            : $start;
     }
 
     private function detectEnd(int $count): int
     {
-        $end = $this->end;
-        if (!isset($end)) {
-            $end = $this->isReverse ? -$count - 1 : $count;
-        }
+        $end = $this->end ?? ($this->isReverse ? -$count - 1 : $count);
         if ($end > $count) {
             return $count;
         }
@@ -104,12 +92,10 @@ final class SliceElementMatcher implements SortedChildMatcherInterface
         return $this->isReverse ? $start - $address : $address - $start;
     }
 
-    public function getSortIndex($address, NodeValueInterface $value, NodeValueInterface $container): int
+    public function getSortIndex(int|string $address, NodeValueInterface $value, NodeValueInterface $container): int
     {
-        $count = $this->findArrayLength($container);
-        if (!isset($count)) {
-            throw new Exception\AddressNotSortableException($address);
-        }
+        $count = $this->findArrayLength($container)
+            ?? throw new Exception\AddressNotSortableException($address);
 
         return $this->getIndex($address, $this->detectStart($count));
     }

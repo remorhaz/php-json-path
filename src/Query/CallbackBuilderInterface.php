@@ -8,7 +8,15 @@ use Remorhaz\UniLex\AST\TranslatorListenerInterface;
 
 interface CallbackBuilderInterface extends TranslatorListenerInterface
 {
-
+    /**
+     * @return callable(
+     *          NodeValueListInterface,
+     *          ValueListFetcherInterface,
+     *          EvaluatorInterface,
+     *          LiteralFactoryInterface,
+     *          MatcherFactoryInterface,
+     *      ): ValueListInterface
+     */
     public function getCallback(): callable;
 
     public function getCallbackCode(): string;

@@ -9,35 +9,22 @@ use Remorhaz\UniLex\Exception as UniLexException;
 
 final class AstBuilder implements AstBuilderInterface
 {
+    private ?int $inputId = null;
 
-    private $inputId;
-
-    private $tree;
-
-    public function __construct(Tree $tree)
-    {
-        $this->tree = $tree;
+    public function __construct(
+        private Tree $tree,
+    ) {
     }
 
-    /**
-     * @return int
-     */
     public function getInput(): int
     {
-        if (!isset($this->inputId)) {
-            $this->inputId = $this
-                ->tree
-                ->createNode(AstNodeType::GET_INPUT)
-                ->getId();
-        }
-
-        return $this->inputId;
+        return $this->inputId ??= $this
+            ->tree
+            ->createNode(AstNodeType::GET_INPUT)
+            ->getId();
     }
 
     /**
-     * @param int $id
-     * @param bool $isDefinite
-     * @param bool $isAddressable
      * @throws UniLexException
      */
     public function setOutput(int $id, bool $isDefinite, bool $isAddressable): void
@@ -54,8 +41,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $id
-     * @return int
      * @throws UniLexException
      */
     public function fetchFilterContext(int $id): int
@@ -68,8 +53,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $id
-     * @return int
      * @throws UniLexException
      */
     public function splitFilterContext(int $id): int
@@ -82,9 +65,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $evaluatedId
-     * @param int $contextId
-     * @return int
      * @throws UniLexException
      */
     public function joinFilterResults(int $evaluatedId, int $contextId): int
@@ -98,9 +78,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $sourceId
-     * @param int $id
-     * @return int
      * @throws UniLexException
      */
     public function evaluate(int $sourceId, int $id): int
@@ -114,9 +91,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $contextId
-     * @param int $evaluatedId
-     * @return int
      * @throws UniLexException
      */
     public function filter(int $contextId, int $evaluatedId): int
@@ -130,55 +104,44 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $leftEvaluatedId
-     * @param int $rightEvaluatedId
-     * @return int
      * @throws UniLexException
      */
-    public function evaluateLogicalOr(int $leftEvaluatedId, int $rightEvaluatedId): int
+    public function evaluateLogicalOr(int $leftId, int $rightId): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::EVALUATE_LOGICAL_OR)
-            ->addChild($this->tree->getNode($leftEvaluatedId))
-            ->addChild($this->tree->getNode($rightEvaluatedId))
+            ->addChild($this->tree->getNode($leftId))
+            ->addChild($this->tree->getNode($rightId))
             ->getId();
     }
 
     /**
-     * @param int $leftEvaluatedId
-     * @param int $rightEvaluatedId
-     * @return int
      * @throws UniLexException
      */
-    public function evaluateLogicalAnd(int $leftEvaluatedId, int $rightEvaluatedId): int
+    public function evaluateLogicalAnd(int $leftId, int $rightId): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::EVALUATE_LOGICAL_AND)
-            ->addChild($this->tree->getNode($leftEvaluatedId))
-            ->addChild($this->tree->getNode($rightEvaluatedId))
+            ->addChild($this->tree->getNode($leftId))
+            ->addChild($this->tree->getNode($rightId))
             ->getId();
     }
 
     /**
-     * @param int $evaluatedId
-     * @return int
      * @throws UniLexException
      */
-    public function evaluateLogicalNot(int $evaluatedId): int
+    public function evaluateLogicalNot(int $id): int
     {
         return $this
             ->tree
             ->createNode(AstNodeType::EVALUATE_LOGICAL_NOT)
-            ->addChild($this->tree->getNode($evaluatedId))
+            ->addChild($this->tree->getNode($id))
             ->getId();
     }
 
     /**
-     * @param int $leftId
-     * @param int $rightId
-     * @return int
      * @throws UniLexException
      */
     public function calculateIsEqual(int $leftId, int $rightId): int
@@ -192,9 +155,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $leftId
-     * @param int $rightId
-     * @return int
      * @throws UniLexException
      */
     public function calculateIsGreater(int $leftId, int $rightId): int
@@ -208,9 +168,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param string $pattern
-     * @param int $id
-     * @return int
      * @throws UniLexException
      */
     public function calculateIsRegExp(string $pattern, int $id): int
@@ -224,9 +181,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $id
-     * @param int $matcherId
-     * @return int
      * @throws UniLexException
      */
     public function fetchChildren(int $id, int $matcherId): int
@@ -240,9 +194,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $id
-     * @param int $matcherId
-     * @return int
      * @throws UniLexException
      */
     public function fetchChildrenDeep(int $id, int $matcherId): int
@@ -256,8 +207,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int ...$idList
-     * @return int
      * @throws UniLexException
      */
     public function merge(int ...$idList): int
@@ -272,9 +221,6 @@ final class AstBuilder implements AstBuilderInterface
         return $node->getId();
     }
 
-    /**
-     * @return int
-     */
     public function matchAnyChild(): int
     {
         return $this
@@ -284,8 +230,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param string ...$names
-     * @return int
      * @throws UniLexException
      */
     public function matchPropertyStrictly(string ...$names): int
@@ -298,8 +242,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int ...$indexes
-     * @return int
      * @throws UniLexException
      */
     public function matchElementStrictly(int ...$indexes): int
@@ -312,10 +254,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int|null $start
-     * @param int|null $end
-     * @param int|null $step
-     * @return int
      * @throws UniLexException
      */
     public function matchElementSlice(?int $start, ?int $end, ?int $step): int
@@ -332,9 +270,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param string $name
-     * @param int $id
-     * @return int
      * @throws UniLexException
      */
     public function aggregate(string $name, int $id): int
@@ -348,9 +283,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $sourceId
-     * @param mixed $value
-     * @return int
      * @throws UniLexException
      */
     public function createScalar(int $sourceId, $value): int
@@ -364,9 +296,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $sourceId
-     * @param int $arrayId
-     * @return int
      * @throws UniLexException
      */
     public function createLiteralArray(int $sourceId, int $arrayId): int
@@ -388,9 +317,6 @@ final class AstBuilder implements AstBuilderInterface
     }
 
     /**
-     * @param int $arrayId
-     * @param int $valueId
-     * @return int
      * @throws UniLexException
      */
     public function appendToArray(int $arrayId, int $valueId): int

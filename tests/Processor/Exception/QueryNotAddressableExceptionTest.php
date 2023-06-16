@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
  */
 class QueryNotAddressableExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new QueryNotAddressableException(

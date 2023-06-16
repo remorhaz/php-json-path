@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Runtime;
 
 interface RuntimeInterface
 {
-
     public function getValueListFetcher(): ValueListFetcherInterface;
 
     public function getEvaluator(): EvaluatorInterface;

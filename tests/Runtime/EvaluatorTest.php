@@ -29,7 +29,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
  */
 class EvaluatorTest extends TestCase
 {
-
     public function testLogicalOr_EmptyLists_ReturnsEmptyList(): void
     {
         $evaluator = new Evaluator(

@@ -8,7 +8,6 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 final class NonExistingValueResult implements ValueResultInterface
 {
-
     public function exists(): bool
     {
         return false;
@@ -19,7 +18,7 @@ final class NonExistingValueResult implements ValueResultInterface
         throw new Exception\SelectedValueNotFoundException();
     }
 
-    public function decode()
+    public function decode(): mixed
     {
         throw new Exception\SelectedValueNotFoundException();
     }

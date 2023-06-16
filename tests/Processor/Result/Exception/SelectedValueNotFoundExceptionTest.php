@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Processor\Result\Exception\SelectedValueNotFoundException
  */
 class SelectedValueNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new SelectedValueNotFoundException();

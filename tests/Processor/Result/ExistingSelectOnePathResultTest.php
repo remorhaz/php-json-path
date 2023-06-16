@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Processor\Result\ExistingSelectOnePathResult;
  */
 class ExistingSelectOnePathResultTest extends TestCase
 {
-
     public function testExists_Always_ReturnsTrue(): void
     {
         $result = new ExistingSelectOnePathResult(

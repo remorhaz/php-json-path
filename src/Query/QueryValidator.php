@@ -8,22 +8,17 @@ use Remorhaz\JSON\Path\Processor\Exception;
 
 final class QueryValidator implements QueryValidatorInterface
 {
-
     public function getDefiniteQuery(QueryInterface $query): QueryInterface
     {
-        if (!$query->getCapabilities()->isDefinite()) {
-            throw new Exception\IndefiniteQueryException($query);
-        }
-
-        return $query;
+        return $query->getCapabilities()->isDefinite()
+            ? $query
+            : throw new Exception\IndefiniteQueryException($query);
     }
 
     public function getAddressableQuery(QueryInterface $query): QueryInterface
     {
-        if (!$query->getCapabilities()->isAddressable()) {
-            throw new Exception\QueryNotAddressableException($query);
-        }
-
-        return $query;
+        return $query->getCapabilities()->isAddressable()
+            ? $query
+            : throw new Exception\QueryNotAddressableException($query);
     }
 }

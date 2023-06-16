@@ -13,13 +13,15 @@ use function count;
 
 final class AvgAggregator extends NumericAggregator
 {
-
+    /**
+     * @param list<int|float>      $dataList
+     * @param ScalarValueInterface ...$elements
+     * @return ValueInterface|null
+     */
     protected function aggregateNumericData(array $dataList, ScalarValueInterface ...$elements): ?ValueInterface
     {
         return empty($dataList)
-            // @codeCoverageIgnoreStart
             ? null
-            // @codeCoverageIgnoreEnd
             : new LiteralScalarValue(array_sum($dataList) / count($dataList));
     }
 }

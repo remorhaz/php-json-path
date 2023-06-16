@@ -6,17 +6,20 @@ namespace Remorhaz\JSON\Path\Value;
 
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
+use function array_values;
+
 final class ValueList implements ValueListInterface
 {
+    /**
+     * @var list<ValueInterface>
+     */
+    private array $values;
 
-    private $indexMap;
-
-    private $values;
-
-    public function __construct(IndexMapInterface $indexMap, ValueInterface ...$values)
-    {
-        $this->indexMap = $indexMap;
-        $this->values = $values;
+    public function __construct(
+        private IndexMapInterface $indexMap,
+        ValueInterface ...$values,
+    ) {
+        $this->values = array_values($values);
     }
 
     public function getIndexMap(): IndexMapInterface
@@ -24,6 +27,9 @@ final class ValueList implements ValueListInterface
         return $this->indexMap;
     }
 
+    /**
+     * @return list<ValueInterface>
+     */
     public function getValues(): array
     {
         return $this->values;
@@ -31,10 +37,6 @@ final class ValueList implements ValueListInterface
 
     public function getValue(int $index): ValueInterface
     {
-        if (!isset($this->values[$index])) {
-            throw new Exception\ValueNotFoundException($index, $this);
-        }
-
-        return $this->values[$index];
+        return $this->values[$index] ?? throw new Exception\ValueNotFoundException($index, $this);
     }
 }

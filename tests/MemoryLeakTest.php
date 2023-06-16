@@ -16,7 +16,6 @@ use function memory_get_usage;
  */
 class MemoryLeakTest extends TestCase
 {
-
     public function testQueryCompilation(): void
     {
         $queryFactory = QueryFactory::create();

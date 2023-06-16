@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Processor\Exception\InvalidPathElementException;
  */
 class InvalidPathElementExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidPathElementException(1);

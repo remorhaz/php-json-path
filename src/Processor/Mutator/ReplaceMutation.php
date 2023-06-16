@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Mutator;
 
-use Generator;
 use Iterator;
 use Remorhaz\JSON\Data\Event\AfterElementEventInterface;
 use Remorhaz\JSON\Data\Event\AfterPropertyEventInterface;
@@ -20,21 +19,27 @@ use Remorhaz\JSON\Data\Walker\MutationInterface;
 use Remorhaz\JSON\Data\Walker\ValueWalkerInterface;
 
 use function array_reverse;
+use function array_values;
 use function count;
 
 final class ReplaceMutation implements MutationInterface
 {
+    /**
+     * @var list<PathInterface>
+     */
+    private array $paths;
 
-    private $newNode;
-
-    private $paths;
-
-    public function __construct(NodeValueInterface $newNode, PathInterface ...$paths)
-    {
-        $this->newNode = $newNode;
+    public function __construct(
+        private NodeValueInterface $newNode,
+        PathInterface ...$paths,
+    ) {
         $this->paths = $this->getNonNestedPaths(...$paths);
     }
 
+    /**
+     * @param PathInterface ...$paths
+     * @return list<PathInterface>
+     */
     private function getNonNestedPaths(PathInterface ...$paths): array
     {
         foreach ($this->createPathPairIterator(...$paths) as $pathPair) {
@@ -44,14 +49,14 @@ final class ReplaceMutation implements MutationInterface
             }
         }
 
-        return $paths;
+        return array_values($paths);
     }
 
     /**
      * @param PathInterface ...$paths
-     * @return Generator|PathInterface[][]
+     * @return Iterator<list{PathInterface, PathInterface}>
      */
-    private function createPathPairIterator(PathInterface ...$paths): Generator
+    private function createPathPairIterator(PathInterface ...$paths): Iterator
     {
         $pathsCount = count($paths);
         for ($i = 0; $i < $pathsCount; $i++) {
@@ -63,6 +68,11 @@ final class ReplaceMutation implements MutationInterface
         }
     }
 
+    /**
+     * @param EventInterface       $event
+     * @param ValueWalkerInterface $valueWalker
+     * @return Iterator<EventInterface>
+     */
     public function __invoke(EventInterface $event, ValueWalkerInterface $valueWalker): Iterator
     {
         return $this->createEventGenerator($event, $valueWalker);
@@ -72,7 +82,12 @@ final class ReplaceMutation implements MutationInterface
     {
     }
 
-    private function createEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Generator
+    /**
+     * @param EventInterface       $event
+     * @param ValueWalkerInterface $valueWalker
+     * @return Iterator<EventInterface>
+     */
+    private function createEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Iterator
     {
         foreach ($this->paths as $path) {
             if ($path->equals($event->getPath())) {
@@ -87,7 +102,12 @@ final class ReplaceMutation implements MutationInterface
         yield $event;
     }
 
-    private function createReplaceEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Generator
+    /**
+     * @param EventInterface       $event
+     * @param ValueWalkerInterface $valueWalker
+     * @return Iterator<EventInterface>
+     */
+    private function createReplaceEventGenerator(EventInterface $event, ValueWalkerInterface $valueWalker): Iterator
     {
         switch (true) {
             case $event instanceof BeforeElementEventInterface:

@@ -7,7 +7,7 @@ RUN apt-get update &&  apt-get install -y \
     pecl install -f -o xdebug && \
     docker-php-ext-enable xdebug && \
     docker-php-ext-configure intl --enable-intl && \
-    docker-php-ext-install intl && \
+    docker-php-ext-install intl pcntl && \
     echo "xdebug.mode = develop,coverage,debug" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini" && \
     echo "xdebug.max_nesting_level = 1024" >> "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
 

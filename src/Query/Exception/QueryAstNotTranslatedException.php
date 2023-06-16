@@ -10,12 +10,10 @@ use Throwable;
 
 final class QueryAstNotTranslatedException extends LogicException implements ExceptionInterface
 {
-
-    private $queryAst;
-
-    public function __construct(Tree $queryAst, Throwable $previous = null)
-    {
-        $this->queryAst = $queryAst;
+    public function __construct(
+        private Tree $queryAst,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct("Query AST was not translated to callback function", 0, $previous);
     }
 

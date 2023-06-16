@@ -10,21 +10,17 @@ use Throwable;
 
 final class QueryExecutionFailedException extends LogicException implements ExceptionInterface
 {
-
-    private $source;
-
-    private $callbackCode;
-
-    public function __construct(string $source, string $callbackCode, Throwable $previous = null)
-    {
-        $this->source = $source;
-        $this->callbackCode = $callbackCode;
+    public function __construct(
+        private string $source,
+        private string $callbackCode,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
     private function buildMessage(): string
     {
-        return "Failed to execute JSONPath query: {$this->source}\n\n{$this->callbackCode}";
+        return "Failed to execute JSONPath query: $this->source\n\n$this->callbackCode";
     }
 
     public function getSource(): string

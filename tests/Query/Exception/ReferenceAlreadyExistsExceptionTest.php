@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\Exception\ReferenceAlreadyExistsException;
  */
 class ReferenceAlreadyExistsExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ReferenceAlreadyExistsException(1);

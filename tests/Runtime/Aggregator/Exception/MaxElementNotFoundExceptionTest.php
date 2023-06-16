@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\Exception\MaxElementNotFoundException;
  */
 class MaxElementNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new MaxElementNotFoundException([], []);

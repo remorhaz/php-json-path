@@ -17,7 +17,6 @@ use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactory;
  */
 class MatcherFactoryTest extends TestCase
 {
-
     public function testMatchAnyChild_Constructed_ReturnsAnyChildMatcherInstance(): void
     {
         $factory = new MatcherFactory();

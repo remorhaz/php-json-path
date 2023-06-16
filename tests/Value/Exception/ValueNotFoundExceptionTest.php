@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
  */
 class ValueNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ValueNotFoundException(

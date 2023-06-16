@@ -26,7 +26,6 @@ use function array_shift;
  */
 class QueryTest extends TestCase
 {
-
     public function testInvoke_ConstructedWithCallback_CallsSameCallback(): void
     {
         $rootValue = $this->createMock(NodeValueInterface::class);

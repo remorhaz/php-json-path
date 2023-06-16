@@ -10,21 +10,17 @@ use Throwable;
 
 final class ValueNotFoundException extends OutOfRangeException implements ExceptionInterface
 {
-
-    private $index;
-
-    private $values;
-
-    public function __construct(int $index, ValueListInterface $valueList, Throwable $previous = null)
-    {
-        $this->index = $index;
-        $this->values = $valueList;
+    public function __construct(
+        private int $index,
+        private ValueListInterface $values,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
     private function buildMessage(): string
     {
-        return "Value not found in list at position {$this->index}";
+        return "Value not found in list at position $this->index";
     }
 
     public function getIndex(): int

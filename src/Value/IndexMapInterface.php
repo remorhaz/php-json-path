@@ -8,9 +8,14 @@ use Countable;
 
 interface IndexMapInterface extends Countable
 {
-
+    /**
+     * @return list<int>
+     */
     public function getInnerIndexes(): array;
 
+    /**
+     * @return list<int|null>
+     */
     public function getOuterIndexes(): array;
 
     public function getOuterIndex(int $innerIndex): int;

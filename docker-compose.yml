@@ -4,20 +4,6 @@ services:
   php:
     build:
       context: .
-      dockerfile: php-7.3.Dockerfile
-    volumes:
-      - .:/app
-    working_dir: /app
-  php7.4:
-    build:
-      context: .
-      dockerfile: php-7.4.Dockerfile
-    volumes:
-      - .:/app
-    working_dir: /app
-  php8.0:
-    build:
-      context: .
       dockerfile: php-8.0.Dockerfile
     volumes:
       - .:/app
@@ -26,6 +12,13 @@ services:
     build:
       context: .
       dockerfile: php-8.1.Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+  php8.2:
+    build:
+      context: .
+      dockerfile: php-8.2.Dockerfile
     volumes:
       - .:/app
     working_dir: /app

@@ -6,7 +6,6 @@ namespace Remorhaz\JSON\Path\Runtime\Matcher;
 
 final class MatcherFactory implements MatcherFactoryInterface
 {
-
     public function matchAnyChild(): ChildMatcherInterface
     {
         return new AnyChildMatcher();

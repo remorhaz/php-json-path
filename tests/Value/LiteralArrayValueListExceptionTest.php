@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Value\ValueList;
  */
 class LiteralArrayValueListExceptionTest extends TestCase
 {
-
     public function testGetIndexMap_ConstructedWithGivenIndexMap_ReturnsSameInstance(): void
     {
         $indexMap = $this->createMock(IndexMapInterface::class);

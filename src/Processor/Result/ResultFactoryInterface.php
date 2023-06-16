@@ -9,7 +9,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 interface ResultFactoryInterface
 {
-
     public function createSelectResult(ValueListInterface $values): SelectResultInterface;
 
     public function createSelectOneResult(ValueListInterface $values): ValueResultInterface;

@@ -15,7 +15,6 @@ use Remorhaz\JSON\Path\Value\NodeValueList;
  */
 class NodeValueListTest extends TestCase
 {
-
     public function testGetIndexMap_ConstructedWithGivenIndexMapInstance_ReturnsSameInstance(): void
     {
         $indexMap = $this->createMock(IndexMapInterface::class);

@@ -8,11 +8,10 @@ use Remorhaz\JSON\Data\Value\ValueInterface;
 
 interface ValueListInterface
 {
-
     public function getValue(int $index): ValueInterface;
 
     /**
-     * @return ValueInterface[]
+     * @return list<ValueInterface>
      */
     public function getValues(): array;
 

@@ -13,7 +13,6 @@ use Remorhaz\JSON\Path\Query\Exception\CapabilitiesNotFoundException;
  */
 class PropertiesNotFoundExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new CapabilitiesNotFoundException();

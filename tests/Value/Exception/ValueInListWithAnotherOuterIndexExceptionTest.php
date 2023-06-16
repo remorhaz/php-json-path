@@ -14,7 +14,6 @@ use Remorhaz\JSON\Path\Value\Exception\ValueInListWithAnotherOuterIndexException
  */
 class ValueInListWithAnotherOuterIndexExceptionTest extends TestCase
 {
-
     public function testGetMessage_ConstructedWithIndexes_ReturnsMatchingValue(): void
     {
         $value = $this->createMock(NodeValueInterface::class);

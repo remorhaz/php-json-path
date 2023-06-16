@@ -6,6 +6,5 @@ namespace Remorhaz\JSON\Path\Query;
 
 interface QueryFactoryInterface
 {
-
     public function createQuery(string $path): QueryInterface;
 }

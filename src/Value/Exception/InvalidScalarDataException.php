@@ -12,12 +12,10 @@ final class InvalidScalarDataException extends DomainException implements
     ExceptionInterface,
     DataAwareInterface
 {
-
-    private $data;
-
-    public function __construct($data, Throwable $previous = null)
-    {
-        $this->data = $data;
+    public function __construct(
+        private mixed $data,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($this->buildMessage(), 0, $previous);
     }
 
@@ -26,7 +24,7 @@ final class InvalidScalarDataException extends DomainException implements
         return "Invalid scalar data";
     }
 
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }

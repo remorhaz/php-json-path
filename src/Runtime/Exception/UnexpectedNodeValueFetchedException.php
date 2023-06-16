@@ -10,12 +10,10 @@ use Throwable;
 
 final class UnexpectedNodeValueFetchedException extends LogicException implements ExceptionInterface
 {
-
-    private $value;
-
-    public function __construct(NodeValueInterface $value, Throwable $previous = null)
-    {
-        $this->value = $value;
+    public function __construct(
+        private NodeValueInterface $value,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct("Unexpected node value fetched", 0, $previous);
     }
 

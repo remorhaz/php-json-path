@@ -12,7 +12,6 @@ use Remorhaz\JSON\Path\Query\Capabilities;
  */
 class CapabilitiesTest extends TestCase
 {
-
     /**
      * @param bool $isDefinite
      * @param bool $expectedValue

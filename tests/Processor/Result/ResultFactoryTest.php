@@ -21,7 +21,6 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
  */
 class ResultFactoryTest extends TestCase
 {
-
     public function testCreateSelectResult_NoValuesInList_ResultEncodesToEmptyArray(): void
     {
         $factory = new ResultFactory(

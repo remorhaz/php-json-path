@@ -18,7 +18,6 @@ use Remorhaz\UniLex\Stack\PushInterface;
  */
 class CallbackBuilderTest extends TestCase
 {
-
     public function testGetCallbackCode_CallbackIsNotSet_ThrowsException(): void
     {
         $callbackBuilder = new CallbackBuilder();

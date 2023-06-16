@@ -8,6 +8,5 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 interface SortedChildMatcherInterface extends ChildMatcherInterface
 {
-
-    public function getSortIndex($address, NodeValueInterface $value, NodeValueInterface $container): int;
+    public function getSortIndex(int|string $address, NodeValueInterface $value, NodeValueInterface $container): int;
 }

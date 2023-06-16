@@ -12,7 +12,6 @@ use function is_int;
 
 final class StrictElementMatcher implements SortedChildMatcherInterface
 {
-
     private $indexes;
 
     public function __construct(int ...$indexes)
@@ -20,19 +19,17 @@ final class StrictElementMatcher implements SortedChildMatcherInterface
         $this->indexes = $indexes;
     }
 
-    public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
+    public function match(int|string $address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
         return in_array($address, $this->indexes, true);
     }
 
-    public function getSortIndex($address, NodeValueInterface $value, NodeValueInterface $container): int
+    public function getSortIndex(int|string $address, NodeValueInterface $value, NodeValueInterface $container): int
     {
         $index = array_search($address, $this->indexes);
 
-        if (is_int($index)) {
-            return $index;
-        }
-
-        throw new Exception\AddressNotSortableException($address);
+        return is_int($index)
+            ? $index
+            : throw new Exception\AddressNotSortableException($address);
     }
 }

@@ -8,8 +8,7 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 
 final class AnyChildMatcher implements ChildMatcherInterface
 {
-
-    public function match($address, NodeValueInterface $value, NodeValueInterface $container): bool
+    public function match(int|string $address, NodeValueInterface $value, NodeValueInterface $container): bool
     {
         return true;
     }
