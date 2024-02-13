@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Runtime\Matcher\Exception\AddressNotSortableException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Matcher\Exception\AddressNotSortableException
- */
+#[CoversClass(AddressNotSortableException::class)]
 class AddressNotSortableExceptionTest extends TestCase
 {
     public function testGetMessage_ConstructedWithAddress_ReturnsMatchingValue(): void
@@ -19,18 +19,19 @@ class AddressNotSortableExceptionTest extends TestCase
         self::assertSame('Index/property is not sortable: 1', $exception->getMessage());
     }
 
-    /**
-     * @param $address
-     * @param $expectedValue
-     * @dataProvider providerGetAddress
-     */
-    public function testGetAddress_ConstructedWithAddress_ReturnsSameValue($address, $expectedValue): void
-    {
+    #[DataProvider('providerGetAddress')]
+    public function testGetAddress_ConstructedWithAddress_ReturnsSameValue(
+        int|string $address,
+        int|string $expectedValue,
+    ): void {
         $exception = new AddressNotSortableException($address);
         self::assertSame($expectedValue, $exception->getAddress());
     }
 
-    public function providerGetAddress(): array
+    /**
+     * @return iterable<string, array{int|string, int|string}>
+     */
+    public static function providerGetAddress(): iterable
     {
         return [
             'String value' => ['a', 'a'],

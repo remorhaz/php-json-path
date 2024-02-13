@@ -2,32 +2,34 @@
 
 namespace Remorhaz\JSON\Path\Test\Parser;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeValueFactory;
+use Remorhaz\JSON\Path\Parser\TranslationScheme;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
 /**
- * @covers       \Remorhaz\JSON\Path\Parser\TranslationScheme
- * @todo         Maybe it's better to test in isolation, checking the resulting AST.
+ * @todo Maybe it's better to test in isolation, checking the resulting AST.
  */
+#[CoversClass(TranslationScheme::class)]
 class TranslationSchemeTest extends TestCase
 {
-    /**
-     * @param string $path
-     * @param bool   $expectedValue
-     * @dataProvider providerIsAddressableCapability
-     */
+    #[DataProvider('providerIsAddressableCapability')]
     public function testIsAddressableCapability_GivenQueryParsed_ContainsMatchingValue(
         string $path,
-        bool $expectedValue
+        bool $expectedValue,
     ): void {
         $query = QueryFactory::create()->createQuery($path);
 
         self::assertSame($expectedValue, $query->getCapabilities()->isAddressable());
     }
 
-    public function providerIsAddressableCapability(): array
+    /**
+     * @return iterable<string, array{string, true}>
+     */
+    public static function providerIsAddressableCapability(): iterable
     {
         return [
             'Dot-notation star' => ['$.*', true],
@@ -44,17 +46,17 @@ class TranslationSchemeTest extends TestCase
     /**
      * Because of the scheme complexity it's more convenient to test it in full integration.
      *
-     * @param        $json
-     * @param string $path
-     * @param array  $expectedValue
-     * @param bool   $isDefinite
-     * @dataProvider providerParser
+     * @param mixed        $json
+     * @param string       $path
+     * @param list<string> $expectedValue
+     * @param bool         $isDefinite
      */
+    #[DataProvider('providerParser')]
     public function testTranslationListenerMethods_AssembledWithParser_QueryWorksAsExpected(
-        $json,
+        mixed $json,
         string $path,
         array $expectedValue,
-        bool $isDefinite
+        bool $isDefinite,
     ): void {
         $query = QueryFactory::create()->createQuery($path);
         // TODO: extract isDefinite test
@@ -62,13 +64,16 @@ class TranslationSchemeTest extends TestCase
 
         $result = Processor::create()->select(
             $query,
-            NodeValueFactory::create()->createValue($json)
+            NodeValueFactory::create()->createValue($json),
         );
 
         self::assertEquals($expectedValue, $result->encode());
     }
 
-    public function providerParser(): array
+    /**
+     * @return iterable<mixed, string, list<string>, bool>
+     */
+    public static function providerParser(): iterable
     {
         return [
             'Dot-notation alpha property' => [

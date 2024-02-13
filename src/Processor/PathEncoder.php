@@ -16,7 +16,7 @@ final class PathEncoder implements PathEncoderInterface
 {
     public function encodePath(PathInterface $path): string
     {
-        return '$' . implode('', array_map([$this, 'encodePathElement'], $path->getElements()));
+        return '$' . implode('', array_map($this->encodePathElement(...), $path->getElements()));
     }
 
     private function encodePathElement($pathElement): string
@@ -28,7 +28,7 @@ final class PathEncoder implements PathEncoderInterface
         if (is_string($pathElement)) {
             $escapedElement = str_replace(['\\', '\''], ['\\\\', '\\\''], $pathElement);
 
-            return "['{$escapedElement}']";
+            return "['$escapedElement']";
         }
 
         throw new Exception\InvalidPathElementException($pathElement);

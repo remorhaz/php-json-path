@@ -28,9 +28,7 @@ final class StdDevAggregator extends NumericAggregator
         }
 
         $meanValue = array_sum($dataList) / $count;
-        $calculateSquaredDifferenceFromMean = function ($value) use ($meanValue): float {
-            return ($value - $meanValue) ** 2;
-        };
+        $calculateSquaredDifferenceFromMean = static fn ($value): float => ($value - $meanValue) ** 2;
 
         $squaredDifferencesSum = array_sum(array_map($calculateSquaredDifferenceFromMean, $dataList));
         $variance = $squaredDifferencesSum / ($count - 1);

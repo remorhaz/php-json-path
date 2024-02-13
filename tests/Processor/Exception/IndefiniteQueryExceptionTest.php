@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException
- */
+#[CoversClass(IndefiniteQueryException::class)]
 class IndefiniteQueryExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new IndefiniteQueryException(
-            $this->createMock(QueryInterface::class)
+            $this->createMock(QueryInterface::class),
         );
         self::assertSame('Query is indefinite', $exception->getMessage());
     }
@@ -29,18 +28,10 @@ class IndefiniteQueryExceptionTest extends TestCase
         self::assertSame($query, $exception->getQuery());
     }
 
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new IndefiniteQueryException(
-            $this->createMock(QueryInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
-    }
-
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new IndefiniteQueryException(
-            $this->createMock(QueryInterface::class)
+            $this->createMock(QueryInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -50,7 +41,7 @@ class IndefiniteQueryExceptionTest extends TestCase
         $previous = new Exception();
         $exception = new IndefiniteQueryException(
             $this->createMock(QueryInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

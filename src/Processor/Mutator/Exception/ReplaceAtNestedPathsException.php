@@ -11,11 +11,11 @@ use Throwable;
 final class ReplaceAtNestedPathsException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private PathInterface $parentPath,
-        private PathInterface $nestedPath,
+        private readonly PathInterface $parentPath,
+        private readonly PathInterface $nestedPath,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Attempt of replacing value at nested paths", 0, $previous);
+        parent::__construct("Attempt of replacing value at nested paths", previous: $previous);
     }
 
     public function getParentPath(): PathInterface

@@ -1,21 +1,23 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
-        forceCoversAnnotation="true"
-        defaultTestSuite="all">
-    <testsuites>
-        <testsuite name="all">
-            <directory>tests/</directory>
-        </testsuite>
-    </testsuites>
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src/</directory>
-            <directory suffix=".php">generated/</directory>
-        </include>
-        <exclude>
-            <file>generated/LookupTable.php</file>
-        </exclude>
-    </coverage>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+    defaultTestSuite="all"
+    cacheDirectory="build/.phpunit.cache"
+    requireCoverageMetadata="true">
+  <testsuites>
+    <testsuite name="all">
+      <directory>tests/</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory>src/</directory>
+      <directory>generated/</directory>
+    </include>
+    <exclude>
+      <file>generated/LookupTable.php</file>
+      <directory>vendor/</directory>
+    </exclude>
+  </source>
 </phpunit>

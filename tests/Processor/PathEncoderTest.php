@@ -4,32 +4,35 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\Path;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\Exception\InvalidPathElementException;
 use Remorhaz\JSON\Path\Processor\PathEncoder;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\PathEncoder
- */
+#[CoversClass(PathEncoder::class)]
 class PathEncoderTest extends TestCase
 {
     /**
-     * @param array $pathElements
-     * @param string $expectedValue
-     * @dataProvider providerEncodePath
+     * @param list<mixed> $pathElements
+     * @param string      $expectedValue
      */
+    #[DataProvider('providerEncodePath')]
     public function testEncodePath_ConstructedWithGivenElements_ReturnsMatchingValue(
         array $pathElements,
-        string $expectedValue
+        string $expectedValue,
     ): void {
         $path = new Path(...$pathElements);
         $actualValue = (new PathEncoder())->encodePath($path);
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerEncodePath(): array
+    /**
+     * @return iterable<string, array{list<mixed>, string}>
+     */
+    public static function providerEncodePath(): iterable
     {
         return [
             'Empty path' => [[], '$'],

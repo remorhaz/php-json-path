@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
 use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Processor\Result\ExistingValueResult;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\ExistingValueResult
- */
+#[CoversClass(ExistingValueResult::class)]
 class ExistingValueResultTest extends TestCase
 {
     public function testExists_Always_ReturnsTrue(): void
@@ -20,7 +19,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertTrue($result->exists());
     }
@@ -31,7 +30,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $value
+            $value,
         );
         self::assertSame($value, $result->get());
     }
@@ -43,7 +42,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $value
+            $value,
         );
         $encoder
             ->expects(self::once())
@@ -59,7 +58,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $value
+            $value,
         );
         $encoder
             ->method('exportValue')
@@ -74,7 +73,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $value
+            $value,
         );
         $decoder
             ->expects(self::once())
@@ -90,7 +89,7 @@ class ExistingValueResultTest extends TestCase
         $result = new ExistingValueResult(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $value
+            $value,
         );
         $decoder
             ->method('exportValue')

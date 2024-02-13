@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Parser;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Parser\Ll1ParserFactory;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Parser\LL1\UnexpectedTokenException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Parser\Ll1ParserFactory
- */
+#[CoversClass(Ll1ParserFactory::class)]
 class Ll1ParserFactoryTest extends TestCase
 {
     /**
-     * @param string $source
-     * @param bool $isDefinite
      * @throws UnexpectedTokenException
      * @throws UniLexException
-     * @dataProvider providerCreateParserIsDefinite
      */
+    #[DataProvider('providerCreateParserIsDefinite')]
     public function testCreateParser_Constructed_ResultBuildsAstWithMatchingIsDefiniteFlagOnRun(
         string $source,
-        bool $isDefinite
+        bool $isDefinite,
     ): void {
         $queryAst = new Tree();
         $ll1Parser = (new Ll1ParserFactory())->createParser($source, $queryAst);
@@ -34,7 +32,10 @@ class Ll1ParserFactoryTest extends TestCase
         self::assertSame($isDefinite, $astRootNode->getAttribute('is_definite'));
     }
 
-    public function providerCreateParserIsDefinite(): array
+    /**
+     * @return iterable<string, array{string, bool}>
+     */
+    public static function providerCreateParserIsDefinite(): iterable
     {
         return [
             'Definite path' => ['$', true],
@@ -43,15 +44,13 @@ class Ll1ParserFactoryTest extends TestCase
     }
 
     /**
-     * @param string $source
-     * @param bool $isAddressable
      * @throws UnexpectedTokenException
      * @throws UniLexException
-     * @dataProvider providerCreateParserIsAddressable
      */
+    #[DataProvider('providerCreateParserIsAddressable')]
     public function testCreateParser_Constructed_ResultBuildsAstWithMatchingIsAddressableFlagOnRun(
         string $source,
-        bool $isAddressable
+        bool $isAddressable,
     ): void {
         $queryAst = new Tree();
         $ll1Parser = (new Ll1ParserFactory())->createParser($source, $queryAst);
@@ -61,7 +60,10 @@ class Ll1ParserFactoryTest extends TestCase
         self::assertSame($isAddressable, $astRootNode->getAttribute('is_addressable'));
     }
 
-    public function providerCreateParserIsAddressable(): array
+    /**
+     * @return iterable<string, array{string, bool}>
+     */
+    public static function providerCreateParserIsAddressable(): iterable
     {
         return [
             'Addressable path' => ['$', true],

@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\StdDevAggregator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\StdDevAggregator
- */
+#[CoversClass(StdDevAggregator::class)]
 class StdDevAggregatorTest extends TestCase
 {
     public function testTryAggregate_EmptyArray_ReturnsNull(): void
@@ -65,7 +64,7 @@ class StdDevAggregatorTest extends TestCase
         );
     }
 
-    private function exportValueData(?ValueInterface $value)
+    private function exportValueData(?ValueInterface $value): string|int|float|bool|null
     {
         if (!isset($value)) {
             return null;

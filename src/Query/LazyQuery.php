@@ -14,10 +14,10 @@ final class LazyQuery implements QueryInterface
     private ?QueryInterface $loadedQuery = null;
 
     public function __construct(
-        private string $source,
-        private ParserInterface $parser,
-        private AstTranslatorInterface $astTranslator,
-        private CallbackBuilderInterface $callbackBuilder,
+        private readonly string $source,
+        private readonly ParserInterface $parser,
+        private readonly AstTranslatorInterface $astTranslator,
+        private readonly CallbackBuilderInterface $callbackBuilder,
     ) {
     }
 

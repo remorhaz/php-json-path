@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
@@ -16,9 +17,7 @@ use Remorhaz\JSON\Path\Query\Capabilities;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\LazyQuery
- */
+#[CoversClass(LazyQuery::class)]
 class LazyQueryTest extends TestCase
 {
     /**
@@ -160,7 +159,7 @@ class LazyQueryTest extends TestCase
             'a',
             $this->createStub(ParserInterface::class),
             $astTranslator,
-            $this->createStub(CallbackBuilderInterface::class)
+            $this->createStub(CallbackBuilderInterface::class),
         );
 
         self::assertSame($properties, $lazyQuery->getCapabilities());

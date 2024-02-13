@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\CallbackBuilderInterface;
@@ -21,9 +22,7 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 
 use function array_shift;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\Query
- */
+#[CoversClass(Query::class)]
 class QueryTest extends TestCase
 {
     public function testInvoke_ConstructedWithCallback_CallsSameCallback(): void
@@ -54,7 +53,7 @@ class QueryTest extends TestCase
             $evaluator,
             $literalFactory,
             $matcherFactory,
-            &$isCallbackCalledWithMatchingArgs
+            &$isCallbackCalledWithMatchingArgs,
         ): ValueListInterface {
             $args = func_get_args();
             /** @var NodeValueListInterface $input */
@@ -125,7 +124,10 @@ class QueryTest extends TestCase
         self::assertSame($capabilities, $query->getCapabilities());
     }
 
-    public function providerIsDefinite(): array
+    /**
+     * @return iterable<string, array{bool, bool}>
+     */
+    public static function providerIsDefinite(): iterable
     {
         return [
             'TRUE' => [true, true],

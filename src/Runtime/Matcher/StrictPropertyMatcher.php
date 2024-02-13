@@ -10,7 +10,7 @@ use function in_array;
 
 final class StrictPropertyMatcher implements SortedChildMatcherInterface
 {
-    private $properties;
+    private array $properties;
 
     public function __construct(string ...$properties)
     {

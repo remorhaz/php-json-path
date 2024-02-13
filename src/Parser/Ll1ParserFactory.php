@@ -32,11 +32,11 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
                 new TranslationSchemeApplier($scheme),
             );
             $parser->loadLookupTable(__DIR__ . '/../../generated/LookupTable.php');
+
+            return $parser;
         } catch (Throwable $e) {
             throw new Exception\ParserCreationFailedException($e);
         }
-
-        return $parser;
     }
 
     /**
@@ -58,7 +58,7 @@ final class Ll1ParserFactory implements Ll1ParserFactoryInterface
         return new TokenReader(
             CharBufferFactory::createFromString($source),
             new TokenMatcher(),
-            new TokenFactory($this->getGrammar())
+            new TokenFactory($this->getGrammar()),
         );
     }
 }

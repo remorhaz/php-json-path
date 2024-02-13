@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
 use Remorhaz\JSON\Path\Value\NodeValueList;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\NodeValueList
- */
+#[CoversClass(NodeValueList::class)]
 class NodeValueListTest extends TestCase
 {
     public function testGetIndexMap_ConstructedWithGivenIndexMapInstance_ReturnsSameInstance(): void
@@ -35,7 +34,7 @@ class NodeValueListTest extends TestCase
         $valueList = new NodeValueList(
             $this->createMock(IndexMapInterface::class),
             $firstValue,
-            $secondValue
+            $secondValue,
         );
         self::assertSame([$firstValue, $secondValue], $valueList->getValues());
     }
@@ -45,7 +44,7 @@ class NodeValueListTest extends TestCase
         $value = $this->createMock(NodeValueInterface::class);
         $valueList = new NodeValueList(
             $this->createMock(IndexMapInterface::class),
-            $value
+            $value,
         );
         self::assertSame($value, $valueList->getValue(0));
     }

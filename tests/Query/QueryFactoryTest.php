@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Parser\ParserInterface;
@@ -14,9 +15,7 @@ use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Runtime\RuntimeInterface;
 use Remorhaz\UniLex\AST\Tree;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\QueryFactory
- */
+#[CoversClass(QueryFactory::class)]
 class QueryFactoryTest extends TestCase
 {
     public function testCreate_Always_ReturnsQueryFactoryInstance(): void
@@ -28,7 +27,7 @@ class QueryFactoryTest extends TestCase
     {
         $factory = new QueryFactory(
             $this->createMock(ParserInterface::class),
-            $this->createMock(AstTranslatorInterface::class)
+            $this->createMock(AstTranslatorInterface::class),
         );
 
         $actualValue = $factory->createQuery('a');
@@ -44,7 +43,7 @@ class QueryFactoryTest extends TestCase
             ->willReturn($query);
         $factory = new QueryFactory(
             $this->createMock(ParserInterface::class),
-            $astTranslator
+            $astTranslator,
         );
         $lazyQuery = $factory->createQuery('a');
 
@@ -63,7 +62,7 @@ class QueryFactoryTest extends TestCase
 
         $factory = new QueryFactory(
             $parser,
-            $this->createMock(AstTranslatorInterface::class)
+            $this->createMock(AstTranslatorInterface::class),
         );
         $lazyQuery = $factory->createQuery('a');
 

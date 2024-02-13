@@ -79,7 +79,7 @@ abstract class NumericAggregator implements ValueAggregatorInterface
     {
         return array_values(
             array_filter(
-                array_map([$this, 'findElementData'], $elements),
+                array_map($this->findElementData(...), $elements),
             ),
         );
     }

@@ -17,7 +17,7 @@ final class NodeValueList implements NodeValueListInterface
     private array $values;
 
     public function __construct(
-        private IndexMapInterface $indexMap,
+        private readonly IndexMapInterface $indexMap,
         NodeValueInterface ...$values,
     ) {
         $this->values = array_values($values);

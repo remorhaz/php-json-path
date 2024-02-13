@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Runtime\Matcher\StrictPropertyMatcher;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Matcher\StrictPropertyMatcher
- */
+#[CoversClass(StrictPropertyMatcher::class)]
 class StrictPropertyMatcherTest extends TestCase
 {
     public function testMatch_ConstructedWithGivenAddressInProperties_ReturnsTrue(): void
@@ -19,28 +19,31 @@ class StrictPropertyMatcherTest extends TestCase
         $actualValue = $matcher->match(
             'a',
             $this->createMock(NodeValueInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(NodeValueInterface::class),
         );
         self::assertTrue($actualValue);
     }
 
     /**
-     * @param array $properties
-     * @param       $address
-     * @dataProvider providerNoAddressAmongProperties
+     * @param list<string> $properties
+     * @param int|string   $address
      */
+    #[DataProvider('providerNoAddressAmongProperties')]
     public function testMatch_ConstructedWithoutGivenAddressInProperties_ReturnsFalse(array $properties, $address): void
     {
         $matcher = new StrictPropertyMatcher(...$properties);
         $actualValue = $matcher->match(
             $address,
             $this->createMock(NodeValueInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(NodeValueInterface::class),
         );
         self::assertFalse($actualValue);
     }
 
-    public function providerNoAddressAmongProperties(): array
+    /**
+     * @return iterable<string, array{list<int>, int|string}>
+     */
+    public static function providerNoAddressAmongProperties(): iterable
     {
         return [
             'Property not listed' => [[], 'a'],

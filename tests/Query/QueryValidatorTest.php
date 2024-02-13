@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
 use Remorhaz\JSON\Path\Processor\Exception\QueryNotAddressableException;
@@ -11,9 +12,7 @@ use Remorhaz\JSON\Path\Query\Capabilities;
 use Remorhaz\JSON\Path\Query\QueryInterface;
 use Remorhaz\JSON\Path\Query\QueryValidator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\QueryValidator
- */
+#[CoversClass(QueryValidator::class)]
 class QueryValidatorTest extends TestCase
 {
     public function testGetDefiniteQuery_GivenDefiniteQuery_ReturnsSameInstance(): void

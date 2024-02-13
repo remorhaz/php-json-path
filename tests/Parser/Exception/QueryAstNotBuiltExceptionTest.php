@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Parser\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Parser\Exception\QueryAstNotBuiltException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Parser\Exception\QueryAstNotBuiltException
- */
+#[CoversClass(QueryAstNotBuiltException::class)]
 class QueryAstNotBuiltExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void

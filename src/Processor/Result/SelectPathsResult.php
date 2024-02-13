@@ -15,10 +15,10 @@ final class SelectPathsResult implements SelectPathsResultInterface
     /**
      * @var list<PathInterface>
      */
-    private array $paths;
+    private readonly array $paths;
 
     public function __construct(
-        private PathEncoderInterface $encoder,
+        private readonly PathEncoderInterface $encoder,
         PathInterface ...$paths,
     ) {
         $this->paths = array_values($paths);
@@ -37,6 +37,6 @@ final class SelectPathsResult implements SelectPathsResultInterface
      */
     public function encode(): array
     {
-        return array_map([$this->encoder, 'encodePath'], $this->paths);
+        return array_map($this->encoder->encodePath(...), $this->paths);
     }
 }

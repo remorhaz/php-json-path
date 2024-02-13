@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AvgAggregator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\AvgAggregator
- */
+#[CoversClass(AvgAggregator::class)]
 class AvgAggregatorTest extends TestCase
 {
     public function testTryAggregate_EmptyArray_ReturnsNull(): void
@@ -58,7 +57,7 @@ class AvgAggregatorTest extends TestCase
         self::assertSame(1.5, $this->exportValueData($aggregator->tryAggregate($value)));
     }
 
-    private function exportValueData(?ValueInterface $value)
+    private function exportValueData(?ValueInterface $value): int|float|string|bool|null
     {
         if (!isset($value)) {
             return null;

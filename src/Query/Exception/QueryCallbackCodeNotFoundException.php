@@ -11,6 +11,6 @@ final class QueryCallbackCodeNotFoundException extends LogicException implements
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct("Query callback code is accessed before being generated", 0, $previous);
+        parent::__construct("Query callback code is accessed before being generated", previous: $previous);
     }
 }

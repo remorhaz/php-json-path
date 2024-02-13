@@ -11,10 +11,10 @@ use Throwable;
 final class IndefiniteQueryException extends RuntimeException implements ExceptionInterface
 {
     public function __construct(
-        private QueryInterface $query,
+        private readonly QueryInterface $query,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Query is indefinite", 0, $previous);
+        parent::__construct("Query is indefinite", previous: $previous);
     }
 
     public function getQuery(): QueryInterface

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeArrayValue;
@@ -12,9 +13,7 @@ use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Runtime\Matcher\AnyChildMatcher;
 use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactory;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactory
- */
+#[CoversClass(MatcherFactory::class)]
 class MatcherFactoryTest extends TestCase
 {
     public function testMatchAnyChild_Constructed_ReturnsAnyChildMatcherInstance(): void
@@ -31,7 +30,7 @@ class MatcherFactoryTest extends TestCase
             ->match(
                 'b',
                 $this->createMock(NodeValueInterface::class),
-                $this->createMock(NodeValueInterface::class)
+                $this->createMock(NodeValueInterface::class),
             );
         self::assertFalse($actualValue);
     }
@@ -44,7 +43,7 @@ class MatcherFactoryTest extends TestCase
             ->match(
                 'a',
                 $this->createMock(NodeValueInterface::class),
-                $this->createMock(NodeValueInterface::class)
+                $this->createMock(NodeValueInterface::class),
             );
         self::assertTrue($actualValue);
     }
@@ -57,7 +56,7 @@ class MatcherFactoryTest extends TestCase
             ->match(
                 2,
                 $this->createMock(NodeValueInterface::class),
-                $this->createMock(NodeValueInterface::class)
+                $this->createMock(NodeValueInterface::class),
             );
         self::assertFalse($actualValue);
     }
@@ -70,7 +69,7 @@ class MatcherFactoryTest extends TestCase
             ->match(
                 1,
                 $this->createMock(NodeValueInterface::class),
-                $this->createMock(NodeValueInterface::class)
+                $this->createMock(NodeValueInterface::class),
             );
         self::assertTrue($actualValue);
     }
@@ -86,8 +85,8 @@ class MatcherFactoryTest extends TestCase
                 new NodeArrayValue(
                     ['a', 'b'],
                     $this->createMock(PathInterface::class),
-                    $this->createMock(NodeValueFactoryInterface::class)
-                )
+                    $this->createMock(NodeValueFactoryInterface::class),
+                ),
             );
         self::assertFalse($actualValue);
     }
@@ -103,8 +102,8 @@ class MatcherFactoryTest extends TestCase
                 new NodeArrayValue(
                     ['a', 'b'],
                     $this->createMock(PathInterface::class),
-                    $this->createMock(NodeValueFactoryInterface::class)
-                )
+                    $this->createMock(NodeValueFactoryInterface::class),
+                ),
             );
         self::assertTrue($actualValue);
     }

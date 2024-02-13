@@ -16,7 +16,7 @@ use Remorhaz\JSON\Path\Value\NodeValueListInterface;
 final class ValueListFetcher implements ValueListFetcherInterface
 {
     public function __construct(
-        private ValueFetcherInterface $valueFetcher,
+        private readonly ValueFetcherInterface $valueFetcher,
     ) {
     }
 

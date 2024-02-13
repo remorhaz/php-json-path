@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
 use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectResult;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\SelectResult
- */
+#[CoversClass(SelectResult::class)]
 class SelectResultTest extends TestCase
 {
     public function testGet_ConstructedWithoutValues_ReturnsEmptyArray(): void
     {
         $result = new SelectResult(
             $this->createMock(ValueEncoderInterface::class),
-            $this->createMock(ValueDecoderInterface::class)
+            $this->createMock(ValueDecoderInterface::class),
         );
         self::assertSame([], $result->get());
     }
@@ -30,7 +29,7 @@ class SelectResultTest extends TestCase
         $result = new SelectResult(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $value
+            $value,
         );
         self::assertSame([$value], $result->get());
     }
@@ -39,7 +38,7 @@ class SelectResultTest extends TestCase
     {
         $result = new SelectResult(
             $this->createMock(ValueEncoderInterface::class),
-            $this->createMock(ValueDecoderInterface::class)
+            $this->createMock(ValueDecoderInterface::class),
         );
         self::assertSame([], $result->encode());
     }
@@ -51,7 +50,7 @@ class SelectResultTest extends TestCase
         $result = new SelectResult(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $value
+            $value,
         );
 
         $encoder
@@ -68,7 +67,7 @@ class SelectResultTest extends TestCase
         $result = new SelectResult(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $value
+            $value,
         );
 
         $decoder
@@ -84,7 +83,7 @@ class SelectResultTest extends TestCase
         $result = new SelectResult(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
 
         $encoder
@@ -99,7 +98,7 @@ class SelectResultTest extends TestCase
         $result = new SelectResult(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
 
         $decoder

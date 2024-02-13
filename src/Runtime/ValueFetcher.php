@@ -44,7 +44,7 @@ final class ValueFetcher implements ValueFetcherInterface
 
     private function createUnsortedChildStructIterator(
         Matcher\ChildMatcherInterface $matcher,
-        NodeValueInterface $value
+        NodeValueInterface $value,
     ): Iterator {
         if (!$value instanceof StructValueInterface) {
             return;

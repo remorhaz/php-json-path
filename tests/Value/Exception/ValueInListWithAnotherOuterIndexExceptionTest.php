@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Value\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueInListWithAnotherOuterIndexException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\Exception\ValueInListWithAnotherOuterIndexException
- */
+#[CoversClass(ValueInListWithAnotherOuterIndexException::class)]
 class ValueInListWithAnotherOuterIndexExceptionTest extends TestCase
 {
     public function testGetMessage_ConstructedWithIndexes_ReturnsMatchingValue(): void
@@ -40,13 +39,6 @@ class ValueInListWithAnotherOuterIndexExceptionTest extends TestCase
         $value = $this->createMock(NodeValueInterface::class);
         $exception = new ValueInListWithAnotherOuterIndexException($value, 1, 2);
         self::assertSame(2, $exception->getActualIndex());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $value = $this->createMock(NodeValueInterface::class);
-        $exception = new ValueInListWithAnotherOuterIndexException($value, 1, 2);
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

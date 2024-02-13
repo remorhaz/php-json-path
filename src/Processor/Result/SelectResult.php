@@ -19,8 +19,8 @@ final class SelectResult implements SelectResultInterface
     private array $values;
 
     public function __construct(
-        private ValueEncoderInterface $encoder,
-        private ValueDecoderInterface $decoder,
+        private readonly ValueEncoderInterface $encoder,
+        private readonly ValueDecoderInterface $decoder,
         ValueInterface ...$values,
     ) {
         $this->values = array_values($values);
@@ -33,7 +33,7 @@ final class SelectResult implements SelectResultInterface
      */
     public function decode(): array
     {
-        return array_map([$this->decoder, 'exportValue'], $this->values);
+        return array_map($this->decoder->exportValue(...), $this->values);
     }
 
     /**
@@ -43,7 +43,7 @@ final class SelectResult implements SelectResultInterface
      */
     public function encode(): array
     {
-        return array_map([$this->encoder, 'exportValue'], $this->values);
+        return array_map($this->encoder->exportValue(...), $this->values);
     }
 
     /**

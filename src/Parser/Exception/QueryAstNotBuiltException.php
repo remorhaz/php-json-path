@@ -13,7 +13,7 @@ final class QueryAstNotBuiltException extends RuntimeException implements Except
         private string $source,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Failed to build AST from JSONPath query: $this->source", 0, $previous);
+        parent::__construct("Failed to build AST from JSONPath query: $this->source", previous: $previous);
     }
 
     public function getSource(): string

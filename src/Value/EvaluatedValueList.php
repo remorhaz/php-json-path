@@ -19,7 +19,7 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
     private array $values;
 
     public function __construct(
-        private IndexMapInterface $indexMap,
+        private readonly IndexMapInterface $indexMap,
         bool ...$results,
     ) {
         $this->results = array_values($results);
@@ -45,8 +45,8 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
 
     public function getResult(int $index): bool
     {
-        return $this->results[$index]
-            ?? throw new Exception\ResultNotFoundException($index, $this);
+        return $this->results[$index] ??
+            throw new Exception\ResultNotFoundException($index, $this);
     }
 
     /**
@@ -54,7 +54,7 @@ final class EvaluatedValueList implements EvaluatedValueListInterface
      */
     public function getValues(): array
     {
-        return $this->values ??= array_map([$this, 'createResultValue'], $this->results);
+        return $this->values ??= array_map($this->createResultValue(...), $this->results);
     }
 
     private function createResultValue(bool $result): EvaluatedValueInterface

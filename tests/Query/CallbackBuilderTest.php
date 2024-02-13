@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Query\Exception\CapabilitiesNotFoundException;
 use Remorhaz\JSON\Path\Query\Exception\QueryCallbackCodeNotFoundException;
@@ -13,9 +15,7 @@ use Remorhaz\UniLex\AST\Node;
 use Remorhaz\UniLex\Exception as UniLexException;
 use Remorhaz\UniLex\Stack\PushInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\CallbackBuilder
- */
+#[CoversClass(CallbackBuilder::class)]
 class CallbackBuilderTest extends TestCase
 {
     public function testGetCallbackCode_CallbackIsNotSet_ThrowsException(): void
@@ -35,14 +35,12 @@ class CallbackBuilderTest extends TestCase
     }
 
     /**
-     * @param bool $isDefinite
-     * @param bool $expectedValue
      * @throws UniLexException
-     * @dataProvider providerIsDefinite
      */
+    #[DataProvider('providerIsDefinite')]
     public function testGetCapabilities_SetOutputProductionFinishedWithGivenCapabilities_ReturnsMatchingCapabilities(
         bool $isDefinite,
-        bool $expectedValue
+        bool $expectedValue,
     ): void {
         $callbackBuilder = new CallbackBuilder();
         $callbackBuilder->onStart($this->createMock(Node::class));
@@ -61,7 +59,10 @@ class CallbackBuilderTest extends TestCase
         self::assertSame($expectedValue, $callbackBuilder->getCapabilities()->isDefinite());
     }
 
-    public function providerIsDefinite(): array
+    /**
+     * @return iterable<string, array{bool, bool}>
+     */
+    public static function providerIsDefinite(): iterable
     {
         return [
             'TRUE' => [true, true],

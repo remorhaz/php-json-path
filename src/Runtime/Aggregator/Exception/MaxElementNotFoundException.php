@@ -16,12 +16,12 @@ final class MaxElementNotFoundException extends LogicException implements Except
      * @param Throwable|null $previous
      */
     public function __construct(
-        private array $dataList,
-        private array $elements,
+        private readonly array $dataList,
+        private readonly array $elements,
         ?Throwable $previous = null,
     ) {
 
-        parent::__construct("Max element not found", 0, $previous);
+        parent::__construct("Max element not found", previous: $previous);
     }
 
     public function getDataList(): array

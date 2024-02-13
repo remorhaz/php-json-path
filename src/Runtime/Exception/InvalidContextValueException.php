@@ -11,10 +11,10 @@ use Throwable;
 final class InvalidContextValueException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private ValueInterface $value,
+        private readonly ValueInterface $value,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Invalid context value", 0, $previous);
+        parent::__construct("Invalid context value", previous: $previous);
     }
 
     public function getValue(): ValueInterface

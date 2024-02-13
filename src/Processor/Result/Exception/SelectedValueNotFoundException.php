@@ -11,6 +11,6 @@ final class SelectedValueNotFoundException extends LogicException implements Exc
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct("Selected value not found", 0, $previous);
+        parent::__construct("Selected value not found", previous: $previous);
     }
 }

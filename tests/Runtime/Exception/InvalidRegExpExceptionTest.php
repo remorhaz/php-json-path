@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Runtime\Exception\InvalidRegExpException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Exception\InvalidRegExpException
- */
+#[CoversClass(InvalidRegExpException::class)]
 class InvalidRegExpExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void

@@ -19,8 +19,8 @@ final class QueryFactory implements QueryFactoryInterface
     }
 
     public function __construct(
-        private ParserInterface $parser,
-        private AstTranslatorInterface $astTranslator,
+        private readonly ParserInterface $parser,
+        private readonly AstTranslatorInterface $astTranslator,
     ) {
     }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
@@ -12,21 +14,17 @@ use Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Processor
- */
+#[CoversClass(Processor::class)]
 class ProcessorTest extends TestCase
 {
     /**
-     * @param string $json
-     * @param string $path
-     * @param array $expectedValue
      * @dataProvider providerSelect
      */
+    #[DataProvider('providerSelect')]
     public function testSelect_GivenQueryAndData_ReturnsMatchingData(
         string $json,
         string $path,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $actualValue = Processor::create()->select(
             QueryFactory::create()->createQuery($path),
@@ -35,7 +33,10 @@ class ProcessorTest extends TestCase
         self::assertSame($expectedValue, $actualValue->encode());
     }
 
-    public function providerSelect(): array
+    /**
+     * @return iterable<string, array{string, string, list<string>}>
+     */
+    public static function providerSelect(): iterable
     {
         return [
             'Query matches nothing' => ['{}', '$.a', []],
@@ -48,16 +49,11 @@ class ProcessorTest extends TestCase
         ];
     }
 
-    /**
-     * @param string $json
-     * @param string $path
-     * @param array $expectedValue
-     * @dataProvider providerSelectPaths
-     */
+    #[DataProvider('providerSelectPaths')]
     public function testSelectPaths_GivenQueryAndData_ResultContainsMatchingPaths(
         string $json,
         string $path,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $actualValue = Processor::create()->selectPaths(
             QueryFactory::create()->createQuery($path),
@@ -66,7 +62,10 @@ class ProcessorTest extends TestCase
         self::assertSame($expectedValue, $actualValue->encode());
     }
 
-    public function providerSelectPaths(): array
+    /**
+     * @return iterable<string, array{string, string, list<string>}>
+     */
+    public static function providerSelectPaths(): iterable
     {
         return [
             'Query matches nothing' => ['{}', '$.a', []],
@@ -77,7 +76,7 @@ class ProcessorTest extends TestCase
                 [
                     "\$['a']",
                     "\$['a']['a']",
-                ]
+                ],
             ],
         ];
     }
@@ -86,7 +85,7 @@ class ProcessorTest extends TestCase
     {
         $actualData = Processor::create()->selectOne(
             QueryFactory::create()->createQuery('$.a'),
-            NodeValueFactory::create()->createValue('{"a":1}')
+            NodeValueFactory::create()->createValue('{"a":1}'),
         );
         self::assertSame('1', $actualData->encode());
     }
@@ -95,7 +94,7 @@ class ProcessorTest extends TestCase
     {
         $actualData = Processor::create()->selectOne(
             QueryFactory::create()->createQuery('$.a'),
-            NodeValueFactory::create()->createValue('{}')
+            NodeValueFactory::create()->createValue('{}'),
         );
         self::assertFalse($actualData->exists());
     }
@@ -114,7 +113,7 @@ class ProcessorTest extends TestCase
     {
         $actualData = Processor::create()->selectOnePath(
             QueryFactory::create()->createQuery('$.a'),
-            NodeValueFactory::create()->createValue('{"a":1}')
+            NodeValueFactory::create()->createValue('{"a":1}'),
         );
         self::assertSame("\$['a']", $actualData->encode());
     }
@@ -123,7 +122,7 @@ class ProcessorTest extends TestCase
     {
         $actualData = Processor::create()->selectOnePath(
             QueryFactory::create()->createQuery('$.a'),
-            NodeValueFactory::create()->createValue('{}')
+            NodeValueFactory::create()->createValue('{}'),
         );
         self::assertFalse($actualData->exists());
     }

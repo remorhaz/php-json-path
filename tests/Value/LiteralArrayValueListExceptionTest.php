@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
 use Remorhaz\JSON\Path\Value\ValueList;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\ValueList
- */
+#[CoversClass(ValueList::class)]
 class LiteralArrayValueListExceptionTest extends TestCase
 {
     public function testGetIndexMap_ConstructedWithGivenIndexMap_ReturnsSameInstance(): void

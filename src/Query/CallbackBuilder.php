@@ -125,7 +125,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
             function (PhpAstNode $stmt): PhpAstNode {
                 return $stmt instanceof Expr ? new Expression($stmt) : $stmt;
             },
-            $this->stmts
+            $this->stmts,
         );
 
         $this->callbackCode = (new Standard())->prettyPrint($stmts);
@@ -326,7 +326,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     'matchPropertyStrictly',
                     ...array_map(
                         [$this->php, 'val'],
-                        $node->getAttribute('names')
+                        $node->getAttribute('names'),
                     ),
                 );
                 break;
@@ -339,7 +339,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
                     'matchElementStrictly',
                     ...array_map(
                         [$this->php, 'val'],
-                        $node->getAttribute('indexes')
+                        $node->getAttribute('indexes'),
                     ),
                 );
                 break;
@@ -450,8 +450,8 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
 
     private function getReference(QueryAstNode $node): Expr
     {
-        return $this->references[$node->getId()]
-            ?? throw new Exception\ReferenceNotFoundException($node->getId());
+        return $this->references[$node->getId()] ??
+            throw new Exception\ReferenceNotFoundException($node->getId());
     }
 
     /**
@@ -460,7 +460,7 @@ final class CallbackBuilder extends AbstractTranslatorListener implements Callba
      */
     private function getReferences(QueryAstNode ...$nodes): array
     {
-        return array_map([$this, 'getReference'], array_values($nodes));
+        return array_map($this->getReference(...), array_values($nodes));
     }
 
     private function addMethodCall(QueryAstNode $node, Expr $object, string $method, PhpAstNode ...$args): void

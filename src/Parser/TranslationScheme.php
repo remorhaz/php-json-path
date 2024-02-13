@@ -17,14 +17,10 @@ use function array_merge;
 class TranslationScheme implements TranslationSchemeInterface
 {
     public function __construct(
-        private AstBuilderInterface $queryAstBuilder,
+        private readonly AstBuilderInterface $queryAstBuilder,
     ) {
     }
 
-    /**
-     * @param Symbol $symbol
-     * @param Token $token
-     */
     public function applyTokenActions(Symbol $symbol, Token $token): void
     {
         $s = $symbol->getShortcut();
@@ -43,9 +39,6 @@ class TranslationScheme implements TranslationSchemeInterface
         }
     }
 
-    /**
-     * @param Production $production
-     */
     public function applyProductionActions(Production $production): void
     {
         $header = $production->getHeaderShortcut();
@@ -59,7 +52,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->setOutput(
                         $symbols[0]['s.value_list_id'],
                         $symbols[0]['s.is_definite'],
-                        $symbols[0]['s.is_addressable']
+                        $symbols[0]['s.is_addressable'],
                     );
                 break;
 
@@ -85,7 +78,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->aggregate(
                         $header['i.filter_name'],
-                        $header['i.value_list_id']
+                        $header['i.value_list_id'],
                     );
                 $header['s.is_definite'] = $header['i.is_definite'];
                 $header['s.is_addressable'] = false;
@@ -375,7 +368,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild()
+                        $this->queryAstBuilder->matchAnyChild(),
                     );
                 $header['s.is_definite'] = false;
                 break;
@@ -387,7 +380,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly(...$symbols[0]['s.text_list'])
+                            ->matchPropertyStrictly(...$symbols[0]['s.text_list']),
                     );
                 $header['s.is_definite'] = $symbols[0]['s.is_definite'];
                 break;
@@ -429,7 +422,7 @@ class TranslationScheme implements TranslationSchemeInterface
                                     ->queryAstBuilder
                                     ->evaluate($symbols[3]['i.value_list_id'], $symbols[3]['s.value_list_id']),
                                 $symbols[3]['i.context_value_list_id'],
-                            )
+                            ),
                     );
                 $header['s.is_definite'] = false;
                 break;
@@ -441,7 +434,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->evaluateLogicalNot(
                         $this
                             ->queryAstBuilder
-                            ->evaluate($header['i.value_list_id'], $symbols[1]['s.value_list_id'])
+                            ->evaluate($header['i.value_list_id'], $symbols[1]['s.value_list_id']),
                     );
                 break;
 
@@ -726,14 +719,14 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->evaluate(
                                 $header['i.value_list_id'],
-                                $header['i.left_value_list_id']
+                                $header['i.left_value_list_id'],
                             ),
                         $this
                             ->queryAstBuilder
                             ->evaluate(
                                 $header['i.value_list_id'],
-                                $symbols[2]['s.value_list_id']
-                            )
+                                $symbols[2]['s.value_list_id'],
+                            ),
                     );
                 break;
 
@@ -763,14 +756,14 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->evaluate(
                                 $header['i.value_list_id'],
-                                $header['i.left_value_list_id']
+                                $header['i.left_value_list_id'],
                             ),
                         $this
                             ->queryAstBuilder
                             ->evaluate(
                                 $header['i.value_list_id'],
-                                $symbols[2]['s.value_list_id']
-                            )
+                                $symbols[2]['s.value_list_id'],
+                            ),
                     );
                 break;
 
@@ -826,7 +819,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->calculateIsEqual(
                         $header['i.left_value_list_id'],
-                        $symbols[2]['s.value_list_id']
+                        $symbols[2]['s.value_list_id'],
                     );
                 break;
 
@@ -840,8 +833,8 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->calculateIsEqual(
                                 $header['i.left_value_list_id'],
-                                $symbols[2]['s.value_list_id']
-                            )
+                                $symbols[2]['s.value_list_id'],
+                            ),
                     );
                 break;
 
@@ -852,7 +845,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->calculateIsGreater(
                         $symbols[2]['s.value_list_id'],
-                        $header['i.left_value_list_id']
+                        $header['i.left_value_list_id'],
                     );
                 break;
 
@@ -866,8 +859,8 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->calculateIsGreater(
                                 $header['i.left_value_list_id'],
-                                $symbols[2]['s.value_list_id']
-                            )
+                                $symbols[2]['s.value_list_id'],
+                            ),
                     );
                 break;
 
@@ -878,7 +871,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->calculateIsGreater(
                         $header['i.left_value_list_id'],
-                        $symbols[2]['s.value_list_id']
+                        $symbols[2]['s.value_list_id'],
                     );
                 break;
 
@@ -892,8 +885,8 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->calculateIsGreater(
                                 $symbols[2]['s.value_list_id'],
-                                $header['i.left_value_list_id']
-                            )
+                                $header['i.left_value_list_id'],
+                            ),
                     );
                 break;
 
@@ -992,7 +985,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly($symbols[0]['s.text'])
+                            ->matchPropertyStrictly($symbols[0]['s.text']),
                     );
                 $symbols[1]['i.is_definite'] = $header['i.is_definite'];
                 $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
@@ -1004,7 +997,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildren(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild()
+                        $this->queryAstBuilder->matchAnyChild(),
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
@@ -1032,7 +1025,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly($header['i.filter_name'])
+                            ->matchPropertyStrictly($header['i.filter_name']),
                     );
                 $symbols[0]['i.is_definite'] = $header['i.is_definite'];
                 $symbols[0]['i.is_addressable'] = $header['i.is_addressable'];
@@ -1048,7 +1041,7 @@ class TranslationScheme implements TranslationSchemeInterface
                         $header['i.value_list_id'],
                         $this
                             ->queryAstBuilder
-                            ->matchPropertyStrictly($symbols[0]['s.text'])
+                            ->matchPropertyStrictly($symbols[0]['s.text']),
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
@@ -1060,7 +1053,7 @@ class TranslationScheme implements TranslationSchemeInterface
                     ->queryAstBuilder
                     ->fetchChildrenDeep(
                         $header['i.value_list_id'],
-                        $this->queryAstBuilder->matchAnyChild()
+                        $this->queryAstBuilder->matchAnyChild(),
                     );
                 $symbols[1]['i.is_definite'] = false;
                 $symbols[1]['i.is_addressable'] = $header['i.is_addressable'];
@@ -1076,7 +1069,7 @@ class TranslationScheme implements TranslationSchemeInterface
                             ->queryAstBuilder
                             ->fetchChildrenDeep(
                                 $header['i.value_list_id'],
-                                $this->queryAstBuilder->matchAnyChild()
+                                $this->queryAstBuilder->matchAnyChild(),
                             ),
                     );
                 $symbols[0]['i.is_definite'] = false;

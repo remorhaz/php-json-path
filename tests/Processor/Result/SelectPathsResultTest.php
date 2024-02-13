@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 use Remorhaz\JSON\Path\Processor\Result\SelectPathsResult;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\SelectPathsResult
- */
+#[CoversClass(SelectPathsResult::class)]
 class SelectPathsResultTest extends TestCase
 {
     public function testGet_ConstructedWithoutPaths_ReturnsEmptyArray(): void
     {
         $result = new SelectPathsResult(
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         self::assertSame([], $result->get());
     }
@@ -27,7 +26,7 @@ class SelectPathsResultTest extends TestCase
         $path = $this->createMock(PathInterface::class);
         $result = new SelectPathsResult(
             $this->createMock(PathEncoderInterface::class),
-            $path
+            $path,
         );
         self::assertSame([$path], $result->get());
     }
@@ -35,7 +34,7 @@ class SelectPathsResultTest extends TestCase
     public function testEncode_ConstructedWithoutPath_ReturnsEmptyArray(): void
     {
         $result = new SelectPathsResult(
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         self::assertSame([], $result->encode());
     }

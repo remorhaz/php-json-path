@@ -57,10 +57,10 @@ final class Processor implements ProcessorInterface
     }
 
     public function __construct(
-        private RuntimeInterface $runtime,
-        private ResultFactoryInterface $resultFactory,
-        private QueryValidatorInterface $queryValidator,
-        private MutatorInterface $mutator,
+        private readonly RuntimeInterface $runtime,
+        private readonly ResultFactoryInterface $resultFactory,
+        private readonly QueryValidatorInterface $queryValidator,
+        private readonly MutatorInterface $mutator,
     ) {
     }
 

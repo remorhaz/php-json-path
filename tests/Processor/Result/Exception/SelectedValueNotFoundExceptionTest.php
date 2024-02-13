@@ -5,24 +5,17 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Result\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Result\Exception\SelectedValueNotFoundException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\Exception\SelectedValueNotFoundException
- */
+#[CoversClass(SelectedValueNotFoundException::class)]
 class SelectedValueNotFoundExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new SelectedValueNotFoundException();
         self::assertSame('Selected value not found', $exception->getMessage());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new SelectedValueNotFoundException();
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

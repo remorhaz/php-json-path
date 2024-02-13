@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
@@ -13,9 +15,7 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\LengthAggregator;
 
 use function array_fill;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\LengthAggregator
- */
+#[CoversClass(LengthAggregator::class)]
 class LengthAggregatorTest extends TestCase
 {
     public function testTryAggregate_NonArrayValue_ReturnsNull(): void
@@ -25,11 +25,7 @@ class LengthAggregatorTest extends TestCase
         self::assertNull($aggregator->tryAggregate($value));
     }
 
-    /**
-     * @param int   $count
-     * @param array $expectedValue
-     * @dataProvider providerArrayCount
-     */
+    #[DataProvider('providerArrayCount')]
     public function testTryAggregate_ArrayValue_ReturnsValueWithArrayLength(int $count, array $expectedValue): void
     {
         $aggregator = new LengthAggregator();
@@ -41,7 +37,10 @@ class LengthAggregatorTest extends TestCase
         self::assertSame($expectedValue, $this->exportValueData($aggregator->tryAggregate($value)));
     }
 
-    public function providerArrayCount(): array
+    /**
+     * @return iterable<string, array{int, array}>
+     */
+    public static function providerArrayCount(): iterable
     {
         return [
             'Empty array' => [0, ['data' => 0]],
@@ -50,7 +49,7 @@ class LengthAggregatorTest extends TestCase
         ];
     }
 
-    private function exportValueData(?ValueInterface $value)
+    private function exportValueData(?ValueInterface $value): ?array
     {
         if (!isset($value)) {
             return null;

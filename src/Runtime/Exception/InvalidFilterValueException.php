@@ -11,10 +11,10 @@ use Throwable;
 final class InvalidFilterValueException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private ValueInterface $value,
+        private readonly ValueInterface $value,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Invalid filter value", 0, $previous);
+        parent::__construct("Invalid filter value", previous: $previous);
     }
 
     public function getValue(): ValueInterface

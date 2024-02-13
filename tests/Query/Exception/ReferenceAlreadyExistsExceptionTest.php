@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Query\Exception\ReferenceAlreadyExistsException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\Exception\ReferenceAlreadyExistsException
- */
+#[CoversClass(ReferenceAlreadyExistsException::class)]
 class ReferenceAlreadyExistsExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void

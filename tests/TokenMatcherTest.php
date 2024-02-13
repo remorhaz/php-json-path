@@ -2,6 +2,8 @@
 
 namespace Remorhaz\JSON\Path\Test;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\TokenMatcher;
 use Remorhaz\JSON\Path\Parser\TokenType;
@@ -10,20 +12,18 @@ use Remorhaz\UniLex\Lexer\TokenFactory;
 use Remorhaz\UniLex\Lexer\TokenReader;
 use Remorhaz\UniLex\Unicode\CharBufferFactory;
 
-/**
- * @covers \Remorhaz\JSON\Path\TokenMatcher
- */
+#[CoversClass(TokenMatcher::class)]
 class TokenMatcherTest extends TestCase
 {
     /**
-     * @param string $input
-     * @param array $expectedValue
+     * @param string    $input
+     * @param list<int> $expectedValue
      * @throws UniLexException
-     * @dataProvider providerValidInputTokenTypeList
      */
+    #[DataProvider('providerValidInputTokenTypeList')]
     public function testMatch_TokenReaderUsedToMatchAllTokensFromValidInput_ProducesMatchingTokenTypeList(
         string $input,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $matcher = new TokenMatcher();
         $buffer = CharBufferFactory::createFromString($input);
@@ -37,7 +37,10 @@ class TokenMatcherTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerValidInputTokenTypeList(): array
+    /**
+     * @return iterable<string, array{string, list<int>}>
+     */
+    public static function providerValidInputTokenTypeList(): iterable
     {
         return [
             "One-symbol name (root)" => ['$', [TokenType::ROOT_ABSOLUTE, TokenType::EOI]],
@@ -248,10 +251,7 @@ class TokenMatcherTest extends TestCase
         ];
     }
 
-    /**
-     * @param string $input
-     * @dataProvider providerInvalidInputTokenTypeList
-     */
+    #[DataProvider('providerInvalidInputTokenTypeList')]
     public function testMatch_TokenReaderUsedToMatchAllTokensFromInvalidInput_ReturnsFalse(string $input): void
     {
         $matcher = new TokenMatcher();
@@ -261,7 +261,10 @@ class TokenMatcherTest extends TestCase
         self::assertFalse($actualValue);
     }
 
-    public function providerInvalidInputTokenTypeList(): array
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function providerInvalidInputTokenTypeList(): iterable
     {
         return [
             "Empty input" => [''],

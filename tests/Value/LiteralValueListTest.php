@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Value\Exception\ValueNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMap;
@@ -11,9 +12,7 @@ use Remorhaz\JSON\Path\Value\IndexMapInterface;
 use Remorhaz\JSON\Path\Value\LiteralValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralValueList;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\LiteralValueList
- */
+#[CoversClass(LiteralValueList::class)]
 class LiteralValueListTest extends TestCase
 {
     public function testGetIndexMap_ConstructedWithGivenIndexMap_ReturnsSameInstance(): void
@@ -21,7 +20,7 @@ class LiteralValueListTest extends TestCase
         $indexMap = $this->createMock(IndexMapInterface::class);
         $valueList = new LiteralValueList(
             $indexMap,
-            $this->createMock(LiteralValueInterface::class)
+            $this->createMock(LiteralValueInterface::class),
         );
         self::assertSame($indexMap, $valueList->getIndexMap());
     }
@@ -31,7 +30,7 @@ class LiteralValueListTest extends TestCase
         $value = $this->createMock(LiteralValueInterface::class);
         $valueList = new LiteralValueList(
             $this->createMock(IndexMapInterface::class),
-            $value
+            $value,
         );
         self::assertSame($value, $valueList->getLiteral());
     }

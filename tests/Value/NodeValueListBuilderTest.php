@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Value\Exception\ValueInListWithAnotherOuterIndexException;
 use Remorhaz\JSON\Path\Value\NodeValueListBuilder;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\NodeValueListBuilder
- */
+#[CoversClass(NodeValueListBuilder::class)]
 class NodeValueListBuilderTest extends TestCase
 {
     public function testBuild_NoValuesAdded_ReturnsListWithEmptyIndexMap(): void

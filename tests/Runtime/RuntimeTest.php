@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Runtime\EvaluatorInterface;
 use Remorhaz\JSON\Path\Runtime\LiteralFactoryInterface;
@@ -11,9 +12,7 @@ use Remorhaz\JSON\Path\Runtime\Matcher\MatcherFactoryInterface;
 use Remorhaz\JSON\Path\Runtime\Runtime;
 use Remorhaz\JSON\Path\Runtime\ValueListFetcherInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Runtime
- */
+#[CoversClass(Runtime::class)]
 class RuntimeTest extends TestCase
 {
     public function testGetEvaluator_ConstructedWithGivenEvaluator_ReturnsSameInstance(): void

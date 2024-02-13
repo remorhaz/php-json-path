@@ -11,6 +11,6 @@ final class CapabilitiesNotFoundException extends LogicException implements Exce
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct("Properties are accessed before being set", 0, $previous);
+        parent::__construct("Properties are accessed before being set", previous: $previous);
     }
 }

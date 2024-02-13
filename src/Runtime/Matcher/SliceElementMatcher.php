@@ -18,8 +18,8 @@ final class SliceElementMatcher implements SortedChildMatcherInterface
     private bool $isReverse;
 
     public function __construct(
-        private ?int $start,
-        private ?int $end,
+        private readonly ?int $start,
+        private readonly ?int $end,
         ?int $step,
     ) {
         $this->step = $step ?? 1;
@@ -94,8 +94,8 @@ final class SliceElementMatcher implements SortedChildMatcherInterface
 
     public function getSortIndex(int|string $address, NodeValueInterface $value, NodeValueInterface $container): int
     {
-        $count = $this->findArrayLength($container)
-            ?? throw new Exception\AddressNotSortableException($address);
+        $count = $this->findArrayLength($container) ??
+            throw new Exception\AddressNotSortableException($address);
 
         return $this->getIndex($address, $this->detectStart($count));
     }

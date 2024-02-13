@@ -12,7 +12,7 @@ use function is_int;
 
 final class StrictElementMatcher implements SortedChildMatcherInterface
 {
-    private $indexes;
+    private array $indexes;
 
     public function __construct(int ...$indexes)
     {

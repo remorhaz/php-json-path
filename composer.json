@@ -16,17 +16,16 @@
     }
   ],
   "require": {
-    "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+    "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
     "ext-intl": "*",
     "ext-json": "*",
-    "remorhaz/php-unilex": "^0.5.2",
-    "remorhaz/php-json-data": "^0.6",
-    "nikic/php-parser": "^4.12"
+    "remorhaz/php-unilex": "^0.5.3",
+    "remorhaz/php-json-data": "^0.6.1",
+    "nikic/php-parser": "^4.12 || ^5"
   },
   "require-dev": {
-    "infection/infection": "^0.26 || ^0.27",
-    "phpunit/phpunit": "^9.6 || ^10",
-    "squizlabs/php_codesniffer": "^3.7.2"
+    "bamarni/composer-bin-plugin": "^1.8",
+    "phpunit/phpunit": "^10.1 || ^11"
   },
   "autoload": {
     "psr-4": {
@@ -42,13 +41,18 @@
     }
   },
   "scripts": {
+    "post-update-cmd": ["@phive-install"],
+    "post-install-cmd": ["@phive-install"],
+    "phive-install": [
+      "`if [ -f tools/phive ]; then echo 'tools/'; fi`phive install --trust-gpg-keys C5095986493B4AA0"
+    ],
     "build": [
       "vendor/bin/unilex build-token-matcher --desc=\"JSONPath token matcher.\" spec/LexerSpec.php generated/TokenMatcher.php",
       "vendor/bin/unilex build-lookup-table --type=LL_1 --symbol=Remorhaz\\\\JSON\\\\Path\\\\Parser\\\\SymbolType --token=Remorhaz\\\\JSON\\\\Path\\\\Parser\\\\TokenType --desc=\"JSONPath parser LL(1) lookup table.\" spec/GrammarSpec.php generated/LookupTable.php",
-      "vendor/bin/phpcbf -p generated/; if [ $? -eq 1 ]; then exit 0; fi"
+      "vendor-bin/cs/vendor/bin/phpcbf -p generated/; if [ $? -eq 1 ]; then exit 0; fi"
     ],
     "test-cs": [
-      "vendor/bin/phpcs -sp"
+      "vendor-bin/cs/vendor/bin/phpcs -sp"
     ],
     "test-unit": [
       "vendor/bin/phpunit --coverage-xml=build/log/coverage-xml --coverage-clover=build/log/clover.xml --log-junit=build/log/junit.xml"
@@ -59,7 +63,7 @@
     ],
     "infection": [
       "mkdir -p build/log/infection",
-      "vendor/bin/infection --threads=4 --coverage=build/log --no-progress --skip-initial-tests"
+      "tools/infection --threads=4 --coverage=build/log --no-progress --skip-initial-tests"
     ],
     "test-infection": [
       "@test-unit",
@@ -68,7 +72,14 @@
   },
   "config": {
     "allow-plugins": {
-      "infection/extension-installer": true
+      "bamarni/composer-bin-plugin": true
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "bamarni-bin": {
+      "bin-links": false,
+      "forward-command": true
     }
   }
 }

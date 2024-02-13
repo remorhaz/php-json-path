@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime;
 
 use Collator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Comparator\EqualValueComparator;
 use Remorhaz\JSON\Data\Comparator\GreaterValueComparator;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Runtime\ComparatorCollection;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\ComparatorCollection
- */
+#[CoversClass(ComparatorCollection::class)]
 class ComparatorCollectionTest extends TestCase
 {
     public function testEqual_Constructed_ReturnsEqualComparatorInstance(): void
     {
         $comparators = new ComparatorCollection(
-            $this->createMock(Collator::class)
+            $this->createMock(Collator::class),
         );
         self::assertInstanceOf(EqualValueComparator::class, $comparators->equal());
     }
@@ -43,7 +42,7 @@ class ComparatorCollectionTest extends TestCase
     public function testGreater_Constructed_ReturnsGreaterComparatorInstance(): void
     {
         $comparators = new ComparatorCollection(
-            $this->createMock(Collator::class)
+            $this->createMock(Collator::class),
         );
         self::assertInstanceOf(GreaterValueComparator::class, $comparators->greater());
     }

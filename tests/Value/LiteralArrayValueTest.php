@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\LiteralArrayValue;
 
 use function iterator_to_array;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\LiteralArrayValue
- */
+#[CoversClass(LiteralArrayValue::class)]
 class LiteralArrayValueTest extends TestCase
 {
     public function testCreateChildIterator_ConstructedWithoutValues_ReturnsEmptyIterator(): void

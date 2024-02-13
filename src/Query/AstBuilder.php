@@ -12,7 +12,7 @@ final class AstBuilder implements AstBuilderInterface
     private ?int $inputId = null;
 
     public function __construct(
-        private Tree $tree,
+        private readonly Tree $tree,
     ) {
     }
 

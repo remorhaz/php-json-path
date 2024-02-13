@@ -11,8 +11,8 @@ use function array_fill_keys;
 final class LiteralValueList implements LiteralValueListInterface
 {
     public function __construct(
-        private IndexMapInterface $indexMap,
-        private LiteralValueInterface $value,
+        private readonly IndexMapInterface $indexMap,
+        private readonly LiteralValueInterface $value,
     ) {
     }
 

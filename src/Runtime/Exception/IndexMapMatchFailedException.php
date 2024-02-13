@@ -11,11 +11,11 @@ use Throwable;
 final class IndexMapMatchFailedException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private ValueListInterface $leftValues,
-        private ValueListInterface $rightValues,
+        private readonly ValueListInterface $leftValues,
+        private readonly ValueListInterface $rightValues,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Index map match failed", 0, $previous);
+        parent::__construct("Index map match failed", previous: $previous);
     }
 
     public function getLeftValues(): ValueListInterface

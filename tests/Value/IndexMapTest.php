@@ -4,29 +4,32 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Value\Exception\OuterIndexNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMap;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\IndexMap
- */
+#[CoversClass(IndexMap::class)]
 class IndexMapTest extends TestCase
 {
     /**
-     * @param array $outerIndexes
-     * @param array $expectedValue
-     * @dataProvider providerGetOuterIndexes
+     * @param list<int|null> $outerIndexes
+     * @param list<int|null> $expectedValue
      */
+    #[DataProvider('providerGetOuterIndexes')]
     public function testGetOuterIndexes_ConstructedWithOuterIndexes_ReturnsSameValuesInArray(
         array $outerIndexes,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $map = new IndexMap(...$outerIndexes);
         self::assertSame($expectedValue, $map->getOuterIndexes());
     }
 
-    public function providerGetOuterIndexes(): array
+    /**
+     * @return iterable<string, array{int|null, int|null}>
+     */
+    public static function providerGetOuterIndexes(): iterable
     {
         return [
             'Empty map' => [[], []],
@@ -37,19 +40,22 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $outerIndexes
-     * @param int   $expectedValue
-     * @dataProvider providerCount
+     * @param list<int|null> $outerIndexes
+     * @param int            $expectedValue
      */
+    #[DataProvider('providerCount')]
     public function testCount_ConstructedWithOuterIndexes_ReturnsMatchingValue(
         array $outerIndexes,
-        int $expectedValue
+        int $expectedValue,
     ): void {
         $map = new IndexMap(...$outerIndexes);
         self::assertCount($expectedValue, $map);
     }
 
-    public function providerCount(): array
+    /**
+     * @return iterable<string, array{list<int|null>, int}>
+     */
+    public static function providerCount(): iterable
     {
         return [
             'Empty map' => [[], 0],
@@ -60,19 +66,22 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $outerIndexes
-     * @param array $expectedValue
-     * @dataProvider providerGetInnerIndexes
+     * @param list<int|null> $outerIndexes
+     * @param list<int|null> $expectedValue
      */
+    #[DataProvider('providerGetInnerIndexes')]
     public function testGetInnerIndexes_ConstructedWithOuterIndexes_ReturnsMatchingArray(
         array $outerIndexes,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $map = new IndexMap(...$outerIndexes);
         self::assertSame($expectedValue, $map->getInnerIndexes());
     }
 
-    public function providerGetInnerIndexes(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null>}>
+     */
+    public static function providerGetInnerIndexes(): iterable
     {
         return [
             'Empty map' => [[], []],
@@ -115,19 +124,22 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param int[] $outerIndexes
-     * @param int[] $expectedValue
-     * @dataProvider providerSplit
+     * @param list<int|null> $outerIndexes
+     * @param list<int|null> $expectedValue
      */
+    #[DataProvider('providerSplit')]
     public function testSplit_ConstructedWithOuterIndexes_ReturnsMatchingMap(
         array $outerIndexes,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $map = new IndexMap(...$outerIndexes);
         self::assertSame($expectedValue, $map->split()->getOuterIndexes());
     }
 
-    public function providerSplit(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null, int|null>}>
+     */
+    public static function providerSplit(): iterable
     {
         return [
             'Empty map' => [[], []],
@@ -138,15 +150,15 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $mapOuterIndexes
-     * @param array $argOuterIndexes
-     * @param array $expectedValue
-     * @dataProvider providerJoin
+     * @param list<int|null> $mapOuterIndexes
+     * @param list<int|null> $argOuterIndexes
+     * @param list<int|null> $expectedValue
      */
+    #[DataProvider('providerJoin')]
     public function testJoin_GivenAnotherMap_ReturnsMatchingMap(
         array $mapOuterIndexes,
         array $argOuterIndexes,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $map = new IndexMap(...$mapOuterIndexes);
         $actualValue = $map
@@ -155,7 +167,10 @@ class IndexMapTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerJoin(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null>, list<int|null>}>
+     */
+    public static function providerJoin(): iterable
     {
         return [
             'Both maps are empty' => [[], [], []],
@@ -166,20 +181,23 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $mapOuterIndexes
-     * @param array $argOuterIndexes
-     * @dataProvider providerEqualMaps
+     * @param list<int|null> $mapOuterIndexes
+     * @param list<int|null> $argOuterIndexes
      */
+    #[DataProvider('providerEqualMaps')]
     public function testEquals_EqualMaps_ReturnsTrue(
         array $mapOuterIndexes,
-        array $argOuterIndexes
+        array $argOuterIndexes,
     ): void {
         $map = new IndexMap(...$mapOuterIndexes);
         $actualValue = $map->equals(new IndexMap(...$argOuterIndexes));
         self::assertTrue($actualValue);
     }
 
-    public function providerEqualMaps(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null>}>
+     */
+    public static function providerEqualMaps(): iterable
     {
         return [
             'Empty maps' => [[], []],
@@ -195,20 +213,23 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $firstOuterIndexes
-     * @param array $secondOuterIndexes
-     * @dataProvider providerIncompatibleMaps
+     * @param list<int|null> $firstOuterIndexes
+     * @param list<int|null> $secondOuterIndexes
      */
+    #[DataProvider('providerIncompatibleMaps')]
     public function testIsCompatible_IncompatibleMaps_ReturnsFalse(
         array $firstOuterIndexes,
-        array $secondOuterIndexes
+        array $secondOuterIndexes,
     ): void {
         $firstMap = new IndexMap(...$firstOuterIndexes);
         $secondMap = new IndexMap(...$secondOuterIndexes);
         self::assertFalse($firstMap->isCompatible($secondMap));
     }
 
-    public function providerIncompatibleMaps(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null>}>
+     */
+    public static function providerIncompatibleMaps(): iterable
     {
         return [
             'Different map sizes' => [[1], [1, 2]],
@@ -217,20 +238,23 @@ class IndexMapTest extends TestCase
     }
 
     /**
-     * @param array $firstOuterIndexes
-     * @param array $secondOuterIndexes
-     * @dataProvider providerCompatibleMaps
+     * @param list<int|null> $firstOuterIndexes
+     * @param list<int|null> $secondOuterIndexes
      */
+    #[DataProvider('providerCompatibleMaps')]
     public function testIsCompatible_CompatibleMaps_ReturnsTrue(
         array $firstOuterIndexes,
-        array $secondOuterIndexes
+        array $secondOuterIndexes,
     ): void {
         $firstMap = new IndexMap(...$firstOuterIndexes);
         $secondMap = new IndexMap(...$secondOuterIndexes);
         self::assertTrue($firstMap->isCompatible($secondMap));
     }
 
-    public function providerCompatibleMaps(): array
+    /**
+     * @return iterable<string, array{list<int|null>, list<int|null>}>
+     */
+    public static function providerCompatibleMaps(): iterable
     {
         return [
             'Empty maps' => [[], []],

@@ -11,11 +11,11 @@ use Throwable;
 final class OuterIndexNotFoundException extends OutOfRangeException implements ExceptionInterface
 {
     public function __construct(
-        private int $innerIndex,
-        private IndexMapInterface $indexMap,
+        private readonly int $innerIndex,
+        private readonly IndexMapInterface $indexMap,
         ?Throwable $previous = null,
     ) {
-        parent::__construct($this->buildMessage(), 0, $previous);
+        parent::__construct($this->buildMessage(), previous: $previous);
     }
 
     private function buildMessage(): string

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\EvaluatedValueListBuilder
- */
+#[CoversClass(EvaluatedValueListBuilder::class)]
 class EvaluatedValueListBuilderTest extends TestCase
 {
     public function testBuild_NoResultsAdded_ReturnsListWithEmptyIndexMap(): void
@@ -27,10 +27,10 @@ class EvaluatedValueListBuilderTest extends TestCase
     }
 
     /**
-     * @param bool   $result
-     * @param bool[] $expectedValues
-     * @dataProvider providerResultAdded
+     * @param bool       $result
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerResultAdded')]
     public function testBuild_ResultAdded_ReturnsListWithSameResult(bool $result, array $expectedValues): void
     {
         $builder = new EvaluatedValueListBuilder();
@@ -39,7 +39,10 @@ class EvaluatedValueListBuilderTest extends TestCase
         self::assertSame($expectedValues, $values->getResults());
     }
 
-    public function providerResultAdded(): array
+    /**
+     * @return iterable<string, array{bool, list<bool>}>
+     */
+    public static function providerResultAdded(): iterable
     {
         return [
             'False' => [false, [false]],

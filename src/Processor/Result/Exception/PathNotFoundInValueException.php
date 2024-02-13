@@ -11,10 +11,10 @@ use Throwable;
 final class PathNotFoundInValueException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private ValueInterface $value,
+        private readonly ValueInterface $value,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Path not found in value", 0, $previous);
+        parent::__construct("Path not found in value", previous: $previous);
     }
 
     public function getValue(): ValueInterface

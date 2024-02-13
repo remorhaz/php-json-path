@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Comparator\ComparatorInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
@@ -24,47 +26,48 @@ use Remorhaz\JSON\Path\Value\LiteralValueListInterface;
 use Remorhaz\JSON\Path\Value\ValueList;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Evaluator
- */
+#[CoversClass(Evaluator::class)]
 class EvaluatorTest extends TestCase
 {
     public function testLogicalOr_EmptyLists_ReturnsEmptyList(): void
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->logicalOr(
             new EvaluatedValueList(new IndexMap()),
-            new EvaluatedValueList(new IndexMap())
+            new EvaluatedValueList(new IndexMap()),
         );
         self::assertSame([], $result->getResults());
     }
 
     /**
-     * @param bool  $leftResult
-     * @param bool  $rightResult
-     * @param array $expectedValues
-     * @dataProvider providerLogicalOr
+     * @param bool       $leftResult
+     * @param bool       $rightResult
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerLogicalOr')]
     public function testLogicalOr_CompatibleLists_ReturnsMatching(
         bool $leftResult,
         bool $rightResult,
-        array $expectedValues
+        array $expectedValues,
     ): void {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->logicalOr(
             new EvaluatedValueList(new IndexMap(), $leftResult),
-            new EvaluatedValueList(new IndexMap(), $rightResult)
+            new EvaluatedValueList(new IndexMap(), $rightResult),
         );
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerLogicalOr(): array
+    /**
+     * @return iterable<string, array{bool, bool, list<bool>}>
+     */
+    public static function providerLogicalOr(): iterable
     {
         return [
             'Both false' => [false, false, [false]],
@@ -78,7 +81,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $leftValues = new EvaluatedValueList(new IndexMap(1));
         $rightValues = new EvaluatedValueList(new IndexMap(2, 3));
@@ -90,38 +93,41 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->logicalAnd(
             new EvaluatedValueList(new IndexMap()),
-            new EvaluatedValueList(new IndexMap())
+            new EvaluatedValueList(new IndexMap()),
         );
         self::assertSame([], $result->getResults());
     }
 
     /**
-     * @param bool  $leftResult
-     * @param bool  $rightResult
-     * @param array $expectedValues
-     * @dataProvider providerLogicalAnd
+     * @param bool       $leftResult
+     * @param bool       $rightResult
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerLogicalAnd')]
     public function testLogicalAnd_CompatibleLists_ReturnsMatching(
         bool $leftResult,
         bool $rightResult,
-        array $expectedValues
+        array $expectedValues,
     ): void {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->logicalAnd(
             new EvaluatedValueList(new IndexMap(), $leftResult),
-            new EvaluatedValueList(new IndexMap(), $rightResult)
+            new EvaluatedValueList(new IndexMap(), $rightResult),
         );
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerLogicalAnd(): array
+    /**
+     * @return iterable<string, array{bool, bool, list<bool>}>
+     */
+    public static function providerLogicalAnd(): iterable
     {
         return [
             'Both false' => [false, false, [false]],
@@ -135,7 +141,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $leftValues = new EvaluatedValueList(new IndexMap(1));
         $rightValues = new EvaluatedValueList(new IndexMap(2, 3));
@@ -147,7 +153,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = new EvaluatedValueList(new IndexMap());
         $result = $evaluator->logicalNot($values);
@@ -158,7 +164,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $indexMap = new IndexMap();
         $values = new EvaluatedValueList($indexMap);
@@ -167,22 +173,25 @@ class EvaluatorTest extends TestCase
     }
 
     /**
-     * @param bool  $value
-     * @param array $expectedValues
-     * @dataProvider providerLogicalNot
+     * @param bool       $value
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerLogicalNot')]
     public function testLogicalNot_ValueInList_ReturnsMatchingList(bool $value, array $expectedValues): void
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = new EvaluatedValueList(new IndexMap(), $value);
         $result = $evaluator->logicalNot($values);
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerLogicalNot(): array
+    /**
+     * @return iterable<string, array{bool, list<bool>}>
+     */
+    public static function providerLogicalNot(): iterable
     {
         return [
             'True becomes false' => [true, [false]],
@@ -194,27 +203,23 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isEqual(
             new ValueList(new IndexMap()),
-            new ValueList(new IndexMap())
+            new ValueList(new IndexMap()),
         );
         self::assertSame([], $result->getResults());
     }
 
-    /**
-     * @param int|null $leftOuterIndex
-     * @param int|null $rightOuterIndex
-     * @dataProvider providerNullOuterIndex
-     */
+    #[DataProvider('providerNullOuterIndex')]
     public function testIsEqual_NullIndexMapsInLists_ReturnsEmptyList(
         ?int $leftOuterIndex,
-        ?int $rightOuterIndex
+        ?int $rightOuterIndex,
     ): void {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isEqual(
             new ValueList(new IndexMap($leftOuterIndex)),
@@ -223,7 +228,10 @@ class EvaluatorTest extends TestCase
         self::assertSame([], $result->getResults());
     }
 
-    public function providerNullOuterIndex(): array
+    /**
+     * @return iterable<string, array{int|null, int|null}>
+     */
+    public static function providerNullOuterIndex(): iterable
     {
         return [
             'Both indexes are null' => [null, null],
@@ -236,11 +244,11 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isEqual(
             new ValueList(new IndexMap(1)),
-            new ValueList(new IndexMap(2))
+            new ValueList(new IndexMap(2)),
         );
         self::assertSame([], $result->getResults());
     }
@@ -250,7 +258,7 @@ class EvaluatorTest extends TestCase
         $comparators = $this->createMock(ComparatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $comparators,
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $leftValue = $this->createMock(ValueInterface::class);
         $rightValue = $this->createMock(ValueInterface::class);
@@ -265,23 +273,23 @@ class EvaluatorTest extends TestCase
             ->with(self::identicalTo($leftValue), self::identicalTo($rightValue));
         $evaluator->isEqual(
             new ValueList(new IndexMap(1), $leftValue),
-            new ValueList(new IndexMap(1), $rightValue)
+            new ValueList(new IndexMap(1), $rightValue),
         );
     }
 
     /**
-     * @param bool  $comparison
-     * @param array $expectedValues
-     * @dataProvider providerIsEqual
+     * @param bool       $comparison
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerIsEqual')]
     public function testIsEqual_ComparatorReturnsResult_ReturnsListWithSameResult(
         bool $comparison,
-        array $expectedValues
+        array $expectedValues,
     ): void {
         $comparators = $this->createMock(ComparatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $comparators,
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $leftValue = $this->createMock(ValueInterface::class);
         $rightValue = $this->createMock(ValueInterface::class);
@@ -295,12 +303,15 @@ class EvaluatorTest extends TestCase
             ->willReturn($comparison);
         $result = $evaluator->isEqual(
             new ValueList(new IndexMap(1), $leftValue),
-            new ValueList(new IndexMap(1), $rightValue)
+            new ValueList(new IndexMap(1), $rightValue),
         );
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerIsEqual(): array
+    /**
+     * @return iterable<string, array{bool, list<bool>}>
+     */
+    public static function providerIsEqual(): iterable
     {
         return [
             'True' => [true, [true]],
@@ -312,11 +323,11 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isEqual(
             new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class)),
-            new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class))
+            new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class)),
         );
         self::assertSame([1], $result->getIndexMap()->getOuterIndexes());
     }
@@ -325,11 +336,11 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isGreater(
             new ValueList(new IndexMap(1)),
-            new ValueList(new IndexMap(2))
+            new ValueList(new IndexMap(2)),
         );
         self::assertSame([], $result->getResults());
     }
@@ -339,7 +350,7 @@ class EvaluatorTest extends TestCase
         $comparators = $this->createMock(ComparatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $comparators,
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $leftValue = $this->createMock(ValueInterface::class);
         $rightValue = $this->createMock(ValueInterface::class);
@@ -354,18 +365,18 @@ class EvaluatorTest extends TestCase
             ->with(self::identicalTo($leftValue), self::identicalTo($rightValue));
         $evaluator->isGreater(
             new ValueList(new IndexMap(1), $leftValue),
-            new ValueList(new IndexMap(1), $rightValue)
+            new ValueList(new IndexMap(1), $rightValue),
         );
     }
 
     /**
-     * @param bool  $comparison
-     * @param array $expectedValues
-     * @dataProvider providerIsGreater
+     * @param bool       $comparison
+     * @param list<bool> $expectedValues
      */
+    #[DataProvider('providerIsGreater')]
     public function testIsGreater_ComparatorReturnsResult_ReturnsListWithSameResult(
         bool $comparison,
-        array $expectedValues
+        array $expectedValues,
     ): void {
         $comparators = $this->createMock(ComparatorCollectionInterface::class);
         $evaluator = new Evaluator(
@@ -389,7 +400,10 @@ class EvaluatorTest extends TestCase
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerIsGreater(): array
+    /**
+     * @return iterable<string, array{bool, list<bool>}>
+     */
+    public static function providerIsGreater(): iterable
     {
         return [
             'True' => [true, [true]],
@@ -401,11 +415,11 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $result = $evaluator->isGreater(
             new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class)),
-            new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class))
+            new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class)),
         );
         self::assertSame([1], $result->getIndexMap()->getOuterIndexes());
     }
@@ -414,7 +428,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = new ValueList(new IndexMap());
         $result = $evaluator->isRegExp('//', $values);
@@ -425,7 +439,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = new ValueList(new IndexMap(1), $this->createMock(ValueInterface::class));
         $result = $evaluator->isRegExp('//', $values);
@@ -436,7 +450,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $value = $this->createMock(ScalarValueInterface::class);
         $value
@@ -451,7 +465,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $value = $this->createMock(ScalarValueInterface::class);
         $value
@@ -466,7 +480,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $value = $this->createMock(ScalarValueInterface::class);
         $value
@@ -481,7 +495,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $value = $this->createMock(ScalarValueInterface::class);
         $value
@@ -496,7 +510,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $indexMap = new IndexMap();
         $values = new ValueList($indexMap);
@@ -508,12 +522,12 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = $this->createMock(EvaluatedValueListInterface::class);
         $result = $evaluator->evaluate(
             $this->createMock(ValueListInterface::class),
-            $values
+            $values,
         );
         self::assertSame($values, $result);
     }
@@ -522,12 +536,12 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $source = new ValueList(new IndexMap());
         $result = $evaluator->evaluate(
             $source,
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertSame([], $result->getResults());
     }
@@ -536,12 +550,12 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $source = new ValueList(new IndexMap(null));
         $result = $evaluator->evaluate(
             $source,
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertSame([false], $result->getResults());
     }
@@ -550,12 +564,12 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $source = new ValueList(new IndexMap(1));
         $result = $evaluator->evaluate(
             $source,
-            new ValueList(new IndexMap(2))
+            new ValueList(new IndexMap(2)),
         );
         self::assertSame([false], $result->getResults());
     }
@@ -564,12 +578,12 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $source = new ValueList(new IndexMap(1));
         $result = $evaluator->evaluate(
             $source,
-            new ValueList(new IndexMap(1))
+            new ValueList(new IndexMap(1)),
         );
         self::assertSame([true], $result->getResults());
     }
@@ -578,7 +592,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = $this->createMock(LiteralValueListInterface::class);
         $values
@@ -596,7 +610,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = $this->createMock(LiteralValueListInterface::class);
         $values
@@ -621,7 +635,7 @@ class EvaluatorTest extends TestCase
     ): void {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = $this->createMock(LiteralValueListInterface::class);
         $values
@@ -635,7 +649,10 @@ class EvaluatorTest extends TestCase
         self::assertSame($expectedValues, $result->getResults());
     }
 
-    public function providerEvaluateLiteral(): array
+    /**
+     * @return iterable<bool, list<bool>>
+     */
+    public static function providerEvaluateLiteral(): iterable
     {
         return [
             'True' => [true, [true]],
@@ -648,7 +665,7 @@ class EvaluatorTest extends TestCase
         $aggregators = $this->createMock(AggregatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $aggregators
+            $aggregators,
         );
         $aggregator = $this->createMock(ValueAggregatorInterface::class);
         $aggregators
@@ -670,7 +687,7 @@ class EvaluatorTest extends TestCase
     {
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $this->createMock(AggregatorCollectionInterface::class)
+            $this->createMock(AggregatorCollectionInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $values
@@ -686,7 +703,7 @@ class EvaluatorTest extends TestCase
         $aggregators = $this->createMock(AggregatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $aggregators
+            $aggregators,
         );
         $aggregator = $this->createMock(ValueAggregatorInterface::class);
         $aggregators
@@ -711,7 +728,7 @@ class EvaluatorTest extends TestCase
         $aggregators = $this->createMock(AggregatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $aggregators
+            $aggregators,
         );
         $aggregator = $this->createMock(ValueAggregatorInterface::class);
         $aggregators
@@ -737,7 +754,7 @@ class EvaluatorTest extends TestCase
         $aggregators = $this->createMock(AggregatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $aggregators
+            $aggregators,
         );
         $aggregator = $this->createMock(ValueAggregatorInterface::class);
         $aggregators
@@ -764,7 +781,7 @@ class EvaluatorTest extends TestCase
         $aggregators = $this->createMock(AggregatorCollectionInterface::class);
         $evaluator = new Evaluator(
             $this->createMock(ComparatorCollectionInterface::class),
-            $aggregators
+            $aggregators,
         );
         $aggregator = $this->createMock(ValueAggregatorInterface::class);
         $aggregators

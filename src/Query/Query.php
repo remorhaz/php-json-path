@@ -15,8 +15,8 @@ use function call_user_func;
 final class Query implements QueryInterface
 {
     public function __construct(
-        private string $source,
-        private CallbackBuilderInterface $callbackBuilder,
+        private readonly string $source,
+        private readonly CallbackBuilderInterface $callbackBuilder,
     ) {
     }
 

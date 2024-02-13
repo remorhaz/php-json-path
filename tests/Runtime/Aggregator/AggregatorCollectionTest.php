@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection;
 use Remorhaz\JSON\Path\Runtime\Aggregator\AvgAggregator;
@@ -13,23 +15,24 @@ use Remorhaz\JSON\Path\Runtime\Aggregator\MaxAggregator;
 use Remorhaz\JSON\Path\Runtime\Aggregator\MinAggregator;
 use Remorhaz\JSON\Path\Runtime\Aggregator\StdDevAggregator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\AggregatorCollection
- */
+#[CoversClass(AggregatorCollection::class)]
 class AggregatorCollectionTest extends TestCase
 {
     /**
      * @param string $name
-     * @param string $expectedClass
-     * @dataProvider providerByName
+     * @param class-string $expectedClass
      */
+    #[DataProvider('providerByName')]
     public function testByName_KnownName_ReturnsMatchingInstance(string $name, string $expectedClass): void
     {
         $aggregators = new AggregatorCollection();
         self::assertInstanceOf($expectedClass, $aggregators->byName($name));
     }
 
-    public function providerByName(): array
+    /**
+     * @return iterable<string, array{string, class-string}>
+     */
+    public static function providerByName(): iterable
     {
         return [
             'min' => ['min', MinAggregator::class],

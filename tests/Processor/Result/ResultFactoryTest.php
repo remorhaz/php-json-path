@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Export\ValueDecoderInterface;
 use Remorhaz\JSON\Data\Export\ValueEncoderInterface;
@@ -16,9 +17,7 @@ use Remorhaz\JSON\Path\Processor\Result\Exception\PathNotFoundInValueException;
 use Remorhaz\JSON\Path\Processor\Result\ResultFactory;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\ResultFactory
- */
+#[CoversClass(ResultFactory::class)]
 class ResultFactoryTest extends TestCase
 {
     public function testCreateSelectResult_NoValuesInList_ResultEncodesToEmptyArray(): void
@@ -26,10 +25,10 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $result = $factory->createSelectResult(
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertSame([], $result->encode());
     }
@@ -40,7 +39,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -62,7 +61,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -83,7 +82,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $values
@@ -98,7 +97,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -115,7 +114,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -136,7 +135,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -161,7 +160,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -185,7 +184,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $values
@@ -201,7 +200,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $pathEncoder
+            $pathEncoder,
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(NodeValueInterface::class);
@@ -225,7 +224,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $values
@@ -240,7 +239,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(NodeValueInterface::class);
@@ -256,7 +255,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(ValueInterface::class);
@@ -272,7 +271,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(NodeValueInterface::class);
@@ -297,7 +296,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $pathEncoder
+            $pathEncoder,
         );
         $values = $this->createMock(ValueListInterface::class);
         $value = $this->createMock(NodeValueInterface::class);
@@ -326,7 +325,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $result = $factory->createValueResult(null);
         self::assertFalse($result->exists());
@@ -337,10 +336,10 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $result = $factory->createValueResult(
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertTrue($result->exists());
     }
@@ -351,7 +350,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $encoder,
             $this->createMock(ValueDecoderInterface::class),
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $value = $this->createMock(ValueInterface::class);
         $result = $factory->createValueResult($value);
@@ -368,7 +367,7 @@ class ResultFactoryTest extends TestCase
         $factory = new ResultFactory(
             $this->createMock(ValueEncoderInterface::class),
             $decoder,
-            $this->createMock(PathEncoderInterface::class)
+            $this->createMock(PathEncoderInterface::class),
         );
         $value = $this->createMock(ValueInterface::class);
         $result = $factory->createValueResult($value);

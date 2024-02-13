@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
@@ -11,12 +13,10 @@ use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 
 use function file_get_contents;
 
-/**
- * @coversNothing
- */
+#[CoversNothing]
 class JsonPathTest extends TestCase
 {
-    private $example;
+    private ?string $example;
 
     public function setUp(): void
     {
@@ -51,21 +51,24 @@ class JsonPathTest extends TestCase
     }
 
     /**
-     * @param string $path
-     * @param array $expectedValue
-     * @dataProvider providerGoessnerExamples
+     * @param string       $path
+     * @param list<string> $expectedValue
      */
+    #[DataProvider('providerGoessnerExamples')]
     public function testSelect_GoessnerExamples_WorkAsExpected(string $path, array $expectedValue): void
     {
         $result = Processor::create()->select(
             QueryFactory::create()->createQuery($path),
-            NodeValueFactory::create()->createValue($this->example)
+            NodeValueFactory::create()->createValue($this->example),
         );
 
         self::assertEquals($expectedValue, $result->encode());
     }
 
-    public function providerGoessnerExamples(): array
+    /**
+     * @return iterable<string, array{string, list<string>}>
+     */
+    public static function providerGoessnerExamples(): iterable
     {
         return [
             'the authors of all books in the store' => [

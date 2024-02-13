@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Result\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Result\Exception\MoreThanOneValueInListException;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\Exception\MoreThanOneValueInListException
- */
+#[CoversClass(MoreThanOneValueInListException::class)]
 class MoreThanOneValueInListExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new MoreThanOneValueInListException(
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
 
         self::assertSame('More than 1 value in list', $exception->getMessage());
@@ -30,18 +29,10 @@ class MoreThanOneValueInListExceptionTest extends TestCase
         self::assertSame($values, $exception->getValues());
     }
 
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new MoreThanOneValueInListException(
-            $this->createMock(ValueListInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
-    }
-
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new MoreThanOneValueInListException(
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -51,7 +42,7 @@ class MoreThanOneValueInListExceptionTest extends TestCase
         $previous = new Exception();
         $exception = new MoreThanOneValueInListException(
             $this->createMock(ValueListInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

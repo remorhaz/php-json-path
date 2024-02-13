@@ -10,10 +10,10 @@ use Throwable;
 final class AddressNotSortableException extends DomainException implements ExceptionInterface
 {
     public function __construct(
-        private int|string $address,
+        private readonly int|string $address,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Index/property is not sortable: {$this->address}", 0, $previous);
+        parent::__construct("Index/property is not sortable: $this->address", previous: $previous);
     }
 
     public function getAddress(): int|string

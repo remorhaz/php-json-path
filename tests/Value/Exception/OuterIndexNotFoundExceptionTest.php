@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Value\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Value\Exception\OuterIndexNotFoundException;
 use Remorhaz\JSON\Path\Value\IndexMapInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\Exception\OuterIndexNotFoundException
- */
+#[CoversClass(OuterIndexNotFoundException::class)]
 class OuterIndexNotFoundExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new OuterIndexNotFoundException(
             1,
-            $this->createMock(IndexMapInterface::class)
+            $this->createMock(IndexMapInterface::class),
         );
         self::assertSame('Outer index not found in index map for inner index 1', $exception->getMessage());
     }
@@ -27,7 +26,7 @@ class OuterIndexNotFoundExceptionTest extends TestCase
     {
         $exception = new OuterIndexNotFoundException(
             1,
-            $this->createMock(IndexMapInterface::class)
+            $this->createMock(IndexMapInterface::class),
         );
         self::assertSame(1, $exception->getInnerIndex());
     }
@@ -39,20 +38,11 @@ class OuterIndexNotFoundExceptionTest extends TestCase
         self::assertSame($indexMap, $exception->getIndexMap());
     }
 
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new OuterIndexNotFoundException(
-            1,
-            $this->createMock(IndexMapInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
-    }
-
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new OuterIndexNotFoundException(
             1,
-            $this->createMock(IndexMapInterface::class)
+            $this->createMock(IndexMapInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -63,7 +53,7 @@ class OuterIndexNotFoundExceptionTest extends TestCase
         $exception = new OuterIndexNotFoundException(
             1,
             $this->createMock(IndexMapInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

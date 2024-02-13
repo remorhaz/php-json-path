@@ -10,10 +10,10 @@ use Throwable;
 final class AggregateFunctionNotFoundException extends DomainException implements ExceptionInterface
 {
     public function __construct(
-        private string $name,
+        private readonly string $name,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Aggregate function not found: $this->name", 0, $previous);
+        parent::__construct("Aggregate function not found: $this->name", previous: $previous);
     }
 
     public function getName(): string

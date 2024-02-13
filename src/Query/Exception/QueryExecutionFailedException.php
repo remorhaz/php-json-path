@@ -11,11 +11,11 @@ use Throwable;
 final class QueryExecutionFailedException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private string $source,
-        private string $callbackCode,
+        private readonly string $source,
+        private readonly string $callbackCode,
         ?Throwable $previous = null,
     ) {
-        parent::__construct($this->buildMessage(), 0, $previous);
+        parent::__construct($this->buildMessage(), previous: $previous);
     }
 
     private function buildMessage(): string

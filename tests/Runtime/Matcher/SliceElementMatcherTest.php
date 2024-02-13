@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Runtime\Matcher;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Data\Value\DecodedJson\NodeArrayValue;
@@ -13,9 +15,7 @@ use Remorhaz\JSON\Path\Runtime\Matcher\SliceElementMatcher;
 
 use function array_fill;
 
-/**
- * @covers  \Remorhaz\JSON\Path\Runtime\Matcher\SliceElementMatcher
- */
+#[CoversClass(SliceElementMatcher::class)]
 class SliceElementMatcherTest extends TestCase
 {
     public function testMatch_MatchingIndexNonArrayContainer_ReturnsFalse(): void
@@ -24,36 +24,32 @@ class SliceElementMatcherTest extends TestCase
         $actualValue = $matcher->match(
             0,
             $this->createMock(NodeValueInterface::class),
-            $this->createMock(NodeValueInterface::class)
+            $this->createMock(NodeValueInterface::class),
         );
         self::assertFalse($actualValue);
     }
 
-    /**
-     * @param int|null $start
-     * @param int|null $end
-     * @param int|null $step
-     * @param          $address
-     * @param          $elementCount
-     * @dataProvider providerNonMatchingIndex
-     */
+    #[DataProvider('providerNonMatchingIndex')]
     public function testMatch_NonMatchingIndexArrayContainer_ReturnsFalse(
         ?int $start,
         ?int $end,
         ?int $step,
-        $address,
-        $elementCount
+        int|string $address,
+        int $elementCount,
     ): void {
         $matcher = new SliceElementMatcher($start, $end, $step);
         $actualValue = $matcher->match(
             $address,
             $this->createMock(NodeValueInterface::class),
-            $this->createArrayValueOfLength($elementCount)
+            $this->createArrayValueOfLength($elementCount),
         );
         self::assertFalse($actualValue);
     }
 
-    public function providerNonMatchingIndex(): array
+    /**
+     * @return iterable<string, array{int|null, int|null, int|null, int|string, int}>
+     */
+    public static function providerNonMatchingIndex(): iterable
     {
         return [
             'Zero step, int address, non-empty container' => [null, null, 0, 1, 2],
@@ -85,31 +81,27 @@ class SliceElementMatcherTest extends TestCase
         );
     }
 
-    /**
-     * @param int|null $start
-     * @param int|null $end
-     * @param int|null $step
-     * @param          $address
-     * @param          $elementCount
-     * @dataProvider providerMatchingIndex
-     */
+    #[DataProvider('providerMatchingIndex')]
     public function testMatch_MatchingIndex_ReturnsTrue(
         ?int $start,
         ?int $end,
         ?int $step,
-        $address,
-        $elementCount
+        int|string $address,
+        int $elementCount,
     ): void {
         $matcher = new SliceElementMatcher($start, $end, $step);
         $actualValue = $matcher->match(
             $address,
             $this->createMock(NodeValueInterface::class),
-            $this->createArrayValueOfLength($elementCount)
+            $this->createArrayValueOfLength($elementCount),
         );
         self::assertTrue($actualValue);
     }
 
-    public function providerMatchingIndex(): array
+    /**
+     * @return iterable<string, array{int|null, int|null, int|null, int|string, int}>
+     */
+    public static function providerMatchingIndex(): iterable
     {
         return [
             'At container start (straight range)' => [null, null, 1, 0, 2],

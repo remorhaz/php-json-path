@@ -13,10 +13,10 @@ final class InvalidScalarDataException extends DomainException implements
     DataAwareInterface
 {
     public function __construct(
-        private mixed $data,
+        private readonly mixed $data,
         ?Throwable $previous = null,
     ) {
-        parent::__construct($this->buildMessage(), 0, $previous);
+        parent::__construct($this->buildMessage(), previous: $previous);
     }
 
     private function buildMessage(): string

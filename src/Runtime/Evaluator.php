@@ -22,8 +22,8 @@ use function preg_match;
 final class Evaluator implements EvaluatorInterface
 {
     public function __construct(
-        private ComparatorCollectionInterface $comparators,
-        private Aggregator\AggregatorCollectionInterface $aggregators,
+        private readonly ComparatorCollectionInterface $comparators,
+        private readonly Aggregator\AggregatorCollectionInterface $aggregators,
     ) {
     }
 

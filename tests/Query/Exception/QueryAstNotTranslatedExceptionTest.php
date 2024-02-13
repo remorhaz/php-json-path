@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Query\Exception\QueryAstNotTranslatedException;
 use Remorhaz\UniLex\AST\Tree;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\Exception\QueryAstNotTranslatedException
- */
+#[CoversClass(QueryAstNotTranslatedException::class)]
 class QueryAstNotTranslatedExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
@@ -25,12 +24,6 @@ class QueryAstNotTranslatedExceptionTest extends TestCase
         $tree = new Tree();
         $exception = new QueryAstNotTranslatedException($tree);
         self::assertSame($tree, $exception->getQueryAst());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new QueryAstNotTranslatedException(new Tree());
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

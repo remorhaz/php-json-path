@@ -30,7 +30,7 @@ final class ReplaceMutation implements MutationInterface
     private array $paths;
 
     public function __construct(
-        private NodeValueInterface $newNode,
+        private readonly NodeValueInterface $newNode,
         PathInterface ...$paths,
     ) {
         $this->paths = $this->getNonNestedPaths(...$paths);

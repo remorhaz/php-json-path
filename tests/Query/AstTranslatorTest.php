@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Path\Query\Exception\ExceptionInterface;
@@ -23,9 +24,7 @@ use Remorhaz\JSON\Path\Value\ValueListInterface;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Exception as UniLexException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\AstTranslator
- */
+#[CoversClass(AstTranslator::class)]
 class AstTranslatorTest extends TestCase
 {
     /**
@@ -131,7 +130,7 @@ class AstTranslatorTest extends TestCase
             $evaluator,
             $literalFactory,
             $matcherFactory,
-            &$isCallbackCalledWithMatchingArgs
+            &$isCallbackCalledWithMatchingArgs,
         ): ValueListInterface {
             $args = func_get_args();
             /** @var NodeValueListInterface $input */

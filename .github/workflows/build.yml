@@ -12,11 +12,12 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php-version:
-          - "8.0"
           - "8.1"
           - "8.2"
+          - "8.3"
         dependencies:
           - lowest
           - highest
@@ -31,6 +32,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+
+      - name: Install PHIVE
+        uses: szepeviktor/phive@v1
 
       - name: Install lowest dependencies
         if: ${{ matrix.dependencies == 'lowest' && matrix.platform-reqs == 'use-platform-reqs' }}

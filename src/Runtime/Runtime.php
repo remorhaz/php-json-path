@@ -7,10 +7,10 @@ namespace Remorhaz\JSON\Path\Runtime;
 final class Runtime implements RuntimeInterface
 {
     public function __construct(
-        private ValueListFetcherInterface $valueListFetcher,
-        private EvaluatorInterface $evaluator,
-        private LiteralFactoryInterface $literalFactory,
-        private Matcher\MatcherFactoryInterface $matcherFactory,
+        private readonly ValueListFetcherInterface $valueListFetcher,
+        private readonly EvaluatorInterface $evaluator,
+        private readonly LiteralFactoryInterface $literalFactory,
+        private readonly Matcher\MatcherFactoryInterface $matcherFactory,
     ) {
     }
 

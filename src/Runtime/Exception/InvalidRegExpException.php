@@ -10,10 +10,10 @@ use Throwable;
 final class InvalidRegExpException extends RuntimeException implements ExceptionInterface
 {
     public function __construct(
-        private string $pattern,
+        private readonly string $pattern,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Error processing regular expression: $this->pattern", 0, $previous);
+        parent::__construct("Error processing regular expression: $this->pattern", previous: $previous);
     }
 
     public function getPattern(): string

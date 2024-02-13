@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\MaxAggregator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\MaxAggregator
- */
+#[CoversClass(MaxAggregator::class)]
 class MaxAggregatorTest extends TestCase
 {
     public function testTryAggregate_ArrayWithZeroElement_ReturnsNull(): void

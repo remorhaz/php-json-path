@@ -11,6 +11,6 @@ final class ParserCreationFailedException extends LogicException implements Exce
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct("Failed to create JSONPath parser", 0, $previous);
+        parent::__construct("Failed to create JSONPath parser", previous: $previous);
     }
 }

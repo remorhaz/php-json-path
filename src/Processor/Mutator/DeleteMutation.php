@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Processor\Mutator;
 
-use Generator;
 use Iterator;
 use Remorhaz\JSON\Data\Event\EventInterface;
 use Remorhaz\JSON\Data\Path\PathInterface;

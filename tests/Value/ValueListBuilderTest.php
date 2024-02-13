@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Value;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Value\ValueListBuilder;
 
-/**
- * @covers \Remorhaz\JSON\Path\Value\ValueListBuilder
- */
+#[CoversClass(ValueListBuilder::class)]
 class ValueListBuilderTest extends TestCase
 {
     public function testBuild_NoValuesAdded_ReturnsListWithEmptyIndexMap(): void

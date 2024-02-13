@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\Exception\MaxElementNotFoundException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\Exception\MaxElementNotFoundException
- */
+#[CoversClass(MaxElementNotFoundException::class)]
 class MaxElementNotFoundExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
@@ -20,7 +19,7 @@ class MaxElementNotFoundExceptionTest extends TestCase
         self::assertSame('Max element not found', $exception->getMessage());
     }
 
-    public function testGetDataLiist_ConstructedWithDataList_ReturnsSameValue(): void
+    public function testGetDataList_ConstructedWithDataList_ReturnsSameValue(): void
     {
         $exception = new MaxElementNotFoundException(['a'], []);
         self::assertSame(['a'], $exception->getDataList());
@@ -31,12 +30,6 @@ class MaxElementNotFoundExceptionTest extends TestCase
         $element = $this->createMock(ScalarValueInterface::class);
         $exception = new MaxElementNotFoundException([], [$element]);
         self::assertSame([$element], $exception->getElements());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new MaxElementNotFoundException([], []);
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

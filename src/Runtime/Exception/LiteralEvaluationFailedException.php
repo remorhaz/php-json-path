@@ -11,10 +11,10 @@ use Throwable;
 final class LiteralEvaluationFailedException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private LiteralValueInterface $literal,
+        private readonly LiteralValueInterface $literal,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Failed to evaluate literal value", 0, $previous);
+        parent::__construct("Failed to evaluate literal value", previous: $previous);
     }
 
     public function getLiteral(): LiteralValueInterface

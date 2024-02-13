@@ -10,10 +10,10 @@ use Throwable;
 final class ReferenceNotFoundException extends OutOfRangeException implements ExceptionInterface
 {
     public function __construct(
-        private int $referenceId,
+        private readonly int $referenceId,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Reference #$this->referenceId not found", 0, $previous);
+        parent::__construct("Reference #$this->referenceId not found", previous: $previous);
     }
 
     public function getReferenceId(): int

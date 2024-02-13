@@ -13,8 +13,8 @@ use Remorhaz\JSON\Data\Walker\ValueWalkerInterface;
 final class Mutator implements MutatorInterface
 {
     public function __construct(
-        private ValueWalkerInterface $valueWalker,
-        private EventDecoderInterface $eventDecoder,
+        private readonly ValueWalkerInterface $valueWalker,
+        private readonly EventDecoderInterface $eventDecoder,
     ) {
     }
 

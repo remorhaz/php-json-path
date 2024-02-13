@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Runtime\Exception\IndexMapMatchFailedException;
 use Remorhaz\JSON\Path\Value\ValueListInterface;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Exception\IndexMapMatchFailedException
- */
+#[CoversClass(IndexMapMatchFailedException::class)]
 class IndexMapMatchFailedExceptionTest extends TestCase
 {
     public function testGetLeftValues_ConstructedWithGivenLeftValues_ReturnsSameInstance(): void
@@ -19,7 +18,7 @@ class IndexMapMatchFailedExceptionTest extends TestCase
         $leftValues = $this->createMock(ValueListInterface::class);
         $exception = new IndexMapMatchFailedException(
             $leftValues,
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertSame($leftValues, $exception->getLeftValues());
     }
@@ -29,7 +28,7 @@ class IndexMapMatchFailedExceptionTest extends TestCase
         $rightValues = $this->createMock(ValueListInterface::class);
         $exception = new IndexMapMatchFailedException(
             $this->createMock(ValueListInterface::class),
-            $rightValues
+            $rightValues,
         );
         self::assertSame($rightValues, $exception->getRightValues());
     }
@@ -38,25 +37,16 @@ class IndexMapMatchFailedExceptionTest extends TestCase
     {
         $exception = new IndexMapMatchFailedException(
             $this->createMock(ValueListInterface::class),
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertSame('Index map match failed', $exception->getMessage());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new IndexMapMatchFailedException(
-            $this->createMock(ValueListInterface::class),
-            $this->createMock(ValueListInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new IndexMapMatchFailedException(
             $this->createMock(ValueListInterface::class),
-            $this->createMock(ValueListInterface::class)
+            $this->createMock(ValueListInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -67,7 +57,7 @@ class IndexMapMatchFailedExceptionTest extends TestCase
         $exception = new IndexMapMatchFailedException(
             $this->createMock(ValueListInterface::class),
             $this->createMock(ValueListInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

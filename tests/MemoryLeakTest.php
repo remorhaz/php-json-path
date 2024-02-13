@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test;
 
+use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
@@ -11,9 +12,7 @@ use function array_fill;
 use function array_unique;
 use function memory_get_usage;
 
-/**
- * @coversNothing
- */
+#[CoversNothing]
 class MemoryLeakTest extends TestCase
 {
     public function testQueryCompilation(): void

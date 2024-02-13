@@ -7,7 +7,6 @@ namespace Remorhaz\JSON\Path\Value;
 use ArrayIterator;
 use Iterator;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
-use Remorhaz\JSON\Data\Value\NodeValueInterface;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 
 use function array_values;

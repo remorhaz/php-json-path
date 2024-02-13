@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace Remorhaz\JSON\Path\Test\Processor\Result;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\PathEncoderInterface;
 use Remorhaz\JSON\Path\Processor\Result\ExistingSelectOnePathResult;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\ExistingSelectOnePathResult
- */
+#[CoversClass(ExistingSelectOnePathResult::class)]
 class ExistingSelectOnePathResultTest extends TestCase
 {
     public function testExists_Always_ReturnsTrue(): void
     {
         $result = new ExistingSelectOnePathResult(
             $this->createMock(PathEncoderInterface::class),
-            $this->createMock(PathInterface::class)
+            $this->createMock(PathInterface::class),
         );
         self::assertTrue($result->exists());
     }
@@ -28,7 +27,7 @@ class ExistingSelectOnePathResultTest extends TestCase
         $path = $this->createMock(PathInterface::class);
         $result = new ExistingSelectOnePathResult(
             $this->createMock(PathEncoderInterface::class),
-            $path
+            $path,
         );
         self::assertSame($path, $result->get());
     }
@@ -51,7 +50,7 @@ class ExistingSelectOnePathResultTest extends TestCase
         $encoder = $this->createMock(PathEncoderInterface::class);
         $result = new ExistingSelectOnePathResult(
             $encoder,
-            $this->createMock(PathInterface::class)
+            $this->createMock(PathInterface::class),
         );
 
         $encoder

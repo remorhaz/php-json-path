@@ -12,10 +12,10 @@ use function gettype;
 final class InvalidPathElementException extends DomainException implements ExceptionInterface
 {
     public function __construct(
-        private mixed $pathElement,
+        private readonly mixed $pathElement,
         ?Throwable $previous = null,
     ) {
-        parent::__construct($this->buildMessage(), 0, $previous);
+        parent::__construct($this->buildMessage(), previous: $previous);
     }
 
     private function buildMessage(): string

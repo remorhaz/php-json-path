@@ -18,9 +18,9 @@ use function count;
 final class ResultFactory implements ResultFactoryInterface
 {
     public function __construct(
-        private ValueEncoderInterface $jsonEncoder,
-        private ValueDecoderInterface $jsonDecoder,
-        private PathEncoderInterface $pathsEncoder,
+        private readonly ValueEncoderInterface $jsonEncoder,
+        private readonly ValueDecoderInterface $jsonDecoder,
+        private readonly PathEncoderInterface $pathsEncoder,
     ) {
     }
 
@@ -38,7 +38,7 @@ final class ResultFactory implements ResultFactoryInterface
     {
         return new SelectPathsResult(
             $this->pathsEncoder,
-            ...array_map([$this, 'getValuePath'], $values->getValues()),
+            ...array_map($this->getValuePath(...), $values->getValues()),
         );
     }
 

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Query\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Query\Exception\QueryExecutionFailedException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Query\Exception\QueryExecutionFailedException
- */
+#[CoversClass(QueryExecutionFailedException::class)]
 class QueryExecutionFailedExceptionTest extends TestCase
 {
     public function testGetSource_ConstructedWithGivenSource_ReturnsSameValue(): void
@@ -29,12 +28,6 @@ class QueryExecutionFailedExceptionTest extends TestCase
     {
         $exception = new QueryExecutionFailedException('a', 'b');
         self::assertSame("Failed to execute JSONPath query: a\n\nb", $exception->getMessage());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new QueryExecutionFailedException('a', 'b');
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

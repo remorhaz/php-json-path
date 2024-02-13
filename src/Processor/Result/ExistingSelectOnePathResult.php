@@ -15,8 +15,8 @@ final class ExistingSelectOnePathResult implements SelectOnePathResultInterface
     }
 
     public function __construct(
-        private PathEncoderInterface $encoder,
-        private PathInterface $path,
+        private readonly PathEncoderInterface $encoder,
+        private readonly PathInterface $path,
     ) {
     }
 

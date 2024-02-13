@@ -12,7 +12,7 @@ use Remorhaz\JSON\Data\Comparator\GreaterValueComparator;
 final class ComparatorCollection implements ComparatorCollectionInterface
 {
     public function __construct(
-        private Collator $collator,
+        private readonly Collator $collator,
     ) {
     }
 

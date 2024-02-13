@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Mutator\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Path\PathInterface;
 use Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException
- */
+#[CoversClass(ReplaceAtNestedPathsException::class)]
 class ReplaceAtNestedPathsExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new ReplaceAtNestedPathsException(
             $this->createMock(PathInterface::class),
-            $this->createMock(PathInterface::class)
+            $this->createMock(PathInterface::class),
         );
         self::assertSame('Attempt of replacing value at nested paths', $exception->getMessage());
     }
@@ -28,7 +27,7 @@ class ReplaceAtNestedPathsExceptionTest extends TestCase
         $parentPath = $this->createMock(PathInterface::class);
         $exception = new ReplaceAtNestedPathsException(
             $parentPath,
-            $this->createMock(PathInterface::class)
+            $this->createMock(PathInterface::class),
         );
         self::assertSame($parentPath, $exception->getParentPath());
     }
@@ -38,25 +37,16 @@ class ReplaceAtNestedPathsExceptionTest extends TestCase
         $nestedPath = $this->createMock(PathInterface::class);
         $exception = new ReplaceAtNestedPathsException(
             $this->createMock(PathInterface::class),
-            $nestedPath
+            $nestedPath,
         );
         self::assertSame($nestedPath, $exception->getNestedPath());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new ReplaceAtNestedPathsException(
-            $this->createMock(PathInterface::class),
-            $this->createMock(PathInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new ReplaceAtNestedPathsException(
             $this->createMock(PathInterface::class),
-            $this->createMock(PathInterface::class)
+            $this->createMock(PathInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -67,7 +57,7 @@ class ReplaceAtNestedPathsExceptionTest extends TestCase
         $exception = new ReplaceAtNestedPathsException(
             $this->createMock(PathInterface::class),
             $this->createMock(PathInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

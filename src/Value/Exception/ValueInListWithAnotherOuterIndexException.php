@@ -11,12 +11,12 @@ use Throwable;
 final class ValueInListWithAnotherOuterIndexException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private NodeValueInterface $value,
-        private int $expectedIndex,
-        private int $actualIndex,
+        private readonly NodeValueInterface $value,
+        private readonly int $expectedIndex,
+        private readonly int $actualIndex,
         ?Throwable $previous = null,
     ) {
-        parent::__construct($this->buildMessage(), 0, $previous);
+        parent::__construct($this->buildMessage(), previous: $previous);
     }
 
     private function buildMessage(): string

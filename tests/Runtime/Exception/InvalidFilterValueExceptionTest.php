@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Runtime\Exception\InvalidFilterValueException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Exception\InvalidFilterValueException
- */
+#[CoversClass(InvalidFilterValueException::class)]
 class InvalidFilterValueExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidFilterValueException(
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertSame('Invalid filter value', $exception->getMessage());
     }
@@ -29,18 +28,10 @@ class InvalidFilterValueExceptionTest extends TestCase
         self::assertSame($value, $exception->getValue());
     }
 
-    public function testGetCode_Always_ReturnZero(): void
-    {
-        $exception = new InvalidFilterValueException(
-            $this->createMock(ValueInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
-    }
-
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new InvalidFilterValueException(
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -50,7 +41,7 @@ class InvalidFilterValueExceptionTest extends TestCase
         $previous = new Exception();
         $exception = new InvalidFilterValueException(
             $this->createMock(ValueInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

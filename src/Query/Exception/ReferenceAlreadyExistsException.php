@@ -10,10 +10,10 @@ use Throwable;
 final class ReferenceAlreadyExistsException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private int $referenceId,
+        private readonly int $referenceId,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Reference #$this->referenceId already exists", 0, $previous);
+        parent::__construct("Reference #$this->referenceId already exists", previous: $previous);
     }
 
     public function getReferenceId(): int

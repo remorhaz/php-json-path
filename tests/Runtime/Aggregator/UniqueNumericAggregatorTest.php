@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Runtime\Aggregator;
 
 use ArrayIterator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ArrayValueInterface;
 use Remorhaz\JSON\Data\Value\ScalarValueInterface;
 use Remorhaz\JSON\Path\Runtime\Aggregator\UniqueNumericAggregator;
 
-/**
- * @covers \Remorhaz\JSON\Path\Runtime\Aggregator\UniqueNumericAggregator
- */
+#[CoversClass(UniqueNumericAggregator::class)]
 class UniqueNumericAggregatorTest extends TestCase
 {
     public function testTryAggregate_ArrayWithDifferentValues_AggregatesBothValues(): void
     {
-        $aggregator = $this->getMockForAbstractClass(UniqueNumericAggregator::class);
+        $aggregator = $this
+            ->getMockBuilder(UniqueNumericAggregator::class)
+            ->onlyMethods(['aggregateNumericData'])
+            ->getMock();
         $value = $this->createMock(ArrayValueInterface::class);
         $firstElement = $this->createMock(ScalarValueInterface::class);
         $firstElement
@@ -36,14 +38,17 @@ class UniqueNumericAggregatorTest extends TestCase
             ->with(
                 self::identicalTo([1, 1.2]),
                 self::identicalTo($firstElement),
-                self::identicalTo($secondElement)
+                self::identicalTo($secondElement),
             );
         $aggregator->tryAggregate($value);
     }
 
     public function testTryAggregate_ArrayWithEqualValues_AggregatesOnlyFirstValue(): void
     {
-        $aggregator = $this->getMockForAbstractClass(UniqueNumericAggregator::class);
+        $aggregator = $this
+            ->getMockBuilder(UniqueNumericAggregator::class)
+            ->onlyMethods(['aggregateNumericData'])
+            ->getMock();
         $value = $this->createMock(ArrayValueInterface::class);
         $firstElement = $this->createMock(ScalarValueInterface::class);
         $firstElement
@@ -61,7 +66,7 @@ class UniqueNumericAggregatorTest extends TestCase
             ->method('aggregateNumericData')
             ->with(
                 self::identicalTo([1]),
-                self::identicalTo($firstElement)
+                self::identicalTo($firstElement),
             );
         $aggregator->tryAggregate($value);
     }

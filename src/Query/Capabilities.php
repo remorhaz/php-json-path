@@ -7,8 +7,8 @@ namespace Remorhaz\JSON\Path\Query;
 final class Capabilities implements CapabilitiesInterface
 {
     public function __construct(
-        private bool $isDefinite,
-        private bool $isAddressable,
+        private readonly bool $isDefinite,
+        private readonly bool $isAddressable,
     ) {
     }
 

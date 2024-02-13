@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Result\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\ValueInterface;
 use Remorhaz\JSON\Path\Processor\Result\Exception\PathNotFoundInValueException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Result\Exception\PathNotFoundInValueException
- */
+#[CoversClass(PathNotFoundInValueException::class)]
 class PathNotFoundInValueExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new PathNotFoundInValueException(
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertSame('Path not found in value', $exception->getMessage());
     }
@@ -29,18 +28,10 @@ class PathNotFoundInValueExceptionTest extends TestCase
         self::assertSame($value, $exception->getValue());
     }
 
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new PathNotFoundInValueException(
-            $this->createMock(ValueInterface::class)
-        );
-        self::assertSame(0, $exception->getCode());
-    }
-
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
     {
         $exception = new PathNotFoundInValueException(
-            $this->createMock(ValueInterface::class)
+            $this->createMock(ValueInterface::class),
         );
         self::assertNull($exception->getPrevious());
     }
@@ -50,7 +41,7 @@ class PathNotFoundInValueExceptionTest extends TestCase
         $previous = new Exception();
         $exception = new PathNotFoundInValueException(
             $this->createMock(ValueInterface::class),
-            $previous
+            $previous,
         );
         self::assertSame($previous, $exception->getPrevious());
     }

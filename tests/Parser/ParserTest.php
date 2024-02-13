@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Parser;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Parser\Exception\QueryAstNotBuiltException;
 use Remorhaz\JSON\Path\Parser\Ll1ParserFactoryInterface;
@@ -12,9 +13,7 @@ use Remorhaz\JSON\Path\Parser\Parser;
 use Remorhaz\UniLex\AST\Tree;
 use Remorhaz\UniLex\Parser\LL1\Parser as Ll1Parser;
 
-/**
- * @covers \Remorhaz\JSON\Path\Parser\Parser
- */
+#[CoversClass(Parser::class)]
 class ParserTest extends TestCase
 {
     public function testBuildQueryAst_Constructed_ReturnsTreeInstancePassedToLl1ParserFactory(): void

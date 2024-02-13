@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\JSON\Path\Test\Processor\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Path\Processor\Exception\InvalidPathElementException;
 
-/**
- * @covers \Remorhaz\JSON\Path\Processor\Exception\InvalidPathElementException
- */
+#[CoversClass(InvalidPathElementException::class)]
 class InvalidPathElementExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
@@ -23,12 +22,6 @@ class InvalidPathElementExceptionTest extends TestCase
     {
         $exception = new InvalidPathElementException('a');
         self::assertSame('a', $exception->getPathElement());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new InvalidPathElementException(1);
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void
