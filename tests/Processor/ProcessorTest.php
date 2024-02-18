@@ -10,16 +10,19 @@ use PHPUnit\Framework\TestCase;
 use Remorhaz\JSON\Data\Value\EncodedJson\NodeValueFactory;
 use Remorhaz\JSON\Path\Processor\Exception\IndefiniteQueryException;
 use Remorhaz\JSON\Path\Processor\Exception\QueryNotAddressableException;
+use Remorhaz\JSON\Path\Processor\Mutator\DeleteMutation;
 use Remorhaz\JSON\Path\Processor\Mutator\Exception\ReplaceAtNestedPathsException;
+use Remorhaz\JSON\Path\Processor\Mutator\ReplaceMutation;
 use Remorhaz\JSON\Path\Processor\Processor;
 use Remorhaz\JSON\Path\Query\QueryFactory;
 
-#[CoversClass(Processor::class)]
+#[
+    CoversClass(Processor::class),
+    CoversClass(DeleteMutation::class),
+    CoversClass(ReplaceMutation::class),
+]
 class ProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider providerSelect
-     */
     #[DataProvider('providerSelect')]
     public function testSelect_GivenQueryAndData_ReturnsMatchingData(
         string $json,
@@ -28,7 +31,7 @@ class ProcessorTest extends TestCase
     ): void {
         $actualValue = Processor::create()->select(
             QueryFactory::create()->createQuery($path),
-            NodeValueFactory::create()->createValue($json)
+            NodeValueFactory::create()->createValue($json),
         );
         self::assertSame($expectedValue, $actualValue->encode());
     }
@@ -157,14 +160,51 @@ class ProcessorTest extends TestCase
         $processor->delete($query, $rootValue);
     }
 
-    public function testDelete_NonRootAddressableQuery_ResultContainsMatchingData(): void
-    {
+    /**
+     * @param string $path
+     * @param string $json
+     * @param string $expectedValue
+     * @return void
+     *
+     */
+    #[DataProvider('providerDelete')]
+    public function testDelete_NonRootAddressableQuery_ResultContainsMatchingData(
+        string $path,
+        string $json,
+        string $expectedValue,
+    ): void {
         $processor = Processor::create();
-        $query = QueryFactory::create()->createQuery('$..a');
-        $rootValue = NodeValueFactory::create()->createValue('{"a":1,"b":{"a":2,"c":3}}');
+        $query = QueryFactory::create()->createQuery($path);
+        $rootValue = NodeValueFactory::create()->createValue($json);
 
         $result = $processor->delete($query, $rootValue);
-        self::assertSame('{"b":{"c":3}}', $result->encode());
+        self::assertSame($expectedValue, $result->encode());
+    }
+
+    public static function providerDelete(): iterable
+    {
+        return [
+            'Several properties on different levels' => [
+                '$..a',
+                '{"a":1,"b":{"a":2,"c":3}}',
+                '{"b":{"c":3}}',
+            ],
+            'First array element' => [
+                '$[0]',
+                '["a","b"]',
+                '["b"]',
+            ],
+            'Several array elements' => [
+                '$[0,2]',
+                '["a","b","c","d"]',
+                '["b","d"]',
+            ],
+            'Nested array elements' => [
+                '$..*[1]',
+                '{"a":["b","c",{"d":[1,2,3]}]}',
+                '{"a":["b",{"d":[1,3]}]}',
+            ],
+        ];
     }
 
     public function testDelete_RootQuery_ResultNotExists(): void

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for PHP 8.3.
 ### Removed
 - Dropped support for PHP 8.0.
+### Fixed
+- Broken array indexes on deletion of non-last element.
 
 ## [0.8.0] - 2023-06-17
 ### Removed

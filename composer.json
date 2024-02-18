@@ -20,7 +20,7 @@
     "ext-intl": "*",
     "ext-json": "*",
     "remorhaz/php-unilex": "^0.5.3",
-    "remorhaz/php-json-data": "^0.6.1",
+    "remorhaz/php-json-data": "^0.7",
     "nikic/php-parser": "^4.12 || ^5"
   },
   "require-dev": {
